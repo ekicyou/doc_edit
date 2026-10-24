@@ -5,6 +5,7 @@
 - 今の見た目（`base`）を撮った版: ukadoc-spec の `c84942a`（`origin/main` と同じ。`ukadoc-spec/` のメインのチェックアウトで、原稿と設定は変えていない）。2026-10-24 に撮った
 - 作業木の起点: `c84942a`（`git -C .worktrees/site-look-plan log --oneline origin/main..HEAD` が空）
 - 作業木で変えたファイル（3.1 の時点。どれも未コミット）: `assets/mockup.js`（新規）、`mkdocs.yml`（`extra_javascript` に `assets/mockup.js` を足しただけ）。原稿・`.nav.yml`・`requirements.txt` は触らない（Requirement 6.2）
+- 作業木で変えたファイル（3.2 の時点。どれも未コミット）: `assets/extra.css`・`scripts/prepare_site.py`・`mkdocs.yml`（`pymdownx.highlight` を追加）・`assets/mockup.js`（C10 の着色を追加）。中身は `list/sakura-script` の節
 
 ## 候補の切り替えの仕掛け
 
@@ -34,11 +35,37 @@
 
 - 当てる候補（`candidates.md`）: C01（`#bang-lock-repaint`）・C03（`#scope`）・C04（`#notes_escape`）・C06（`#bang-lock-repaint`）・C08（`#bang-lock-repaint`）・C09（`#bang-lock-repaint`）・C10（`#bang-lock-repaint`）・C11（`#notes_escape`）
 - 今の見た目: `mock-sakura-script-base-*.png`・`mock-sakura-script-base-notes-escape-*.png`
-- 確かめた候補: （3.2 で書く）
-- 作り方（触った作業木のファイルと写し）: （3.2 で書く）
-- 反映の確かめ: （3.2 で書く）
-- 375 px: （3.2 で書く）
-- 失敗: （3.2 で書く）
+- 確かめた候補: C01・C03・C04・C06・C08・C09・C10・C11 の 8 つ。どれも試作の画面を明・暗で撮れた（2026-10-24）
+- 作り方（触った作業木のファイルと写し。写しは 3.5 で `mockups/` に残す）:
+  - `assets/extra.css` — 末尾に、候補ごとの指定を `html[data-slp~="Cxx"]` の下に足した（C01・C03・C04・C06・C08・C09・C10・C11）。暗い表示の色は、`data-md-color-scheme="slate"` が `<body>` に付くので `html[data-slp~="Cxx"] [data-md-color-scheme="slate"] …` で書いた（C06・C10）。ほかの候補は Material の色の変数（`--md-primary-fg-color`・`--md-default-fg-color--lighter` など）だけで明・暗に合わせた
+  - `scripts/prepare_site.py` — まとめ頁の後処理に `slp_mark()` を足した（C04・C06・C11 の目印）。`**対応:**` の段落の末尾（空行の手前）の次の行に `{: .slp-support }` を足し、` / ` で区切った各部分のうち「名前（`Materia`・`SSP`・`CROW`・`Ninix`）、または名前と空白と数字で始まる版」に合うものの名前を `<span class="slp-bw slp-bw-ssp">SSP</span>` のように包む（合わない部分はそのまま）。`notes_*.md` の単位を `<div class="slp-notes" markdown="1">` で包む。コードブロックの中は触らない
+  - `mkdocs.yml` — `markdown_extensions` に `pymdownx.highlight`（`use_pygments: false`）を足した（C10）。**`?slp=` に関係なく、試作の build の全コードブロック 449 個の HTML が `<div class="highlight"><pre><span></span><code>` から `<pre class="highlight"><code>` の形に変わる**（`language-sakurascript` の印が付くのは 287 個）。`?slp=` を付けない同じ頁の画面（例: C01 の画面のコードブロック）と `base` を見比べて、コードブロックの見え方（地の色・折り返し・右上のコピーのボタン）に目で見て分かる違いは無かった
+  - `assets/mockup.js` — `data-slp` に `C10` があるときだけ、`code.language-sakurascript` の字を、タグ（`\` の後の 1 字か `_`・`__` と 1 字、続く `[…]`）を `span.slp-ss-tag`、環境変数（`%` と英字、続く `[…]`）を `span.slp-ss-env` で包む。字は `textContent` から作り直すだけで、包んだ後の `textContent` が元と同じことを `console.assert` で確かめる形にした（コピーされる字は変わらない。D19）。外部のスクリプトは読まない
+  - `overrides/`・`assets/image/slp-*` は作っていない
+  - 組み立て: 作業木で `python scripts/prepare_site.py` が exit 0、`zensical build --strict` が exit 0（No issues found）。`extra.css` の手直しのたびに両方を流し直した（`serve` は `_site_src/` を見ているので、`assets/` の変更は `prepare_site.py` の再実行で反映される）
+- 反映の確かめ: `zensical serve -a 127.0.0.1:8002` の `/ukadoc-spec/list/sakura-script/` の HTML を取ってきて数えた。`class="slp-support"` 350、`class="slp-bw …"` 653、`class="slp-notes"` 14、`code class="language-sakurascript"` 287、`assets/mockup.js` の読み込み 1、本文に漏れた `{: ` 0。配られた `assets/extra.css` に `data-slp` の指定がある。build の全体では `slp-support` 1623・`slp-notes` 16・`slp-bw` 2641・`pre class="highlight"` 449・`language-*` 287、`{: .slp` の漏れは 0 頁（`research.md` の数と同じ）
+  - D17（C04・C11）: 14 個の `div.slp-notes` のどれも、中の見出し（`h2#notes_escape`・`h2#notes_lifespan` と分類の中の `h3#notes_*` 12 個）に `a.headerlink` が 1 つずつある。頁全体の `class="headerlink"` 649・`href="#notes_…"` 75・`class="md-nav__link"` 423 は、メインのチェックアウト（`c84942a`）の build の同じ頁と同じ数で、見出しの id・¶・目次は変わっていない
+  - C10 の対象: `language-sakurascript` の 287 ブロックで、タグとして包まれるのが 502 か所、環境変数が 6 か所（`%username`・`%ms`・`%mp`・`%mh`・`%me`・`%mt`）。`mockup.js` と同じ正規表現を Node で `serve` の HTML に当てて数えた。撮った位置（`#bang-lock-repaint`）には環境変数が無いので、画面に写る色はタグの色だけ
+- 375 px: `tools/shot.mjs "<頁>?slp=<候補>" body - light 375` で、両立しない C04 と C11 を分けて 2 回測った。`?slp=C01,C03,C04,C06,C08,C09,C10` が `scrollWidth` 375・`innerWidth` 375、`?slp=C01,C03,C11,C06,C08,C09,C10` も 375・375。どちらもはみ出しなし（`?slp=` を付けない頁も 375・375）
+- 失敗: なし（試作で確かめられなかった候補は無い）
+
+| 試作の画面（明・暗） | 候補 | 見比べる `base` | 位置（セレクタ） | 写っている試作の見え方 |
+|---|---|---|---|---|
+| `mock-sakura-script-C01-light.png`・`mock-sakura-script-C01-dark.png` | C01 | `mock-sakura-script-base-*.png` | `#bang-lock-repaint` | 項目名の `h3` が、左の緑の太い線・下の線・薄い地の帯になり、`code` の灰色の地が消える |
+| `mock-sakura-script-C06-light.png`・`mock-sakura-script-C06-dark.png` | C06 | `mock-sakura-script-base-*.png` | `#bang-lock-repaint` | 「対応:」の後の Materia・SSP・Ninix が、名前ごとの色の枠の札になる（` / ` は残る） |
+| `mock-sakura-script-C08-light.png`・`mock-sakura-script-C08-dark.png` | C08 | `mock-sakura-script-base-*.png` | `#bang-lock-repaint` | 「記述例」の `h4` が箱の頭の帯になり、続くコードブロックと 1 つの枠でつながる |
+| `mock-sakura-script-C09-light.png`・`mock-sakura-script-C09-dark.png` | C09 | `mock-sakura-script-base-*.png` | `#bang-lock-repaint` | 折り返した記述例の行が、右上のコピーのボタンの手前で折り返す（`base` では「アニメーシ」の字がボタンの下に重なる） |
+| `mock-sakura-script-C10-light.png`・`mock-sakura-script-C10-dark.png` | C10 | `mock-sakura-script-base-*.png` | `#bang-lock-repaint` | 記述例の `\s[0]`・`\i[500]`・`\![lock,repaint]` などのタグが青（暗い表示では明るい青）になる。字の太さ・折り返しの位置は `base` と同じ |
+| `mock-sakura-script-C03-light.png`・`mock-sakura-script-C03-dark.png` | C03 | `mock-sakura-script-base-notes-escape-*.png` | `#notes_escape` | 画面の下の分類の見出し `h2#scope`（スコープコマンド）が緑の帯に白い太い字になる。上の注意書きの `h2#notes_*` 2 つは除いたので `base` のまま |
+| `mock-sakura-script-C04-light.png`・`mock-sakura-script-C04-dark.png` | C04 | `mock-sakura-script-base-notes-escape-*.png` | `#notes_escape` | 注意書き 2 つが、点線の枠・コードの地の色の箱になり、見出しが中央寄せで点線の下に区切られる |
+| `mock-sakura-script-C11-light.png`・`mock-sakura-script-C11-dark.png` | C11 | `mock-sakura-script-base-notes-escape-*.png` | `#notes_escape` | 注意書き 2 つが、緑の線の角の丸い吹き出しになり、左上に尻尾が付く（尻尾は箱の外の左の余白にあり、本文の字に重ならない） |
+
+- 撮り方: `serve`（作業木、ポート 8002）の `/ukadoc-spec/list/sakura-script/?slp=<候補>` を、`base` と同じセレクタ・幅 1000・高さ 700 で撮った。16 枚とも exit 0 で、白紙でなく、狙った位置と候補の効きが明・暗の両方で写っていることを目で見た（試作の確かめ 3）。幅 1000 では 16 枚とも `scrollWidth` と `innerWidth` が 1000
+- C03 は `#scope` を上端にした `base` を撮り足さず、3.1 の `#notes_escape` の位置で撮った（`#scope` は画面の下に写る）。そのため 8001 のメインのチェックアウトの `serve` は、このタスクでは起動していない
+- `#notes_escape` の位置では、3.1 の `base` と同じく、ヘッダの題（「UKADOC project」と「SAKURA Script」）が切り替わりの途中で重なって写る画面がある（C03・C04 の明・暗と C11 の明るい表示。C11 の暗い表示は「UKADOC project」だけ）。本文には響かない
+- C11 の条件（`candidates.md`）: 本文の字の大きさ・行間は変えていない（枠の内側の余白と左の 14px の余白の分だけ行が短くなり、「解除されている」の折り返しの位置は変わる）。尻尾は本文に重ならない。枠は明・暗とも緑の線で地との差がある。見出しの id・¶・目次は上の D17 の数のとおり変わらない。この頁には admonition が無いので、警告の色の扱いは確かめていない
+- C10 の条件: 色はタグと環境変数の 2 つ（地の文は元の色）。太さ・大きさは変えない。等幅の字の指定は変えていないので `\` は `\` のまま写る（D20）
+- 画面の合計: このタスクの 16 枚で 2,178,358 バイト
 
 ## `descript/ghost`
 

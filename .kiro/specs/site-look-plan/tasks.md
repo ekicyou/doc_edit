@@ -41,7 +41,7 @@
   - 完了の状態: 作業木で `prepare_site.py` と `zensical build --strict` が exit 0 で、`?slp=` を付けた頁の `<html>` に `data-slp` が付く。3 頁の `base` の明・暗の画面がそろっている（試作の確かめ 1・3）
   - _Requirements: 3.2, 3.4, 3.5, 3.6, 3.9, 6.1, 6.2_
 
-- [ ] 3.2 `list/sakura-script` の頁に試作を当てる
+- [x] 3.2 `list/sakura-script` の頁に試作を当てる
   - `candidates.md` でこの頁に当てた候補を、作業木の使い捨てのファイル（`assets/extra.css` の `html[data-slp~="Cxx"]` の下、要るときだけ `scripts/prepare_site.py` の目印・`mkdocs.yml` の `pymdownx.highlight`・`assets/mockup.js`・`overrides/`・自作の仮の画像 `assets/image/slp-*`）に足す。旧サイトの素材は使わない
   - `prepare_site.py` を再実行し、`zensical build --strict` を通してから、`zensical serve` の頁の HTML に試作の目印（`slp-` の class か `mockup.js`）があることを確かめる
   - 候補ごとに `screenshots/mock-sakura-script-<Cnn>-<light|dark>.png` を、`base` と同じ URL・セレクタ・大きさで撮る。3.1 で撮っていない位置が要るときは、3.1 と同じくメインのチェックアウトをポート 8001 で出して `mock-<page>-base-*` を撮り足し、撮り終えたら止める。375 px の幅で `scrollWidth` と `innerWidth` を測る
@@ -115,3 +115,4 @@
 ## Implementation Notes
 - `tools/shot.mjs`: ヘッドレスの Edge では縦のスクロールバーが 15 px を取るので、`scrollWidth` にその幅を足して `innerWidth` と同じ物差しで出す。スクロールの後は 1.5 秒待つ（Material のヘッダの題の切り替えの動きが写り込むため）
 - 実装の途中で ukadoc-spec の `origin/main` が `0e028a4` から `c84942a` へ進んだ（PR #1〜#4・#6。`site_url` が shillest.net に直り、`list/sakura-script` などのコードスパンが直った。`extra.css`・`prepare_site.py`・`requirements.txt` は変わらない）。タスク 3.1 の前に、メインのチェックアウトと作業木を `--ff-only` で `c84942a` に進め、サブモジュールの参照をコミットした。見比べ（2.1）は `0e028a4` の時点の記録である
+- 試作: 暗い表示の印 `data-md-color-scheme="slate"` は `<body>` に付くので、暗い表示だけの色は `html[data-slp~="Cxx"] [data-md-color-scheme="slate"] …` で書く。`pymdownx.highlight`（`use_pygments: false`）は `?slp=` に関係なく全コードブロックの HTML を変えるが、見た目の差は出なかった
