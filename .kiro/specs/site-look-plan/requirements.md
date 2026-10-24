@@ -104,7 +104,7 @@
 1. The site-look-plan shall ukadoc-spec に PR を作らず、ukadoc-spec のどのブランチにも push しない
 2. The site-look-plan shall 原稿（Markdown）・`.nav.yml`・Zensical の版を変えない
 3. The site-look-plan shall 成果物（調査記録・画面の記録・決定の記録・roadmap・brief）を doc_edit の中だけに置く
-4. When この spec を完了するとき, the site-look-plan shall 試作の作業木 `.worktrees/site-look-plan/` とそのローカルブランチを捨て、ukadoc-spec のチェックアウト `ukadoc-spec/` の記録している版を変えない
+4. When この spec を完了するとき, the site-look-plan shall 試作の作業木 `.worktrees/site-look-plan/` とそのローカルブランチを捨てる。サブモジュール `ukadoc-spec/` の参照コミットは、この spec の作業としては進めない（`/kiro-start` などの同期で `origin/main` に追いつくのは除く）
 
 ### Requirement 7: 原稿を変えない spec の完了手順
 **Objective:** As a doc_edit の開発者, I want 原稿を変えない spec を、ukadoc-spec への PR なしで完了の手順に通せること, so that この spec（と今後の計画の spec）が、PR とマージがある前提の手順で止まらずに締められる

@@ -58,6 +58,6 @@ UKADOC の公開サイト（https://ukatech.github.io/ukadoc-spec/ ）は、や�
 - **試作の作業木**: 試作は `.worktrees/site-look-plan/` で作り、push しない。spec の完了時に捨てる
 - **serve の監視先**: `docs_dir: _site_src` なので、`zensical serve` が見るのは `_site_src/` である。直下の `assets/extra.css` を直しても、`prepare_site.py` を再実行するまで反映されない。また `prepare_site.py` は `_site_src/` を毎回消す。試作では「直下で直して prepare を再実行する」に決めておく
 - **Zensical 0.0.67 の制限**: テンプレートは minijinja で描画するので、Jinja2 専用の書き方は通らないことがある。対応表に無い MkDocs プラグインは黙って捨てられる。Python で拡張できるのは Markdown 拡張だけ。partial を丸ごと写すと版上げで壊れやすいので、CSS とブロックの上書きにとどめるのが安全。`build --strict` は、存在しない `extra_css` を指定しても検出しない
-- **さくらスクリプトの着色の選択肢**: (a) superfences の `custom_fences` に自作の関数を渡す（試験済み。CI では import 経路の用意が要る）。(b) Pygments の entry point を持つ自作レキサーを、`requirements.txt` で入れる。(c) `extra_javascript` でブラウザ側で着色する（自作の文法が要る）。どれを採っても、タグの文法に沿った字句規則（例: `\p23` は `\p2` と文字 `3`）が要る。highlight を有効にすると、言語指定の無いコードブロック（約 610 個）の HTML も変わる。`prepare_site.py` の `EXTENSIONS` と `mkdocs.yml` をそろえる必要もある
+- **さくらスクリプトの着色の選択肢**: (a) superfences の `custom_fences` に自作の関数を渡す（試験済み。CI では import 経路の用意が要る）。(b) Pygments の entry point を持つ自作レキサーを、`requirements.txt` で入れる。(c) `extra_javascript` でブラウザ側で着色する（自作の文法が要る）。どれを採っても、タグの文法に沿った字句規則（例: `\p23` は `\p2` と文字 `3`）が要る。highlight を有効にすると、言語指定の無いコードブロック（162 個）の HTML も変わる。`prepare_site.py` の `EXTENSIONS` と `mkdocs.yml` をそろえる必要もある
 - **ライセンス**: ukatech/ukadoc にも ukadoc-spec にも LICENSE が無い。旧サイトが許しているのは文章の引用・転載で、CSS と装飾画像の再利用は明記されていない。CSS は流用せず、参考にして書き直す。装飾画像を使うなら、管理者に確認する
 - 見た目の変更は、他者も使う公開リポジトリへの PR になる。後続の spec は小さく、レビューしやすい単位に切る
