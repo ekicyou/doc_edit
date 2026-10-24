@@ -275,3 +275,10 @@ html[data-slp~="C18"] [data-md-color-scheme="slate"] .md-typeset :is(h4, .highli
 
 /* C19: さくらスクリプトのタグと環境変数を太字にする（C10 の span に当てる。色だけでは別の画面で見分けにくいという開発者の指摘 2026-10-25） */
 html[data-slp~="C19"] .md-typeset :is(.slp-ss-tag, .slp-ss-env) { font-weight: 700; }
+
+/* C20: さくらスクリプトのタグの色を青から赤紫に替える（濃い青は黒の地の字と見分けにくいという開発者の指摘 2026-10-25） */
+html[data-slp~="C20"] [data-md-color-scheme="default"] .md-typeset .slp-ss-tag { color: #8a0d4f; }
+html[data-slp~="C20"] [data-md-color-scheme="slate"] .md-typeset .slp-ss-tag { color: #f48fb1; }
+
+/* C21: さくらスクリプトのタグと環境変数に、字の色を薄めた地を敷く（色相に頼らず、面で目立たせる） */
+html[data-slp~="C21"] .md-typeset :is(.slp-ss-tag, .slp-ss-env) { background: color-mix(in srgb, currentColor 9%, transparent); border-radius: .15em; }

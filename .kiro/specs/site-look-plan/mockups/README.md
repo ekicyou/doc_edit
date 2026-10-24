@@ -138,18 +138,21 @@
 
 ## 開発者の指摘を受けた試作（4.2 の提示の場、2026-10-25）
 
-開発者がプレビューを見て「全体に、ライトモードで文字が読みにくい。黒は良いけど色付き文字が明るすぎる」「記述例のさくらスクリプト部が、分かりにくい。強調しないとダメかも」と指摘したので、C17・C18 を足して `list/sakura-script` に当てた（`candidates.md`）。続けて「別モニタでの視認だと厳しい。青は太字にしないとダメかも」と指摘したので、C19 を足した。あわせて、開発者のブラウザでは `extra.css` の古い写しが残って C18 が効いて見えなかったおそれがある（`extra.css` の URL に版の印が無い）。強制の再読み込み（Ctrl+F5）を勧めた
+開発者がプレビューを見て「全体に、ライトモードで文字が読みにくい。黒は良いけど色付き文字が明るすぎる」「記述例のさくらスクリプト部が、分かりにくい。強調しないとダメかも」と指摘したので、C17・C18 を足して `list/sakura-script` に当てた（`candidates.md`）。続けて「別モニタでの視認だと厳しい。青は太字にしないとダメかも」と指摘したので、C19 を足した。さらに「青系なのが目立たない根本原因かもしれない」と指摘したので、C20（タグを赤紫に）と C21（タグに薄い地）を足した。あわせて、開発者のブラウザでは `extra.css` の古い写しが残って C18 が効いて見えなかったおそれがある（`extra.css` の URL に版の印が無い）。強制の再読み込み（Ctrl+F5）を勧めた
 
 - 作り方: 作業木の `assets/extra.css` の末尾に、`html[data-slp~="C17"] [data-md-color-scheme="default"] …`（明るい表示だけ）と `html[data-slp~="C18"] …` の指定を足した。ほかのファイルは触っていない。`serve` を止めてから `prepare_site.py` と `zensical build --strict` を流し（どちらも exit 0、No issues found）、`serve -a 127.0.0.1:8000` で出し直した
 - 反映の確かめ: 配られた `assets/extra.css` に `C17`・`C18` の行が 18 行ある
 - C17 の測り: 明るい表示の `?slp=C01,C03,C06,C09,C10,C17,C18` の頁で、本文の色付きの字（灰色・黒を除く）の対比を測った。最も弱いのはリンクの 7.13:1（C17 なしでは 4.82:1、`code` の地では 4.42:1）。C06 の札は 8.34〜10.93:1、C10 のタグは 8.24:1、環境変数は 8.52:1
-- 375 px: `?slp=C01,C06,C09,C10,C17,C18` と `?slp=C01,C06,C09,C10,C17,C18,C19` で `scrollWidth` 375・`innerWidth` 375。はみ出しなし
+- C20・C21 の測り: 地の字（`#36464e`）と C17 のタグ（`#0842a0`）の明るさの比は 1.04 で、色相も近い（青の目立たない元）。C20 の赤紫のタグは C18 の地に 8.41:1（暗 6.67:1）。C21 の地の上では、タグ 7.14:1・環境変数 7.33:1（暗 5.7:1・6.61:1）
+- 375 px: `?slp=C01,C06,C09,C10,C17,C18` と `?slp=C01,C06,C09,C10,C17,C18,C19`、`?slp=C01,C06,C09,C10,C17,C18,C19,C20,C21` で `scrollWidth` 375・`innerWidth` 375。はみ出しなし
 - 失敗: なし
 
 | 試作の画面（明・暗） | 候補 | 見比べる `base` | 位置（セレクタ） | 写っている試作の見え方 |
 |---|---|---|---|---|
 | `mock-sakura-script-C17-light.png`・`mock-sakura-script-C17-dark.png` | C17（`?slp=C01,C06,C08,C09,C10,C17`） | `mock-sakura-script-C06-*.png`・`mock-sakura-script-C10-*.png` | `#bang-lock-repaint` | 明るい表示で、札・タグの色が濃くなる。暗い表示は C17 なしと同じ |
 | `mock-sakura-script-C19-light.png`・`mock-sakura-script-C19-dark.png` | C19（`?slp=C01,C06,C09,C10,C17,C18,C19`） | `mock-sakura-script-C10-*.png`・`mock-sakura-script-C18-*.png` | `#bang-lock-repaint` | 記述例のタグが太字になる（色は C17 の濃い青）。折り返しの位置は C18 の画面と同じ |
+| `mock-sakura-script-C20-light.png`・`mock-sakura-script-C20-dark.png` | C20（`?slp=C01,C06,C09,C10,C17,C18,C19,C20`） | `mock-sakura-script-C19-*.png` | `#bang-lock-repaint` | 記述例のタグが太字の赤紫になる |
+| `mock-sakura-script-C21-light.png`・`mock-sakura-script-C21-dark.png` | C21（`?slp=C01,C06,C09,C10,C17,C18,C19,C20,C21`） | `mock-sakura-script-C20-*.png` | `#bang-lock-repaint` | タグと環境変数に薄い地が付き、かたまりに見える |
 | `mock-sakura-script-C18-light.png`・`mock-sakura-script-C18-dark.png` | C18（`?slp=C01,C06,C09,C10,C17,C18`） | `mock-sakura-script-C08-*.png` | `#bang-lock-repaint` | 「記述例」が濃い緑の帯の白い字になり、コードブロックに左の太い緑の線と薄い緑の地が付く |
 
 ## 試作しない候補
