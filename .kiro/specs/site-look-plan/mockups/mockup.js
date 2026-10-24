@@ -1,5 +1,7 @@
 // site-look-plan の使い捨ての試作: ?slp=C01,C03 を <html data-slp="C01 C03"> にし、CSS の html[data-slp~="C01"] で候補を入れたり外したりする
-const slp = new URLSearchParams(location.search).get('slp');
+// リンクで頁を移ると ?slp= が消えるので、タブを閉じるまで覚えておく（?slp= を空にすると外れる）
+let slp = new URLSearchParams(location.search).get('slp');
+try { if (slp !== null) sessionStorage.setItem('slp', slp); else slp = sessionStorage.getItem('slp'); } catch {}
 if (slp) document.documentElement.dataset.slp = slp.split(',').map((s) => s.trim()).join(' ');
 
 // C10: さくらスクリプトのタグ（\0・\s[10]・\![raise,…]・\_w[100]）と環境変数（%username・%property[…]）を色の要素で包む。字はそのまま（コピーされる字は変わらない）
