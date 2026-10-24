@@ -635,7 +635,7 @@ interface Decision {                   // decisions.md の 1 行
 1. `git -C .worktrees/site-look-plan log --oneline origin/main..HEAD` が空、`status --porcelain` が空
 2. `git -C .worktrees/site-look-plan diff --name-only origin/main` が空（原稿・`.nav.yml`・`requirements.txt` を変えていない）
 3. ukadoc-spec の origin に `site-look-plan` ブランチが無い（`git -C ukadoc-spec ls-remote --heads origin site-look-plan` が空）
-4. doc_edit の変更が `.kiro/specs/site-look-plan/`・`.kiro/specs/<後続 spec>/brief.md`・`.kiro/steering/roadmap.md` だけ（`tasks.md` と `spec.json` を除く）
+4. doc_edit の変更が `.kiro/specs/site-look-plan/`・`.kiro/specs/<後続 spec>/brief.md`・`.kiro/steering/roadmap.md` と、最後のタスクで初めて決めた方針を書き足した `.kiro/steering/*.md` だけ
 5. `screenshots/` の合計の大きさを記録する（**前提**: 10 MB 以内を目安にする。OPEN QUESTION 4）
 
 ## Security Considerations
