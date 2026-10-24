@@ -6,6 +6,7 @@
 - 作業木の起点: `c84942a`（`git -C .worktrees/site-look-plan log --oneline origin/main..HEAD` が空）
 - 作業木で変えたファイル（3.1 の時点。どれも未コミット）: `assets/mockup.js`（新規）、`mkdocs.yml`（`extra_javascript` に `assets/mockup.js` を足しただけ）。原稿・`.nav.yml`・`requirements.txt` は触らない（Requirement 6.2）
 - 作業木で変えたファイル（3.2 の時点。どれも未コミット）: `assets/extra.css`・`scripts/prepare_site.py`・`mkdocs.yml`（`pymdownx.highlight` を追加）・`assets/mockup.js`（C10 の着色を追加）。中身は `list/sakura-script` の節
+- 作業木で変えたファイル（3.3 の時点。どれも未コミット）: `assets/extra.css`（C02・C05・C07 を追加）・`scripts/prepare_site.py`（C07 の目印 `slp-default` を追加）。中身は `descript/ghost` の節
 
 ## 候補の切り替えの仕掛け
 
@@ -71,11 +72,31 @@
 
 - 当てる候補（`candidates.md`）: C02・C05・C07（どれも `#charset`）
 - 今の見た目: `mock-descript-ghost-base-*.png`
-- 確かめた候補: （3.3 で書く）
-- 作り方（触った作業木のファイルと写し）: （3.3 で書く）
-- 反映の確かめ: （3.3 で書く）
-- 375 px: （3.3 で書く）
-- 失敗: （3.3 で書く）
+- 確かめた候補: C02・C05・C07 の 3 つ。どれも試作の画面を明・暗で撮れた（2026-10-24）
+- 作り方（触った作業木のファイルと写し。写しは 3.5 で `mockups/` に残す）:
+  - `assets/extra.css` — 3.2 の指定の後ろに、C02・C05・C07 の指定を `html[data-slp~="Cxx"]` の下に足した。色は Material の色の変数（`--md-primary-fg-color`・`--md-primary-bg-color`・`--md-default-fg-color--light`・`--md-default-fg-color--lightest`）だけで明・暗に合わせたので、暗い表示だけの指定は無い
+    - C02: `.md-typeset hr` の上下の余白を `.6em`、`h3` の余白を `.6em 0 .4em` にした。`hr` と `h3` だけでは高さ 700 の画面に 3 項目と半分しか入らなかったので、`.md-typeset p` の上下の余白も `.5em` に詰めた（`candidates.md` の「波及」の `hr`・`h3` に加えて、サイト全体の段落の余白も変わる）
+    - C05: `p.slp-support` を、左の緑の太い線・薄い地の帯・少し小さい字にし、頭の「対応:」の `strong` を緑の地に白い字の札にした
+    - C07: `p.slp-default` を、字下げ（`1.2em`）・少し小さい字・控えめの色（`--md-default-fg-color--light`）にし、頭の「既定値:」の `strong` を枠の札にした。斜めの字は使わない
+  - `scripts/prepare_site.py` — 3.2 の `slp_mark()` に、`**既定値:**` で始まる段落の末尾（空行の手前）の次の行に `{: .slp-default }` を足す処理を足した（C07 の目印）。`**対応:**` の段落の `{: .slp-support }` と同じ「段落の末尾に足す」処理を、段落の種類（`slp-support` か `slp-default`）を覚える変数 1 つで共用する形に書き換えた。`**対応:**` の行の名前を `span.slp-bw` で包む処理と、`notes_*.md` を `div.slp-notes` で包む処理は 3.2 のまま
+  - C05 は 3.2 で付けた `p.slp-support` の目印をそのまま使い、`prepare_site.py` には足していない。C06 の `span.slp-bw` は build の全体に付いているが、見た目の指定は `data-slp~="C06"` の下だけにあるので、`?slp=C05` だけのときは普通の字のまま写る（C05 と C06 は両立しない組。C05 の画面で、帯の中の `Materia / SSP / CROW` が札にならず ` / ` でつながっていることを目で見た）
+  - `mkdocs.yml`・`assets/mockup.js` は、このタスクでは触っていない。`overrides/`・`assets/image/slp-*` は作っていない
+  - 組み立て: 作業木で `python scripts/prepare_site.py` が exit 0、`zensical build --strict` が exit 0（No issues found）。build の全体で `class="slp-default"` 423（`descript/ghost` 74）・`class="slp-support"` 1623、本文に漏れた `{: .slp` は 0 頁（`research.md` の数と同じ）。`<strong>既定値:</strong>` の段落で目印の付かないものは 0
+- 反映の確かめ: `zensical serve -a 127.0.0.1:8002` の `/ukadoc-spec/descript/ghost/` の HTML を取ってきて数えた。`class="slp-default"` 74、`class="slp-support"` 74、`class="slp-bw …"` 106、`assets/mockup.js` の読み込み 1、本文に漏れた `{: ` 0。配られた `assets/extra.css` に `data-slp~="C02"`・`"C05"`・`"C07"` の指定がある
+  - 3.2 の候補の目印も、同じ `serve` の `/ukadoc-spec/list/sakura-script/` に引き続きある: `class="slp-support"` 350、`class="slp-bw …"` 653、`class="slp-notes"` 14、`code class="language-sakurascript"` 287、`assets/mockup.js` 1、`{: ` 0（3.2 の記録と同じ数。この頁には `**既定値:**` が無いので `slp-default` は 0）
+- 375 px: `tools/shot.mjs "<頁>?slp=<候補>" body - light 375` で測った。`descript/ghost/?slp=C02,C05,C07` が `scrollWidth` 375・`innerWidth` 375 で、はみ出しなし（`?slp=` を付けない同じ頁も 375・375）。C02 の段落の余白はサイト全体に効くので、`list/sakura-script/?slp=C01,C02,C03,C04,C06,C08,C09,C10` も測り、375・375 だった
+- 失敗: なし（試作で確かめられなかった候補は無い）
+  - 作業の途中の出来事: `serve` を動かしたまま `prepare_site.py` を流し直したところ、`serve` の作り直しが書きかけの `_site_src/` を拾ったらしく、ログに「38 issues found」が出て、`assets/extra.css` が 404 になった。この間に撮った C02 の画面は指定の効かない画面だったので捨てた。`serve` を止め、`zensical build --strict` が exit 0 なのを確かめてから `serve` を起動し直し、`extra.css` に C02 の指定があることを確かめてから 6 枚とも撮り直した。下の画面はどれも撮り直した後のもの
+
+| 試作の画面（明・暗） | 候補 | 見比べる `base` | 位置（セレクタ） | 写っている試作の見え方 |
+|---|---|---|---|---|
+| `mock-descript-ghost-C02-light.png`・`mock-descript-ghost-C02-dark.png` | C02 | `mock-descript-ghost-base-*.png` | `#charset` | 高さ 700 の画面に、`charset`・`name`・`type`・`craftman` の 4 項目が入り、5 つ目の `craftmanw` の項目名が下端に写る（`base` は 3 項目） |
+| `mock-descript-ghost-C05-light.png`・`mock-descript-ghost-C05-dark.png` | C05 | `mock-descript-ghost-base-*.png` | `#charset` | 「対応:」の段落が、左の緑の線の薄い地の帯になり、「対応:」が緑の地に白い字の札になる。名前（`SSP / CROW` など）は普通の字のまま |
+| `mock-descript-ghost-C07-light.png`・`mock-descript-ghost-C07-dark.png` | C07 | `mock-descript-ghost-base-*.png` | `#charset` | 「既定値:」の段落が、字下げした少し小さい控えめの色の字になり、「既定値:」が枠の札になる。説明の文・「対応:」の段落とは見分けられる |
+
+- 撮り方: `serve`（作業木、ポート 8002）の `/ukadoc-spec/descript/ghost/?slp=<候補>` を、`base` と同じセレクタ（`#charset`）・幅 1000・高さ 700 で撮った。3 候補とも `base` と同じ位置なので、`base` の撮り足しは要らず、8001 のメインのチェックアウトの `serve` は、このタスクでは起動していない。6 枚とも exit 0 で、白紙でなく、狙った位置と候補の効きが明・暗の両方で写っていることを目で見た（試作の確かめ 3）。幅 1000 では 6 枚とも `scrollWidth` と `innerWidth` が 1000
+- C07 の暗い表示: 控えめの色（`--md-default-fg-color--light`）の字と札の枠は、暗い地の上でも読める差がある（画面で目で見た。差の数値は測っていない）
+- 画面の合計: このタスクの 6 枚で 675,925 バイト
 
 ## `manual/ghost`
 
