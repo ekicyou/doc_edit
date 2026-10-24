@@ -146,3 +146,110 @@
 - `ukadoc-spec/CLAUDE.md` — 原稿の書式（変えない）とサイトの組み立て
 - `.kiro/steering/workflow.md` — 作業木・DoD・完了時アクション
 - `.claude/skills/kiro-complete/SKILL.md` — PR 前提の完了手順
+
+---
+
+# 設計フェーズの調査（2026-10-24）
+
+## Summary
+- **Discovery Scope**: Extension（軽い調査）。既存のサイト生成と kiro の手順に乗せる計画の spec で、新しい依存を入れない
+- **使ったスキル・指針**: `kiro-spec-design`（`rules/design-principles.md`・`design-discovery-light.md`・`design-synthesis.md`・`design-review-gate.md`）、`.kiro/settings/templates/specs/design.md` と `research.md`。手順の読み取りに `kiro-impl`・`kiro-complete`・`kiro-next` の SKILL.md と `workflow.md`
+- **Key Findings**:
+  1. ギャップ分析の Research Needed の 5 件のうち 4 件を、一時フォルダの ukadoc-spec の写し（`git archive` の `0e028a4`）での試験で確かめた。残る 1 件（記述例の再生の同意・外部の読み込み）は論点として brief に渡す
+  2. Edge の `--screenshot` では頁の途中を撮れない。Node.js v26 の標準の `fetch`/`WebSocket` で Edge の CDP を操作すれば、新しいパッケージなしで、要素の位置の切り出しと明・暗の模擬ができる
+  3. `/kiro-impl` の既存の止まり方（`STOP_FOR_HUMAN`）は、失敗の後のデバッグの出口で、判断を待つ段に使うと回り道になる。開発者の関門の印を足す小さな手直しが要る
+
+## Research Log
+
+### Zensical 0.0.67 のテンプレートの上書き（Research Needed 1）
+- **Context**: 頁の組み立てを変える候補（キャラクターなど）を試作できるか
+- **Sources Consulted**: 一時の写しで `theme.custom_dir: overrides` と `overrides/main.html`（`{% extends "base.html" %}`、`{% block extrahead %}{{ super() }}…{% endblock %}`、`{% block content %}…{{ super() }}…{% endblock %}`）を置き、`extra_javascript` に `assets/slp.js` を足して `build --strict`
+- **Findings**: build が通り（No issues found）、`list/sakura-script/` の HTML に、`extrahead` に足した meta、`content` の前後に足した要素、`assets/slp.js` の読み込みがそれぞれ 1 つずつ出た。`custom_dir` はリポジトリ直下の `overrides/` で効く（`_site_src/` に写す必要は無い）
+- **Implications**: ブロックの上書きと `super()` は minijinja で通る。partial を丸ごと写さずに済む範囲の試作はできる
+
+### `pymdownx.highlight` と言語の印（Research Needed 2）
+- **Sources Consulted**: 一時の写しの `mkdocs.yml` の `markdown_extensions` に `pymdownx.highlight` を足して build し、`_site/` の `<pre>` を数えた
+- **Findings**:
+  - `pygments_lang_class: true` だけでは、レキサーの無い `sakurascript` は `text` に落ち、`<div class="language-text highlight">` になる。言語指定の無いブロックも同じ class になり、**見分けられない**
+  - `use_pygments: false` にすると、`sakurascript` の 287 個は `<pre class="highlight"><code class="language-sakurascript">`、言語指定の無い 162 個は `<pre class="highlight"><code>` になる。どちらも、今の `<div class="highlight"><pre><span></span><code>` から形が変わる（449 個すべてに波及する）
+  - build はどちらでも通る
+- **Implications**: ブラウザ側で着色する案（brief の (c)）は `use_pygments: false` で成り立つ。ただし全コードブロックの HTML が変わるので、`extra.css` の `pre > code` の指定やコピーのボタンの見え方を確かめる必要がある。`prepare_site.py` の `EXTENSIONS` は見出しの id の計算用で、`highlight` を足しても見出しには響かない見込み（後続 spec で確かめる）
+
+### `prepare_site.py` で目印を付けたときの影響（Research Needed 3）
+- **Sources Consulted**: 一時の写しの `unit_body()` で、`**対応:**` と `**既定値:**` で始まる段落に `attr_list` の `{: .slp-support }` `{: .slp-default }` を足して、`prepare_site.py` と `build --strict` を流した
+- **Findings**:
+  - 段落の 1 行目の直後に足すと、`<br />` で続く複数行の段落で `{: … }` が本文にそのまま出た（`descript/shell-surfaces/` で 6 か所）
+  - 段落の末尾（空行の手前）に足すと漏れは 0 で、サイト全体で `slp-support` が 1623 個、`slp-default` が 423 個付いた。`list/sakura-script/` は `slp-support` 350、`descript/ghost/` は両方 74
+  - `prepare_site.py` は exit 0（見出しの数の検査 `old_ids` は見出しの行だけを見るので響かない）、`build --strict` も通る
+- **Implications**: 「対応」「既定値」の見分けは、原稿を変えずに `prepare_site.py` の後処理で付けられる。付ける位置は段落の末尾に限る。この事実を後続 spec の brief の Constraints に書き写す
+
+### 画面の記録の道具（Research Needed 4）
+- **Sources Consulted**: Edge（`msedge.exe`）のヘッドレス、Node.js v26.8.1
+- **Findings**:
+  - `--screenshot` は既定のプロファイルだと白紙になった（起動中の Edge とぶつかる）。`--user-data-dir` で別のプロファイルにすると撮れた
+  - `--screenshot` は頁の先頭しか撮れず、`#見出し` 付きの URL では白紙になった。位置を指定する手段が無い
+  - `--remote-debugging-port` で起動し、Node.js の標準の `fetch`（`/json/list`）と `WebSocket` で CDP を呼ぶと、`Emulation.setEmulatedMedia`（`prefers-color-scheme: dark`）、`Runtime.evaluate`（要素の位置）、`Page.captureScreenshot`（`clip` と `captureBeyondViewport`）で、要素の位置の 1000 × 700 を明・暗で撮れた。ローカルの `zensical serve` の頁でも旧サイトでも撮れ、1 枚 120〜130 KB ほど
+  - Material の明暗は `media` 指定なので、模擬だけで暗い表示になる（`localStorage` を持たない使い捨てのプロファイルのため）
+  - `.venv` に Pillow も playwright も無い。新しく入れずに済む
+- **Implications**: `tools/shot.mjs`（40 行ほど）を spec のフォルダに置く。後続 spec も同じ道具で目標の画面と見比べられる
+
+### 記述例の再生（Research Needed 5）
+- 試験はしていない。Requirement 2.7 で試作を必須にしないので、論点（利用者の操作を起点にする、外部の CDN の読み込みの扱い）として候補と brief に渡す
+
+### 公開サイトの URL
+- `https://ukatech.github.io/ukadoc-spec/…` は 301 で `https://ukatech.shillest.net/ukadoc-spec/…` へ転送される（2026-10-24 に確認）。`mkdocs.yml` の `site_url` は github.io のまま。見比べの記録には両方を書く（直すのはこの spec の範囲外）
+
+### 旧サイトの頁
+- `list_sakura_script.html`・`descript_ghost.html`・`spec_shiori3.html`・`manual_ghost.html` はどれも 200。`manual.html` は 404（`manual/` の頁は `manual_<名前>.html`）
+
+### kiro の手順の止まり方（Requirement 4.6）
+- **Sources Consulted**: `.claude/skills/kiro-impl/SKILL.md`
+- **Findings**: 自律モードで人に返る道は、実装サブエージェントの `BLOCKED` → デバッグのサブエージェント → `NEXT_ACTION: STOP_FOR_HUMAN` → tasks.md に `_Blocked:_` を付けて止まる、だけである。再実行では `_Blocked:_` の付いたタスクは飛ばされるので、判断の後に誰かが印を外す必要がある。実装サブエージェントのひな形はコミットせず、TDD の RED を求める
+- **Implications**: 判断を待つ段にこの道を使うと、失敗でないものを失敗として扱い、デバッグのサブエージェントを 1 回無駄に出す。`_Gate: developer_` の印を足し、親が材料を示して止まる手直し（数行）にする。原稿を変えない spec では作業木でコミットしない旨もあわせて足す
+
+## Architecture Pattern Evaluation
+
+| Option | Description | Strengths | Risks / Limitations | Notes |
+|--------|-------------|-----------|---------------------|-------|
+| 記録のパイプライン（採用） | 差 → 候補 → 試作 → 決定 → spec を ID でつなぐ | 行き先の漏れを機械的に確かめられる | ID を振り直すと参照が切れる | 振り直さない規則を置く |
+| 1 つの大きな記録 | 調査から決定まで 1 ファイル | ファイルが少ない | タスクの境界があいまいになり、関門の前後で同じファイルを触る | 不採用 |
+| 候補ごとの試作のブランチ | 候補ごとに作業木の状態を分ける | 試作どうしが混ざらない | 作業木 1 つの規則に合わない。切り替えに build が要る | `?slp=` の切り替えで代える |
+
+## Design Decisions
+
+### Decision: 決定の段の止まり方
+- **Context**: Requirement 4.6（自律実行の中で止まり、判断の後に続ける）
+- **Alternatives Considered**:
+  1. 既存の `STOP_FOR_HUMAN` と `_Blocked:_`、再実行
+  2. `/kiro-impl` に `_Gate: developer_` の関門を足す
+  3. 決定の段を `/kiro-impl` の外に出す（要件で手動モードと外出しは採らないと決めた）
+- **Selected Approach**: 2。親が材料を示して止まり、同じセッションの答えで続ける。切れたら再実行で関門から再開する
+- **Rationale**: 1 は失敗の出口を流用するので、デバッグのサブエージェントが無駄に出て、`_Blocked:_` を手で外す手間が要る。2 は数行の手直しで済む
+- **Trade-offs**: スキルの手直しが 1 つ増える（Requirement 7.4 の手直しと同じ時期に行う）
+- **Follow-up**: 手直しを入れない場合の代わりは 1（OPEN QUESTION 1）
+
+### Decision: 原稿を変えない spec の目印
+- **Alternatives Considered**: (1) `design.md` の Boundary Commitments の一文、(2) `spec.json` の印、(3) 作業木にコミットが無いことで判断（ギャップ分析の Option C）
+- **Selected Approach**: 1。3 は Requirement 7.3（変えないはずの spec にコミットがあれば止める）を満たせない。「変えないはず」を前もって宣言する場所が要る
+- **Rationale**: `/kiro-spec-tasks`・`/kiro-impl`・`/kiro-complete` はどれも `design.md` を読む。`spec.json` は kiro の各段が書き換えるので、手で足した印が消えるおそれがある
+- **Follow-up**: OPEN QUESTION 2
+
+### Decision: 作業木の片付けをこの spec の最後のタスクで行う
+- **Context**: Requirement 6.4（完了時に作業木を捨てる）と 7.3（未コミットの変更があれば止める）
+- **Selected Approach**: 最後のタスクで写しを確かめてから作業木を `origin/main` と同じ状態に戻し、`/kiro-complete` は確かめて消すだけにする
+- **Rationale**: 7.3 の止まる条件をそのまま使え、試作の消し忘れと誤ったコミットを見分けられる
+- **Trade-offs**: 片付けた後は試作のプレビューを見られない（写しと画面で代える）
+
+### Decision: 今の見た目は試作の前の作業木で撮る
+- **Rationale**: 目印と `highlight` の試作は HTML を変えるので、試作の build で候補を外しても今の見た目にならない
+
+### Synthesis
+- **Generalization**: 見比べ・候補・決定・切り分けは、どれも「ID の付いた項目に、前の段の ID を参照させる」同じ形にまとめた。行き先の確かめ（5.1）が、ID の突き合わせだけで済む
+- **Build vs. Adopt**: 画面の道具は playwright などを入れず、手元の Edge と Node.js の標準機能で作る（依存を足さない）。目印は `attr_list`（既に有効）を使い、Markdown 拡張を書かない。着色の試作は `pymdownx.highlight`（既に入っている pymdown-extensions の一部）を使う
+- **Simplification**: 試作の記録は独立したファイルにせず `mockups/README.md` に置いた。候補の切り替えは build のし直しでなく `?slp=` にした。roadmap の形は `/kiro-next` の形に合わせ、`/kiro-discovery` の Path D の形は使わない
+
+## Risks & Mitigations
+- 画面の枚数が膨らみ、公開リポジトリが重くなる — 上限（候補ごとの枚数、1000 × 700）を置き、最後に合計の大きさを記録する
+- 開発者の答えが曖昧なまま判断を記録してしまう — 答えの無い候補は「判断」を空にし、確かめ直す。推奨を判断に写さない
+- `/kiro-impl` の手直しが入らないまま実装に入る — 代わりに既存の `STOP_FOR_HUMAN` の道で止まれるが、`_Blocked:_` を手で外す手間が要る（OPEN QUESTION 1）
+- 試作で確かめた事実が、Zensical の版上げで古くなる — brief の Constraints に「0.0.67 で確かめた」と版を書き添える
