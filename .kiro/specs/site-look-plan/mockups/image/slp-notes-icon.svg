@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 88" fill="none" stroke="#000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- site-look-plan の使い捨ての試作（C27）: 開発者が添付した注釈のアイコン（筆にリボン）を、手で白黒の線に起こしたもの -->
+  <!-- 柄 -->
+  <path d="M14 80 L34 54" stroke-width="10"/>
+  <path d="M30 58 L40 46" stroke-width="12"/>
+  <!-- 穂先 -->
+  <path d="M40 46 C 38 32 46 16 62 6 C 64 20 58 36 46 50 Z" fill="#fff"/>
+  <path d="M50 22 C 47 30 45 38 44 44" stroke-width="3"/>
+  <!-- リボン -->
+  <path d="M30 50 C 14 38 8 52 20 58 C 24 60 28 58 30 54 Z" fill="#fff"/>
+  <path d="M38 58 C 52 74 38 80 32 70 C 30 66 32 62 36 60 Z" fill="#fff"/>
+  <circle cx="33" cy="56" r="4" fill="#000"/>
+  <path d="M30 60 L22 70 M36 62 L40 74" stroke-width="3"/>
+</svg>

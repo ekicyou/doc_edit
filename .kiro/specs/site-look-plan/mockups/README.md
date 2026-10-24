@@ -174,6 +174,26 @@
 |---|---|---|---|---|
 | `mock-sakura-script-C24-light.png`・`mock-sakura-script-C24-dark.png` | C24（推奨の採るものを全部入れた上に C24） | `mock-sakura-script-C21-*.png` | `#bang-lock-repaint` | 暗い表示で、リンクと左の目次の今の頁が明るい紺になる。明るい表示は C24 なしと同じ |
 
+## 判断の答えの付け足しを受けた試作（2026-10-25、`afb2152`）
+
+開発者が「以下を除き承認」と答え、付け足しとして「さくらスクリプトページ以外にも、さくらスクリプトの記述例があるが、これも同様に強調すること」「注釈の個所に、添付アイコンか、それを白黒ベクター化したものを、ヘッダーにつけてほしい」と指摘したので、C25・C26・C27 を足して試作した。
+
+- 作り方:
+  - C25: `assets/mockup.js` の C10 の前に、言語の指定が無く 1 行目がさくらスクリプトのタグか環境変数で始まるコードブロックへ `language-sakurascript` を付ける処理を足した（`?slp=` に C25 があるときだけ）。組み立てたサイトの全頁を数えると、印が付くのは `list/propertysystem` 5 個・`spec/plugin` 1 個の 6 個で、SSTP などの要求の例と `\![vanishbymyself]` の例は外れた
+  - C26・C27: `assets/extra.css` の末尾に、`id` が `notes_` で始まる見出しの `::before` に絵を置く指定を足した。C26 は開発者の添付の画像を `assets/image/slp-notes-icon.png`（88×88）として置いた。C27 は手で描いた白黒の SVG `assets/image/slp-notes-icon.svg`（暗い表示では `filter: invert(1)`）
+  - 作業木への反映は、`serve` を動かしたまま `assets/` のファイルを `_site_src/assets/` へ写す形で行った（`prepare_site.py` は流し直していない）
+- 反映の確かめ: 配られた `slp-notes-icon.png`・`slp-notes-icon.svg` が 200。`list/propertysystem` で `code.language-sakurascript` が 2 個から（C25 の印で）増え、タグの色の要素が付いた。`notes_` の見出しの `::before` に絵が付いた
+- 375 px: `list/sakura-script`（推奨の採るもの＋C25・C27）と `list/propertysystem`（同）で `scrollWidth` 375・`innerWidth` 375
+- 見え方: C26 は字の大きさでも筆とリボンが分かり、暗い表示でも読めた。C27 の手描きは字の大きさだと潰れて剣のようにも見える
+- 撮り直し: C26・C27 の最初の画面は、ヘッダの題の切り替えの途中（「UKADOC project」と「SAKURA Script」が重なる）が写ったので、4 枚とも撮り直した
+- 失敗: なし
+
+| 試作の画面（明・暗） | 候補 | 見比べる `base` | 位置（セレクタ） | 写っている試作の見え方 |
+|---|---|---|---|---|
+| `mock-propertysystem-C25-light.png`・`mock-propertysystem-C25-dark.png` | C25（推奨の採るもの C01〜C24 の `?slp=` に C25） | `mock-propertysystem-C25before-*.png`（同じ `?slp=` から C25 だけ外したもの） | `[id="currentghost.seriko.cursor.scope-ID-.mouse-q-q-q-q-list-.path"]` | プロパティシステムの記述例のタグが、さくらスクリプトの頁と同じ太字の赤紫と薄い地になる |
+| `mock-sakura-script-C26-light.png`・`mock-sakura-script-C26-dark.png` | C26（同じく C26） | `mock-sakura-script-C04-*.png` | `#notes_escape` | 「さくらスクリプトのエスケープ」「さくらスクリプトの寿命」の見出しの頭に、添付の色付きの絵 |
+| `mock-sakura-script-C27-light.png`・`mock-sakura-script-C27-dark.png` | C27（同じく C27） | `mock-sakura-script-C04-*.png` | `#notes_escape` | 同じ所に、白黒の線の絵（暗い表示では白い線） |
+
 ## 試作しない候補
 
 - C13（記述例を手元のゴーストで再生する）・C16（ヘッダの値の名前を列にそろえる）は、`candidates.md` の「試作の当て先」の理由により試作しない
@@ -188,6 +208,8 @@
 | `assets/mockup.js` | 新規 | `mockup.js`（全文） |
 | `overrides/main.html` | 新規 | `overrides/main.html`（全文） |
 | `assets/image/slp-character.svg` | 新規（自作の仮の絵） | `image/slp-character.svg`（全文） |
+| `assets/image/slp-notes-icon.png` | 新規（開発者が添付した絵。C26） | `image/slp-notes-icon.png`（全体） |
+| `assets/image/slp-notes-icon.svg` | 新規（添付の絵を手で白黒の線に起こした仮の絵。C27） | `image/slp-notes-icon.svg`（全文） |
 | `mkdocs.yml` | 変更 | `worktree.diff` の差分 |
 | `scripts/prepare_site.py` | 変更 | `worktree.diff` の差分 |
 

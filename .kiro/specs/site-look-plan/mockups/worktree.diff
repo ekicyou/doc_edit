@@ -1,8 +1,8 @@
 diff --git a/assets/extra.css b/assets/extra.css
-index 80fdd5b..f842b1c 100644
+index 80fdd5b..e669810 100644
 --- a/assets/extra.css
 +++ b/assets/extra.css
-@@ -18,3 +18,296 @@
+@@ -18,3 +18,311 @@
    white-space: pre-wrap;
    word-break: break-all;
  }
@@ -299,6 +299,21 @@ index 80fdd5b..f842b1c 100644
 +
 +/* C24: 暗い表示のリンクを明るい紺にする（afb2152 で紺 #1f4e8c になったリンクと左メニューの今の頁が、暗い地に 1.94:1 しかない） */
 +html[data-slp~="C24"] [data-md-color-scheme="slate"] { --md-typeset-a-color: #8fb4e8; }
++
++/* C26・C27: 注釈の節（「さくらスクリプトの寿命」など、id が notes_ で始まる見出し）の頭にアイコンを置く（開発者の指摘 2026-10-25）。
++   C26 は開発者が添付した色付きの絵（assets/image/slp-notes-icon.png）、C27 はそれを手で白黒の線に起こしたもの（.svg。暗い表示では色を反転する）。同じ所なので両立しない */
++html:is([data-slp~="C26"], [data-slp~="C27"]) .md-typeset :is(h2, h3, h4)[id^="notes_"]::before {
++  content: "";
++  display: inline-block;
++  width: 1.5em;
++  height: 1.5em;
++  margin-right: .35em;
++  vertical-align: -.35em;
++  background: center / contain no-repeat;
++}
++html[data-slp~="C26"] .md-typeset :is(h2, h3, h4)[id^="notes_"]::before { background-image: url("image/slp-notes-icon.png"); }
++html[data-slp~="C27"] .md-typeset :is(h2, h3, h4)[id^="notes_"]::before { background-image: url("image/slp-notes-icon.svg"); }
++html[data-slp~="C27"] [data-md-color-scheme="slate"] .md-typeset :is(h2, h3, h4)[id^="notes_"]::before { filter: invert(1); }
 diff --git a/mkdocs.yml b/mkdocs.yml
 index 0fcf738..00cb5bf 100644
 --- a/mkdocs.yml
@@ -393,5 +408,7 @@ index 7b06b60..4a6b0eb 100644
 
 # 未追跡のファイル（全文は mockups/ の写しにある）
 # assets/image/slp-character.svg
+# assets/image/slp-notes-icon.png
+# assets/image/slp-notes-icon.svg
 # assets/mockup.js
 # overrides/main.html

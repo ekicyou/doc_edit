@@ -4,6 +4,15 @@ let slp = new URLSearchParams(location.search).get('slp');
 try { if (slp !== null) sessionStorage.setItem('slp', slp); else slp = sessionStorage.getItem('slp'); } catch {}
 if (slp) document.documentElement.dataset.slp = slp.split(',').map((s) => s.trim()).join(' ');
 
+// C25: さくらスクリプトの頁の外の記述例（list/propertysystem・spec/plugin など）は、原稿のコードブロックに言語の指定が無い。
+// 1 行目がさくらスクリプトのタグか環境変数で始まるブロックに言語の印を付けて、C10 の色を効かせる（本番は原稿に sakurascript を書き足す想定の見本）。
+// SSTP などの要求の例は 1 行目が「NOTIFY SSTP/1.1」などなので外れる
+if (document.documentElement.dataset.slp?.split(' ').includes('C25')) {
+  for (const code of document.querySelectorAll('.md-typeset .highlight code:not([class*="language-"])')) {
+    if (/^\s*(?:\\(?:[0-9a-z_!*&-]|__)|%[A-Za-z_]+)/.test(code.textContent)) code.classList.add('language-sakurascript');
+  }
+}
+
 // C10: さくらスクリプトのタグ（\0・\s[10]・\![raise,…]・\_w[100]）と環境変数（%username・%property[…]）を色の要素で包む。字はそのまま（コピーされる字は変わらない）
 if (document.documentElement.dataset.slp?.split(' ').includes('C10')) {
   const token = /(\\(?:__.|_.|.)(?:\[(?:\\.|[^\]\\])*\])?)|(%[A-Za-z_?]+\d*(?:\[(?:\\.|[^\]\\])*\])?)/g;
