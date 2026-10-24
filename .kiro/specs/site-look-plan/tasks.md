@@ -114,3 +114,4 @@
 
 ## Implementation Notes
 - `tools/shot.mjs`: ヘッドレスの Edge では縦のスクロールバーが 15 px を取るので、`scrollWidth` にその幅を足して `innerWidth` と同じ物差しで出す。スクロールの後は 1.5 秒待つ（Material のヘッダの題の切り替えの動きが写り込むため）
+- 実装の途中で ukadoc-spec の `origin/main` が `0e028a4` から `c84942a` へ進んだ（PR #1〜#4・#6。`site_url` が shillest.net に直り、`list/sakura-script` などのコードスパンが直った。`extra.css`・`prepare_site.py`・`requirements.txt` は変わらない）。タスク 3.1 の前に、メインのチェックアウトと作業木を `--ff-only` で `c84942a` に進め、サブモジュールの参照をコミットした。見比べ（2.1）は `0e028a4` の時点の記録である
