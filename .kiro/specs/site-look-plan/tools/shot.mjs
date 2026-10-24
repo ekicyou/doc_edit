@@ -82,6 +82,7 @@ try {
   });
   if (!result.value) fail(`セレクタが見つからない: ${selector}`);
   const { y, sw, iw } = result.value;
+  await sleep(1500); // スクロールの後、ヘッダの題の切り替えの動きが終わるのを待つ
 
   let wrote = null;
   if (out !== '-') {

@@ -13,7 +13,7 @@
   - _Requirements: 1.6, 3.5, 3.6, 3.9_
 
 - [ ] 2. 旧サイトと今のサイトを見比べ、候補を洗い出す
-- [ ] 2.1 4 組の頁を見比べて差を記録する
+- [x] 2.1 4 組の頁を見比べて差を記録する
   - `survey.md` を作る。「組」表に `list/sakura-script`・`descript/ghost`・`spec/shiori3`・`manual/ghost` の 4 組を、旧サイトの URL と、今のサイトの `site_url`（`https://ukatech.github.io/ukadoc-spec/...`）の URL と転送先の URL を並べて書く
   - 組ごとに 6 つの観点（項目の切れ目・パラメータ・既定値・対応ベースウェア・記述例・注記）の表を書く。当てはまらない観点は「該当なし」と書く
   - 差を `D01` からの通し番号で書き、種類（視認性／旧サイトだけ／失わないもの）・どの頁のどの部分か・旧サイトでの見せ方（視認性のとき）・根拠を付ける。根拠は `screenshots/survey-<page>-<Dnn>-<old|now>.png`（差 1 つにつき旧・今の 2 枚まで、明るい表示だけ）か、URL とセレクタ・見出しの組
@@ -111,3 +111,6 @@
   - doc_edit: 初めて決めた方針を steering に書き足す
   - 完了の状態: 記録の確かめ 1〜5 と境界の確かめ 1〜5 がすべて通り、作業木の `log origin/main..HEAD` と `status --porcelain` が空で、完了の手順の 3 つの手直しがそろっている
   - _Requirements: 5.1, 5.9, 6.1, 6.2, 6.3, 6.4, 7.1, 7.2, 7.3, 7.4_
+
+## Implementation Notes
+- `tools/shot.mjs`: ヘッドレスの Edge では縦のスクロールバーが 15 px を取るので、`scrollWidth` にその幅を足して `innerWidth` と同じ物差しで出す。スクロールの後は 1.5 秒待つ（Material のヘッダの題の切り替えの動きが写り込むため）
