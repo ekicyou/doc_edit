@@ -81,6 +81,7 @@
 #### Acceptance Criteria
 1. When 開発者が試作の画面を見て判断したとき, the site-look-plan shall 候補ごとに「採る」「採らない」「保留」のどれかと、その理由を記録する
 2. The site-look-plan shall 方向の決定を、開発者が画面（試作のプレビューか画面の記録）を見た後にだけ記録し、開発者の判断なしに決定済みとしない
+6. When 実装（`/kiro-impl` の自律実行。タスク番号を指定せず全タスクを流す）が方向の決定の段に来たとき, the site-look-plan shall そこで止まり、候補ごとの推奨と画面の記録を開発者に示して判断を待ち、判断を記録した後に残りのタスク（切り分けなど）を続ける
 3. Where 候補が「採る」と決まったとき, the site-look-plan shall 見た目の目標（どの画面の記録のどの見え方を目指すか）を、後続 spec が参照できる形で記録する
 4. Where 候補が「保留」になったとき, the site-look-plan shall 保留の理由と、決めるのに要るもの（例: 管理者の確認、別の試作）を記録する
 5. If 候補どうしが両立しない（例: 同じ部分に別の見せ方を当てる）とき, the site-look-plan shall どちらを採ったかと、採らなかった方を記録する
@@ -115,4 +116,4 @@
 1. When 原稿を変えない spec の完了を開発者が承認したとき, the doc_edit の完了手順 shall ukadoc-spec への PR・squash マージ・サブモジュールの参照コミットの更新を飛ばし、spec のアーカイブと doc_edit への記録を行う
 2. While 完了の対象が原稿を変えない spec であるとき, the doc_edit の完了手順 shall 原稿を前提にした関門（作業木での Build Gate・規約 Gate）を、当てはまらないものとして扱い、そのことを完了の記録に書く
 3. If 原稿を変えないはずの spec の作業木に、ukadoc-spec の `origin/main` からのコミットや未コミットの変更があるとき, the doc_edit の完了手順 shall 作業木を捨てずに止め、開発者に報告する
-4. The site-look-plan shall この手順の手直しを、この spec の完了（`/kiro-complete`）より前に、spec にせず doc_edit の手順（スキルと steering）を直接直して済ませる（**前提**: brief の Constraints に従う。この spec のタスクに含めるかは OPEN QUESTION 3）
+4. The site-look-plan shall この手順の手直しを、この spec のタスクにせず、設計の後・タスク生成（`/kiro-spec-tasks`）の前に、doc_edit の手順（スキルと steering）を直接直して済ませる。手直しには、`/kiro-complete` の分岐に加えて、`workflow.md` の DoD とタスク生成ルールに計画の spec の扱いを書くことを含める（タスク生成ルールが最終タスクに Build Gate を強制するため、タスク生成より前に直す）

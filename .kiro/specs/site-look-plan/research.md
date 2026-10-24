@@ -125,7 +125,8 @@
   - 試作の対象の 2〜3 頁と、試作ごとに確かめる候補
   - 画面の記録の道具・撮る範囲（頁の一部）・明暗の両方を撮るか・画像の大きさの上限
   - 「対応」「既定値」「パラメータ」「さくらスクリプトのブロック」に目印を付ける方法の候補（テンプレートの上書き／`prepare_site.py` の後処理／Markdown 拡張／ブラウザ側のスクリプト）を、試作で確かめる範囲。原稿を変えないこと
-  - roadmap の形（`/kiro-next` の形に合わせる見込み）
+  - roadmap の形（`/kiro-next` の形に合わせる。要件ディスカッションで確定）
+  - 方向の決定の段（要件 4.6）で、`/kiro-impl` の自律実行をどう止めて再開するか。既存の止まり方（`STOP_FOR_HUMAN` で `_Blocked:_` を付けて止め、開発者の判断の後に `/kiro-impl` を再実行する）で足りるか、`/kiro-impl` に手を入れるか（入れるなら、要件 7.4 の直接の手直しと同じ時期に行う）。実装は手動モードにせず、自律実行で流す（要件ディスカッションで確定）
 - **Research Needed**:
   - Zensical 0.0.67 で、`content` ブロックや partial の上書きがどこまで minijinja で通るか（brief の Constraints）
   - `pymdownx.highlight`（`pygments_lang_class`）を有効にしたとき、レキサーの無い `sakurascript` に `language-sakurascript` の class が付くか、言語指定なしのブロックの HTML がどう変わるか
