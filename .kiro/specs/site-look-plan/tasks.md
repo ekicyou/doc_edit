@@ -4,7 +4,7 @@
 
 文書のタスクには TDD の RED の証拠が当てはまらない。各タスクの完了の証拠は、design.md の Testing Strategy の確かめ（「記録の確かめ N」「試作の確かめ N」「境界の確かめ N」）の結果とする。
 
-- [ ] 1. 画面の記録の道具を作る
+- [x] 1. 画面の記録の道具を作る
   - `.kiro/specs/site-look-plan/tools/shot.mjs` を作る。Edge をヘッドレスで、使い捨てのプロファイル（一時フォルダ）と CDP のポートを付けて起動し、Node.js v26 の標準の `fetch` と `WebSocket` だけで操作する（新しいパッケージは入れない）
   - 引数は `<url> <selector> <out> [scheme] [width] [height]`（既定は `light`・1000・700）。明・暗は `Emulation.setEmulatedMedia` の `prefers-color-scheme` で切り替え、指定の要素をヘッダの高さの分を空けて上端近くに寄せて切り出す。`out` が `-` なら画像を書かずに測るだけ
   - 標準出力に `wrote`・`scrollWidth`・`innerWidth` を 1 行ずつ書く。セレクタが見つからない・頁が開けない・Edge が起動しないときは、理由の 1 行と終了コード 1 で終える。終わったら Edge を止める
