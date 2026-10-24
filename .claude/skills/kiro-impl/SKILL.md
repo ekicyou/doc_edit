@@ -91,6 +91,8 @@ Select skills for the current task even when steering/spec context is already av
 
 For each task (one at a time):
 
+**Developer-decision tasks**: When the task text asks to present material to the developer and act on the developer's decision or approval (e.g. 「開発者に提示し、判断を受けて記録する」), do NOT dispatch an implementer for it. The parent shows the material the task names, stops, and waits for the developer's answer; then it records the answer as the task says (never copying a recommendation as the decision unless the developer said so), marks the task `[x]`, commits per e), and continues with the remaining tasks. If the session ends before the answer, re-running `/kiro-impl {feature}` resumes at this task because it is still `[ ]`. This keeps the run autonomous (no task numbers, no manual mode) while stopping only where the developer must decide.
+
 **a) Dispatch implementer**:
 - Read `templates/implementer-prompt.md` from this skill's directory
 - Construct a prompt by combining the template with task-specific context:
@@ -146,7 +148,7 @@ For each task (one at a time):
 - **NEVER** use `git add -A` or `git add .`
 - Use `git add <file1> <file2> ...` with explicit file paths
 - Commit message format: `feat(<feature-name>): <task description>`
-- **doc_edit**: this makes two commits. (1) Manuscripts in the ukadoc-spec worktree: `git -C .worktrees/<feature> add <files>` and `git -C .worktrees/<feature> commit -m "<変更を 1 文で表す日本語>"` (ukadoc-spec history uses plain Japanese sentences, no type prefix); do not push it (the PR is made by `/kiro-complete`). (2) `tasks.md` in doc_edit: `git commit -m "feat(<feature-name>): <task description>" -- .kiro/specs/<feature>/tasks.md`, then `git pull --no-rebase --no-edit origin main` and `git push origin main` (doc_edit records every step on `main`).
+- **doc_edit**: this makes two commits. (1) Manuscripts in the ukadoc-spec worktree: `git -C .worktrees/<feature> add <files>` and `git -C .worktrees/<feature> commit -m "<変更を 1 文で表す日本語>"` (ukadoc-spec history uses plain Japanese sentences, no type prefix); do not push it (the PR is made by `/kiro-complete`). (2) `tasks.md` in doc_edit: `git commit -m "feat(<feature-name>): <task description>" -- .kiro/specs/<feature>/tasks.md`, then `git pull --no-rebase --no-edit origin main` and `git push origin main` (doc_edit records every step on `main`). For a spec whose `design.md` Boundary Commitments say 「この spec は原稿を変えない spec である」, skip (1): never commit in the ukadoc-spec worktree (it holds throwaway mockups only); commit only the doc_edit paths the task produced plus `tasks.md`.
 
 **f) Record learnings**:
 - If this task revealed cross-cutting insights, append a one-line note to the `## Implementation Notes` section at the bottom of tasks.md

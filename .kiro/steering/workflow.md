@@ -1,7 +1,7 @@
 # 開発ワークフロー
 
 Kiro 仕様駆動開発の作業フロー、git の運用、完了基準（DoD）を定める。
-kiro 系スキル（`kiro-start` `kiro-design` `kiro-impl` `kiro-complete` `kiro-next` `kiro-wave` など）は git の手順を複製せず、本ファイルの節を権威として参照する。
+kiro 系スキル（`kiro-start` `kiro-design` `kiro-impl` `kiro-complete` `kiro-next` など）は git の手順を複製せず、本ファイルの節を権威として参照する。
 
 ---
 
@@ -35,6 +35,7 @@ git -C ukadoc-spec worktree add ../.worktrees/<feature> -b <feature> origin/main
 - 最初に原稿を書き換える段（ふつうは `/kiro-impl` の最初のタスク）で作る。既にあればそのまま使う
 - 原稿の編集・確認・コミットは、すべてこの作業木の中で行う（`git -C .worktrees/<feature> ...`）
 - 原稿を読むだけなら `ukadoc-spec/` でよい。ただし spec を書く前に `git -C ukadoc-spec fetch origin` して、`origin/main` との差を意識する
+- **原稿を変えない spec**（`design.md` の Boundary Commitments に「この spec は原稿を変えない spec である」と書いた spec。計画の spec など）の作業木は、試作の置き場である。そこではコミットも push もしない。spec の最後のタスクで `origin/main` と同じ状態（コミット 0・未コミットの変更 0）に戻し、`/kiro-complete` が消す
 
 ---
 
@@ -52,8 +53,7 @@ discovery → requirements → design → tasks → implementation → complete
 | `/kiro-spec-tasks {feature}` | タスク分解 |
 | `/kiro-impl {feature} [tasks]` | 実装（原稿の編集） |
 | `/kiro-complete {feature}` | 完了（DoD → アーカイブ → PR → squash マージ → 記録） |
-| `/kiro-next` | 棚卸と次のウェーブの計画 |
-| `/kiro-wave` | ウェーブの spec を別セッションで一斉に始める |
+| `/kiro-next` | 棚卸と次に始める spec の名指し |
 | `/kiro-spec-status {feature}` | 進捗確認 |
 
 ---
@@ -91,9 +91,13 @@ git push origin main
 4. **Doc Gate**: 仕様の差分を spec の文書に反映した
 5. **Steering Gate**: doc_edit の steering と整合している（自作アプリの載せ方など、初めて決めたことは steering に書き足した）
 
+原稿を変えない spec では、Build Gate と規約 Gate は当てはまらない。そのことを完了の記録（`/kiro-complete` のコミットの本文と spec.json）に書く。
+
 ---
 
 ## 実装完了時アクション
+
+原稿を変えない spec では、1（原稿のコミット）と 3（PR → squash マージ）を飛ばす。4 は、作業木にコミットも未コミットの変更も無いことを確かめてから、作業木とローカルブランチを消すだけを行う（`ukadoc-spec/` は進めず、参照コミットも更新しない）。手順は `/kiro-complete` の「例外: 原稿を変えない spec」。
 
 ### 1. 原稿のコミット（ukadoc-spec の作業木）
 
@@ -167,8 +171,19 @@ git -C ukadoc-spec pull --ff-only origin main
   - doc_edit: 初めて決めた方針（自作アプリの載せ方など）を steering に書き足す
 ```
 
+原稿を変えない spec では、上の最終タスクの代わりに次を**必ず**加える。
+
+```markdown
+- [ ] N. 計画の成果物の整合と作業木の片付け
+  - roadmap と brief: どの候補にも行き先がある、spec 名が kebab-case の英語、次の spec が名指しされている
+  - 試作の写し（`mockups/`）がそろっている
+  - 作業木を `origin/main` と同じ状態に戻す（コミット 0・未コミットの変更 0）
+  - doc_edit: 初めて決めた方針を steering に書き足す
+```
+
 - タスクには触るファイル（作業木からのパス）と完了条件を書く
 - 1 タスクは 1 コミットにできる大きさにする
+- 開発者の判断を待つタスクは、本文に「開発者に提示し、判断（承認）を受けて〜する」と書く。新しい印は作らない（`/kiro-impl` の自律実行は、このタスクで止まって答えを待つ）
 
 ---
 

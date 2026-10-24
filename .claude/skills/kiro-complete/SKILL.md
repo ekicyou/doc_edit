@@ -9,7 +9,7 @@ argument-hint: <feature-name>
 ## 発動条件（必須）
 
 > **⚠️ このスキルは開発者の明示的「承認」がある場合にのみ発動する。**
-> ukadoc-spec の `main` に入った時点で公開サイト（https://ukatech.github.io/ukadoc-spec/ ）が更新される。この承認が、PR の作成と squash マージの承認を兼ねる。
+> ukadoc-spec の `main` に入った時点で公開サイト（https://ukatech.github.io/ukadoc-spec/ ）が更新される。この承認が、PR の作成と squash マージの承認を兼ねる（原稿を変えない spec では PR もマージも無い。「例外: 原稿を変えない spec」）。
 
 ### ✅ 発動する（承認の明示がある）
 - 「実装完了を**承認**します」「**承認**してください」
@@ -60,6 +60,17 @@ argument-hint: <feature-name>
 3. ステップ7（ukadoc-spec への PR → squash マージ）とステップ8（後始末と記録）を実行。作業木は次の回のために消してよい（次の `/kiro-impl` が作り直す）
 4. tasks.md のチェックボックスをリセット（全 `[x]` → `[ ]`）して、ステップ8 の記録に含める
 
+## 例外: 原稿を変えない spec
+
+`design.md` の Boundary Commitments に「この spec は原稿を変えない spec である」と書いた spec（計画の spec など）は、ukadoc-spec に PR を出さない。この spec では、承認は PR とマージを含まない。workflow.md「実装完了時アクション」の原稿を変えない spec の扱いに従い、次のように進める。
+
+1. **冒頭ステップ**: ふつうどおり行う。その場の解決は doc_edit 側の記録（spec のフォルダ・brief・roadmap）で行い、作業木では直さない。
+2. **ステップ0 の 4**: 作業木 `.worktrees/{feature}` が無くても止めない。あれば、`git -C .worktrees/{feature} log --oneline origin/main..HEAD` と `git -C .worktrees/{feature} status --porcelain` がどちらも空であることを確かめる。どちらかが空でなければ、**作業木を消さずに止めて**開発者に報告する。
+3. **ステップ1**: Spec・Doc・Steering の各 Gate は確かめる。Build Gate と規約 Gate は「当てはまらない（原稿を変えない spec）」として、完了の記録（ステップ8 のコミットの本文と spec.json）に書く。
+4. **ステップ2 とステップ7 は飛ばす**（原稿のコミット・push・PR・squash マージ）。
+5. **ステップ3〜6** はふつうどおり行う。ステップ4 で spec.json に `"ukadoc_spec": { "pr": "none", "reason": "原稿を変えない spec。Build Gate・規約 Gate は当てはまらない" }` を足す。
+6. **ステップ8**: `MERGED` の確かめは要らない。作業木があれば `git -C ukadoc-spec worktree remove ../.worktrees/{feature}`（未追跡がビルドの生成物だけなら `--force`）と `git -C ukadoc-spec branch -D {feature}` で消す。`ukadoc-spec/` の checkout・pull はせず、サブモジュールの参照コミットは進めない（`git add` に `ukadoc-spec` を含めない）。コミットのメッセージは `chore({feature-name}): spec を完了してアーカイブする（原稿の変更なし・ukadoc-spec の PR なし）`。
+
 ---
 
 ## 手順
@@ -99,7 +110,7 @@ doc_edit 側の `{remote}` と `{default-branch}` を、**固定優先順序で1
 1. **`{remote}`**: `git remote` に `origin` があれば `origin`。無ければ、リモートがちょうど 1 つならそれ。それ以外は none（doc_edit の pull・push を飛ばし、一度だけ警告する）。
 2. **`{default-branch}`**: `{remote}` があれば `git symbolic-ref --quiet --short refs/remotes/{remote}/HEAD` から `"{remote}/"` を除いた名前。空ならローカルの `main`、無ければ `master`、それも無ければ現在のブランチ。
 3. **作業場所の確認**: 現在のブランチが `{default-branch}` で、`git rev-parse --absolute-git-dir` と `git rev-parse --git-common-dir` の解決先が同じ（linked worktree でない）こと。違えば STOP して、メインのチェックアウトで開き直すよう頼む。
-4. **spec の作業木**: `.worktrees/{feature}` があり、そのブランチが `{feature}` であること（`git -C .worktrees/{feature} branch --show-current`）。無ければ STOP して報告する（原稿の変更がどこにあるか分からないまま進めない）。
+4. **spec の作業木**: `.worktrees/{feature}` があり、そのブランチが `{feature}` であること（`git -C .worktrees/{feature} branch --show-current`）。無ければ STOP して報告する（原稿の変更がどこにあるか分からないまま進めない）。原稿を変えない spec は「例外: 原稿を変えない spec」の 2 に従う。
 
 ukadoc-spec 側のリモートは `origin`（`ukatech/ukadoc-spec`）、既定のブランチは `main` で固定である。
 
@@ -256,6 +267,7 @@ git push {remote} {default-branch}
 - [ ] ロードマップ・ステアリング更新済み（該当する場合）
 - [ ] ukadoc-spec へ PR → squash マージ（ステップ7）: origin/main を取り込み → push → gh pr create → gh pr merge --squash --delete-branch → gh pr view で MERGED を確認
 - [ ] 後始末と記録（ステップ8）: 作業木とブランチを片付け、ukadoc-spec/ を main の最新に進め、spec.json に PR とマージ後のコミットを書き、doc_edit の main に自分のパスだけコミットして push
+- [ ] ※原稿を変えない spec: 作業木にコミット・未コミットの変更が無いことを確かめ、Build・規約 Gate は「当てはまらない」と記録し、ステップ2・7 を飛ばし、作業木とブランチを消し、参照コミットは進めない（spec.json に "pr": "none"）
 ```
 
 ---
