@@ -1,6 +1,6 @@
 ---
 name: kiro-start
-description: 'Post-discovery single-spec entry point. Precondition: /kiro-discovery has already created {specs-root}/{feature-name}/brief.md, so the feature name is already confirmed. Acts as an orchestrator: the controller handles deterministic resolution, the precondition gate, the main-checkout guard, the initial commit, and an interactive requirements discussion, while delegating spec init + requirements generation + gap analysis to a single non-interactive subagent. Portable across repos: deterministically resolves the specs root, skill base directory, git remote, and default branch (fixed priority orders, no guessing). doc_edit runs every session in the main checkout on main (no harness worktree; see .kiro/steering/workflow.md). Does NOT create branches or worktrees. When the session is NOT the main checkout on the default branch it STOPs and asks the developer to re-run there; otherwise it initializes the spec via kiro-spec-init (which consumes brief.md), runs kiro-spec-requirements, runs kiro-validate-gap against the ukadoc-spec manuscripts, commits the generated spec (its own folder only) to main and pushes, and then runs kiro-requirements-discussion interactively. No questions are asked before the discussion phase. Use when: 要件ディスカバリ後に仕様を開始したい, kiro-start, spec開始, start a confirmed spec. DO NOT USE FOR: 複数仕様の一括生成 (use /kiro-spec-batch), 既存 spec の追加要件生成のみ (use /kiro-spec-requirements directly).'
+description: 'Post-discovery single-spec entry point. Precondition: /kiro-discovery has already created {specs-root}/{feature-name}/brief.md, so the feature name is already confirmed. Acts as an orchestrator: the controller handles deterministic resolution, the precondition gate, the main-checkout guard, the initial commit, and an interactive requirements discussion, while delegating spec init + requirements generation + gap analysis to a single non-interactive subagent. Portable across repos: deterministically resolves the specs root, skill base directory, git remote, and default branch (fixed priority orders, no guessing). doc_edit runs every session in the main checkout on main (no harness worktree; see .kiro/steering/workflow.md). Does NOT create branches or worktrees. When the session is NOT the main checkout on the default branch it STOPs and asks the developer to re-run there; otherwise it pulls main, fast-forwards every submodule''s main to origin/main (committing moved pointers), initializes the spec via kiro-spec-init (which consumes brief.md), runs kiro-spec-requirements, runs kiro-validate-gap against the ukadoc-spec manuscripts, commits the generated spec (its own folder only) to main and pushes, and then runs kiro-requirements-discussion interactively. No questions are asked before the discussion phase. Use when: 要件ディスカバリ後に仕様を開始したい, kiro-start, spec開始, start a confirmed spec. DO NOT USE FOR: 複数仕様の一括生成 (use /kiro-spec-batch), 既存 spec の追加要件生成のみ (use /kiro-spec-requirements directly).'
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep, Agent, WebSearch, WebFetch, AskUserQuestion
 argument-hint: <feature-name>
 ---
@@ -9,7 +9,7 @@ argument-hint: <feature-name>
 
 <instructions>
 ## Core Task
-Start a single specification end-to-end **after `/kiro-discovery`**, taking it from init through requirements, gap analysis, and an interactive requirements discussion. Discovery has already created `{specs-root}/{feature-name}/brief.md`, so the **feature name is already confirmed and equals `$ARGUMENTS`**. In doc_edit every session runs in the **main checkout on the default branch** (`main`), never in a harness worktree, and records its work by committing to `main` and pushing right away (`.kiro/steering/workflow.md`, "doc_edit への記録"). This skill does **not** create branches or worktrees. When the session is not the main checkout on the default branch, **STOP** and ask the developer to re-run there. Before anything else it pulls the latest remote default branch (Step 0.5). Then it:
+Start a single specification end-to-end **after `/kiro-discovery`**, taking it from init through requirements, gap analysis, and an interactive requirements discussion. Discovery has already created `{specs-root}/{feature-name}/brief.md`, so the **feature name is already confirmed and equals `$ARGUMENTS`**. In doc_edit every session runs in the **main checkout on the default branch** (`main`), never in a harness worktree, and records its work by committing to `main` and pushing right away (`.kiro/steering/workflow.md`, "doc_edit への記録"). This skill does **not** create branches or worktrees. When the session is not the main checkout on the default branch, **STOP** and ask the developer to re-run there. Before anything else it pulls the latest remote default branch and fast-forwards every submodule's `main` to `origin/main`, recording moved pointers (Step 0.5). Then it:
 1. Initializes the spec via `kiro-spec-init` (consumes the existing brief.md, skips clarification),
 2. Runs `kiro-spec-requirements` (best-effort draft; never blocks on user input),
 3. Runs `kiro-validate-gap` (gap analysis written to `research.md`; the "codebase" is the ukadoc-spec manuscripts in `ukadoc-spec/`, plus `pasta/` `areka/` `shiori4/` as read-only sources),
@@ -65,8 +65,19 @@ Pull the latest `{remote}/{default-branch}` first, so the precondition gate and 
 1. If `{remote}` is none, warn once and skip this step.
 2. `git pull --no-rebase --no-edit {remote} {default-branch}` (never `--rebase`: other sessions may have uncommitted work in this checkout). If it fails (conflict, or uncommitted changes in the way): run `git merge --abort` when a merge is in progress, then STOP and report the cause and the conflicting files. Never resolve conflicts silently or discard local changes.
 3. Confirm it took: `git merge-base --is-ancestor {remote}/{default-branch} HEAD` must exit 0. Otherwise STOP and report it; nothing about the spec has been read yet.
-4. Refresh the ukadoc-spec view for the gap analysis: `git -C ukadoc-spec fetch origin`. If `ukadoc-spec/` is behind `origin/main`, say so in the report line (the gap analysis must judge against `origin/main`, e.g. with `git -C ukadoc-spec show origin/main:<path>` for files that changed).
-5. Report the result in one line (already up to date / merged N commits, with the `{remote}/{default-branch}` short SHA, and the ukadoc-spec `origin/main` short SHA), then proceed.
+4. Bring every submodule's `main` up to date (ukadoc-spec, pasta, areka, shiori4; list them with `git submodule foreach --quiet 'echo $sm_path'`). For each `{path}`:
+   1. `git -C {path} fetch origin`.
+   2. If `git -C {path} branch --show-current` is not `main`, or `git -C {path} status --porcelain` is non-empty, warn and skip this submodule (never switch branches or touch someone's uncommitted work).
+   3. `git -C {path} merge --ff-only origin/main`. If it fails (local commits not on `origin/main`), warn and skip; never reset or force.
+   - If ukadoc-spec was skipped, the gap analysis must judge against `origin/main` (e.g. `git -C ukadoc-spec show origin/main:<path>` for files that changed).
+5. Record the submodule pointers this step moved (only those paths; per "doc_edit への記録"). Skip when none moved:
+   ```powershell
+   git add -- {moved paths}
+   git commit -m "chore(submodules): サブモジュールを origin/main の最新に進める" -- {moved paths}
+   git push {remote} {default-branch}
+   ```
+   If the push is rejected, STOP the git part and report it (the commit stays local), then proceed.
+6. Report the result in one line (doc_edit: already up to date / merged N commits, with the `{remote}/{default-branch}` short SHA; each submodule: short SHA, advanced / unchanged / skipped and why; the pointer commit SHA if any), then proceed.
 
 ### Step 1: Verify post-discovery precondition (hard gate)
 This skill is deterministic about its precondition: the spec folder created by `/kiro-discovery` MUST already exist.
@@ -174,7 +185,7 @@ This is the **only** interactive phase. Run `kiro-requirements-discussion` **inl
 - Do NOT generate design or tasks. This skill stops after the requirements discussion (Step 6), before design.
 - Do NOT re-derive or change the feature name; it is fixed by discovery (`$ARGUMENTS`).
 - **STOP outside the main checkout**: If the session is not the main checkout on the resolved default branch, STOP in Step 2 (no init, no gap, no commit, no discussion) and ask the developer to re-run there.
-- **Commit only your own paths**: add/commit `{specs-root}/{feature-name}` only, then pull (merge, never rebase) and push to `{remote}/{default-branch}`. Never open a PR for doc_edit.
+- **Commit only your own paths**: add/commit `{specs-root}/{feature-name}` only (plus, in Step 0.5, the submodule pointers that step moved), then pull (merge, never rebase) and push to `{remote}/{default-branch}`. Never open a PR for doc_edit.
 - Do NOT use this skill for `/kiro-spec-batch` (multi-spec) flows.
 </instructions>
 
