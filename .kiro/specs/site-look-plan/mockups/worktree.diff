@@ -1,8 +1,8 @@
 diff --git a/assets/extra.css b/assets/extra.css
-index 2cfb63e..aab8e68 100644
+index 80fdd5b..f842b1c 100644
 --- a/assets/extra.css
 +++ b/assets/extra.css
-@@ -18,3 +18,293 @@
+@@ -18,3 +18,296 @@
    white-space: pre-wrap;
    word-break: break-all;
  }
@@ -230,8 +230,8 @@ index 2cfb63e..aab8e68 100644
 +html[data-slp~="C15"] .md-typeset .slp-tree-file { color: var(--md-primary-fg-color); }
 +html[data-slp~="C15"] [data-md-color-scheme="slate"] .md-typeset .slp-tree-file { color: #81c784; }
 +
-+/* C17: 明るい表示の色付きの字を濃くする（白地で 7:1 以上。開発者の指摘 2026-10-25）。暗い表示は変えない */
-+html[data-slp~="C17"] [data-md-color-scheme="default"] { --md-typeset-a-color: #185a1c; }
++/* C17: 明るい表示の色付きの字を濃くする（白地で 7:1 以上。開発者の指摘 2026-10-25）。暗い表示は変えない。
++   リンクの色は、ヘッダの紺（#1f4e8c、afb2152 から）がそのままで 7:1 を超えるので上書きしない */
 +html[data-slp~="C17"] [data-md-color-scheme="default"] .md-typeset .slp-bw-materia { color: #6b4500; }
 +html[data-slp~="C17"] [data-md-color-scheme="default"] .md-typeset .slp-bw-ssp { color: #185a1c; }
 +html[data-slp~="C17"] [data-md-color-scheme="default"] .md-typeset .slp-bw-crow { color: #5a1a85; }
@@ -240,26 +240,26 @@ index 2cfb63e..aab8e68 100644
 +html[data-slp~="C17"] [data-md-color-scheme="default"] .md-typeset .slp-ss-env { color: #7a2e0a; }
 +html[data-slp~="C17"] [data-md-color-scheme="default"] .md-typeset .slp-tree-file { color: #185a1c; }
 +
-+/* C18: 記述例を強く目立たせる（C08 の箱を、濃い緑の頭の帯と左の太い線にする。C08 なしでも効く。開発者の指摘 2026-10-25） */
++/* C18: 記述例を強く目立たせる（C08 の箱を、テーマの濃い紺の頭の帯と左の太い線にする。C08 なしでも効く。開発者の指摘 2026-10-25） */
 +html[data-slp~="C18"] .md-typeset h4:has(+ .highlight) {
 +  margin: 1.4em 0 0;
 +  padding: .3em .8em;
 +  font-size: .75rem;
 +  color: #ffffff;
-+  background: #1b5e20;
++  background: var(--md-primary-fg-color--dark);
 +  border-radius: .2rem .2rem 0 0;
 +}
 +html[data-slp~="C18"] .md-typeset :is(h4, .highlight) + .highlight {
 +  margin-top: 0;
-+  border-left: .35rem solid #1b5e20;
-+  background: #eef5ee;
++  border-left: .35rem solid var(--md-primary-fg-color--dark);
++  background: #eef2f8;
 +}
 +html[data-slp~="C18"] .md-typeset :is(h4, .highlight) + .highlight :is(pre, code) { background: transparent; }
-+html[data-slp~="C18"] .md-typeset .highlight + .highlight { border-top: 1px dashed #1b5e20; }
++html[data-slp~="C18"] .md-typeset .highlight + .highlight { border-top: 1px dashed var(--md-primary-fg-color--dark); }
 +html[data-slp~="C18"] .md-typeset :is(h4, .highlight) + .highlight:has(+ .highlight) { margin-bottom: 0; }
 +html[data-slp~="C18"] .md-typeset :is(h4, .highlight) + div.highlight > pre { margin: 0; }
-+html[data-slp~="C18"] [data-md-color-scheme="slate"] .md-typeset h4:has(+ .highlight) { background: #2e7d32; }
-+html[data-slp~="C18"] [data-md-color-scheme="slate"] .md-typeset :is(h4, .highlight) + .highlight { border-left-color: #66bb6a; background: #1f2a20; }
++html[data-slp~="C18"] [data-md-color-scheme="slate"] .md-typeset h4:has(+ .highlight) { background: var(--md-primary-fg-color); }
++html[data-slp~="C18"] [data-md-color-scheme="slate"] .md-typeset :is(h4, .highlight) + .highlight { border-left-color: #7fa6dc; background: #1d2433; }
 +
 +/* C19: さくらスクリプトのタグと環境変数を太字にする（C10 の span に当てる。色だけでは別の画面で見分けにくいという開発者の指摘 2026-10-25） */
 +html[data-slp~="C19"] .md-typeset :is(.slp-ss-tag, .slp-ss-env) { font-weight: 700; }
@@ -296,8 +296,11 @@ index 2cfb63e..aab8e68 100644
 +html[data-slp~="C23"] .md-typeset table.slp-keytable { display: table; width: 100%; font-size: .75rem; }
 +html[data-slp~="C23"] .md-typeset table.slp-keytable td:last-child { overflow-wrap: anywhere; }
 +html[data-slp~="C23"] .md-typeset table.slp-keytable td:first-child { white-space: nowrap; font-weight: 700; }
++
++/* C24: 暗い表示のリンクを明るい紺にする（afb2152 で紺 #1f4e8c になったリンクと左メニューの今の頁が、暗い地に 1.94:1 しかない） */
++html[data-slp~="C24"] [data-md-color-scheme="slate"] { --md-typeset-a-color: #8fb4e8; }
 diff --git a/mkdocs.yml b/mkdocs.yml
-index c16db9a..e32103f 100644
+index 0fcf738..00cb5bf 100644
 --- a/mkdocs.yml
 +++ b/mkdocs.yml
 @@ -11,6 +11,8 @@ site_dir: _site
@@ -309,7 +312,7 @@ index c16db9a..e32103f 100644
    # Zensical の既定は modern（新デザイン）。従来の見た目は classic
    variant: classic
    language: ja
-@@ -42,6 +44,9 @@ theme:
+@@ -41,6 +43,9 @@ theme:
  extra_css:
    - assets/extra.css
  
@@ -319,7 +322,7 @@ index c16db9a..e32103f 100644
  plugins:
    - search:
        lang: ja
-@@ -53,6 +58,9 @@ markdown_extensions:
+@@ -52,6 +57,9 @@ markdown_extensions:
    - attr_list
    - md_in_html
    - mdx_truly_sane_lists
@@ -330,10 +333,10 @@ index c16db9a..e32103f 100644
    - toc:
        permalink: true
 diff --git a/scripts/prepare_site.py b/scripts/prepare_site.py
-index 5f51016..d363b4d 100644
+index 7b06b60..4a6b0eb 100644
 --- a/scripts/prepare_site.py
 +++ b/scripts/prepare_site.py
-@@ -223,6 +223,44 @@ def rewrite_links(text, src, dst):
+@@ -224,6 +224,44 @@ def rewrite_links(text, src, dst):
      return '\n'.join(out)
  
  
@@ -378,7 +381,7 @@ index 5f51016..d363b4d 100644
  # ---------------------------------------------------------------- 本体
  
  def page_dirs():
-@@ -253,7 +291,7 @@ def main():
+@@ -277,7 +315,7 @@ def main():
          parts = []
          for rel, depth, is_index, text in units:
              bundled.add(rel)

@@ -1,9 +1,9 @@
-/* ヘッダの色。旧 HTML 版のヘッダ（iframes.css の #94de84）と同系統の緑で、明度を下げて白文字にする。
+/* ヘッダの色。ukatech.shillest.net のトップページでの UKADOC 仕様書のテーマ色（紺 #1f4e8c）に合わせる。
    mkdocs.yml の theme.palette の primary: custom と対 */
 [data-md-color-primary="custom"] {
-  --md-primary-fg-color: #2e8233;
-  --md-primary-fg-color--light: #4fa053;
-  --md-primary-fg-color--dark: #226426;
+  --md-primary-fg-color: #1f4e8c;
+  --md-primary-fg-color--light: #3f6fae;
+  --md-primary-fg-color--dark: #163a69;
   --md-primary-bg-color: #ffffff;
   --md-primary-bg-color--light: rgba(255, 255, 255, .7);
 }
@@ -242,8 +242,8 @@ html[data-slp~="C14"] .md-typeset:has(h1#ゴースト) > ul > li > p:first-child
 html[data-slp~="C15"] .md-typeset .slp-tree-file { color: var(--md-primary-fg-color); }
 html[data-slp~="C15"] [data-md-color-scheme="slate"] .md-typeset .slp-tree-file { color: #81c784; }
 
-/* C17: 明るい表示の色付きの字を濃くする（白地で 7:1 以上。開発者の指摘 2026-10-25）。暗い表示は変えない */
-html[data-slp~="C17"] [data-md-color-scheme="default"] { --md-typeset-a-color: #185a1c; }
+/* C17: 明るい表示の色付きの字を濃くする（白地で 7:1 以上。開発者の指摘 2026-10-25）。暗い表示は変えない。
+   リンクの色は、ヘッダの紺（#1f4e8c、afb2152 から）がそのままで 7:1 を超えるので上書きしない */
 html[data-slp~="C17"] [data-md-color-scheme="default"] .md-typeset .slp-bw-materia { color: #6b4500; }
 html[data-slp~="C17"] [data-md-color-scheme="default"] .md-typeset .slp-bw-ssp { color: #185a1c; }
 html[data-slp~="C17"] [data-md-color-scheme="default"] .md-typeset .slp-bw-crow { color: #5a1a85; }
@@ -252,26 +252,26 @@ html[data-slp~="C17"] [data-md-color-scheme="default"] .md-typeset .slp-ss-tag {
 html[data-slp~="C17"] [data-md-color-scheme="default"] .md-typeset .slp-ss-env { color: #7a2e0a; }
 html[data-slp~="C17"] [data-md-color-scheme="default"] .md-typeset .slp-tree-file { color: #185a1c; }
 
-/* C18: 記述例を強く目立たせる（C08 の箱を、濃い緑の頭の帯と左の太い線にする。C08 なしでも効く。開発者の指摘 2026-10-25） */
+/* C18: 記述例を強く目立たせる（C08 の箱を、テーマの濃い紺の頭の帯と左の太い線にする。C08 なしでも効く。開発者の指摘 2026-10-25） */
 html[data-slp~="C18"] .md-typeset h4:has(+ .highlight) {
   margin: 1.4em 0 0;
   padding: .3em .8em;
   font-size: .75rem;
   color: #ffffff;
-  background: #1b5e20;
+  background: var(--md-primary-fg-color--dark);
   border-radius: .2rem .2rem 0 0;
 }
 html[data-slp~="C18"] .md-typeset :is(h4, .highlight) + .highlight {
   margin-top: 0;
-  border-left: .35rem solid #1b5e20;
-  background: #eef5ee;
+  border-left: .35rem solid var(--md-primary-fg-color--dark);
+  background: #eef2f8;
 }
 html[data-slp~="C18"] .md-typeset :is(h4, .highlight) + .highlight :is(pre, code) { background: transparent; }
-html[data-slp~="C18"] .md-typeset .highlight + .highlight { border-top: 1px dashed #1b5e20; }
+html[data-slp~="C18"] .md-typeset .highlight + .highlight { border-top: 1px dashed var(--md-primary-fg-color--dark); }
 html[data-slp~="C18"] .md-typeset :is(h4, .highlight) + .highlight:has(+ .highlight) { margin-bottom: 0; }
 html[data-slp~="C18"] .md-typeset :is(h4, .highlight) + div.highlight > pre { margin: 0; }
-html[data-slp~="C18"] [data-md-color-scheme="slate"] .md-typeset h4:has(+ .highlight) { background: #2e7d32; }
-html[data-slp~="C18"] [data-md-color-scheme="slate"] .md-typeset :is(h4, .highlight) + .highlight { border-left-color: #66bb6a; background: #1f2a20; }
+html[data-slp~="C18"] [data-md-color-scheme="slate"] .md-typeset h4:has(+ .highlight) { background: var(--md-primary-fg-color); }
+html[data-slp~="C18"] [data-md-color-scheme="slate"] .md-typeset :is(h4, .highlight) + .highlight { border-left-color: #7fa6dc; background: #1d2433; }
 
 /* C19: さくらスクリプトのタグと環境変数を太字にする（C10 の span に当てる。色だけでは別の画面で見分けにくいという開発者の指摘 2026-10-25） */
 html[data-slp~="C19"] .md-typeset :is(.slp-ss-tag, .slp-ss-env) { font-weight: 700; }
@@ -308,3 +308,6 @@ html[data-slp~="C14"][data-slp~="C22"] .md-typeset:has(h1#ゴースト) > ul > l
 html[data-slp~="C23"] .md-typeset table.slp-keytable { display: table; width: 100%; font-size: .75rem; }
 html[data-slp~="C23"] .md-typeset table.slp-keytable td:last-child { overflow-wrap: anywhere; }
 html[data-slp~="C23"] .md-typeset table.slp-keytable td:first-child { white-space: nowrap; font-weight: 700; }
+
+/* C24: 暗い表示のリンクを明るい紺にする（afb2152 で紺 #1f4e8c になったリンクと左メニューの今の頁が、暗い地に 1.94:1 しかない） */
+html[data-slp~="C24"] [data-md-color-scheme="slate"] { --md-typeset-a-color: #8fb4e8; }

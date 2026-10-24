@@ -210,6 +210,6 @@
 
 ## 見た目の外の問題
 
-- **`site_url` と転送先の食い違い**: 公開サイトの `https://ukatech.github.io/ukadoc-spec/…` は 301 で `https://ukatech.shillest.net/ukadoc-spec/…` へ転送される（4 頁とも、2026-10-24）。一方、`ukadoc-spec/mkdocs.yml` の `site_url` は `https://ukatech.github.io/ukadoc-spec/` のままである（`0e028a4` の 3 行目）。直すのはこの spec の範囲外で、後で roadmap のバックログに回す。**追記（2026-10-24）**: 見比べの後に ukadoc-spec の `3d8e4a7`（PR #1、`origin/main` は `c84942a`）で `site_url` が `https://ukatech.shillest.net/ukadoc-spec/` に直り、この食い違いは解けた。試作（タスク 3）からは `c84942a` を土台にする
+- **`site_url` と転送先の食い違い**: 公開サイトの `https://ukatech.github.io/ukadoc-spec/…` は 301 で `https://ukatech.shillest.net/ukadoc-spec/…` へ転送される（4 頁とも、2026-10-24）。一方、`ukadoc-spec/mkdocs.yml` の `site_url` は `https://ukatech.github.io/ukadoc-spec/` のままである（`0e028a4` の 3 行目）。直すのはこの spec の範囲外で、後で roadmap のバックログに回す。**追記（2026-10-24）**: 見比べの後に ukadoc-spec の `3d8e4a7`（PR #1、`origin/main` は `c84942a`）で `site_url` が `https://ukatech.shillest.net/ukadoc-spec/` に直り、この食い違いは解けた。試作（タスク 3）からは `c84942a` を土台にする。**追記（2026-10-25）**: その後 ukadoc-spec の `417511c` でヘッダの色（テーマの色）が緑 `#2e8233` から紺 `#1f4e8c` に変わった（`afb2152` まで進めた）。この見比べの「今のサイト」の画面と「緑の帯」の記述は、緑の時点のものである。紺の暗い表示では、リンクと左の目次の今の頁が暗い地に 1.94:1 しかない（`candidates.md` の C24）
 - **`manual-ghost` の `updates2.dau`**: 旧サイトでは `updates2.dau` と `updates.txt` が 1 つの説明を共有しているが、今のサイトでは `updates2.dau` が説明の無い箇条書きになる（D12）。原稿の書き方による見え方で、原稿を直すのはこの spec の範囲外である
 - **旧サイトの検索の絞り込み先**: 旧サイトの `manual_*.html` の検索欄は `site:http://ssp.shillest.net/ukadoc/manual/` に絞る（D15）。旧サイトの今の場所（`/ukadoc-legacy/manual/`）とは違う。旧サイトの側の話で、記録だけにする

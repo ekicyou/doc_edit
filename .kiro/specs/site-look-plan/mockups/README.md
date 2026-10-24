@@ -4,6 +4,7 @@
 
 - 今の見た目（`base`）を撮った版: ukadoc-spec の `c84942a`（`origin/main` と同じ。`ukadoc-spec/` のメインのチェックアウトで、原稿と設定は変えていない）。2026-10-24 に撮った
 - 作業木の起点: `c84942a`（`git -C .worktrees/site-look-plan log --oneline origin/main..HEAD` が空）
+- **土台の上げ直し（2026-10-25）**: ukadoc-spec の `417511c` でヘッダの色が緑 `#2e8233` から紺 `#1f4e8c` に変わったので、開発者の「紺に合わせて作り直して」を受けて、メインのチェックアウトと作業木を `afb2152` に進め（作業木は試作の差分を外して `--ff-only` で進め、`git apply --3way` で当て直した。3 ファイルとも衝突なし）、サブモジュールの参照を doc_edit の `28a7a20` でコミットした。C17 のリンクの上書きを外し、C18 の緑の直書きをテーマの色の変数に替え、C24 を足して、下の「撮り直し」の表の画面を `afb2152` の上で撮り直した。この節より前の記録の色（緑）は `c84942a` の時点のものである
 - 作業木で変えたファイル（3.1 の時点。どれも未コミット）: `assets/mockup.js`（新規）、`mkdocs.yml`（`extra_javascript` に `assets/mockup.js` を足しただけ）。原稿・`.nav.yml`・`requirements.txt` は触らない（Requirement 6.2）
 - 作業木で変えたファイル（3.2 の時点。どれも未コミット）: `assets/extra.css`・`scripts/prepare_site.py`・`mkdocs.yml`（`pymdownx.highlight` を追加）・`assets/mockup.js`（C10 の着色を追加）。中身は `list/sakura-script` の節
 - 作業木で変えたファイル（3.3 の時点。どれも未コミット）: `assets/extra.css`（C02・C05・C07 を追加）・`scripts/prepare_site.py`（C07 の目印 `slp-default` を追加）。中身は `descript/ghost` の節
@@ -159,13 +160,27 @@
 | `mock-propertysystem-C23-light.png`・`mock-propertysystem-C23-dark.png` | C23（`?slp=C01,C02,C03,C04,C06,C07,C09,C10,C14,C15,C17,C18,C19,C20,C21,C23`） | `mock-propertysystem-base-*.png`（`?slp=`） | `[id="system.cpu"]` | キーの箇条書きが「キー」「内容」の 2 列の表になる |
 | `mock-sakura-script-C18-light.png`・`mock-sakura-script-C18-dark.png` | C18（`?slp=C01,C06,C09,C10,C17,C18`） | `mock-sakura-script-C08-*.png` | `#bang-lock-repaint` | 「記述例」が濃い緑の帯の白い字になり、コードブロックに左の太い緑の線と薄い緑の地が付く |
 
+## 紺への撮り直し（2026-10-25、`afb2152`）
+
+上の「土台の上げ直し」の後に、`serve` を止めて `prepare_site.py`（exit 0）と `zensical build --strict`（exit 0、No issues found）を流し直し、`serve -a 127.0.0.1:8000` で出し直して、次の画面を同じ名前・同じ `?slp=`・同じセレクタで撮り直した。古い（緑の）画面は上書きした。緑の時の見え方は git の履歴（`b5ade75` 以前）に残っている。
+
+- 撮り直した画面: `mock-*-base-*`（5 組。`mock-propertysystem-base` を含む）、C01・C02・C03・C04・C05・C06・C07・C08・C09・C10・C11・C12・C14・C15（それぞれ `?slp=` にその候補だけ）、C17〜C23（上の「開発者の指摘を受けた試作」の表と同じ `?slp=`）、新しい C24（`?slp=C01,C02,C03,C04,C06,C07,C09,C10,C14,C15,C17,C18,C19,C20,C21,C24`、`#bang-lock-repaint`）。27 組 54 枚
+- 撮る途中の描き直しで画面が二重に重なったものが 5 枚あった（C03 暗・C11 明暗・C17 暗・C24 明。右と左の端にヘッダの紺の行が 42 行あるので見分けた）。その 5 枚は撮り直し、54 枚とも重なりが無いのを確かめた
+- 紺の測り（`?slp=C01,C02,C03,C04,C06,C07,C09,C10,C14,C15,C17,C18,C19,C20,C21,C22,C23` の `list/sakura-script`）: ヘッダ・C03 の帯の白い字 8.31:1、C18 の帯の白い字 明 11.39:1（`#163a69`）・暗 8.31:1、リンク 明 8.31:1、C20 のタグ 明 8.30:1・暗 6.96:1、C06 の SSP の札 明 8.34:1・暗 8.00:1
+- C24 を足したわけ: 紺のリンク（と左の目次の今の頁）は、暗い表示の地 `#1e2129` に 1.94:1 しかない（`?slp=` なし、つまり今の本番と同じ）。C24 で `#8fb4e8` にすると 7.56:1
+- 375 px: `list/sakura-script`（+C24）・`list/propertysystem`（+C23・C24）・`manual/ghost`（+C22・C24）・`descript/ghost`（+C24）で、どれも `scrollWidth` 375・`innerWidth` 375
+
+| 試作の画面（明・暗） | 候補 | 見比べる `base` | 位置（セレクタ） | 写っている試作の見え方 |
+|---|---|---|---|---|
+| `mock-sakura-script-C24-light.png`・`mock-sakura-script-C24-dark.png` | C24（推奨の採るものを全部入れた上に C24） | `mock-sakura-script-C21-*.png` | `#bang-lock-repaint` | 暗い表示で、リンクと左の目次の今の頁が明るい紺になる。明るい表示は C24 なしと同じ |
+
 ## 試作しない候補
 
 - C13（記述例を手元のゴーストで再生する）・C16（ヘッダの値の名前を列にそろえる）は、`candidates.md` の「試作の当て先」の理由により試作しない
 
 ## 写し（タスク 3.5）
 
-作業木 `.worktrees/site-look-plan/`（`c84942a` から、コミット 0）で作った・変えたファイルの写しである。参考であって、後続 spec はそのまま使わずに書き直してよい。作業木ではコミットしていない。
+作業木 `.worktrees/site-look-plan/`（`afb2152` から、コミット 0。初めは `c84942a` から）で作った・変えたファイルの写しである。参考であって、後続 spec はそのまま使わずに書き直してよい。作業木ではコミットしていない。
 
 | 作業木のファイル | 状態 | 写し |
 |---|---|---|

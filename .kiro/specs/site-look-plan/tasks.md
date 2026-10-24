@@ -115,6 +115,8 @@
 ## Implementation Notes
 - `tools/shot.mjs`: ヘッドレスの Edge では縦のスクロールバーが 15 px を取るので、`scrollWidth` にその幅を足して `innerWidth` と同じ物差しで出す。スクロールの後は 1.5 秒待つ（Material のヘッダの題の切り替えの動きが写り込むため）
 - 実装の途中で ukadoc-spec の `origin/main` が `0e028a4` から `c84942a` へ進んだ（PR #1〜#4・#6。`site_url` が shillest.net に直り、`list/sakura-script` などのコードスパンが直った。`extra.css`・`prepare_site.py`・`requirements.txt` は変わらない）。タスク 3.1 の前に、メインのチェックアウトと作業木を `--ff-only` で `c84942a` に進め、サブモジュールの参照をコミットした。見比べ（2.1）は `0e028a4` の時点の記録である
+- 4.2 の提示の場で、ukadoc-spec の `origin/main` が `c84942a` から `afb2152` へ進んだ（`417511c` でテーマの色が緑から紺 `#1f4e8c` に、`b94c793` で `navigation.indexes` を外し、`70cac39` で 16 項目に `**対応:**` を足した、ほか）。開発者の指示で作業木を `afb2152` に上げ直して試作を紺に合わせた（`mockups/README.md` の「土台の上げ直し」）。5.1 の roadmap の棚卸の SHA は `afb2152` を使う。試作の色は、直書きせずテーマの色の変数（`--md-primary-fg-color` など）から取ると、テーマの色が変わってもついてくる
+- `tools/shot.mjs` は、撮る途中の描き直しで画面が二重に重なった PNG を、まれに（54 枚に 5 枚）書く。続けて撮ったら、左右の端にヘッダの色の行が上の端以外にも出ていないかを確かめ、出ていたら撮り直す
 - 試作: 暗い表示の印 `data-md-color-scheme="slate"` は `<body>` に付くので、暗い表示だけの色は `html[data-slp~="Cxx"] [data-md-color-scheme="slate"] …` で書く。`pymdownx.highlight`（`use_pygments: false`）は `?slp=` に関係なく全コードブロックの HTML を変えるが、見た目の差は出なかった
 - 試作: `serve` を動かしたまま `prepare_site.py` を流し直すと、`serve` が書きかけの `_site_src/` を拾って壊れることがある（`extra.css` が 404 になった）。流し直す前に `serve` を止め、`build --strict` の後に起動し直す。C02 は `hr`・`h3` に加えて段落の余白も詰めた案である（`hr`・`h3` だけでは画面に 3 項目半しか入らなかった）。推奨にはそこまで含めて書く
 - 試作: C12 の `.md-content__inner { position: relative; }` で h1 の `offsetParent` が変わり、ヘッダの題が早く切り替わるらしい（見立て。試していない）。推奨の理由に、頭の帯の動きへの副作用として書く
