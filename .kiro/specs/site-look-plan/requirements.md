@@ -71,9 +71,9 @@
 4. The site-look-plan shall 試作ごとに、同じ頁の同じ位置について、今の見た目と試作の見た目の画面の記録を残す
 5. The site-look-plan shall 画面の記録を spec のフォルダ（`.kiro/specs/site-look-plan/` の下）に置き、どの試作・どの候補の記録かが分かる名前か説明を付ける
 6. The site-look-plan shall 試作の画面の記録を、明るい表示とダークモードの両方で残す。狭い画面は画面の記録を残さず、表示が崩れないことを確かめた結果だけを記録する
-9. The site-look-plan shall 画面の記録を頁の一部の切り出しにし、候補ごとに数枚までに抑える（doc_edit は公開リポジトリのため）
 7. If 試作がローカルで表示できない（作成や表示の処理が失敗する）とき, the site-look-plan shall 失敗した試作と原因の見立てを記録し、その候補を「試作で確かめられなかった」として決定の段へ渡す
 8. The site-look-plan shall 試作の変更（見た目の指定や頁の組み立ての試し書き）の写しを、後続 spec の参考として spec のフォルダの `mockups/` に残す（写しは参考であって、後続 spec はそのまま使わずに書き直してよい）
+9. The site-look-plan shall 画面の記録を頁の一部の切り出しにし、候補ごとに数枚までに抑える（doc_edit は公開リポジトリのため）
 
 ### Requirement 4: 見た目の方向の決定
 **Objective:** As a doc_edit の開発者, I want 試作を見て決めた方向が候補ごとに記録されていること, so that 後続の spec で方向を議論し直さずに済む
@@ -81,10 +81,10 @@
 #### Acceptance Criteria
 1. When 開発者が試作の画面を見て判断したとき, the site-look-plan shall 候補ごとに「採る」「採らない」「保留」のどれかと、その理由を記録する
 2. The site-look-plan shall 方向の決定を、開発者が画面（試作のプレビューか画面の記録）を見た後にだけ記録し、開発者の判断なしに決定済みとしない
-6. When 実装（`/kiro-impl` の自律実行。タスク番号を指定せず全タスクを流す）が方向の決定の段に来たとき, the site-look-plan shall そこで止まり、候補ごとの推奨と画面の記録を開発者に示して判断を待ち、判断を記録した後に残りのタスク（切り分けなど）を続ける
 3. Where 候補が「採る」と決まったとき, the site-look-plan shall 見た目の目標（どの画面の記録のどの見え方を目指すか）を、後続 spec が参照できる形で記録する
 4. Where 候補が「保留」になったとき, the site-look-plan shall 保留の理由と、決めるのに要るもの（例: 管理者の確認、別の試作）を記録する
 5. If 候補どうしが両立しない（例: 同じ部分に別の見せ方を当てる）とき, the site-look-plan shall どちらを採ったかと、採らなかった方を記録する
+6. When 実装（`/kiro-impl` の自律実行。タスク番号を指定せず全タスクを流す）が方向の決定の段に来たとき, the site-look-plan shall そこで止まり、候補ごとの推奨と画面の記録を開発者に示して判断を待ち、判断を記録した後に残りのタスク（切り分けなど）を続ける
 
 ### Requirement 5: 後続の改造 spec への切り分け
 **Objective:** As a doc_edit の開発者, I want 決めた方向が、依存の順に並んだ後続 spec の roadmap と brief になっていること, so that 次の改造をそのまま `/kiro-start` で始められる
