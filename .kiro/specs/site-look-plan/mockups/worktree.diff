@@ -1,8 +1,8 @@
 diff --git a/assets/extra.css b/assets/extra.css
-index 2cfb63e..0bed621 100644
+index 2cfb63e..aab8e68 100644
 --- a/assets/extra.css
 +++ b/assets/extra.css
-@@ -18,3 +18,267 @@
+@@ -18,3 +18,293 @@
    white-space: pre-wrap;
    word-break: break-all;
  }
@@ -270,6 +270,32 @@ index 2cfb63e..0bed621 100644
 +
 +/* C21: さくらスクリプトのタグと環境変数に、字の色を薄めた地を敷く（色相に頼らず、面で目立たせる） */
 +html[data-slp~="C21"] .md-typeset :is(.slp-ss-tag, .slp-ss-env) { background: color-mix(in srgb, currentColor 9%, transparent); border-radius: .15em; }
++
++/* C22: manual/ghost のファイル名（C14 で 1 行に置いた名前）を、C01 の項目名と同じ帯にする（開発者の指摘 2026-10-25「descript.txt は OnBoot などと同じ装飾で」）。C14 が要る */
++html[data-slp~="C14"][data-slp~="C22"] .md-typeset:has(h1#ゴースト) > ul > li { border-top: 0; padding-top: .8em; }
++html[data-slp~="C14"][data-slp~="C22"] .md-typeset:has(h1#ゴースト) > ul > li > p:first-child > strong:first-child,
++html[data-slp~="C14"][data-slp~="C22"] .md-typeset:has(h1#ゴースト) > ul > li > strong:only-child {
++  display: block;
++  margin-bottom: .5em;
++  padding: .35em .6em;
++  font-size: 1.25em;
++  font-weight: 400;
++  border-left: .3rem solid var(--md-primary-fg-color);
++  border-bottom: 1px solid var(--md-default-fg-color--lighter);
++  background: var(--md-default-fg-color--lightest);
++}
++
++/* 帯の中のリンクは OnBoot などの項目名と同じ字の色にする（暗い表示でリンクの緑が帯の灰色に沈むため） */
++html[data-slp~="C14"][data-slp~="C22"] .md-typeset:has(h1#ゴースト) > ul > li > p:first-child > strong:first-child a,
++html[data-slp~="C14"][data-slp~="C22"] .md-typeset:has(h1#ゴースト) > ul > li > strong:only-child a { color: var(--md-default-fg-color); }
++/* C22 では「: 」を assets/mockup.js が外すので、C14 の覆いは要らない */
++html[data-slp~="C14"][data-slp~="C22"] .md-typeset:has(h1#ゴースト) > ul > li > p:first-child { text-indent: 0; }
++html[data-slp~="C14"][data-slp~="C22"] .md-typeset:has(h1#ゴースト) > ul > li > p:first-child > strong:first-child::after { content: none; }
++
++/* C23: キーの表（assets/mockup.js が作る）。キーの列は折り返さない */
++html[data-slp~="C23"] .md-typeset table.slp-keytable { display: table; width: 100%; font-size: .75rem; }
++html[data-slp~="C23"] .md-typeset table.slp-keytable td:last-child { overflow-wrap: anywhere; }
++html[data-slp~="C23"] .md-typeset table.slp-keytable td:first-child { white-space: nowrap; font-weight: 700; }
 diff --git a/mkdocs.yml b/mkdocs.yml
 index c16db9a..e32103f 100644
 --- a/mkdocs.yml

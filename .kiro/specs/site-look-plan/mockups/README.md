@@ -145,6 +145,7 @@
 - C17 の測り: 明るい表示の `?slp=C01,C03,C06,C09,C10,C17,C18` の頁で、本文の色付きの字（灰色・黒を除く）の対比を測った。最も弱いのはリンクの 7.13:1（C17 なしでは 4.82:1、`code` の地では 4.42:1）。C06 の札は 8.34〜10.93:1、C10 のタグは 8.24:1、環境変数は 8.52:1
 - C20・C21 の測り: 地の字（`#36464e`）と C17 のタグ（`#0842a0`）の明るさの比は 1.04 で、色相も近い（青の目立たない元）。C20 の赤紫のタグは C18 の地に 8.41:1（暗 6.67:1）。C21 の地の上では、タグ 7.14:1・環境変数 7.33:1（暗 5.7:1・6.61:1）
 - 375 px: `?slp=C01,C06,C09,C10,C17,C18` と `?slp=C01,C06,C09,C10,C17,C18,C19`、`?slp=C01,C06,C09,C10,C17,C18,C19,C20,C21` で `scrollWidth` 375・`innerWidth` 375。はみ出しなし
+- C22・C23（同じ日、続く指摘）: 開発者が「ゴーストの作り方、例えば descript.txt は、SHIORI Event でいう OnBoot などと同じ装飾で」「プロパティシステムの箇条書きを表にできないか（原稿を表にしてもよい）」と指摘したので、C22（`manual/ghost`）と C23（`list/propertysystem`）を足した。C23 は原稿を変えず、`assets/mockup.js` が箇条書きを表に組み替える見本である。C23 は初め 375 px で `scrollWidth` 517 にはみ出した（`system.os` の `x86,x64,arm,…` が折り返さない）ので、内容の列に `overflow-wrap: anywhere` を足し、`system.os`・`system.cpu`・`note-1`・`system.network` の位置で 375/375 を確かめた。C22 は 375/375。C22 の帯の中のリンクは、暗い表示で緑が帯の灰色に沈んだので、項目名と同じ字の色にした。説明の無い `updates2.dau` の帯は、ほかのファイル名の帯より 6 px ほど右にずれる（試作の細工の残り。本番は目印で揃える）
 - 失敗: なし
 - 頁の移り: 開発者が「リンクをクリックしたら元の頁になるのか」と指摘した。リンクで頁を移ると `?slp=` が消えて候補が全部外れていたので、`assets/mockup.js` で `?slp=` を `sessionStorage` に覚え、`?slp=` の無い頁でも同じ候補を入れるようにした（`?slp=` を空にすると外れる）。`list/sakura-script` から `list/propertysystem/` に `?slp=` なしで移っても、C06 の札が効くのを確かめた
 
@@ -154,6 +155,8 @@
 | `mock-sakura-script-C19-light.png`・`mock-sakura-script-C19-dark.png` | C19（`?slp=C01,C06,C09,C10,C17,C18,C19`） | `mock-sakura-script-C10-*.png`・`mock-sakura-script-C18-*.png` | `#bang-lock-repaint` | 記述例のタグが太字になる（色は C17 の濃い青）。折り返しの位置は C18 の画面と同じ |
 | `mock-sakura-script-C20-light.png`・`mock-sakura-script-C20-dark.png` | C20（`?slp=C01,C06,C09,C10,C17,C18,C19,C20`） | `mock-sakura-script-C19-*.png` | `#bang-lock-repaint` | 記述例のタグが太字の赤紫になる |
 | `mock-sakura-script-C21-light.png`・`mock-sakura-script-C21-dark.png` | C21（`?slp=C01,C06,C09,C10,C17,C18,C19,C20,C21`） | `mock-sakura-script-C20-*.png` | `#bang-lock-repaint` | タグと環境変数に薄い地が付き、かたまりに見える |
+| `mock-manual-ghost-C22-light.png`・`mock-manual-ghost-C22-dark.png` | C22（`?slp=C01,C02,C03,C04,C06,C07,C09,C10,C14,C15,C17,C18,C19,C20,C21,C22`） | `mock-manual-ghost-C14-*.png` | `.md-typeset > ul`（高さ 900） | ファイル名が C01 の項目名と同じ帯になり、「: 」が消える |
+| `mock-propertysystem-C23-light.png`・`mock-propertysystem-C23-dark.png` | C23（`?slp=C01,C02,C03,C04,C06,C07,C09,C10,C14,C15,C17,C18,C19,C20,C21,C23`） | `mock-propertysystem-base-*.png`（`?slp=`） | `[id="system.cpu"]` | キーの箇条書きが「キー」「内容」の 2 列の表になる |
 | `mock-sakura-script-C18-light.png`・`mock-sakura-script-C18-dark.png` | C18（`?slp=C01,C06,C09,C10,C17,C18`） | `mock-sakura-script-C08-*.png` | `#bang-lock-repaint` | 「記述例」が濃い緑の帯の白い字になり、コードブロックに左の太い緑の線と薄い緑の地が付く |
 
 ## 試作しない候補

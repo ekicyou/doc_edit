@@ -35,3 +35,38 @@ if (document.documentElement.dataset.slp?.split(' ').includes('C15')) {
     console.assert(code.textContent === text, 'slp C15: 字が変わった');
   }
 }
+
+// C23: list/propertysystem の「- **キー**: 説明」だけが並ぶ箇条書きを、2 列の表に見せる（本番は原稿を Markdown の表に書き換える想定の見本）。
+// 項目に入れ子の箇条書きやコードブロックがある箇条書きは、そのまま残す
+if (document.documentElement.dataset.slp?.split(' ').includes('C23') && location.pathname.includes('/list/propertysystem/')) {
+  for (const ul of document.querySelectorAll('.md-typeset ul')) {
+    const items = [...ul.children];
+    const simple = items.every((li) => {
+      const first = li.firstElementChild?.tagName === 'P' ? li.firstElementChild : li;
+      return first.firstElementChild?.tagName === 'STRONG' && first.firstChild === first.firstElementChild
+        && /^:\s/.test(first.firstElementChild.nextSibling?.textContent ?? '') && !li.querySelector('ul, ol, pre');
+    });
+    if (!items.length || !simple) continue;
+    const table = document.createElement('table');
+    table.className = 'slp-keytable';
+    table.innerHTML = '<thead><tr><th>キー</th><th>内容</th></tr></thead><tbody></tbody>';
+    for (const li of items) {
+      const first = li.firstElementChild?.tagName === 'P' ? li.firstElementChild : li;
+      const key = first.firstElementChild;
+      key.nextSibling.textContent = key.nextSibling.textContent.replace(/^:\s*/, '');
+      key.remove();
+      const tr = table.tBodies[0].insertRow();
+      tr.insertCell().append(...key.childNodes);
+      tr.insertCell().append(...li.childNodes);
+    }
+    ul.replaceWith(table);
+  }
+}
+
+// C22: manual/ghost でファイル名を帯にするとき、名前の後ろの「: 」を外す（本番は prepare_site.py かテンプレートで外す想定。C14 の条件と同じ）
+if (['C14', 'C22'].every((c) => document.documentElement.dataset.slp?.split(' ').includes(c)) && document.querySelector('h1#ゴースト')) {
+  for (const strong of document.querySelectorAll('.md-typeset > ul > li > p:first-child > strong:first-child')) {
+    const t = strong.nextSibling;
+    if (t?.nodeType === Node.TEXT_NODE) t.textContent = t.textContent.replace(/^:\s*/, '');
+  }
+}
