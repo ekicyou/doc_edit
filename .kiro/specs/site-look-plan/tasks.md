@@ -56,7 +56,7 @@
   - 完了の状態: `mockups/README.md` のこの頁の節に、確かめた候補・反映の確かめの結果・375 px の結果があり、各候補の明・暗の画面がそろっている。3.2 の候補の目印も、引き続き `serve` の頁にある（試作の確かめ 1〜4）
   - _Requirements: 3.1, 3.3, 3.4, 3.6, 3.7, 3.9_
 
-- [ ] 3.4 `manual/ghost` の頁に試作を当てる
+- [x] 3.4 `manual/ghost` の頁に試作を当てる
   - 3.2 と同じ手順で、この頁に当てた候補を試作する（3.3 の後に行う）。`base` の撮り足しと、起動した `serve` を止めることも 3.2 と同じ
   - 画面は `screenshots/mock-manual-ghost-<Cnn>-<light|dark>.png`
   - 完了の状態: `mockups/README.md` のこの頁の節に、確かめた候補・反映の確かめの結果・375 px の結果があり、各候補の明・暗の画面がそろっている（試作の確かめ 1〜4）
@@ -117,3 +117,4 @@
 - 実装の途中で ukadoc-spec の `origin/main` が `0e028a4` から `c84942a` へ進んだ（PR #1〜#4・#6。`site_url` が shillest.net に直り、`list/sakura-script` などのコードスパンが直った。`extra.css`・`prepare_site.py`・`requirements.txt` は変わらない）。タスク 3.1 の前に、メインのチェックアウトと作業木を `--ff-only` で `c84942a` に進め、サブモジュールの参照をコミットした。見比べ（2.1）は `0e028a4` の時点の記録である
 - 試作: 暗い表示の印 `data-md-color-scheme="slate"` は `<body>` に付くので、暗い表示だけの色は `html[data-slp~="Cxx"] [data-md-color-scheme="slate"] …` で書く。`pymdownx.highlight`（`use_pygments: false`）は `?slp=` に関係なく全コードブロックの HTML を変えるが、見た目の差は出なかった
 - 試作: `serve` を動かしたまま `prepare_site.py` を流し直すと、`serve` が書きかけの `_site_src/` を拾って壊れることがある（`extra.css` が 404 になった）。流し直す前に `serve` を止め、`build --strict` の後に起動し直す。C02 は `hr`・`h3` に加えて段落の余白も詰めた案である（`hr`・`h3` だけでは画面に 3 項目半しか入らなかった）。推奨にはそこまで含めて書く
+- 試作: C12 の `.md-content__inner { position: relative; }` で h1 の `offsetParent` が変わり、ヘッダの題が早く切り替わるらしい（見立て。試していない）。推奨の理由に、頭の帯の動きへの副作用として書く

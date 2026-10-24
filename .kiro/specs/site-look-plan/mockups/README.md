@@ -7,6 +7,7 @@
 - 作業木で変えたファイル（3.1 の時点。どれも未コミット）: `assets/mockup.js`（新規）、`mkdocs.yml`（`extra_javascript` に `assets/mockup.js` を足しただけ）。原稿・`.nav.yml`・`requirements.txt` は触らない（Requirement 6.2）
 - 作業木で変えたファイル（3.2 の時点。どれも未コミット）: `assets/extra.css`・`scripts/prepare_site.py`・`mkdocs.yml`（`pymdownx.highlight` を追加）・`assets/mockup.js`（C10 の着色を追加）。中身は `list/sakura-script` の節
 - 作業木で変えたファイル（3.3 の時点。どれも未コミット）: `assets/extra.css`（C02・C05・C07 を追加）・`scripts/prepare_site.py`（C07 の目印 `slp-default` を追加）。中身は `descript/ghost` の節
+- 作業木で変えたファイル（3.4 の時点。どれも未コミット）: `assets/extra.css`（C12・C14・C15 を追加）・`assets/mockup.js`（C15 の包みを追加）・`mkdocs.yml`（`theme.custom_dir: overrides` を追加）・`overrides/main.html`（新規）・`assets/image/slp-character.svg`（新規）。中身は `manual/ghost` の節
 
 ## 候補の切り替えの仕掛け
 
@@ -102,11 +103,38 @@
 
 - 当てる候補（`candidates.md`）: C12・C14・C15（どれも `h1#ゴースト`）
 - 今の見た目: `mock-manual-ghost-base-*.png`
-- 確かめた候補: （3.4 で書く）
-- 作り方（触った作業木のファイルと写し）: （3.4 で書く）
-- 反映の確かめ: （3.4 で書く）
-- 375 px: （3.4 で書く）
-- 失敗: （3.4 で書く）
+- 確かめた候補: C12・C14・C15 の 3 つ。どれも試作の画面を明・暗で撮れた（2026-10-24）
+- 作り方（触った作業木のファイルと写し。写しは 3.5 で `mockups/` に残す）:
+  - `overrides/main.html`（新規。C12）— `{% extends "base.html" %}` に `{% block content %}` の上書きを 1 つだけ置き、`{{ super() }}` の前に `<img class="slp-character" src="{{ 'assets/image/slp-character.svg' | url }}" alt="" width="80" height="120">` を足した（飾りなので `alt=""`）。絵は `?slp=` に関係なく**全頁**の本文の頭に入り（build の 41 頁のうち `404.html` を除く 40 頁）、`extra.css` で `data-slp~="C12"` の無いときは隠す。`manual/` の頁だけに絞る分けは、この試作では作っていない（`?slp=C12` を付ければどの頁にも出るので、ほかの頁でも見比べられる）
+  - `mkdocs.yml` — `theme` に `custom_dir: overrides` を足した（C12）。`research.md` のとおり、リポジトリ直下の `overrides/` で効き、`_site_src/` に写す必要は無かった
+  - `assets/image/slp-character.svg`（新規。C12）— 自作の仮の絵（幅 80・高さ 120 の手書きの SVG。緑の髪・肌色の顔・白い服を、濃い灰色 `#333` の線で縁取った人の形）。旧サイトの素材は使っていない。外部の読み込みも無い
+  - `assets/extra.css` — 3.3 の指定の後ろに、C12・C14・C15 の指定を `html[data-slp~="Cxx"]` の下に足した
+    - C12: 絵を `.md-content__inner` の右上に `position: absolute` で幅 54・高さ 80 px に置き、`h1` の右に 64 px の余白を取った（題が長い頁でも題の字が絵の下に入らない）。絵の高さは `h1` と、その下の余白の中に収まる大きさにしたので、本文の幅も段落の位置も変わらない。暗い表示だけ、白い薄い縁の影（`drop-shadow`）を足した（`html[data-slp~="C12"] [data-md-color-scheme="slate"] …`）。幅 `44.984375em` 以下（Material の狭い画面の境）では幅 36・高さ 54 px に小さくし、`h1` の余白も 44 px にした。動きは付けていないので `prefers-reduced-motion` の指定は要らない
+    - C14: `.md-typeset:has(h1#ゴースト)` で `manual/ghost` だけに絞った（頁の種類の印の代わり）。この頁のファイルごとの箇条書きは、空行のため 1 項目ずつ別の `<ul>` になっているので、`> ul > li` ごとに、上の細い線（`--md-default-fg-color--lighter`）・点の無い箇条書き・字下げした段落（`1.5em`）にした。最初の段落を `display: flex; flex-wrap: wrap` にして、頭の `strong`（ファイル名）を 1 行目に置き、説明を次の行に送った
+    - C14 の細工: 「`**名前**: 説明`」の「`: `」は字の要素でないので、見た目の指定では消せない。最初の段落に負の字下げ（`-.5em`）を付けて「`: `」を左の余白に出し、名前の `::after`（地の色の小さな四角）で覆って見えなくした。字の大きさや字の幅が変わると覆いがずれるおそれがあるので、本番は `prepare_site.py` の目印かテンプレートで「`: `」を外す（`サイトを作る処理` が加わる）のがよい。コピーや検索の字は変わらない（字は消しておらず、覆っているだけ）
+    - C15: `span.slp-tree-file` を緑（明るい表示は `--md-primary-fg-color`、暗い表示は `#81c784`）にした。フォルダの `span.slp-tree-dir` は元の色のまま
+  - `assets/mockup.js` — `data-slp` に `C15` があるときだけ、言語の印の無いコードブロック（`pre > code:not([class*="language-"])`）のうち「`+-`」で始まる行のあるものを、行ごとに「`+-`」の後の名前を、拡張子があれば `span.slp-tree-file`、無ければ `span.slp-tree-dir` で包む。C10 と同じく `textContent` から作り直し、包んだ後の `textContent` が元と同じことを `console.assert` で確かめる形にした（コピーされる字は変わらない。D19）。同じ変換を Node で `serve` の HTML の木に当て、包んだ後の字が元と同じことを確かめた
+  - `scripts/prepare_site.py` は、このタスクでは触っていない
+  - 組み立て: 作業木で `python scripts/prepare_site.py` が exit 0、`zensical build --strict` が exit 0（No issues found）。`extra.css` の手直しのたびに、`serve` を止めてから両方を流し直した（Implementation Notes のとおり）。手直しの途中の確かめは、build の `_site/` をその場の静かな配信（`python -m http.server 8003`）で開いて撮り、画面は捨てた。下の画面は、最後の build の後に起動し直した `zensical serve`（8002）で撮ったもの
+- 反映の確かめ: `zensical serve -a 127.0.0.1:8002` の `/ukadoc-spec/manual/ghost/` の HTML を取ってきて数えた。`class="slp-character"`（テンプレートの上書きで足した絵）1、`assets/mockup.js` の読み込み 1、本文に漏れた `{: ` 0。配られた `assets/extra.css` に `data-slp~="C12"`（6 か所）・`"C14"`（6 か所）・`"C15"`（2 か所）の指定があり、配られた `assets/mockup.js` に C15 の分岐がある。`/ukadoc-spec/assets/image/slp-character.svg` は 200（`image/svg+xml`）。C14・C15 は目印を足さない候補なので、HTML に `slp-` の class は増えない（C15 の `span` は `mockup.js` が頁を開いた後に足す）
+  - C15 の対象: この頁の言語の印の無いコードブロック 1 つ（ファイル構成の木）の「`+-`」の 14 行で、ファイルとして包むのが 11（`descript.txt`・`shiori.dll`・`(saori).dll`・`makoto.dll`・`updates2.dau`・`updates.txt`・`*.ico`・`*.cur`・`thumbnail.png`・`ai0.png`・`ai0_dark.png`。旧サイトの `em.filename` の 11 個と同じ）、フォルダが 3（`(myghost)`・`ghost`・`master`）。`mockup.js` と同じ判定を Node で `serve` の HTML に当てて数えた
+  - 3.2・3.3 の候補の目印も、同じ `serve` に引き続きある: `/ukadoc-spec/list/sakura-script/` に `class="slp-support"` 350、`class="slp-bw …"` 653、`class="slp-notes"` 14、`code class="language-sakurascript"` 287、`assets/mockup.js` 1、`{: ` 0。`/ukadoc-spec/descript/ghost/` に `class="slp-default"` 74、`class="slp-support"` 74、`assets/mockup.js` 1、`{: ` 0（3.2・3.3 の記録と同じ数）。どちらの頁にも `slp-character` が 1 つずつあるが、`?slp=C12` が無ければ出ない
+- 375 px: `tools/shot.mjs "<頁>?slp=<候補>" body - light 375` で測った。`manual/ghost/?slp=C12,C14,C15` が `scrollWidth` 375・`innerWidth` 375、`?slp=C12` だけも 375・375、`?slp=` を付けない同じ頁も 375・375 で、はみ出しなし。絵は全頁に入るので、`descript/ghost/?slp=C12` も測り、375・375 だった。幅 375 では、絵は幅 36・高さ 54 px に小さくなって、`h1` の右の余白に収まり、題・本文・頭の帯に重ならないことを、捨てた確かめの画面で目で見た（狭い画面の画面は残さない。Requirement 3.6）
+- 失敗: なし（試作で確かめられなかった候補は無い）
+  - 作業の途中の出来事: C14 で、最初は名前を `float` にして説明の行を下に送ろうとしたが、負の字下げの分だけ 1 行目に隙間ができ、「`: `」が名前の行の右の端（本文の幅の外）に残った。名前の外の幅を広げても同じだったので、`float` をやめて段落の `flex` の折り返しに変えた。この間の画面はどれも捨てた。また、この頁の箇条書きは 1 項目ずつ別の `<ul>` なので、`li:first-child` は全項目に効く（はじめに足した「最初の項目の線だけ緑」の指定は、そのために外した）
+
+| 試作の画面（明・暗） | 候補 | 見比べる `base` | 位置（セレクタ） | 写っている試作の見え方 |
+|---|---|---|---|---|
+| `mock-manual-ghost-C12-light.png`・`mock-manual-ghost-C12-dark.png` | C12 | `mock-manual-ghost-base-*.png` | `h1#ゴースト` | 題「ゴースト」の右、本文の右の端に、仮のキャラクターの絵（緑の髪・白い服）が立つ。絵は題の行とその下の余白の中にあり、「masterゴーストフォルダ…」の段落・ファイル構成の木・頭の帯に重ならない。暗い表示でも、白い服と縁の影で輪郭が地に溶けない |
+| `mock-manual-ghost-C14-light.png`・`mock-manual-ghost-C14-dark.png` | C14 | `mock-manual-ghost-base-*.png` | `h1#ゴースト` | ファイルごとの箇条書きの点が消え、ファイルの間に細い横線が入る。`descript.txt` が 1 行に置かれ、説明の 3 段落が字下げされて下に並ぶ（「`: `」は見えない）。`updates2.dau` は名前だけの 1 行のまま（D12 の原稿による見え方は直らない。`candidates.md` のとおり） |
+| `mock-manual-ghost-C15-light.png`・`mock-manual-ghost-C15-dark.png` | C15 | `mock-manual-ghost-base-*.png` | `h1#ゴースト` | ファイル構成の木で、`descript.txt` から `ai0_dark.png` までのファイル名 11 個が緑（暗い表示では明るい緑）になり、`(myghost)`・`ghost`・`master` のフォルダと「`+-`」・「（旧仕様）」は元の色のまま |
+
+- 撮り方: `serve`（作業木、ポート 8002）の `/ukadoc-spec/manual/ghost/?slp=<候補>` を、`base` と同じセレクタ（`h1#ゴースト`）・幅 1000・高さ 700 で撮った。3 候補とも `base` と同じ位置なので、`base` の撮り足しは要らず、8001 のメインのチェックアウトの `serve` は、このタスクでは起動していない。6 枚とも exit 0 で、白紙でなく、狙った位置と候補の効きが明・暗の両方で写っていることを目で見た（試作の確かめ 3）。幅 1000 では 6 枚とも `scrollWidth` と `innerWidth` が 1000
+- C12 の画面では、ヘッダの題が「UKADOC project」でなく頁の題「ゴースト」に切り替わって写る（`h1` の右の余白の分か、撮るときのスクロールの位置の差でヘッダの題の切り替えの境を越えたと見ている。原因は確かめていない）。本文と絵の位置には響かない
+- C12 の条件（`candidates.md`）: 本文・目次・頭の帯に重ならない（絵は `h1` の右の余白にあり、本文の幅と段落の位置は `base` と同じ。この頁の右の欄の目次は空で、絵は本文の欄の中に置いたので、目次の欄には入らない）。明・暗とも輪郭が地に溶けない（明るい表示は `#333` の縁の線、暗い表示は白い服と白い薄い影。差の数値は測っていない）。幅 375 では小さくして、はみ出しなし（上の 375 px）。飾りとして `alt=""`。動かしていないので `prefers-reduced-motion` は当てはまらない。`manual/` の頁だけに出すか全頁に出すかは、この試作では全頁に入れて `?slp=C12` で見比べられる形にした（絞るなら、`overrides/main.html` で頁の道を見て分けるか、C14・C16 の頁の種類の印を使う）
+- C14 の条件: 字の大きさ・行間・色は変えていない。字下げと線だけ。頁は `:has(h1#ゴースト)` で絞ったので、ほかの頁の頭が太字の箇条書き（`spec/shiori3` など）には効かない
+- C15 の条件: 字を色の要素で包むだけで、字・太さ・折り返しは変えていない。右上のコピーのボタンは残っている（D19）
+- 画面の合計: このタスクの 6 枚で 410,476 バイト
 
 ## 試作しない候補
 
