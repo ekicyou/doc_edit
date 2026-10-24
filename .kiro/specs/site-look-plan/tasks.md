@@ -32,7 +32,7 @@
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 4.5_
 
 - [ ] 3. 3 頁に使い捨ての試作を当てる
-- [ ] 3.1 試作の土台を作り、今の見た目を撮る
+- [x] 3.1 試作の土台を作り、今の見た目を撮る
   - 作業木が `origin/main` から始まっていることを確かめる（`git -C .worktrees/site-look-plan log --oneline origin/main..HEAD` が空）。`ukadoc-spec/` のメインのチェックアウトが `origin/main` と同じ版で汚れていないことも確かめる（`git -C ukadoc-spec rev-parse HEAD` が `origin/main` と同じ、`status --porcelain` が空）。どちらかが外れたら止めて開発者に報告する
   - 作業木に、候補の切り替えの仕掛けを足す: `assets/mockup.js`（URL の `?slp=C01,C03` を読んで `<html data-slp="C01 C03">` を付ける）と、`mkdocs.yml` の `extra_javascript`。原稿・`.nav.yml`・`requirements.txt` は触らない
   - `ukadoc-spec/` のメインのチェックアウト（`origin/main` と同じ版）で `prepare_site.py` を流し、`zensical serve -a 127.0.0.1:8001` で今の見た目を出す。候補の当て先の頁と位置ごとに `screenshots/mock-<page>-base-<light|dark>.png` を撮る（頁と位置ごとに明・暗の 2 枚まで）
