@@ -1,0 +1,6 @@
+{#- site-look-plan の使い捨ての試作（C12）: 本文の頭に仮のキャラクターの絵を置く。?slp=C12 が無ければ extra.css で隠す -#}
+{% extends "base.html" %}
+{% block content %}
+  <img class="slp-character" src="{{ 'assets/image/slp-character.svg' | url }}" alt="" width="80" height="120">
+  {{ super() }}
+{% endblock %}

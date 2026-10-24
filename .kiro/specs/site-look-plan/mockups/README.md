@@ -139,3 +139,18 @@
 ## 試作しない候補
 
 - C13（記述例を手元のゴーストで再生する）・C16（ヘッダの値の名前を列にそろえる）は、`candidates.md` の「試作の当て先」の理由により試作しない
+
+## 写し（タスク 3.5）
+
+作業木 `.worktrees/site-look-plan/`（`c84942a` から、コミット 0）で作った・変えたファイルの写しである。参考であって、後続 spec はそのまま使わずに書き直してよい。作業木ではコミットしていない。
+
+| 作業木のファイル | 状態 | 写し |
+|---|---|---|
+| `assets/extra.css` | 変更 | `extra.css`（全文） |
+| `assets/mockup.js` | 新規 | `mockup.js`（全文） |
+| `overrides/main.html` | 新規 | `overrides/main.html`（全文） |
+| `assets/image/slp-character.svg` | 新規（自作の仮の絵） | `image/slp-character.svg`（全文） |
+| `mkdocs.yml` | 変更 | `worktree.diff` の差分 |
+| `scripts/prepare_site.py` | 変更 | `worktree.diff` の差分 |
+
+`worktree.diff` は `git -C .worktrees/site-look-plan diff`（変更した 3 ファイル）と、未追跡のファイルの一覧（末尾のコメント）である。

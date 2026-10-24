@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 120" width="80" height="120">
+  <!-- site-look-plan の使い捨ての試作（C12）の自作の仮の絵。本番の絵は後続 spec で決める -->
+  <g stroke="#333" stroke-width="2" stroke-linejoin="round">
+    <path d="M18 118 L24 74 Q40 66 56 74 L62 118 Z" fill="#fff"/>
+    <path d="M30 76 L40 92 L50 76" fill="none"/>
+    <path d="M14 46 Q12 10 40 10 Q68 10 66 46 L66 70 L56 62 L24 62 L14 70 Z" fill="#2e8233"/>
+    <circle cx="40" cy="42" r="21" fill="#ffe3cf"/>
+    <path d="M19 38 Q24 18 40 20 Q56 18 61 38 Q50 28 40 30 Q30 28 19 38 Z" fill="#2e8233"/>
+  </g>
+  <g fill="#333">
+    <ellipse cx="32" cy="45" rx="2.6" ry="3.6"/>
+    <ellipse cx="48" cy="45" rx="2.6" ry="3.6"/>
+  </g>
+  <path d="M35 54 Q40 58 45 54" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+  <g fill="#f4a3a3" opacity=".7"><circle cx="27" cy="52" r="3"/><circle cx="53" cy="52" r="3"/></g>
+</svg>

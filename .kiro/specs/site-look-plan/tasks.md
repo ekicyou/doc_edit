@@ -62,7 +62,7 @@
   - 完了の状態: `mockups/README.md` のこの頁の節に、確かめた候補・反映の確かめの結果・375 px の結果があり、各候補の明・暗の画面がそろっている（試作の確かめ 1〜4）
   - _Requirements: 3.1, 3.3, 3.4, 3.6, 3.7, 3.9_
 
-- [ ] 3.5 試作の写しを残す
+- [x] 3.5 試作の写しを残す
   - 作業木で作った・変えたファイルの全文を `mockups/` に写す（`extra.css`、作ったときだけ `mockup.js`・`overrides/`・自作の仮の画像 `slp-*`）。作業木全体の差分を `mockups/worktree.diff` に書く（`git -C .worktrees/site-look-plan diff` と、未追跡ファイルの一覧）
   - 作業木ではコミットしない
   - 完了の状態: `git -C .worktrees/site-look-plan status --short` の各行が、`mockups/` の写しか `worktree.diff` に載っている。記録の確かめ 3 が通る

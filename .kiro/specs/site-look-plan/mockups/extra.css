@@ -1,0 +1,243 @@
+/* ヘッダの色。旧 HTML 版のヘッダ（iframes.css の #94de84）と同系統の緑で、明度を下げて白文字にする。
+   mkdocs.yml の theme.palette の primary: custom と対 */
+[data-md-color-primary="custom"] {
+  --md-primary-fg-color: #2e8233;
+  --md-primary-fg-color--light: #4fa053;
+  --md-primary-fg-color--dark: #226426;
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: rgba(255, 255, 255, .7);
+}
+
+/* 目次ページなどの一覧を詰めて表示する */
+.md-typeset ul li > ul {
+  margin-top: 0.2em;
+}
+
+/* 記述例（さくらスクリプト）のコードブロックは折り返して表示する */
+.md-typeset pre > code {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* ===== site-look-plan の使い捨ての試作（?slp=Cxx で候補ごとに入れたり外したりする）===== */
+
+/* C01 項目名を帯で囲む（注意書きの節の h3 は除く） */
+html[data-slp~="C01"] .md-typeset h3:not([id^="notes_"]) {
+  margin-top: 1.2em;
+  padding: .35em .6em;
+  border-left: .3rem solid var(--md-primary-fg-color);
+  border-bottom: 1px solid var(--md-default-fg-color--lighter);
+  background: var(--md-default-fg-color--lightest);
+}
+html[data-slp~="C01"] .md-typeset h3:not([id^="notes_"]) code {
+  background: transparent;
+  padding: 0;
+}
+
+/* C03 分類の見出しを濃い帯にする（注意書きの節の h2 は除く） */
+html[data-slp~="C03"] .md-typeset h2:not([id^="notes_"]) {
+  padding: .3em .6em;
+  background: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+  font-weight: 700;
+  border-radius: .1rem;
+}
+html[data-slp~="C03"] .md-typeset h2:not([id^="notes_"]) code {
+  background: rgba(255, 255, 255, .2);
+  color: inherit;
+}
+html[data-slp~="C03"] .md-typeset h2:not([id^="notes_"]) .headerlink {
+  color: var(--md-primary-bg-color--light);
+}
+
+/* C04 注意書きの節を枠の箱に入れる（prepare_site.py の div.slp-notes） */
+html[data-slp~="C04"] .md-typeset .slp-notes {
+  margin: 1em 0;
+  padding: 0 .8rem .4rem;
+  border: 2px dashed var(--md-default-fg-color--light);
+  border-radius: .2rem;
+  background: var(--md-code-bg-color);
+}
+html[data-slp~="C04"] .md-typeset .slp-notes > :is(h2, h3):first-child {
+  margin: 0 -.8rem .6em;
+  padding: .3em .8rem;
+  text-align: center;
+  border-bottom: 1px dashed var(--md-default-fg-color--light);
+}
+
+/* C06 対応のベースウェアを名前ごとの札にする（prepare_site.py の p.slp-support と span.slp-bw） */
+html[data-slp~="C06"] .md-typeset .slp-bw {
+  display: inline-block;
+  padding: 0 .5em;
+  border: 1px solid currentColor;
+  border-radius: .2em;
+  font-size: .85em;
+  font-weight: 700;
+  line-height: 1.5;
+}
+html[data-slp~="C06"] .md-typeset .slp-bw-materia { color: #8a5a00; }
+html[data-slp~="C06"] .md-typeset .slp-bw-ssp { color: #2e7d32; }
+html[data-slp~="C06"] .md-typeset .slp-bw-crow { color: #6a1b9a; }
+html[data-slp~="C06"] .md-typeset .slp-bw-ninix { color: #1565c0; }
+html[data-slp~="C06"] [data-md-color-scheme="slate"] .md-typeset .slp-bw-materia { color: #ffc260; }
+html[data-slp~="C06"] [data-md-color-scheme="slate"] .md-typeset .slp-bw-ssp { color: #81c784; }
+html[data-slp~="C06"] [data-md-color-scheme="slate"] .md-typeset .slp-bw-crow { color: #ce93d8; }
+html[data-slp~="C06"] [data-md-color-scheme="slate"] .md-typeset .slp-bw-ninix { color: #90caf9; }
+
+/* C08 記述例をひとかたまりの箱に見せる（h4 を箱の頭の帯にし、続くコードブロックをつなぐ。div.highlight・pre.highlight のどちらの形にも効く） */
+html[data-slp~="C08"] .md-typeset h4:has(+ .highlight) {
+  margin: 1.2em 0 0;
+  padding: .25em .8em;
+  font-size: .75rem;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-bottom: none;
+  border-radius: .2rem .2rem 0 0;
+  background: var(--md-default-fg-color--lightest);
+}
+html[data-slp~="C08"] .md-typeset :is(h4, .highlight) + .highlight {
+  margin-top: 0;
+  border: 1px solid var(--md-default-fg-color--lighter);
+}
+html[data-slp~="C08"] .md-typeset .highlight + .highlight { border-top-style: dashed; }
+html[data-slp~="C08"] .md-typeset :is(h4, .highlight) + .highlight:has(+ .highlight) { margin-bottom: 0; border-bottom: none; }
+html[data-slp~="C08"] .md-typeset :is(h4, .highlight) + div.highlight > pre { margin: 0; }
+
+/* C09 コピーのボタンの下に字を重ねない（コードの右の内側の余白をボタンの分だけ広げる。pre > code はどちらの形にも効く） */
+html[data-slp~="C09"] .md-typeset pre > code {
+  padding-right: 2.8em;
+}
+
+/* C10 さくらスクリプトに色を付ける（assets/mockup.js が code.language-sakurascript の字を包む。太さ・大きさは変えない） */
+html[data-slp~="C10"] .md-typeset .slp-ss-tag { color: #0b57d0; }
+html[data-slp~="C10"] .md-typeset .slp-ss-env { color: #a3410f; }
+html[data-slp~="C10"] [data-md-color-scheme="slate"] .md-typeset .slp-ss-tag { color: #8ab4f8; }
+html[data-slp~="C10"] [data-md-color-scheme="slate"] .md-typeset .slp-ss-env { color: #f6ad7b; }
+
+/* C11 注意書きの節をバルーン風にする（div.slp-notes を角の丸い吹き出しにし、左に尻尾を付ける。尻尾は箱の外の余白に置く） */
+html[data-slp~="C11"] .md-typeset .slp-notes {
+  position: relative;
+  margin: 1em 0 1em 14px;
+  padding: 0 .8rem .4rem;
+  border: 2px solid var(--md-primary-fg-color);
+  border-radius: 1em;
+  background: var(--md-default-bg-color);
+}
+html[data-slp~="C11"] .md-typeset .slp-notes::before,
+html[data-slp~="C11"] .md-typeset .slp-notes::after {
+  content: "";
+  position: absolute;
+  top: 1.4em;
+  border: 10px solid transparent;
+}
+html[data-slp~="C11"] .md-typeset .slp-notes::before { left: -22px; border-right: 12px solid var(--md-primary-fg-color); }
+html[data-slp~="C11"] .md-typeset .slp-notes::after { left: -17px; border-right: 12px solid var(--md-default-bg-color); }
+html[data-slp~="C11"] .md-typeset .slp-notes > :is(h2, h3):first-child { margin-top: 0; padding-top: .4em; }
+
+/* C02 項目の間を詰める（まとめ頁の項目の間の hr と、項目名の h3 の上下の余白を小さくする。hr と h3 だけでは 700 px に 3.5 項目だったので、段落の上下の余白も詰める） */
+html[data-slp~="C02"] .md-typeset hr {
+  margin: .6em 0;
+}
+html[data-slp~="C02"] .md-typeset h3 {
+  margin: .6em 0 .4em;
+}
+html[data-slp~="C02"] .md-typeset p {
+  margin: .5em 0;
+}
+
+/* C05 対応の段落を札の帯にする（prepare_site.py の p.slp-support。C06 と両立しない。C06 の span.slp-bw は C06 が無ければ普通の字） */
+html[data-slp~="C05"] .md-typeset p.slp-support {
+  padding: .25em .6em;
+  font-size: .85em;
+  border-left: .2rem solid var(--md-primary-fg-color);
+  border-radius: .1rem;
+  background: var(--md-default-fg-color--lightest);
+}
+html[data-slp~="C05"] .md-typeset p.slp-support > strong:first-child {
+  display: inline-block;
+  margin-right: .5em;
+  padding: 0 .5em;
+  border-radius: .2em;
+  font-size: .9em;
+  line-height: 1.5;
+  background: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+}
+
+/* C07 既定値を説明の文と分けて見せる（prepare_site.py の p.slp-default。字下げ・少し小さい控えめの字。斜めの字は使わない） */
+html[data-slp~="C07"] .md-typeset p.slp-default {
+  margin-left: 1.2em;
+  font-size: .85em;
+  color: var(--md-default-fg-color--light);
+}
+html[data-slp~="C07"] .md-typeset p.slp-default > strong:first-child {
+  display: inline-block;
+  margin-right: .5em;
+  padding: 0 .5em;
+  border: 1px solid currentColor;
+  border-radius: .2em;
+  font-size: .9em;
+  line-height: 1.5;
+}
+
+/* C12 キャラクターを頁に出す（overrides/main.html が本文の頭に置く img.slp-character。?slp=C12 が無ければ出さない。
+   本文の右上に、h1 の高さと余白の中に収まる大きさで置き、h1 の右に絵の幅の余白を取って字に重ねない。本文の幅は変えない） */
+.md-typeset .slp-character { display: none; }
+html[data-slp~="C12"] .md-content__inner { position: relative; }
+html[data-slp~="C12"] .md-typeset .slp-character {
+  display: block;
+  position: absolute;
+  top: .4rem;
+  right: 0;
+  width: 54px;
+  height: 80px;
+  margin: 0;
+  pointer-events: none;
+}
+html[data-slp~="C12"] .md-typeset h1 { padding-right: 64px; }
+html[data-slp~="C12"] [data-md-color-scheme="slate"] .md-typeset .slp-character {
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, .55));
+}
+/* 狭い画面では小さくする（h1 の字が小さくなる幅。Material の 44.984375em と同じ） */
+@media screen and (max-width: 44.984375em) {
+  html[data-slp~="C12"] .md-typeset .slp-character { width: 36px; height: 54px; }
+  html[data-slp~="C12"] .md-typeset h1 { padding-right: 44px; }
+}
+
+/* C14 ファイルごとの説明の切れ目を見せる（manual/ghost だけに絞る。頁の種類の印の代わりに :has(h1#ゴースト)）。
+   ファイル名を 1 行に置いて説明を字下げし、ファイルの間に細い線を引く。
+   「**名前**: 説明」の「: 」は字の要素でないので見た目の指定では消せない。段落を flex で折り返して名前を 1 行目に置き、
+   「: 」を負の字下げで左の余白に出して名前の ::after で覆う（試作だけの細工。本番では目印を付けて「: 」を外す） */
+html[data-slp~="C14"] .md-typeset:has(h1#ゴースト) > ul { margin-left: 0; }
+html[data-slp~="C14"] .md-typeset:has(h1#ゴースト) > ul > li {
+  margin: 0;
+  padding: .5em 0 .3em;
+  list-style: none;
+  border-top: 1px solid var(--md-default-fg-color--lighter);
+}
+html[data-slp~="C14"] .md-typeset:has(h1#ゴースト) > ul > li > p { margin-left: 1.5em; }
+html[data-slp~="C14"] .md-typeset:has(h1#ゴースト) > ul > li > p:first-child {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 0;
+  text-indent: -.5em;
+}
+html[data-slp~="C14"] .md-typeset:has(h1#ゴースト) > ul > li > p:first-child > strong:first-child {
+  position: relative;
+  flex: 0 0 calc(100% + 1.5em);
+  margin: 0 0 .2em -1.5em;
+  text-indent: 0;
+}
+html[data-slp~="C14"] .md-typeset:has(h1#ゴースト) > ul > li > p:first-child > strong:first-child::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: .9em;
+  width: .5em;
+  height: 1.7em;
+  margin-top: .2em;
+  background: var(--md-default-bg-color);
+}
+
+/* C15 ファイル構成の木でファイル名に色を付ける（assets/mockup.js が「+-」の行の名前を span で包む。拡張子のある名前をファイル、無い名前をフォルダとする） */
+html[data-slp~="C15"] .md-typeset .slp-tree-file { color: var(--md-primary-fg-color); }
+html[data-slp~="C15"] [data-md-color-scheme="slate"] .md-typeset .slp-tree-file { color: #81c784; }
