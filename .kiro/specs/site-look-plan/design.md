@@ -135,7 +135,7 @@ graph LR
 原稿（`descript/` `list/` `spec/` `manual/` `dev/` `memo/` の `.md`、`INDEX.md`）と `.nav.yml`・`requirements.txt` は、作業木の中でも書き換えない。
 
 ### 部品とファイルの対応（ファイルを持たない部品）
-- DecisionGate — `tasks.md` の `_Gate: developer_` の付いたタスク 1 つ（`/kiro-spec-tasks` が作る）と、その結果を書く `decisions.md`
+- DecisionGate — `tasks.md` の、本文に「推奨と画面を開発者に提示し、判断を受けて記録する」と書いたタスク 1 つ（`/kiro-spec-tasks` が作る）と、その結果を書く `decisions.md`
 - WorktreeCleanup — `tasks.md` の最後のタスク。触るのは作業木 `.worktrees/site-look-plan/` だけ（上の使い捨てのファイルを戻す）
 - ProcessEdits — この spec の外で直接直すファイル: `.claude/skills/kiro-complete/SKILL.md`、`.kiro/steering/workflow.md`、`.claude/skills/kiro-impl/SKILL.md`（中身は「手順の直接の手直し」）
 
@@ -171,8 +171,8 @@ sequenceDiagram
 
 ```mermaid
 graph TB
-    Base[作業木 origin main のまま] --> BaseShot[今の見た目を撮る]
-    BaseShot --> Edit[使い捨ての変更を足す]
+    Base[ukadoc-spec のメインのチェックアウト 別ポート] --> BaseShot[今の見た目を撮る]
+    WT[作業木] --> Edit[使い捨ての変更を足す]
     Edit --> Prep[prepare site を再実行]
     Prep --> Build[build strict]
     Build -->|失敗| Fail[失敗と原因の見立てを記録]
@@ -182,7 +182,7 @@ graph TB
     Narrow --> Copy[写しを mockups に残す]
 ```
 
-- 今の見た目は、使い捨ての変更を足す**前**の作業木（`origin/main` のまま）で撮る。試作の変更（`prepare_site.py` の目印・`highlight` の設定）は HTML そのものを変えるので、変更後の頁で候補を外しても「今の見た目」にはならないため
+- 今の見た目は、作業木ではなく、ukadoc-spec のメインのチェックアウト `ukadoc-spec/`（`origin/main` と同じ版）を別のポート（例: `zensical serve -a 127.0.0.1:8001`）で出して撮り、撮った版の短い SHA を `mockups/README.md` に書く。試作の変更（`prepare_site.py` の目印・`highlight` の設定）は HTML そのものを変えるので、作業木で候補を外しても「今の見た目」にはならない。メインのチェックアウトなら、後で別の位置が要っても撮り直せる。`_site_src/` `_site/` は gitignore 済みなので、メインのチェックアウトで組み立ててもよい（原稿と設定は変えない）
 - 反映の確かめ（Requirement 3.3）は、`serve` の頁を取ってきて、試作の目印（`slp-` の class か `mockup.js` の読み込み）が HTML にあることを見る。無ければ `prepare_site.py` の再実行と `serve` の起動し直しをしてから確かめ直す
 
 ## Requirements Traceability
@@ -217,7 +217,7 @@ graph TB
 | 4.3 | 採る候補の目標の画面 | DecisionRecord | 「目標」欄 | 全体 |
 | 4.4 | 保留の理由と要るもの | DecisionRecord | 「保留」欄 | 全体 |
 | 4.5 | 両立しない候補 | CandidateList, DecisionRecord | 「両立しない組」表 | 全体 |
-| 4.6 | 自律実行の中で止まって待つ | DecisionGate | `_Gate: developer_` のタスク | 全体 |
+| 4.6 | 自律実行の中で止まって待つ | DecisionGate | 開発者への提示と判断を求めるタスク | 全体 |
 | 5.1 | どの候補も行き先がある | FollowupSplit | decisions.md の「行き先」欄 | 全体 |
 | 5.2 | roadmap.md を作る | FollowupSplit | roadmap.md の形 | 全体 |
 | 5.3 | brief の形 | FollowupSplit | brief.md の節 | 全体 |
@@ -311,7 +311,7 @@ graph TB
 - **作業木ではコミットしない。push もしない。** 変更は未コミットのまま置き、最後に WorktreeCleanup が片付ける
 - 作業木で触ってよいのは、File Structure Plan の「作業木の中の使い捨てのファイル」に挙げたものだけ
 - 候補の指定は `html[data-slp~="Cxx"]` の下に書き、`?slp=` で候補ごとに入れたり外したりできるようにする（両立しない候補を同じ build で見比べるため）
-- 試作の順: (1) 変更を足す前に今の見た目を撮る → (2) 変更を足す → (3) `prepare_site.py` を再実行 → (4) `zensical build --strict` → (5) `zensical serve` の頁に目印があることを確かめる → (6) 試作を撮る → (7) 狭い画面のはみ出しを確かめる → (8) 写しを残す
+- 試作の順: (1) 今の見た目を `ukadoc-spec/` のメインのチェックアウト（別のポート）で撮る → (2) 作業木に変更を足す → (3) `prepare_site.py` を再実行 → (4) `zensical build --strict` → (5) `zensical serve` の頁に目印があることを確かめる → (6) 試作を撮る → (7) 狭い画面のはみ出しを確かめる → (8) 写しを残す
 - 試作の作成・表示が失敗したら、失敗した候補・失敗したコマンドと出力の要点・原因の見立てを `mockups/README.md` に書き、その候補を「試作で確かめられなかった」として決定の段へ渡す。ほかの候補の試作は続ける
 - 写しは、作業木で作った・変えたファイルの全文（`mockups/extra.css` など）と、作業木全体の差分 `mockups/worktree.diff` にする
 
@@ -384,7 +384,7 @@ interface ShotResult {            // 標準出力に 1 行ずつ書く
 | Requirements | 3.3, 4.2, 4.6 |
 
 **Responsibilities & Constraints**
-- 関門は tasks.md の 1 つのタスクで、`_Gate: developer_` を付ける（`/kiro-impl` の手直しで、この印を扱えるようにする）
+- 関門は tasks.md の 1 つのタスクで、新しい印は付けない。pasta の先例（「削除候補リストを開発者に提示し、承認後に削除実行」）と同じく、本文に「推奨と画面を開発者に提示し、判断を受けて記録する」と書く。`/kiro-impl` の 1 文の手直し（「手順の直接の手直し」の 3）で、親がこの種のタスクで止まるようにする
 - 関門の前のタスクで、`decisions.md` に候補ごとの「推奨」と理由までを書いておく。「判断」欄は空のままにする
 - 関門のタスクでは、`/kiro-impl` の親が次を行う:
   1. 作業木で `zensical serve` を起動し、3 頁それぞれで試作の目印が HTML にあることを確かめる
@@ -436,6 +436,7 @@ interface ShotResult {            // 標準出力に 1 行ずつ書く
   - 目印（class など）を付ける程度の後処理（`prepare_site.py`）やテンプレートの上書きは、その目印を使う見た目の改造と同じ spec に入れてよい
   - 画像・キャラクター・ブラウザで動く仕掛けを要する遊びは、視認性の改造と別の spec にする
   - 「保留」の候補は spec にせず、roadmap の `## バックログ` に、保留の理由と決めるのに要るものを書く
+  - 見た目の外で見つかった問題も `## バックログ` に積む。少なくとも、公開サイトが `https://ukatech.shillest.net/ukadoc-spec/` へ 301 で転送されるのに `mkdocs.yml` の `site_url` が github.io のままである件（正規の URL・サイトマップに響きうる）を 1 行書く（`survey.md` にも記録する）
 - 名前は変更の中身が分かる kebab-case の英語にする（例の形: `site-look-<中身>`。具体の名前は決定の後に決める）
 - `roadmap.md` は `/kiro-next` の形にする:
   ```markdown
@@ -463,7 +464,7 @@ interface ShotResult {            // 標準出力に 1 行ずつ書く
 - 各 brief の Constraints に、当てはまるものを書き写す:
   - 旧サイトの素材の許可（画像は管理者の確認、見た目の指定は書き直す）
   - Zensical 0.0.67 の制限（minijinja、partial を丸ごと写さない、`build --strict` は存在しない `extra_css` を検出しない）と、試作で確かめた事実（`custom_dir` のブロックの上書きと `super()`・`extra_javascript` が通る、`highlight` の挙動、目印は段落の末尾に付ける）
-  - 表示の確かめ方（直下を直したら `prepare_site.py` を再実行、`serve` の頁で目印を確かめる、`tools/shot.mjs` で明・暗を撮る、375 px の幅ではみ出しを測る）
+  - 表示の確かめ方（直下を直したら `prepare_site.py` を再実行、`serve` の頁で目印を確かめる、`tools/shot.mjs` で明・暗を撮る、375 px の幅ではみ出しを測る）。道具は完了後の `.kiro/specs/completed/site-look-plan/tools/shot.mjs` のパスで指す
   - 失わないもの（`survey.md` の「失わないもの」の差の一覧）
 - 終わったら、次に `/kiro-start` する spec を 1 つ、roadmap の棚卸の節と、実装の報告で名指す
 
@@ -518,12 +519,10 @@ Requirement 7.4 により、次の手直しは、この設計の後・`/kiro-spe
        - 作業木を `origin/main` と同じ状態に戻す（コミット 0・未コミットの変更 0）
        - doc_edit: 初めて決めた方針を steering に書き足す
      ```
-     開発者の判断を待つタスクには `_Gate: developer_` を付けてよい（下の 3）
-3. **`/kiro-impl`（`.claude/skills/kiro-impl/SKILL.md`）に開発者の関門と、原稿を変えない spec のコミットの扱いを足す**（4.6。**前提**: OPEN QUESTION 1）
-   - Step 2 のタスクの列: `_Gate: developer_` の付いたタスクは開発者の関門である。`_Blocked:_` と違って飛ばさない
-   - Step 3 の自律モード: 関門のタスクでは実装サブエージェントを出さない。親がタスクに書かれた材料を示して止まり、開発者の答えを待つ。答えを受けたら、親がタスクのとおりに記録し、`kiro-verify-completion` を当ててから `[x]` にしてコミットし、残りのタスクを続ける。関門のタスクのレビューは「記録が開発者の答えと一致しているか」だけを親が確かめる
-   - セッションが切れたら、`/kiro-impl {feature}` の再実行で関門のタスクから再開する（タスクが `[ ]` のまま残るため）
-   - Step 3 e) のコミット: 原稿を変えない spec では、作業木でコミットしない（(1) を飛ばし、(2) の doc_edit のコミットだけを行う）
+     開発者の判断を待つタスクは、本文に「開発者に提示し、判断（承認）を受けて〜する」と書く（新しい印は作らない。下の 3）
+3. **`/kiro-impl`（`.claude/skills/kiro-impl/SKILL.md`）に 1 文ずつ足す**（4.6）
+   - Step 3 の自律モード: 「タスクの本文が開発者への提示と判断（承認）を求めるとき、親は実装サブエージェントを出さず、自分でタスクに書かれた材料を示して止まり、開発者の答えを受けてタスクのとおりに記録し、`[x]` にしてコミットしてから残りのタスクを続ける」。セッションが切れたら、`/kiro-impl {feature}` の再実行でそのタスクから再開する（タスクが `[ ]` のまま残るため）
+   - Step 3 のコミット: 「原稿を変えない spec では、作業木でコミットしない（doc_edit のコミットだけを行う）」
    - 自律実行のまま全タスクを流す（タスク番号を指定した手動モードにしない）
 
 ## Data Models
@@ -598,9 +597,10 @@ interface Decision {                   // decisions.md の 1 行
 
 ### 画面の名前の付け方と上限
 - 見比べ: `screenshots/survey-<page>-<D番号>-<old|now>.png`（例: `survey-sakura-script-D03-old.png`）
-- 試作: `screenshots/mock-<page>-<C番号|base>-<light|dark>.png`（`base` は変更を足す前の今の見た目。例: `mock-descript-ghost-C05-dark.png`）
+- 試作: `screenshots/mock-<page>-<C番号|base>-<light|dark>.png`（`base` は `ukadoc-spec/` のメインのチェックアウトで撮った今の見た目。例: `mock-descript-ghost-C05-dark.png`）
 - 大きさ: 1 枚 1000 × 700 の切り出し（ShotTool の既定）。PNG
-- 枚数: 試作は候補ごとに試作の明・暗の 2 枚まで。今の見た目（`base`）は頁と位置ごとに明・暗の 2 枚まで。見比べは差ごとに旧・今の 2 枚まで（**前提**: OPEN QUESTION 4）
+- 枚数: 試作は候補ごとに試作の明・暗の 2 枚まで。今の見た目（`base`）は頁と位置ごとに明・暗の 2 枚まで。見比べは差ごとに旧・今の 2 枚まで（明るい表示だけ）
+- 合計: `screenshots/` の合計で 10 MB を目安にし、最後のタスクで合計の大きさを記録する
 
 ## Error Handling
 
@@ -616,7 +616,7 @@ interface Decision {                   // decisions.md の 1 行
 
 ## Testing Strategy
 
-原稿の spec の Build Gate に当たる確かめを、記録ごとの機械的な確かめにする。各タスクの完了条件と `/kiro-validate-impl` は、これを根拠にする。
+原稿の spec の Build Gate に当たる確かめを、記録ごとの機械的な確かめにする。**この節の確かめが、この spec のテストである。** `/kiro-spec-tasks` は各タスクの完了条件に、当てはまる確かめの番号（例: 「記録の確かめ 2」）を書く。実装サブエージェントの雛形が求める TDD の RED の証拠は、文書のタスクには当てはまらないので、代わりにこの確かめの結果を証拠にする。確かめ用のスクリプトは作らない。`/kiro-validate-impl` も、これを根拠にする。
 
 ### 記録の確かめ（各タスク）
 1. `survey.md`: 「組」表に 4 組があり、各組に `https://ssp.shillest.net/` と `https://ukatech.github.io/` の URL がある。各組に 6 つの観点の行がある。各差に `kind` と根拠（画面のファイル名か URL とセレクタ）がある。参照した画面のファイルが `screenshots/` にある
@@ -636,7 +636,7 @@ interface Decision {                   // decisions.md の 1 行
 2. `git -C .worktrees/site-look-plan diff --name-only origin/main` が空（原稿・`.nav.yml`・`requirements.txt` を変えていない）
 3. ukadoc-spec の origin に `site-look-plan` ブランチが無い（`git -C ukadoc-spec ls-remote --heads origin site-look-plan` が空）
 4. doc_edit の変更が `.kiro/specs/site-look-plan/`・`.kiro/specs/<後続 spec>/brief.md`・`.kiro/steering/roadmap.md` と、最後のタスクで初めて決めた方針を書き足した `.kiro/steering/*.md` だけ
-5. `screenshots/` の合計の大きさを記録する（**前提**: 10 MB 以内を目安にする。OPEN QUESTION 4）
+5. `screenshots/` の合計の大きさを記録する（10 MB 以内を目安にする）
 
 ## Security Considerations
 - 記述例の再生（`sakura_player.js` の方式）は、公開サイトから手元のベースウェアへ SSTP を送り、外部の CDN からスクリプトを読む。この spec では試作しない（2.7）。候補として残すときは、「利用者の操作（ボタン）を起点にする」「外部の読み込みを自前で置くか、読み込みを利用者の操作の後にする」を論点として brief に渡す

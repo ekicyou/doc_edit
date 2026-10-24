@@ -116,4 +116,4 @@
 1. When 原稿を変えない spec の完了を開発者が承認したとき, the doc_edit の完了手順 shall ukadoc-spec への PR・squash マージ・サブモジュールの参照コミットの更新を飛ばし、spec のアーカイブと doc_edit への記録を行う
 2. While 完了の対象が原稿を変えない spec であるとき, the doc_edit の完了手順 shall 原稿を前提にした関門（作業木での Build Gate・規約 Gate）を、当てはまらないものとして扱い、そのことを完了の記録に書く
 3. If 原稿を変えないはずの spec の作業木に、ukadoc-spec の `origin/main` からのコミットや未コミットの変更があるとき, the doc_edit の完了手順 shall 作業木を捨てずに止め、開発者に報告する
-4. The site-look-plan shall この手順の手直しを、この spec のタスクにせず、設計の後・タスク生成（`/kiro-spec-tasks`）の前に、doc_edit の手順（スキルと steering）を直接直して済ませる。手直しには、`/kiro-complete` の分岐に加えて、`workflow.md` の DoD とタスク生成ルールに計画の spec の扱いを書くことを含める（タスク生成ルールが最終タスクに Build Gate を強制するため、タスク生成より前に直す）
+4. The site-look-plan shall この手順の手直しを、この spec のタスクにせず、設計の後・タスク生成（`/kiro-spec-tasks`）の前に、doc_edit の手順（スキルと steering）を直接直して済ませる。手直しには、`/kiro-complete` の分岐に加えて、`workflow.md` の DoD とタスク生成ルールに計画の spec の扱いを書くことと、`/kiro-impl` が開発者への提示と判断を求めるタスクで止まるようにすること（要件 4.6）を含める（タスク生成ルールが最終タスクに Build Gate を強制するため、タスク生成より前に直す）
