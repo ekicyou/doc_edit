@@ -54,6 +54,12 @@ Select skills for the current task even when steering/spec context is already av
 **Establish repo baseline**:
 - Run `git status --porcelain` and note any pre-existing uncommitted changes
 
+**doc_edit: two repositories** (local customization — keep when regenerating this skill; authoritative rules in `.kiro/steering/workflow.md`):
+- The session runs in the doc_edit main checkout on `main`. If it is in a linked worktree or on another branch, STOP and ask the developer to re-run there.
+- The manuscripts are edited in the spec's ukadoc-spec worktree `.worktrees/<feature>/` (branch `<feature>`), never in `ukadoc-spec/` itself. If it does not exist, create it now with `git -C ukadoc-spec fetch origin` and `git -C ukadoc-spec worktree add ../.worktrees/<feature> -b <feature> origin/main`; if it exists, reuse it.
+- Validation set for this repo (from `ukadoc-spec/CLAUDE.md`, run inside `.worktrees/<feature>/`): `TEST_COMMANDS` = `python scripts/prepare_site.py` and `zensical build --strict`; no smoke command. Use the doc_edit `.venv` if present (`.venv/Scripts/python`, `.venv/Scripts/zensical`); if zensical is missing, install with `pip install -r requirements.txt` into that venv.
+- `pasta/` `areka/` `shiori4/` are read-only sources. Pass `ukadoc-spec/CLAUDE.md` (editing rules) to every implementer and reviewer.
+
 ### Step 2: Select Tasks & Determine Mode
 
 **Parse arguments**:
@@ -140,6 +146,7 @@ For each task (one at a time):
 - **NEVER** use `git add -A` or `git add .`
 - Use `git add <file1> <file2> ...` with explicit file paths
 - Commit message format: `feat(<feature-name>): <task description>`
+- **doc_edit**: this makes two commits. (1) Manuscripts in the ukadoc-spec worktree: `git -C .worktrees/<feature> add <files>` and `git -C .worktrees/<feature> commit -m "<変更を 1 文で表す日本語>"` (ukadoc-spec history uses plain Japanese sentences, no type prefix); do not push it (the PR is made by `/kiro-complete`). (2) `tasks.md` in doc_edit: `git commit -m "feat(<feature-name>): <task description>" -- .kiro/specs/<feature>/tasks.md`, then `git pull --no-rebase --no-edit origin main` and `git push origin main` (doc_edit records every step on `main`).
 
 **f) Record learnings**:
 - If this task revealed cross-cutting insights, append a one-line note to the `## Implementation Notes` section at the bottom of tasks.md

@@ -40,10 +40,11 @@ zensical serve                   # http://127.0.0.1:8000/ukadoc-spec/ でプレ�
 
 ### git の運用
 
-- **doc_edit**: 作業記録用。`main` に直接コミット・push してよい。PR は不要
-- **ukadoc-spec**: PR 運用。サブモジュール内で作業ブランチを切り、`origin`（`ukatech/ukadoc-spec`、書き込み権限あり）に push して `main` へ PR を出す。fork は不要
+手順の正本は [workflow.md](workflow.md)。要点だけを挙げる。
+
+- **doc_edit**: 作業記録用。`main` に区切りごとにコミットしてすぐ push する。PR は作らない
+- **ukadoc-spec**: PR 運用。spec ごとの作業木 `.worktrees/<feature>/`（ブランチ `<feature>`）で書き、`/kiro-complete`（開発者の完了の承認）で `origin`（`ukatech/ukadoc-spec`、書き込み権限あり）へ push して PR → squash マージする。fork は不要
 - **ukadoc-spec の `main` には直接 push しない**。push した時点で公開サイトが更新されるため（技術的にはブランチ保護が無く、できてしまう）
-- push と PR の作成は、作者の指示を受けてから行う
 - サブモジュールの参照コミットが動いたら、doc_edit 側で記録としてコミットする
 
 ## Key Technical Decisions

@@ -39,6 +39,11 @@ Kiro-style Spec-Driven Development on an agentic SDLC
   - `/kiro-validate-impl {feature}` (standalone re-validation)
 - Progress check: `/kiro-spec-status {feature}` (use anytime)
 
+### doc_edit flow (usual path)
+- `/kiro-discovery "idea"` → `/kiro-start {feature}` (requirements + gap + discussion) → `/kiro-design {feature}` (design + validation + discussion) → `/kiro-spec-tasks {feature}` → `/kiro-impl {feature}` → `/kiro-complete {feature}` (on the developer's explicit approval: PR → squash merge into ukadoc-spec)
+- `/kiro-next`: inventory the roadmap and name the next spec to start
+- Git and DoD rules are in `.kiro/steering/workflow.md`: sessions run in this main checkout on `main` (no harness worktree); doc_edit is committed to `main` and pushed after each step (commit only your own paths, never a PR); manuscripts are edited in the spec's ukadoc-spec worktree `.worktrees/{feature}/` and reach ukadoc-spec only through `/kiro-complete`
+
 ## Skills Structure
 Skills are located in `.claude/skills/kiro-*/SKILL.md`
 - Each skill is a directory with a `SKILL.md` file

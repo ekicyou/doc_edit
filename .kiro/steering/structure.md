@@ -18,6 +18,11 @@
 **Purpose**: UKADOC の原稿。中の構成は ukadoc-spec の `CLAUDE.md` と `README.md` が定める
 **Example**: さくらスクリプトのタグは `list/sakura-script/<カテゴリ>/<スラッグ>.md`、SHIORI イベントは `list/shiori-event/<カテゴリ>/OnXxx.md`
 
+### 原稿の作業木（spec ごと）
+**Location**: `.worktrees/<feature>/`（`.gitignore` 済み）
+**Purpose**: ukadoc-spec の git worktree。spec の原稿をブランチ `<feature>` で書く場所。`/kiro-impl` が作り、`/kiro-complete` が PR のマージ後に消す
+**Example**: `git -C ukadoc-spec worktree add ../.worktrees/<feature> -b <feature> origin/main`（詳しくは `workflow.md`）
+
 ### 情報の参照元
 **Location**: `pasta/` `areka/` `shiori4/`
 **Purpose**: 自作アプリの仕様・対応状況の一次資料。読むだけで、ここからは変更しない
