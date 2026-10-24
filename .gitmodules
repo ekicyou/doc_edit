@@ -1,3 +1,12 @@
 [submodule "ukadoc-spec"]
 	path = ukadoc-spec
 	url = https://github.com/ukatech/ukadoc-spec.git
+[submodule "pasta"]
+	path = pasta
+	url = https://github.com/ekicyou/pasta.git
+[submodule "areka"]
+	path = areka
+	url = https://github.com/ekicyou/areka.git
+[submodule "shiori4"]
+	path = shiori4
+	url = https://github.com/ekicyou/shiori4.git
