@@ -1,0 +1,3 @@
+[submodule "ukadoc-spec"]
+	path = ukadoc-spec
+	url = https://github.com/ukatech/ukadoc-spec.git
