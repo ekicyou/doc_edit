@@ -112,3 +112,52 @@ node $S/lexer/corpus.mjs   # 原稿の全ブロックの数と試作との違い
 | `choice/q-script.md` | `\q[その１,"script:\q[その２,script:その３はない]`（`"]` が地の文） | 全体が 1 つのタグ | 1 |
 | `balloon-text/_-q.md` | 囲みの中の `\1`・`\n` もタグ | 囲みの中は地の文 | 2 |
 | 計 | | | 13 |
+
+## 配りと数（タスク 3.2、2026-10-25）
+
+### 配りの結果
+- プレビュー: 親が作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動し直したもの（作業木の HEAD `4ce6b5e`、2.1〜2.4 のコミットの後）。http://127.0.0.1:8000/ukadoc-spec/
+- `/ukadoc-spec/assets/sakurascript.js` と `/ukadoc-spec/assets/extra.css` はどちらも 200 で、作業木の `assets/` のファイルとバイトが同じ。`extra.css` の 174 行目に `/* site-look-sakura-script-highlight: 記述例のタグと環境変数 */` がある
+- 全頁（41 頁、`404.html` を含む）の HTML に `assets/sakurascript.js` の `<script src>` が 1 つずつある（1 でない頁 0）
+- 8000 で配る 40 頁（`index.html` のもの）の HTML は、作業木の `_site/` の HTML の後ろに serve が live-reload の `<script type="module">` を足しただけ（それ以外の違い 0）。よって数と比べは作業木の `_site/` を測った
+- 控えは http://127.0.0.1:8030/ に配られている（200）。測りは 1.2 の `S\before\baseline\` と比べた
+
+### 数（全頁の `article` の中）
+
+| もの | 変更の前 | 変更の後 | 期待 |
+|---|---|---|---|
+| `<pre class="highlight">` | 0 | 449 | 449 |
+| `<code class="language-sakurascript">` | 0 | 287 | 287 |
+| 言語の印の無い `<pre class="highlight"><code>` | — | 162 | 162 |
+| `language-ss` | 0 | 0 | 0 |
+| `<div class="highlight">` | 449 | 0 | 0 |
+| `assets/sakurascript.js` の読み込み（頁ごと） | — | 41 頁すべてで 1 | 1 |
+
+控えと同じに保つもの:
+
+| もの | 変更の前 | 変更の後 |
+|---|---|---|
+| 頁 | 41 | 41 |
+| 見出しの id（合計） | 2579 | 2579 |
+| `class="headerlink"`（¶） | 2579 | 2579 |
+| `class="md-nav__link`（目次） | 6370 | 6370 |
+| `hr` | 1921 | 1921 |
+| `search.json` の項目 | 2579 | 2579 |
+
+### 控えとの比べ
+- 頁ごとの見出しの id の並び・¶ の数・目次の数・`hr` の数・本文の字（タグを除き空白を詰めたもの。言語の指定の無いブロックの字を含む）: 控えと違う頁 0
+- `search.json` の各項目の `location`・題・字（タグを除き空白を詰めたもの）: 違う項目 0
+- `div.highlight` → `pre.highlight` の形の変わりは字に出ない。本文の字は空白を詰めて比べる。空白を詰めずに全 449 ブロックの `code` の字を比べると、違いは各ブロックの末尾の改行 1 つが消えたことだけ（設計で予期済み。コピーは `trimEnd()` するので字は変わらない）
+
+### 流した式（Git Bash）
+```sh
+S=/c/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/fc194b1e-28b1-4328-9e08-7d8780051c15/scratchpad
+PY=/c/home/maz/git/doc_edit/.venv/Scripts/python.exe
+W=/c/home/maz/git/doc_edit/.worktrees/site-look-sakura-script-highlight
+curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8000/ukadoc-spec/assets/sakurascript.js   # 200
+curl -s http://127.0.0.1:8000/ukadoc-spec/assets/extra.css | grep -n "site-look-sakura-script-highlight:"
+$PY -I $S/tools/served_prefix.py $W/_site                 # 「pages 40 not-prefix 0」
+$PY -I $S/tools/measure_static.py $W/_site $S/after32     # 1.2 と同じ道具で数える
+$PY -I $S/tools/check_serve.py $W/_site $S/before/baseline $S/after32   # 形の数・読み込み・控えとの静的な比べ。exit 0
+```
+- `check_serve.py` は、形の数が期待どおりで、読み込みが 1 でない頁が無く、控えとの静的な比べ（頁ごとの id の並び・¶・目次・`hr`・本文の字）と `search.json` の項目の字と題に違いが無いときだけ exit 0。ブラウザの比べ（`browser.json`）は 3.3 で行う

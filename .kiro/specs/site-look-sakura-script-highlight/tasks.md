@@ -52,7 +52,7 @@
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`git diff --stat origin/main` が `mkdocs.yml`・`CLAUDE.md`・`assets/extra.css`・`assets/sakurascript.js` だけである
   - _Requirements: 8.2, 10.1, 10.2, 10.5_
 
-- [ ] 3.2 プレビューの配りと、言語の印・見出しの数を控えと比べる
+- [x] 3.2 プレビューの配りと、言語の印・見出しの数を控えと比べる
   - プレビューを起動し直す（`prepare_site.py` → `build --strict` → `serve` の順）
   - `/ukadoc-spec/assets/extra.css` に `site-look-sakura-script-highlight:` の見出しのコメントがあり、`/ukadoc-spec/assets/sakurascript.js` が 200 で、全頁の HTML にスクリプトの読み込みが 1 つずつあることを見る。無ければプレビューを止めて作り直す
   - 全頁の `article` の中で `<pre class="highlight">` 449・`<code class="language-sakurascript">` 287・言語の印の無い `<pre class="highlight"><code>` 162・`language-ss` 0・`<div class="highlight">` 0 を数える
