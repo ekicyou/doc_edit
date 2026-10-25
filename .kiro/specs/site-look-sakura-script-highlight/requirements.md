@@ -130,7 +130,7 @@
 #### Acceptance Criteria
 1. When 変更を確かめるとき, the site-look-sakura-script-highlight shall ローカルのプレビュー（頁の道は `/ukadoc-spec/` から始まる）で、配られた見た目の指定のファイルにこの spec の指定が入っていること、足したスクリプトのファイルが開けること（200）、どの頁もスクリプトを 1 回ずつ読み込むことを確かめる（サイトを作る処理の厳しい検査は、指定したファイルが無くても気づかないため）
 2. The site-look-sakura-script-highlight shall プレビューの頁の HTML を取ってきて、言語の印の付いたブロックの数（今は 287）・コードブロックの数（今は 449）・言語の印の無いブロックの数（今は 162）を確かめて記録する
-3. The site-look-sakura-script-highlight shall Requirement 2 の規則で見分けたタグと環境変数の数（今の見込みはタグ 500・環境変数 6）と、試作の規則と見分け方が違う所（今の見込みは 12 か所: `\w9` 6・`\p2`・`\p3`・`\b2`・引用符の中に `]` のある `\q[…]` 1・囲み `\_?…\_?` の中の `\1`・`\n`）を数えて記録する
+3. The site-look-sakura-script-highlight shall Requirement 2 の規則で見分けたタグと環境変数の数（今の見込みはタグ 500・環境変数 6）と、試作の規則と見分け方が違う所（今の見込みは 13 か所: `\w9` 5・`\w2` 1・`\p2`・`\p3`・`\b2`・`\s1`・引用符の中に `]` のある `\q[…]` 1・囲み `\_?…\_?` の中の `\1`・`\n`。設計で数え直した）を数えて記録する
 4. The site-look-sakura-script-highlight shall 記述例のある頁のすべての記述例のブロックで、包んだ後の字が包む前と同じこと（違いが 0 個）と、いくつかのブロックでコピーのボタンでコピーされる字が変更の前と同じことを確かめて記録する
 5. The site-look-sakura-script-highlight shall ```` ```ss ```` のブロックが言語の印と見え方を `sakurascript` と同じに得ることを、原稿に残さない使い捨ての写しの上で確かめて記録する（今の原稿に ```` ```ss ```` は無く、原稿は変えないため。［仮定 A5］）
 6. The site-look-sakura-script-highlight shall 変更の後の画面を、目標の画面と同じ頁・同じ位置・同じ大きさ（`list/sakura-script` の `#bang-lock-repaint`、幅 1000・高さ 700）で明・暗の両方で撮り、記述例のタグの見え方を見比べた結果を記録する
