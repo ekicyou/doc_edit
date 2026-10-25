@@ -80,7 +80,7 @@
   - _Requirements: 1.2, 1.4, 2.11, 3.8, 9.5, 9.13_
 
 - [ ] 4. 対比と画面
-- [ ] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
+- [x] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `mkdocs.yml` は両方の行を、`extra.css` は両方の塊を残して直す
   - merge したときは Build Gate（3.1）をやり直し、原稿か見た目の指定が変わっていれば、控えを新しい `origin/main` から 1.2 と同じ手順で作り直して、2.2・3.2・3.3・3.4 の確かめをやり直し、`verification.md` の数を直す
   - 4.2・4.3 はこの版で測る（測る版を `verification.md` に書く）

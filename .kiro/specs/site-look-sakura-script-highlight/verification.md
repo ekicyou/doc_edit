@@ -308,3 +308,9 @@ node $S/tools/check_copy34.mjs http://127.0.0.1:8032/ $S/after34/check34.json /c
 # 配りを止め、rm -rf $S/copy34。git -C $W status --short が空
 ```
 - `check_copy34.mjs`: `list/sakura-script`・`memo/memo` の印・包み・字・コピーを数え、`memo/memo` の誤りのブロックの範囲・`title`・`text-decoration`・下線と地の対比・ボタンのコピーを明で測り、画面を撮り、ヘッダの切り替えで暗にして同じく測って撮り、暗のまま読み込み直して警告を見る
+
+## 測る版（タスク 4.1、2026-10-25）
+
+- `git -C ukadoc-spec fetch origin` の後も `origin/main` は `0eb3fb9` のまま（作業木の分岐点）。merge は要らず、`origin/main` は作業木の先祖
+- Build Gate は 3.1 で `4ce6b5e` に対して exit 0（その後の作業木の変更なし）。控えと 2.2〜3.4 の確かめは作り直さない
+- 4.2・4.3 は作業木 `4ce6b5e`（`origin/main` `0eb3fb9` の上）で測る
