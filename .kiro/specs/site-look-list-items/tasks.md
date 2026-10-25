@@ -1,13 +1,13 @@
 # Implementation Plan
 
-- [ ] 1. 土台: 作業木と変更の前の控え
+- [x] 1. 土台: 作業木と変更の前の控え
 - [x] 1.1 ukadoc-spec の `origin/main` の最新から PR の単位の作業木を作り、プレビューを起動する
   - ukadoc-spec を fetch し、`origin/main`（PR #10 を含む）から単位 `site-look-visibility` の作業木とブランチを作る。この spec が単位の最初なので新しく作る（既にあれば、先頭が `origin/main` と同じことを確かめて使う）。ukadoc-spec のメインのチェックアウトは使わない
   - 作業木で `prepare_site.py` と `zensical build --strict` を流してから `zensical serve` を起動する（doc_edit の `.venv` を使う）
   - 作業木の先頭が `origin/main` と同じコミットで、`/ukadoc-spec/list/sakura-script/` の頁がプレビューで開ける
   - _Requirements: 9.3_
 
-- [ ] 1.2 変更の前の画面を撮り、変わらないことを比べるための控えを取る
+- [x] 1.2 変更の前の画面を撮り、変わらないことを比べるための控えを取る
   - プレビューが動いていなければ、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
   - `shot.mjs`（読むだけで使う）で `manual/ghost` の `h1#ゴースト` を明・暗で撮り、`before-manual-ghost-{light,dark}.png` として spec の `screenshots/` に置く。二重に重なった跡があれば撮り直す
   - 変更の前の build の、まとめ頁 20 頁の見出しの id の並び・`class="headerlink"` の数・`class="md-nav__link"` の数・`<hr />` の数と、`_raw/` の中身を、doc_edit の `.worktrees/_baseline-site-look-list-items/`（git に載らない。spec の完了まで残し、2.2・4.4・4.6 がここを読む）に控える
@@ -124,3 +124,4 @@
 
 ## Implementation Notes
 - 変更の前の控え `.worktrees/_baseline-site-look-list-items/` は git に載らない。`/kiro-complete site-look-list-items` の後始末で消す
+- 控えの置き場の `snapshot.py`（20 頁の id・headerlink・md-nav__link・hr と `_raw/` のハッシュ）と `overlap.mjs`（ボタンの重なり、Edge ヘッドレス）を 2.2・4.4・4.6 でもそのまま使い、物差しをそろえる。変更の前の重なりは幅 1000 で 172/288（設計の 165 は幅 1024 の数）
