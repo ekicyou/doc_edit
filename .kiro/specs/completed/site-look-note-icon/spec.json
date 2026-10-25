@@ -1,0 +1,29 @@
+{
+  "feature_name": "site-look-note-icon",
+  "created_at": "2026-10-25T18:30:00+09:00",
+  "updated_at": "2026-10-25T23:30:00+09:00",
+  "language": "ja",
+  "phase": "completed",
+  "approvals": {
+    "requirements": {
+      "generated": true,
+      "approved": true
+    },
+    "design": {
+      "generated": true,
+      "approved": true
+    },
+    "tasks": {
+      "generated": true,
+      "approved": true
+    }
+  },
+  "ready_for_implementation": true,
+  "completed_at": "2026-10-25T23:30:00+09:00",
+  "ukadoc_spec": {
+    "pr_unit": "site-look-note-icon",
+    "pr": "https://github.com/ukatech/ukadoc-spec/pull/14",
+    "state": "MERGED",
+    "merge_commit": "b1f8ab1c1fb61d894b467cf5ff272653533f8fcf"
+  }
+}
