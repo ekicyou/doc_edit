@@ -193,3 +193,136 @@ sha256sum logo.tmp assets/logo.png                                              
 - 配られた `extra.css` は作業木のファイルと同じで、`site-look-note-icon:` の見出しのコメントが 2 つある
 - 配られた `assets/logo.png` は 200 で返り、中身が作業木の `assets/logo.png` と同じ
 - 起動の直後の 1 回だけ `logo.png` が 404 だった（`serve` が `_site_src/` を写し終える前）。数秒後に取り直して 200 だった
+
+## 効き
+
+### 測り方（4.3）
+- 日付: 2026-10-25。作業木 `5938d27` の `zensical serve`（`http://127.0.0.1:8000/ukadoc-spec/`）
+- 使い捨ての `scratchpad\probe.mjs`（`shot.mjs` と同じ Edge ヘッドレス + CDP、標準の `fetch` と `WebSocket` だけ、1000×700）で、頁を明（`prefers-color-scheme: light`）で開き、`article` の中のすべての `h1`〜`h6` の `getComputedStyle(h, '::before').backgroundImage` と、注意書きの題の `::before` を読んだ。続けて、ヘッダの `form[data-md-component=palette]` の見えている `label`（「ダークモードに切り替え」）の真ん中を本当に押し、読み込み直さずに同じ値を読み直した
+- 読み込み直していないことは、開いた後に頁に置いた印 `window.__mark` が押した後も残っていることで見た
+- `warning` の注意書きは IconCheck の表の 7 頁に無いので、`warning` を持つ `descript/shell-surfaces`（3 個）を足して 8 頁を見た
+
+```sh
+# scratchpad の中で。B = http://127.0.0.1:8000/ukadoc-spec
+for p in list/sakura-script list/propertysystem list/shiori-event-ex descript/ghost descript/install descript/shell dev/shell descript/shell-surfaces; do node probe.mjs "$B/$p/"; done > applied.jsonl
+```
+
+### 絵の当たる見出し（1.1・1.4・2.1・2.3・4.5）
+`::before` の `backgroundImage` に `logo.png` を持つ見出しは、どの頁でも `.bundle-notes > :first-child` と `.bundle-supplement` の見出しと、数・並びまで同じだった。絵の幅は、どの見出しでも見出しの字の大きさの **1.5 倍**だった。
+
+| 頁 | 見出しの数 | 絵の当たる見出し（並び） | 数 |
+|---|---|---|---|
+| `list/sakura-script` | 649 | `h2` `notes_escape`・`notes_lifespan`、`h3` `notes_move`・`balloon-text-note-1`・`choice-marker-note-1`・`event-note-1`・`notes_sound`・`notes_sound_spectrum`・`notes_inputbox-option`・`notes_inputbox-id`・`notes_selectfile`・`notes_passivemode`・`notes_inductionmode`・`notes_executehttp`・`notes_executeical`・`notes_executerss`・`notes_environmentvariable` | 17（注釈 14・補足 3） |
+| `list/propertysystem` | 206 | `h3` `note-1`、`h4` `notes_sound_meta`・`notes_sound_propertyset` | 3（注釈 2・補足 1） |
+| `list/shiori-event-ex` | 229 | `h2` `note-1`・`note-2`、`h3` `ghost-common-note-1`・`ghost-kanaderu-nichijo-no-neiro-note-1`・`plugin-weather-station-note-1`・`app-ghost-terminal-note-1`・`app-ghost-terminal-note-2`・`note-3`・`app-elin-note-1` | 9（補足） |
+| `descript/ghost` | 83 | `h3` `note-1` | 1（補足） |
+| `descript/install` | 39 | `h3` `note-1` | 1（補足） |
+| `descript/shell` | 112 | `h3` `note-1` | 1（補足） |
+| `dev/shell` | 17 | なし | 0 |
+| `descript/shell-surfaces` | 192 | なし | 0 |
+| 計 | | | **32**（注釈 16・補足 16） |
+
+- 補足の項目の中の節の見出し（`h4`）、項目名・分類の見出し、注釈の節の中の見出しには、どれも絵が無い（1.4・2.3）
+- 絵は `content: ""` の背景なので、見出しの字は変わらない（4.5。字は「目印」の「変わらないこと」で控えと同じ）
+
+### 注の題と `tip`・`warning`（3.1・3.3・3.4・3.5）
+| 頁 | 題 | 数 | `::before` の `maskImage`（`-webkit-` も） | `backgroundImage` | `backgroundColor` |
+|---|---|---|---|---|---|
+| `dev/shell` | `.note`（「注」） | 2 | `none` | `logo.png` | `rgba(0, 0, 0, 0)`（透明） |
+| `dev/shell` | `.tip` | 5 | テーマの炎の SVG（`none` でない） | `none` | `rgb(0, 191, 165)` |
+| `descript/shell-surfaces` | `.warning` | 3 | テーマの三角の SVG（`none` でない） | `none` | `rgb(255, 145, 0)` |
+
+- `.note` の題は鉛筆の型抜きが外れ、地の青が透明に戻り、絵だけが出る（3.1）。2 個とも同じ値で、題の字に依らない（3.5）
+- `.tip`・`.warning` の題は Material の印のまま（3.4）
+- `dev/shell` の注意書きの本文の中の見出し「※1」（`h4#1`）・「※2」（`h4#2`）の `::before` の `backgroundImage` は `none`（3.3）
+
+### 切り替え（4.3）
+8 頁とも、押した `label` は「ダークモードに切り替え」で、`<body>` の `data-md-color-scheme` が `default` → `slate` に変わり、`window.__mark` が残っていた（読み込み直していない）。切り替えの後に読み直した値（絵の当たる見出しの並び・幅の比・注の題と `tip`・`warning` の 4 つの値・「※1」「※2」）は、8 頁とも明で読んだ値と**同じ**だった。
+
+## 画面
+
+### 撮った版と撮り方（4.4）
+- 日付: 2026-10-25。作業木 `5938d27` の `zensical serve`（`http://127.0.0.1:8000/ukadoc-spec/`）。控えは `529d092` の配り（`http://127.0.0.1:8010/ukadoc-spec/`）
+- `site-look-plan/tools/shot.mjs` を読むだけで使い、既定の 1000×700 で明・暗を撮った。明・暗は `prefers-color-scheme` で選んだ
+
+```sh
+# spec のフォルダ（.kiro/specs/site-look-note-icon/）の中で。T = ../completed/site-look-plan/tools/shot.mjs、B = http://127.0.0.1:8000/ukadoc-spec、s = light・dark
+node $T "$B/list/sakura-script/"  "#notes_escape"     screenshots/after-sakura-script-notes-$s.png  $s
+node $T "$B/list/propertysystem/" "#note-1"           screenshots/after-propertysystem-note-$s.png  $s
+node $T "$B/list/propertysystem/" "#notes_sound_meta" screenshots/after-propertysystem-notes-$s.png $s
+node $T "$B/dev/shell/"           ".admonition.note"  screenshots/after-dev-shell-note-$s.png       $s
+```
+
+### 撮った画面（7.4・7.5）
+| 画面 | 頁 | 位置 | 見比べた目標の画面 |
+|---|---|---|---|
+| `after-sakura-script-notes-{light,dark}.png` | `list/sakura-script/` | `#notes_escape` | `mock-sakura-script-C26-{light,dark}` |
+| `after-propertysystem-note-{light,dark}.png` | `list/propertysystem/` | `#note-1` | `mock-propertysystem-C26-{light,dark}` |
+| `after-propertysystem-notes-{light,dark}.png` | `list/propertysystem/` | `#notes_sound_meta`（設計の id のとおり在った） | なし（段が `h4` の注釈の節） |
+| `after-dev-shell-note-{light,dark}.png` | `dev/shell/` | `.admonition.note` | なし（注の題） |
+
+### 撮り直し（7.6）
+- 撮り直しは **2 枚**: `after-sakura-script-notes-light.png`・`after-sakura-script-notes-dark.png`。最初の画面は y ≈ 570 の所にヘッダの紺の行がもう 1 本あり、右の端にも紺の帯が出ていた（二重に重なった跡）。同じ式で撮り直し、重なりの無いことを見た
+- 撮り直した `after-sakura-script-notes-{light,dark}.png` のヘッダの題（「SAKURA Script」と前の題）の重なりは、題の切り替えの動きで、本文に響かないので撮り直していない（設計の「Error Handling」のとおり）
+- 残した 8 枚は、上の端のほかに紺の行が無いことを 1 枚ずつ見た
+
+### 目標の画面との見比べ（1.2・2.2・4.2・4.4）
+比べたのは見出しの頭の絵（大きさ・縦の位置・字との間・暗い表示での見え方）だけ。目標の画面のほかの候補の部分（C04 の箱・C01 の帯の表など）は見ていない。目で見たうえで、使い捨ての `scratchpad\cmp.py`（Pillow）で見出しの区画を目標の画面と画素で比べた（色の差が 24 を超える画素の数）。
+
+| 見出し | 表示 | 比べた区画 | 違う画素 | 見え方 |
+|---|---|---|---|---|
+| `#notes_escape`（`h2`、中央寄せ） | 明 | x 160〜600・y 60〜105 | 12 | 絵の大きさ・縦の位置・字との間が目標と同じ。違う画素は絵の縁のにじみだけ |
+| 同上 | 暗 | 同上 | 27 | 同上。暗い地の上でも絵の色は明と同じで、縁の白が見える |
+| `#notes_lifespan`（`h2`、中央寄せ） | 明 / 暗 | x 195〜540・y 455〜500 | 12 / 27 | 同上 |
+| `#note-1`「補足」（`h3`、C01 の帯） | 明 | x 20〜200・y 58〜98 | 548 | 絵の大きさ（字の 1.5 倍）・字との間・帯の左の余白の後ろに並ぶことは目標と同じ。帯の高さが目標より 2px 低く（目標 約 46px・変更の後 44px）、絵と字が帯の中で 1px 上に来るため、絵と字の輪郭の画素がずれて数えられた |
+| 同上 | 暗 | 同上 | 573 | 同上。帯の薄い白の重ねの上で、絵の色は明と同じ |
+
+- 目に見える違いは無い。`#note-1` の 1〜2px は、拡大して並べた画面（`scratchpad\prop-cmp-{light,dark}.png`。スクラッチだけに置いた）で見て、絵そのものの大きさ・形は同じ
+
+### 段が `h4` の注釈の節と注の題（1.3・3.2・4.6）
+使い捨ての `scratchpad\eval.mjs`（`probe.mjs` と同じ CDP で式を 1 つ評価する）と `keep.js` で、控え（8010）と変更の後（8000）の明・暗で、次の要素の `textAlign`・`fontSize`・`lineHeight`・`fontWeight`・`color`・`backgroundColor`・`borderTop`・`borderBottom`・`borderLeft`・`paddingLeft`・`marginTop`・`marginBottom` と高さを読んで比べた。
+
+| 頁 | 要素 | 結果 |
+|---|---|---|
+| `list/propertysystem` | `#notes_sound_meta`・`#notes_sound_propertyset`（`h4`）、その箱、箱の中の段落 | 中央寄せ・下の点線（C04）・箱の点線の枠と地・字の大きさと行間はすべて控えと同じ。違うのは高さだけ（見出し 36.2 → 36.6px、箱 307.3 → 307.7px） |
+| `list/propertysystem` | `#note-1`（C01 の帯）、その次の要素 | 帯の左の線・地・下の線・字はすべて控えと同じ。違うのは帯の高さだけ（43 → 44px） |
+| `list/sakura-script` | `#notes_escape`（`h2`）、その箱 | 中央寄せ・下の点線・枠と地は控えと同じ。違うのは高さだけ（見出し 51 → 53.8px、箱 357.3 → 360.1px） |
+| `dev/shell` | `.admonition.note`・その題・本文の段落 | 明・暗とも、読んだ値がすべて控えと**同じ**（題の字・地・枠、本文の字の大きさと行間） |
+
+- 高さの違いは、字の 1.5 倍の絵（`inline-block`、`vertical-align: -.35em`）が見出しの行の箱を少し高くするためで、目標の画面 `mock-sakura-script-C26-*` でも同じだった（上の画素の比べで `#notes_escape` と `#notes_lifespan` の位置が目標と合う）
+- `after-propertysystem-notes-{light,dark}.png` で、`h4` の見出しの字の前に字の 1.5 倍の絵が、中央寄せの字と一緒に並ぶ。下の点線・箱の枠は控えと同じに見える
+- `after-dev-shell-note-{light,dark}.png` で、注の題の頭に鉛筆の代わりに絵が出て、青の四角は出ない。題の字「注」・題の地・青の枠・本文は控えと同じに見える。暗い表示でも絵の色は同じ
+
+## 失わないもの
+
+### 幅 375（6.3）
+`shot.mjs` を幅 375×高さ 812 で、画面を書かずに（出力 `-`）流した。`scrollWidth` は縦のスクロールバーの幅を足した値（`shot.mjs` の数え方）。
+
+```sh
+node $T "$B/<頁>" "<位置>" - $s 375 812   # 位置: list/sakura-script は #notes_escape、list/propertysystem は #notes_sound_meta、list/shiori-event-ex は #note-1、dev/shell は .admonition.note
+```
+
+| 頁 | 明 `scrollWidth` / `innerWidth` | 暗 `scrollWidth` / `innerWidth` |
+|---|---|---|
+| `list/sakura-script` | 375 / 375 | 375 / 375 |
+| `list/propertysystem` | 375 / 375 | 375 / 375 |
+| `list/shiori-event-ex` | 375 / 375 | 375 / 375 |
+| `dev/shell` | 375 / 375 | 375 / 375 |
+
+- 8 つとも 375 で、横にはみ出さない
+
+### 折り返し（決定 7）
+- いちばん長い `notes_` の見出しは `list/sakura-script` の `#notes_selectfile`（「ファイルを開く / ファイルを保存 / フォルダ選択 / カラーパレット選択 パラメータ」、44 字）。幅 375 の明るい表示で撮って目で見た（`scratchpad\w375-notes_selectfile-light.png`。スクラッチだけに置いた）: 3 行に折り返し、1 行目は絵と「ファイルを開く / ファイル」で、**絵だけが 1 行目に残ることは無い**
+- あわせて `scratchpad\wrap.js` で、幅 375 の明るい表示の絵の当たる見出し 29 個（`list/sakura-script` 17・`list/propertysystem` 3・`list/shiori-event-ex` 9）の最初の字が 1 行目にあることを見た: 29 個とも 1 行目にあった
+
+### コピーのボタン（6.4）
+- 控え（8010）と変更の後（8000）の `list/sakura-script/` で、`article` の中の `pre` は 288 / 288、コピーのボタン（`button.md-code__button`、題「クリップボードへコピー」）は 288 / 288 で同じ
+- 2 つの配りの `list/sakura-script/#bang-lock-repaint` を明で撮って並べた（`scratchpad\copy-{8010,8000}-light.png`。スクラッチだけに置いた）: 2 つの記述例のコピーのボタンは、同じ位置（記述例の右上）・同じ形・同じ色で、変わっていない
+- コピーされる字（本文の字）は「目印」の「変わらないこと」で控えと同じ
+
+### `#notes_escape` の `\`（6.5）
+- `scratchpad\copy.js` で、2 つの配りの `list/sakura-script/` の `#notes_escape` の箱の `innerText`（空白を詰めたもの）を比べた: **同じ**（どちらも 320 字、`\` はどちらも 8 個、`¥`・`￥` はどちらも 0 個）
+- 画面でも、控えの `#notes_escape`（`scratchpad\base-sakura-script-notes-light.png`）と `after-sakura-script-notes-light.png` の「「\」」「「\\」」「「\%」」「`\q[ラベル名,ID]`」「「\]」」「`\![raise,…]`」「`\![call,…]`」は同じ字形（バックスラッシュのまま。円の記号にならない）で出ていた
+
+### 開発者に見せるとき（7.7）
+- 開発者にプレビューや画面を見せるときは、古い `extra.css` が残らないよう Ctrl+F5 を頼む

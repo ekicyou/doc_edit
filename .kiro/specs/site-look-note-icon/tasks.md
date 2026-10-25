@@ -65,7 +65,7 @@
   - `verification.md` の「配り」の節に、2 つの塊と絵が配られていることを確かめた結果が書いてある
   - _Requirements: 5.1, 7.1_
 
-- [ ] 4.3 絵の効きと当たらないことと切り替えを、配られた頁の見た目で調べる
+- [x] 4.3 絵の効きと当たらないことと切り替えを、配られた頁の見た目で調べる
   - プレビューが動いていなければ、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
   - 設計の IconCheck の表の 7 頁で、`article` の中のすべての見出しの `::before` の `backgroundImage` を読み、`logo.png` を持つのが注釈の節の見出しと補足の項目の頭の見出しの 32 個だけであることを見る
   - `.note` の題の `::before` が `maskImage` `none`・`backgroundImage` に `logo.png`・地が透明で、`.tip`・`.warning` の題は `maskImage` が残り、「※1」「※2」の見出しに絵が無いことを見る
@@ -74,7 +74,7 @@
   - `verification.md` の「効き」の節に、頁ごとの絵の当たる見出しの id、注の題と `tip`・`warning` の結果、切り替えの結果が書いてある
   - _Requirements: 1.1, 1.4, 2.1, 2.3, 3.1, 3.3, 3.4, 3.5, 4.3, 4.5, 7.7_
 
-- [ ] 4.4 変更の後の画面を撮り、目標の画面との見比べと、失わないものを確かめる
+- [x] 4.4 変更の後の画面を撮り、目標の画面との見比べと、失わないものを確かめる
   - プレビューが動いていなければ、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
   - 設計の「VerificationRecord」の画面の一覧のとおり、`shot.mjs`（読むだけで使う）で `after-` の 8 枚を明・暗で撮って spec の `screenshots/` に置く。二重に重なった跡があれば撮り直し、枚数とわけを控える
   - 見出しの頭の絵（大きさ・縦の位置・字との間・暗い表示での見え方）だけを、目標の画面（`mock-sakura-script-C26-*`・`mock-propertysystem-C26-*`）と見比べる。段が `h4` の注釈の節と `dev/shell` の注の題を明・暗で見て、C04 の中央寄せと点線・C01 の帯・注の題の字と地と枠・本文の字の大きさと行間が保たれていることを見る
