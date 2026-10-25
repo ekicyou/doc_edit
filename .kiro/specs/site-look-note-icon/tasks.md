@@ -8,7 +8,7 @@
   - 作業木の先頭が `origin/main` と同じコミットで、ブランチに追う先が無く、`/ukadoc-spec/list/sakura-script/` の頁がプレビューで開ける
   - _Requirements: 8.4_
 
-- [ ] 1.2 変更の前の控えを書き出して配り、変わらないことを比べる数を取る
+- [x] 1.2 変更の前の控えを書き出して配り、変わらないことを比べる数を取る
   - 作業木の HEAD を `git archive` で Claude のスクラッチの下の新しいフォルダに書き出し、`prepare_site.py` と `zensical build --strict` を流して、`_site/` を 8000 以外の口（例: 8010）で配る
   - 控えの置き場と、書き出した作業木のコミットを控える（後のタスクが控えを配り直す・作り直すときに使う）
   - 控えの 40 頁で、`article` の中の見出しの id の並び・`class="headerlink"` の数・`class="md-nav__link"` の数・`hr` の数・本文の字（空白を詰めたもの）・`bundle-item`・`bundle-category`・`bundle-notes`・`bundle-support`・`bundle-default` の数（`class` の値の中の語として数える。`class="…"` の字の並びでは数えない）と、`_raw/` の中身を控える
