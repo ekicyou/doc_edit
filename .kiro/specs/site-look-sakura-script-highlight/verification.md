@@ -548,3 +548,9 @@ for s in light dark; do node $T $U/list/sakura-script/ "#bang-lock-repaint" - $s
 - この PR だけで壊れない: 言語の印・スクリプト・見た目の指定は 1 コミット（`0c94a01`）にそろって入り、Build Gate は exit 0（「Build Gate と規約 Gate」）、スクリプトを切った頁は今の見え方（「字とコピー」）
 - 作業木に未コミットの変更 0、ブランチ `site-look-sakura-script-highlight` は追う先なしで未 push（`ls-remote` 0 件）。PR は `/kiro-complete` で作る
 - プレビュー（8000）と控えの配り（8030）を止め、スクラッチの控え（`before/`）を消した
+
+## 整合性（タスク 6、2026-10-25）
+
+- 新しい頁・ディレクトリは作らない（`git diff --name-status origin/main` は `CLAUDE.md`・`assets/extra.css`・`assets/sakurascript.js`（新規）・`mkdocs.yml` だけ）。`index.md` の `## 一覧`・`.nav.yml`・`INDEX.md`・`llms.txt` に足す所は無い
+- Build Gate: 作業木 `4ce6b5e` で `prepare_site.py` exit 0、`zensical build --strict` exit 0
+- steering: `tech.md` に「ブラウザの仕掛け」（`assets/` の自作スクリプトを `extra_javascript` で読む、外部の資源を読まない、誤りは救済せず波線と警告で示す）、`structure.md` に `assets/` の型を書き足した

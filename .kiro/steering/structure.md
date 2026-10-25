@@ -41,6 +41,7 @@
 - どのディレクトリにも `index.md` があり、その `## 一覧` が項目の順序を決める。一覧に無いファイルがあると `prepare_site.py` が止まる
 - 新しいページを作ったら、ルートの `.nav.yml` と `INDEX.md` の目次にも加える
 - `manual/` `dev/` `memo/` は 1 ファイル 1 ページ
+- サイトの見た目は `assets/extra.css`（spec ごとに見出しのコメントで始まる塊を末尾に足す）、ブラウザの仕掛けは `assets/*.js`（`extra_javascript` で読む）。`prepare_site.py` が `assets/` を丸ごと写すので、ファイルを足しても前処理は変えない
 
 ## Naming Conventions
 

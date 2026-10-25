@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. 土台: 作業木と変更の前の控え
+- [x] 1. 土台: 作業木と変更の前の控え
 - [x] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューを起動する
   - ukadoc-spec を fetch し、`origin/main` から作業木 `.worktrees/site-look-sakura-script-highlight/` とブランチ `site-look-sakura-script-highlight` を作る。ukadoc-spec のメインのチェックアウトは使わない
   - 作った直後に追う先を外す（素の `git push` で `main` に送らないため）
@@ -16,7 +16,7 @@
   - spec の `verification.md` を作り、「変更の前」の節に、控えの置き場・作業木のコミット・控えた数が書いてある
   - _Requirements: 3.4, 5.2, 6.1, 7.2, 9.9, 9.10_
 
-- [ ] 2. 言語の印と着色
+- [x] 2. 言語の印と着色
 - [x] 2.1 `mkdocs.yml` に言語の印とスクリプトの読み込みを足し、`assets/sakurascript.js` を書く
   - プレビューを止めてから書く（書きかけの `_site_src/` を拾わせない）
   - 設計の「Modified Files」のとおり、`markdown_extensions` に `pymdownx.highlight`（`use_pygments: false`）を `pymdownx.superfences` の前に、`extra_css` の後に `extra_javascript` の `assets/sakurascript.js` を足す。ほかの行と `scripts/prepare_site.py`・`requirements.txt` には触らない
@@ -45,7 +45,7 @@
   - `git show --stat` が `CLAUDE.md` の 1 行の変更だけで、原稿の ```` ```sakurascript ```` が 287 のまま
   - _Requirements: 8.1, 8.2_
 
-- [ ] 3. 配られた頁の数と字の確かめ
+- [x] 3. 配られた頁の数と字の確かめ
 - [x] 3.1 Build Gate と規約 Gate を通し、変更の範囲を確かめる
   - プレビューを止めてから、作業木で `prepare_site.py` と `zensical build --strict` を流す
   - 規約 Gate（ukadoc-spec の `CLAUDE.md` の決まり）に照らす
@@ -79,7 +79,7 @@
   - `verification.md` の「`ss` と読み物の頁」「誤りの見え方」の節に、数・見え方・警告・下線の対比が書いてあり、`screenshots/` に `after-error-*` の 2 枚がある
   - _Requirements: 1.2, 1.4, 2.11, 3.8, 9.5, 9.13_
 
-- [ ] 4. 対比と画面
+- [x] 4. 対比と画面
 - [x] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `mkdocs.yml` は両方の行を、`extra.css` は両方の塊を残して直す
   - merge したときは Build Gate（3.1）をやり直し、原稿か見た目の指定が変わっていれば、控えを新しい `origin/main` から 1.2 と同じ手順で作り直して、2.2・3.2・3.3・3.4 の確かめをやり直し、`verification.md` の数を直す
@@ -105,7 +105,7 @@
   - `after-` の画面がそろい、`verification.md` の「画面」の節に、見比べ・幅 375・撮り直しの枚数が書いてある
   - _Requirements: 3.1, 3.2, 5.3, 6.1, 7.3, 9.6, 9.7, 9.9, 9.11_
 
-- [ ] 5. 記録と PR に出せる状態
+- [x] 5. 記録と PR に出せる状態
 - [x] 5.1 `verification.md` の記録を仕上げる
   - 頭に、測った版（作業木のコミット、`origin/main` の版）と日付、流した式（Build Gate・LexerCheck・PageCheck・測りのスクリプト）をそのまま書く
   - 1.2・2.2・3.1〜3.4・4.1〜4.3 の節がそろっていることを見て欠けを埋め、Build Gate・規約 Gate・`git diff --stat origin/main` を書く
@@ -121,7 +121,7 @@
   - 作業木に未コミットの変更が無く、`origin/main` が作業木の先祖で、ブランチ `site-look-sakura-script-highlight` がまだ push されていない
   - _Requirements: 10.6, 10.7_
 
-- [ ] 6. 整合性の確認と更新
+- [x] 6. 整合性の確認と更新
   - ukadoc-spec: 新しい頁・ディレクトリは作らないので、`index.md` の `## 一覧`・`.nav.yml`・`INDEX.md`・`llms.txt` に足す所が無いことを確かめる
   - Build Gate（`prepare_site.py` と `zensical build --strict`）が通る
   - doc_edit: 初めて決めた方針（`assets/` の自作のスクリプトを `extra_javascript` で読み、外部の資源を読まないこと、記述例の誤りを救済せず波線と警告で示すこと）を steering（`tech.md`・`structure.md`）に書き足し、「doc_edit への記録」のとおり自分の道だけをコミットして push する
