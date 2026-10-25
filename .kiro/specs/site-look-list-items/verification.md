@@ -220,10 +220,46 @@ fg は `getComputedStyle` の `color`、bg は重ねた地（表は整数に丸�
 - 注（レビューで足した）: テーマは ¶（`.headerlink`）をふだん `opacity: 0` にしているので、¶ の「ふだん」の行は見えていない字の `color` で出した数である。見えるのはホバー・フォーカスのときで、その行は `opacity: 1` まで待って測った。C01 の帯の中のリンクの明るい表示の 7.11 は、`getComputedStyle` が丸めた地のアルファ（.07）で出した数で、丸める前の地（237.0）では 7.10。どちらも 7:1 の線を満たす
 
 ## 詰め
+- 4.4。日付 2026-10-25。作業木 `902a7f1` の `zensical serve`（`http://127.0.0.1:8000/ukadoc-spec/descript/ghost/`）。幅 1000×高さ 700、明
+- スクリプト: 控えの置き場の `layout.mjs`（`node layout.mjs gap <url> [width] [height]`。Edge ヘッドレス + CDP、`overlap.mjs` の作りを写した）。`#charset` の置き方は `shot.mjs` と同じ（読み込みの後 2 秒待ち、`#charset` の上を「ヘッダの高さ + 8px」にスクロールし、1.5 秒待つ）
+- ヘッダの高さ 48px、スクロール 1007px、`#charset` の上は画面の 56.0px
+- `#charset` から 4 項目目は `craftman`（`charset`・`name`・`type`・`craftman`）。その終わり（次の `hr` の上。`hr` の次は `craftmanw`）は画面の **679.9px** で、高さ 700 の中にある（設計の写しでは 680px）
 
 ## ボタン
+- 4.4。作業木 `902a7f1` の `serve` の `list/sakura-script/`。1.2 の `overlap.mjs` をそのまま使った（`node overlap.mjs <url> <width> 700`。空白でない字だけを数える定義のまま）
+
+| 幅 | `pre > code` | ボタン | 重なるブロック（変更の前、1.2） | 重なるブロック（変更の後） |
+|---|---|---|---|---|
+| 1000 | 288 | 288 | 172 | **0** |
+| 375 | 288 | 288 | （測っていない） | **0** |
+
+- 参考に幅 375×高さ 812 でも 0
 
 ## 箱
+- 4.4。作業木 `902a7f1` の `serve`。幅 1000×高さ 700、明。スクリプト: 控えの置き場の `layout.mjs`（`node layout.mjs box <基の url> <頁>...`）
+- 数え方: 頁の `.highlight` のうち、別の `.highlight` の中に無いものを順に見る。前の要素を `.highlight` でないものまでたどり、その要素（連なりの頭）と、連なりの中の順番（1 起点）を出す。`getComputedStyle` の `border-left-width` が 0 でなく `border-left-style` が `none` でないものを「箱（左の線）」、`border-top-style` が `dashed` のものを「点線」とする。食い違いは「左の線がある ≠ 頭が `h4`」か「点線がある ≠ 頭が `h4` で順番が 2 以上」の `.highlight` の数
+- サイトの全頁（`_site/` の `index.html` の 40 頁。頭の頁を含む）を走査した。`.highlight` 449・箱 325・点線 **36**・食い違い **0**。箱の 325 から点線の 36 を引いた 289 は、設計の記述例の見出しの数 289 と同じ
+
+設計の 9 頁:
+
+| 頁 | `.highlight` | 箱（左の線） | 点線 | 食い違い |
+|---|---|---|---|---|
+| `list/sakura-script` | 288 | 288 | 33 | 0 |
+| `spec/plugin` | 4 | 0 | 0 | 0 |
+| `spec/sstp` | 18 | 3 | 0 | 0 |
+| `descript/shell-surfaces` | 21 | 2 | 0 | 0 |
+| `spec/dll` | 4 | 2 | 0 | 0 |
+| `spec/saori-ex` | 27 | 21 | 3 | 0 |
+| `list/propertysystem` | 5 | 2 | 0 | 0 |
+| `descript/install` | 10 | 2 | 0 | 0 |
+| `manual/ghost` | 1 | 0 | 0 | 0 |
+
+- 9 頁の外で箱がある頁: `descript/balloon`・`descript/ghost`・`descript/headline`・`descript/plugin`・`descript/shell` が各 1（点線 0、食い違い 0）。ほかの 26 頁は箱 0・食い違い 0（その 26 頁の `.highlight` 66 個は、どれも頭が `h4` でなく、左の線も点線も無い）。点線は 9 頁の外に 0
+
+### 区切りの線
+- 1.2 の `snapshot.py` を作業木 `902a7f1` の `serve` に流し直した（出力はスクラッチ）。`before.json` と**バイト単位で同じ**で、20 頁の `<hr />` は **1921**（1.2 の控えと同じ）
+
+- 明るい表示だけで測った。暗い表示（`[data-md-color-scheme="slate"]`）で変わる指定は `@media screen` の中の地と線の色だけで、余白・線の幅・線の型・当て先は明・暗で同じなので、詰め・箱の有無・点線は明で足りる（レビューで足した）
 
 ## 着色の後の形
 
