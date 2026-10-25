@@ -191,3 +191,105 @@ node treecount.mjs http://127.0.0.1:8020/ $(cat pages.txt) > old-all.json
 ```
 
 `treecount.mjs` と `treecheck.js` は spec の外のスクラッチの `tools/` に置いた使い捨てのスクリプトである。
+
+## 画面（4.5）
+
+- 日付: 2026-10-25。撮った版: 作業木 `site-look-manual-files` の `75c7433` を `zensical serve` で配ったもの（`http://127.0.0.1:8000/ukadoc-spec/`。止めず・build し直さずにそのまま使った）
+- 道具: `shot.mjs`（`.kiro/specs/completed/site-look-plan/tools/`。読むだけで使い、直していない）。1 枚ごとに使い捨てのプロファイルの Edge ヘッドレスで撮る
+- `screenshots/` に `after-` の画面 14 枚（7 組 × 明・暗）を置いた。どの画面も `scrollWidth` = `innerWidth` = 1000
+
+| 画面 | 頁 | セレクタ | 大きさ |
+|---|---|---|---|
+| `after-ghost-{light,dark}.png` | `manual/ghost/` | `h1#ゴースト` | 1000×700 |
+| `after-ghost-C22-{light,dark}.png` | `manual/ghost/` | `.md-typeset > ul` | 1000×900 |
+| `after-balloon-{light,dark}.png` | `manual/balloon/` | `.md-typeset > ul:has(> li > strong.manual-item)`（最初の段落に分かれない項目 `balloonk*.pna`） | 1000×700 |
+| `after-install-{light,dark}.png` | `manual/install/` | `.md-typeset > ul` | 1000×900 |
+| `after-directory-{light,dark}.png` | `manual/directory/` | `.md-typeset > ul:has(+ ul + p + p + p + ul a[href$="#delete.txt"])`（`(myghost)\shell\master\` から `(myghost)\delete.txt`・`(myghost)\developer_options.txt` まで） | 1000×700 |
+| `after-directory-tree-{light,dark}.png` | `manual/directory/` | `.md-typeset pre`（最初の木） | 1000×900 |
+| `after-shell-tree-{light,dark}.png` | `manual/shell/` | `.md-typeset pre` | 1000×700 |
+
+### 撮り直し（7.9）
+
+- 撮り直した枚数: 0。14 枚すべてを Read で目で見て、二重に重なった跡は無かった
+- 目で見るのに加えて、`tools/ghostrows.py`（PIL）で、各画面の上の 60px より下の左の端（x=2）と右の端（x=幅−20）に、ヘッダの色（`rgb(31, 78, 140)`）の行がいくつあるかを数えた。14 枚とも 0 行
+- `after-directory-*` は、最初に書いたセレクタ（`ul:has(+ ul + ul …)`）が段落 3 つを挟む並びに合わず「セレクタが見つからない」で画面を書かなかった。セレクタを直して 1 回で撮った（書けた画面の撮り直しではないので数えない）
+
+### 目標の画面との見比べ（7.5）
+
+`after-ghost-*` を `mock-manual-ghost-C14-*`・`mock-manual-ghost-C15-*` と、`after-ghost-C22-*` を `mock-manual-ghost-C22-*` と、この spec の部分（ファイル名の行と帯・説明の字下げ・木のファイル名の色）だけ見比べた。頁の位置・大きさは目標の画面と同じ（題・前書き・木の位置が 1px も動いていない）。
+
+- ファイル名の行（2.1）: 名前が 1 行に、説明が次の行から始まる。C14 と同じ
+- 説明の字下げ（2.2）: 説明の左の端は x=40 で、C14・C22 の目標の画面の説明の左の端（x=40）と同じ。点は無い
+- ファイルの間（2.8）: C14 の細い線でなく、ファイル名の帯で分かれている（要件どおりの違い）
+- 帯（3.1）: 左の太い線・下の細い線・薄い地・`h3` と同じ大きさの字。C22 と同じ見え方。`updates2.dau`（名前だけ）の帯もほかと同じ左の端と幅（3.2。目標の画面では 6px ずれていた所がそろった）
+- 木のファイル名の色（4.1）: 明るい表示はファイル名 11 個が紺で、フォルダ名 3 個（`(myghost)`・`ghost`・`master`）と `+-`・注（`（旧仕様）`）は今の色のまま。C15 の明るい表示と同じ
+- 決めたとおりの違い 3 つ（設計の VerificationRecord）:
+  1. 帯の位置: 目標の画面の帯は本文の左の端より 6px 左（x=10）にあるが、この spec の帯は C01 と同じく本文の左の端（x=16）にある
+  2. 帯の中のリンク: 目標の画面では字の色だったが、明るい表示は本文のリンクの紺、暗い表示は白と下線（要件 3.6。`descript.txt`・`updates2.dau`・`updates.txt` の帯で見えている。リンクの無い `shiori.dll`・`(saori).dll` は字の色のまま）
+  3. 暗い表示の木の色: 目標の画面の緑から、明るい紺（`--md-typeset-a-color`）に変わった
+- この 3 つのほかに目に付いた違い: 帯の高さと帯の上下の間が目標の画面より少し詰まっている（帯の高さ 約 42px、目標の画面は 約 46px）。帯の宣言を C01 と分け合う（`:is(.bundle-item, .manual-item)`）ことによるもので、要件 3.1 の「C01 の項目名の帯と同じ見え方」どおり。本文のリンクの暗い表示の色の違い（目標の画面は暗い紺、今は明るい青）はこの spec の部分の外（サイト全体のリンクの色）
+
+### 目標の画面の無い 5 組（7.6）
+
+- `after-balloon-*`（2.5）: 段落に分かれない `balloonk*.pna`・`balloonp*def*.pna` の説明も名前の次の行から、ほかの項目（`balloonp*def*.png`・`balloonc*.png`）と同じ x=40 の字下げで始まる。説明の中の入れ子の箇条書き（`balloonc0.png …`）は点を残している
+- `after-install-*`（2.9）: 場合分けの名前（「標準的なゴーストの場合」「標準的な追加シェルの場合」）がファイル名と同じ帯になり、その下の木と注記の箱（ヒント）が説明と同じ左の端（x=40）にそろう。箇条書きの中の木と注記の箱の中の木（`(mysupplement)`）の両方で、ファイル名（`install.txt`・`developer_options.txt`・`dic_supplement.txt` など）にだけ色が付き、フォルダ名（`ghost`・`shell`・`master`）と注（`(SSPのみ)`）・`:` の行は今の色のまま
+- `after-directory-*`（3.4・6.6）: `(myghost)\shell\master\`・`(myghost)\shell\(additional_shell)\` の帯で `\` がそのまま見える。名前の一部だけのリンク `(myghost)\delete.txt`・`(myghost)\developer_options.txt` は、`(myghost)\` が字の色、リンクの部分だけが明るい表示は紺、暗い表示は白と下線。帯の後の段落（「シェルフォルダ内の…」）は帯でなく、本文の左の端のまま
+- `after-directory-tree-*`（4.5）: 「`readme.txt` または `readme.md`」「`terms.txt` または `terms.md`」で 2 つのファイル名のどちらにも色が付き、「または」と注（`(必要な時のみ)`）は今の色のまま。`(additional_shell)`・`shell`・`master` などフォルダ名は今の色。「`/`」の行（`ok_down.png/ok_up.png` など 3 行）はこの画面の範囲（最初の木）に無いので、同じ頁の 2 つ目の木（`#バルーン ~ pre`）を明・暗で別に撮って見た（spec の外のスクラッチの `shots45/extra-directory-tree2-{light,dark}.png`。`screenshots/` には置いていない）。`ok_down.png`・`ok_up.png` のどちらにも色が付き、「`/`」と注は今の色。包んだ字は 4.3 の数（`/`・または の 2 つ目 10 個）とも合う
+- `after-shell-tree-*`（4.4）: `alias.txt（旧仕様）` で `alias.txt` だけに色が付き、`（旧仕様）` は今の色のまま。`surfaces**.txt`・`surfacetable.txt` も名前だけに色が付き、注 `（SSPのみ）` は今の色
+
+### ファイル名とフォルダ名の見分け（4.3）
+
+- 明るい表示: ファイル名は紺（`rgb(31, 78, 140)`）、フォルダ名・`+-`・注は灰色がかった黒で、どの画面でもはっきり見分けられる
+- 暗い表示: ファイル名は明るい紺（`rgb(143, 180, 232)`）、フォルダ名・`+-`・注は灰白（`rgba(213, 216, 226, 0.82)`）。色合いの差は明るい表示より小さいが、`after-ghost-dark`・`after-install-dark`・`after-directory-tree-dark`・`after-shell-tree-dark` のどれでも、フォルダ名（`(myghost)`・`ghost`・`master`・`shell`・`(additional_shell)`）とファイル名を色で見分けられた。設計の話し合いで決めた色のままで、選び直しは要らないと見た
+
+## 失わないもの（4.5）
+
+自分の Edge ヘッドレス + CDP のスクリプト `tools/keep45.mjs` で、作業木（`http://127.0.0.1:8000/ukadoc-spec/`）と控え（`http://127.0.0.1:8010/`、`b1f8ab1`）を同じ式で開いて比べた。Edge は自分の空いた口と、スクラッチの下の新しいプロファイル（`edge45-*`）で起動し、終わりに子のプロセスごと止めてプロファイルを消した（残っている `msedge.exe` 0、`edge45-*` 0）。色の選びは `localStorage` に残るので、頁を開くたびに `Storage.clearDataForOrigin` で消し、`prefers-color-scheme` だけで明・暗が決まるようにした（開いた頁の `data-md-color-scheme` が明 `default`・暗 `slate` であることも見た）。
+
+### 検索の強調（6.2）
+
+帯 = 一番外の箇条書きの項目の頭の太字（控えには `manual-item` が無いので、`.md-typeset > ul > li > strong:first-child` と `… > li > p:first-child > strong:first-child` の形で取った）。
+
+| 頁 | 表示 | `mark` の数（後・控え） | 帯の中（後・控え） | 木の中（後・控え） | うち木のファイル名の `span` の中（後） |
+|---|---|---|---|---|---|
+| `manual/ghost/?h=descript` | 明 | 2・2 | 1・1 | 1・1 | 1 |
+| `manual/ghost/?h=descript` | 暗 | 2・2 | 1・1 | 1・1 | 1 |
+| `manual/directory/?h=readme` | 明 | 12・12 | 2・2 | 5・5 | 5 |
+| `manual/directory/?h=readme` | 暗 | 12・12 | 2・2 | 5・5 | 5 |
+
+- 見え方: どの `mark` も `visibility: visible`・`opacity: 1`・大きさが 0 でなく、地の色は控えと同じ（明 `rgba(255, 255, 0, 0.5)`、暗 `rgba(66, 135, 255, 0.3)`）。帯の地（明 `rgba(0, 0, 0, 0.07)`、暗 `rgba(226, 228, 233, 0.12)`）・木の地と違う色で、強調として見える。`manual/ghost/?h=descript` を明・暗で撮った画面（スクラッチの `shots45/mark-ghost-{light,dark}.png`）でも、帯の `descript` と木の `descript` に強調の地が見えた
+- 控えとの違いは、`mark` の中の字の色と大きさだけで、どれも決めたとおり: 帯の中は `h3` の大きさになり（高さ 19→24px）、リンクの中の字は暗い表示で白（3.6）。木のファイル名の中の字はファイル名の色（明 紺 `rgb(31, 78, 140)`、暗 明るい紺 `rgb(143, 180, 232)`）。`mark` の数・字・地の色は同じ
+- `mark` の入った帯と木のファイル名で、`mark` は包みの `span.filetree-file` の中に入り（ghost 1・directory 5）、強調も色も消えていない
+
+### 木のコピーのボタンと字（6.5）
+
+- `manual/ghost`（木 1）・`manual/directory`（木 2）の明・暗で、どの木にもコピーのボタン（`data-clipboard-target` が `#__code_0 > code`・`#__code_1 > code`）があり、控えと同じ
+- ボタンでコピーされる字（`data-clipboard-target` の `code` の `innerText`）が、控えの同じ木の字と 1 字も違わない（ghost 253 字、directory 913 字・552 字。`?h=` で `mark` が入った状態でも同じ）
+
+### `directory` の帯の `\`（6.6）
+
+- `manual/directory` の帯の字のうち `\` を含むもの 12 個（`(myghost)\`・`(myghost)\ghost\`・`(myghost)\ghost\master\` …）が、明・暗とも控えの同じ位置の太字の字と並びまで同じ。`after-directory-*` の画面でも `\` がそのまま見える
+
+### 幅 375（6.4・7.8）
+
+幅 375・高さ 812 で、明・暗の両方で開いた（画面は残していない）。
+
+| 頁 | 明 | 暗 |
+|---|---|---|
+| `manual/balloon`・`directory`・`ghost`・`install`・`owner-draw-menu`・`shell`・`translator`・`update`、`dev/nar`・`dev/update` | 10 頁とも `scrollWidth` 375 = `innerWidth` 375 | 10 頁とも `scrollWidth` 375 = `innerWidth` 375 |
+
+- 数え方は `shot.mjs` と同じ（縦のスクロールバーの幅を足して `innerWidth` と同じ物差しにする: `scrollWidth + innerWidth − clientWidth`）。生の値は 20 回とも `scrollWidth` 360 = `clientWidth` 360（縦のスクロールバー 15px）、`innerWidth` 375 で、横にはみ出した頁は無い
+
+### 流した式
+
+```sh
+# 画面（spec のフォルダで。B = http://127.0.0.1:8000/ukadoc-spec/manual）
+node ../completed/site-look-plan/tools/shot.mjs "$B/ghost/" 'h1#ゴースト' screenshots/after-ghost-light.png light 1000 700
+#   ほかの 13 枚も上の表のセレクタ・大きさで同じ式（light/dark）
+# 二重の跡（スクラッチの tools で）
+python ghostrows.py ".kiro/specs/site-look-manual-files/screenshots/after-*.png"
+# 失わないもの
+node keep45.mjs http://127.0.0.1:8000/ukadoc-spec/ http://127.0.0.1:8010/ keep45.json
+```
+
+`ghostrows.py`・`keep45.mjs`・`keep45.json` と見るための画面（`shots45/`）は、spec の外のスクラッチ `C:/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/95cb4bf7-32a6-4bf5-b971-42e18f7e2f04/scratchpad/` の下に置いた使い捨てのもの。
