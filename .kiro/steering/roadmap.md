@@ -22,12 +22,14 @@
 - [ ] site-look-definition-tables -- 「`- **名前**: 説明`」だけが並ぶ箇条書きを、原稿を変えずに組み立ての処理で 2 列の表にする（C23）. Dependencies: site-look-manual-files
 - [ ] site-look-note-icon -- 注釈の節・補足の項目・`!!! note` の見出しの頭に、添付の色付きのアイコンを付ける（C26）. Dependencies: site-look-list-markers
 - [ ] site-look-sstp-playback -- さくらスクリプトの記述例・プロパティシステム・SHIORI Event を、利用者の操作で手元のゴーストへ送れるようにする（C13）. Dependencies: site-look-sakura-script-highlight, site-look-definition-tables. PR: site-look-sstp-playback
+- [ ] site-look-top-page -- トップページ（`INDEX.md`）に印を付け、節の見出し・目次の分類・「ukadocの見方」の箇条書きを、ほかの頁と同じ帯で見せる（開発者の指摘、2026-10-25。候補番号なし）. Dependencies: site-look-list-items, site-look-manual-files
 
 依存の理由（どれも中身で依るもの。同じファイルを触るだけのものは書かない）:
 - `site-look-list-markers` の C04 の箱は、`site-look-list-items` の C01・C03 が `notes_` の見出しを帯から除くことに依る
 - `site-look-manual-files` の C22 は、C01 の項目名の帯を使う
 - `site-look-definition-tables` は、`manual/` のファイルの箇条書き（C14・C22 の当て先）を表にしないことを、`site-look-manual-files` の後に確かめる（C23 は段落を 2 つ以上持つ箇条書きを初めから除く）
 - `site-look-note-icon` の C26 は、C04 の箱に入る `notes_` の見出しにアイコンを付ける
+- `site-look-top-page` は、C01・C03 の帯の指定と、`site-look-manual-files` の C14・C22 の箇条書きの指定を、トップの印にも当てる
 - `site-look-sstp-playback` は、C10 の言語の印で記述例を見分け、プロパティシステムのキーの表（C23）からプロパティの名前を組み立てる
 - `site-look-sakura-script-highlight` は `site-look-plan` だけに依る。`site-look-list-items` の C09・C18 と `site-look-manual-files` の C15 は、着色の前後どちらのコードブロックの HTML（`pre > code`・`pre.highlight > code`）にも効く書き方にするので、並びの縛りにはならない
 
