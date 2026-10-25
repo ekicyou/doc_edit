@@ -29,7 +29,7 @@
 - 絵を ukadoc-spec の `assets/` に置き、`assets/extra.css` で見出しの `::before`（`content: ""` の背景の絵）に出す。飾りなので読み上げに出さない
 - 注釈の節は `id^="notes_"` の見出しで選べる。補足の項目は、`prepare_site.py` が `note-*.md` から作った見出しに印を付ける（試作はブラウザの仕掛けで `slp-note-head` を付けたが、本番は組み立ての処理で付けるのが確か）。印を付ける後処理は、それを使う見た目の改造と同じ spec に入れてよい
 - `!!! note` の題は、Material の鉛筆（`.admonition.note > .admonition-title::before` の `mask-image`）を外して同じ絵にする。`!!! tip`・`!!! warning` は Material のアイコンのまま残す
-- 本番に入れる前に、開発者が絵の出どころと使ってよい範囲を確かめる
+- 本番に入れる前に、開発者が絵の出どころと使ってよい範囲を確かめる（2026-10-25 に確かめ済み。下の「絵の使ってよい範囲」）
 
 ## Scope
 - **In**:
@@ -62,7 +62,7 @@
 
 ## Constraints
 - **方向は議論し直さない**: 候補と判断は `site-look-plan` の `decisions.md` で決まっている。この spec は、決まった見え方を本番の書き方で入れる
-- **絵の使ってよい範囲**: 絵は開発者が会話で添付した画像で、試作の写しは `.kiro/specs/completed/site-look-plan/mockups/image/slp-notes-icon.png`（88×88）にある。ukadoc-spec は CC BY 4.0（`afb2152` の LICENSE）なので、本番に入れる前に、絵の出どころと、ukadoc-spec の CC BY 4.0 で出してよいか（または絵だけ別の許可で置くか）を開発者が確かめる。確かめが済むまで PR にしない。この spec は単位 `site-look-visibility` の最後なので、確かめが済むまで単位の 6 本の spec の PR をまとめて出せない
+- **絵の使ってよい範囲**: 絵は開発者が会話で添付した画像で、試作の写しは `.kiro/specs/completed/site-look-plan/mockups/image/slp-notes-icon.png`（88×88）にある。ukadoc-spec は CC BY 4.0（`afb2152` の LICENSE）なので、本番に入れる前に、絵の出どころと、ukadoc-spec の CC BY 4.0 で出してよいか（または絵だけ別の許可で置くか）を開発者が確かめる。**確かめは済んだ**: 開発者の答え（2026-10-25）「アイコンは大丈夫です」により、絵は ukadoc-spec の `assets/` に置いて CC BY 4.0 の PR に入れてよい（`site-look-visibility` の PR を止める理由にはならない）
 - **旧サイトの素材**: 旧サイト（https://ssp.shillest.net/ukadoc-legacy/manual/ ）の画像・見た目の指定（`list.css`・`base.css`）・スクリプト（`sakura_player.js` など）は、再利用の許可が明記されていない。使わない
 - **原稿は変えない**: 変えるのは ukadoc-spec の `assets/`（絵と `extra.css`）と `scripts/prepare_site.py` で、原稿（`.md`）・`.nav.yml`・`requirements.txt`・Zensical の版は変えない。ただし ukadoc-spec を変えるので、`workflow.md` の「原稿を変えない spec」には当たらない。作業木 `.worktrees/site-look-visibility/` で書き、Build Gate（`prepare_site.py` と `zensical build --strict`）と規約 Gate（ファイル名は ASCII）を通し、`/kiro-complete` で PR にする
 - **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）の上に、中身で依る `site-look-list-markers`（と `site-look-list-items`）が入った版（同じ PR の単位 `site-look-visibility` の作業木を引き継ぐ）。ほかの後続 spec（`site-look-definition-tables` など）は先に入っていても、まだでもよい
