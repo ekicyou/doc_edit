@@ -35,3 +35,23 @@ manual の頁の数（控え）:
 | `manual/update` | 1 | 56 | 1 | 1388 |
 
 - 設計の MarkerCheck の見込み（¶ は `directory` 3・ほか 1、`md-nav__link` は `directory` 62・ほか 56）と同じ
+
+## 目印の例（タスク 2）
+
+`mark_manual()` に字を直に渡した（`scratchpad/tools/mark_manual_examples.py`、作業木の `scripts` を読み込み `python -I` で流す）。11 例すべて期待どおり。
+
+| 例 | 渡した字 | 結果 |
+|---|---|---|
+| 見出しの行 | `# ゴースト` | 変わらない |
+| 名前のリンク | `- **[descript.txt](descript.md)**: 説明` | `- **[descript.txt](descript.md)**{: .manual-item } 説明` |
+| 名前だけ | `- **[updates2.dau](update.md)**` | `- **[updates2.dau](update.md)**{: .manual-item }` |
+| 行の終わりの「`:`」 | `- **sstp.png**:` | `- **sstp.png**{: .manual-item }` |
+| `\*` を含む名前 | `- **[surfaces\*\*.txt](x.md)**: SSP専用。` | `- **[surfaces\*\*.txt](x.md)**{: .manual-item } SSP専用。` |
+| `\` と名前の一部のリンク | `- **(myghost)\[delete.txt](x.md)**: 説明` | `- **(myghost)\[delete.txt](x.md)**{: .manual-item } 説明` |
+| 名前の終わりの `\*` | `- **foo\***: 説明` | `- **foo\***{: .manual-item } 説明` |
+| 字下げした `※1,※2` | `    - **※1,※2**: 説明` | 変わらない |
+| 形に合わない（空白） | `- **名前** 説明` | 変わらない |
+| 形に合わない（`:説明`） | `- **名前**:説明` | 変わらない |
+| コードブロックの中 | ```` ``` ```` の中の `- **x**: y` | 変わらない |
+
+`_site_src/manual/*.md` の `{: .manual-item }` の数: `balloon` 22・`directory` 12・`ghost` 10・`install` 7・`owner-draw-menu` 3・`shell` 12・`translator` 0・`update` 7、計 73（設計の表と同じ）。manual の外の `_site_src/` は 0。外す「`:`」は原稿の数えで計 72（`ghost` 9、ほかは目印と同じ）。manual の原稿で `- **` で始まり形に合わない行は 0。`prepare_site.py` と `zensical build --strict` は exit 0。
