@@ -1,7 +1,7 @@
 # Implementation Plan
 
 - [ ] 1. 土台: 作業木と変更の前の控え
-- [ ] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューを起動する
+- [x] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューを起動する
   - ukadoc-spec を fetch し、`site-look-list-markers` の PR #12 を含む `origin/main` から作業木 `.worktrees/site-look-note-icon/` とブランチ `site-look-note-icon` を作る。ukadoc-spec のメインのチェックアウトは使わない
   - 作った直後に追う先を外す（素の `git push` で `main` に送らないため）
   - 作業木で `prepare_site.py` と `zensical build --strict` を流してから `zensical serve` を起動する（doc_edit の `.venv` を使う）
@@ -103,3 +103,4 @@
 
 ## Implementation Notes
 - `(P)` は付けない。2.1 と 3.1 は別のファイルを変えるが、同じ作業木・同じプレビュー（止めてから書く）・同じ `verification.md` を使い、3.2 以降は両方がそろってから確かめるため
+- 1.1: 作業木は `origin/main` の `529d092`（#12 の後に #13 `site-look-sakura-script-highlight` も入った版）から作った。設計の `0eb3fb9` より進んでいるので、`extra.css` の末尾は #13 の塊の後ろになる
