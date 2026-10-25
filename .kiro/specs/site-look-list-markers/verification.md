@@ -1,5 +1,29 @@
 # 確かめの記録: site-look-list-markers
 
+## 測った版と日付
+- 日付: 2026-10-25
+- 作業木: `.worktrees/site-look-list-markers/`（ブランチ `site-look-list-markers`。ukadoc-spec の作業木）
+  - `02e71e2` まとめ頁の対応・既定値の段落と注意書きの節に目印を付け、対応のベースウェアの名前を札で包む（2.1）
+  - `f8a747c` 注意書きの節を点線の箱に、対応のベースウェアの名前を色の札に、既定値を字下げと札で見せる（3.1）
+  - 2.2 は `02e71e2`、4.2〜4.4 と 5.1 の Build Gate は `f8a747c` で測った
+- `origin/main`: `d3154d8`（PR #11 のマージの後）。変更の前の控えはこの版で、作業木の先祖である。4.1 の後も進んでいない
+- 頁: 作業木の `zensical serve`（`http://127.0.0.1:8000/ukadoc-spec/…`）。変更の前の控えは 8010
+- 測りのブラウザ: Edge ヘッドレス + CDP（`shot.mjs` と、控えの置き場のスクリプト）
+- 流した式: Build Gate は下の「Build Gate と規約 Gate」、控えと比べは「変更の前」、目印の数えは「目印」、対比の式と重ねの計算は「対比」、画面は「画面」の各節にそのまま書いた
+- 開発者に画面や `serve` を見せるときは、古い `extra.css` が残らないよう Ctrl+F5 を頼む（8.9）
+
+## Build Gate と規約 Gate
+```sh
+# 作業木 .worktrees/site-look-list-markers/ の中で
+../../.venv/Scripts/python scripts/prepare_site.py    # exit 0
+../../.venv/Scripts/zensical build --strict           # exit 0（No issues found）
+git diff --stat origin/main
+#  assets/extra.css        | 56 +++
+#  scripts/prepare_site.py | 47 ++-
+#  2 files changed, 102 insertions(+), 1 deletion(-)
+```
+- 規約 Gate: 原稿（`.md`）・`index.md` の「## 一覧」・`.nav.yml`・`INDEX.md`・`mkdocs.yml` は変えていない。頁も足していない。`prepare_site.py` の注と docstring は既にある書き方（日本語・だ/である調）にそろえ、`extra.css` の注は塊ごとに `/* site-look-list-markers: <何> */` の 1 行だけ（9.1・9.2・9.4）
+
 ## 変更の前
 
 ### 測った版と控えの置き場
