@@ -144,7 +144,7 @@
 **Objective:** As a ukadoc-spec のメンテナ, I want 小さく、言語の印と見た目の指定に限った変更を、この spec だけの PR で受け取ること, so that 他者も使う公開リポジトリでもレビューしやすい
 
 #### Acceptance Criteria
-1. The site-look-sakura-script-highlight shall ukadoc-spec の中で、`mkdocs.yml`・`assets/extra.css`・`assets/` に足す自作のスクリプト・`ukadoc-spec/CLAUDE.md`（`ss` の書き足しだけ）と、要るときだけ `scripts/prepare_site.py`（見出しの id の計算の設定をそろえる所。［仮定 A4］を改めて配る HTML の中まで `ss` の印をそろえるなら、その扱いも）を変え、原稿（`.md`）・`.nav.yml`・Zensical の版を変えない
+1. The site-look-sakura-script-highlight shall ukadoc-spec の中で、`mkdocs.yml`・`assets/extra.css`・`assets/` に足す自作のスクリプト・`ukadoc-spec/CLAUDE.md`（`ss` の書き足しだけ）と、要るときだけ `scripts/prepare_site.py`（見出しの id の計算の設定をそろえる所と、［仮定 A4］を改めて配る HTML の中まで `ss` の印をそろえるときの、その扱い）を変え、原稿（`.md`）・`.nav.yml`・Zensical の版を変えない
 2. The site-look-sakura-script-highlight shall `requirements.txt` を変えない。変えるときは、新しい依存として設計に理由を書く
 3. The site-look-sakura-script-highlight shall `assets/extra.css` のこの spec の指定を、ファイルの末尾に塊として足し、塊ごとの注を `/* site-look-sakura-script-highlight: <何の指定か> */` の短い 1 行にとどめる（説明・測りの数・わけは spec の記録に書く）。足すスクリプトの注も短くする
 4. The site-look-sakura-script-highlight shall 変更を、この spec の作業木 `.worktrees/site-look-sakura-script-highlight/`（ブランチ `site-look-sakura-script-highlight`）で、ukadoc-spec の `origin/main` の上に書く
