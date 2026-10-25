@@ -178,3 +178,75 @@
 - 推す組み合わせ: **A**（`prepare_site.py` で「: 」の目印と頁の種類の印を付け、帯は C01 の指定を広げ、木はスクリプトで包む）。brief の「頁の種類の印（テンプレートの上書きか `prepare_site.py`）」のうち、`prepare_site.py` は list-markers で包みの実績があり、テンプレートの未確認の書き方と `overrides/` の新設を避けられる。ただし C16・C12 で頁の道から印を付けたい場面が来たら、テンプレートの上書きに移せる形（印の名前を種類ごとにそろえる）にしておく
 - 要件の話し合いで決めたこと: ［仮定 A1］〜［仮定 A5］はどれも仮定のとおり、色だけで見分けることも brief のとおり（2026-10-25。`requirements.md` の「要件の話し合いで決めたこと」）。この文書の［仮定 An］は、その結論に読み替える
 - 確かめの基準の数: ファイルの箇条書き 73（「: 」の目印 72）、帯の中のリンク 18、木 17（manual）＋ 4（`dev/`）、木の行 243（ファイル 194・フォルダ 49）＋ 36（17・19）、`manual/ghost` の木はファイル 11・フォルダ 3
+
+## 9. 設計の調査（2026-10-25、`/kiro-design` の設計の段）
+
+- 発見の種類: 既にある仕組みの拡張（light discovery）。外の新しい依存は無い（Python-Markdown の `attr_list`・テーマの変数・素の JavaScript だけ）ので、Web の調べは要らなかった
+- 使ったスキルと決まり: `kiro-spec-design` の `rules/design-principles.md`・`design-discovery-light.md`・`design-synthesis.md`・`design-review-gate.md`、`kiro-validate-design` の `rules/design-review.md`。手元に、見た目・読みやすさ（アクセシビリティ）の専用のスキルは無いので、対比の線は要件（7:1・4.5:1・3:1）と `site-look-list-items` の測り方に従った
+- 確かめ方: ukadoc-spec `0eb3fb9` を `git archive` で Claude のスクラッチ（`C:\Users\maz-o\AppData\Local\Temp\claude\C--home-maz-git-doc-edit\17fa22f0-3c3e-4809-97f6-8ba3b52c31bc\scratchpad\design\`）に 2 つ書き出し、`base`（変更の前）と `impl`（`design.md` の差分を当てたもの）で `prepare_site.py` と `zensical build --strict` を流した（どちらも exit 0）。`impl2` は `impl` に `site-look-sakura-script-highlight` の `mkdocs.yml` の 2 か所（`pymdownx.highlight`・`extra_javascript`）と `sakurascript.js` を足した写し。`_site/` を `python -m http.server`（8031〜8033。終わったら止めた）で配り、Edge ヘッドレス + CDP（`shot.mjs` を元にした使い捨ての `probe.mjs`）で開いて数え、測った。`ukadoc-spec/`・作業木・`_site_src/` は触っていない
+- 使い捨てのスクリプト（同じ置き場）: `trees.py`（原稿の木の行）、`check.py`（`base` と `impl` の HTML の比べ）、`ex.py`（`mark_manual()` の例）、`probe.mjs`・`tree-expr.js`・`band-expr.js`・`w-expr.js`（ブラウザで数える・測る）、`summ.py`。結果は `tree-*.jsonl`、画面は `shots/`
+
+### 9.1 調べたことと分かったこと
+
+#### 頁の種類の印（Research Needed の 1・2）
+- `prepare_site.py` で manual の頁の最初の `#` 見出しに ` {: .page-manual }` を足すと、`<h1 class="page-manual" id="ゴースト">` になり、8 頁の `<title>`（「ゴースト - UKADOC project」など）・見出しの id の並び・¶ の数・`md-nav__link` の数は変わらなかった。まとめ頁の `h1` も `shift_headings()` が `{#id}` を付けて同じ形で通っている
+- テンプレートの上書き（T）は、`page.url` と minijinja の字の頭の比べが未確認のまま残る。`overrides/` と `theme.custom_dir` を増やさずに済む `h1` の印（P2）を選び、テンプレートは確かめなかった
+- 頁を `<div markdown="1">` で包む案（P1）は、`.md-typeset > ul` が `.md-typeset > div > ul` になり、要件 7.5 の撮る位置のセレクタと、後続の `site-look-definition-tables` の当て先が変わるので採らなかった
+- 名前の決まり: 頁の種類の印は `page-<種類>`、その種類の頁の中の役は `<種類>-<役>`（まとめ頁の `bundle-<役>` と並ぶ）。この spec は `page-manual` と `manual-item` を使う
+
+#### 「`: `」の目印（Research Needed の 3）
+- 規則 `^(- \*\*(?:\.|[^\*])+\*\*)(: |:$|$)`。`\*`・`\` を 1 字の組として読むので、`surfaces\*\*.txt`・`(myghost)\ghost\`・`foo\***` の切れ目を取り違えない。名前の一部だけのリンク `(myghost)\[delete.txt](…)` も通る
+- 写しの数: 頁の種類の印 8（manual の 8 頁に 1 つずつ、ほか 0）、名前の目印 73（`balloon` 22・`directory` 12・`ghost` 10・`install` 7・`owner-draw-menu` 3・`shell` 12・`translator` 0・`update` 7）。本文の字（タグを外し空白を詰めたもの）の違いは manual の頁で「`:`」72 字だけ（`ghost` は 9）、ほかの 32 頁は 0。漏れ（`{:`・`{#`・`{.`）0。`_raw/` と `llms.txt` は同じ
+- 形: `<li><p><strong class="manual-item">…</strong> 説明</p>…` が 61、`<li><strong class="manual-item">…</strong> 説明</li>` が 12（`updates2.dau` は `<li><strong class="manual-item"><a …>updates2.dau</a></strong></li>`）
+- 「`:`」だけを外し、空白 1 つを残した。空白は帯（`display: block`）の後ろの行の頭の空白として消え、見えない。検索の字で名前と説明の語の切れ目になる（`design.md` の OPEN QUESTION 4）
+- 例: 字下げした `    - **※1,※2**: …`・`- **名前** 説明`・`- **名前**:説明`・コードブロックの中の行には付かない。題の無い頁は `error()` になる
+
+#### 帯の共有と字下げ（Research Needed の 4・8）
+- C01 の帯の指定の 2 つのセレクタを `:is(.bundle-item, .manual-item)` に広げ、manual の頁の帯の形（`display: block`・`1.25em`・`400`・`line-height: 1.5`・`margin: .5em 0 .3em -1.2rem`）を自分の塊に置いた。manual の頁に `.bundle-item` は無いので、C02 の詰め（`:has(.bundle-item)`）は効かない
+- 字下げ: 一番外の箇条書きの左の余白 0、項目 `1.2rem` と点なし、帯は `-1.2rem`。`li > p:first-child` の上の余白を 0 にして、2 つの形の帯の上の端もそろえた
+- 写しの測り（幅 1000）: 73 個の帯の左の端が 16px（本文の左の端）、幅が 711px の 1 通り。説明の左の端 40px。一番外の項目の点 `none`、`balloon` の入れ子の箇条書きの点 `disc`
+- 目標の画面（`mock-manual-ghost-C22-light.png`）の帯は x=10 で、`updates2.dau` だけが x=16 だった。試作の C22 の帯は `margin-left: -1.5em` を帯の字の大きさ（1.25 倍）で効かせたので 6px 大きく左に出ていた。この設計は C01 と同じく本文の左の端に置き、`updates2.dau` もそろう
+- 帯の中のリンク: 明 `#1f4e8c` で帯の地（`rgb(237,237,237)`）に 7.11、暗 `#ffffff` と下線で帯の地（`rgb(54,56,64)`）に 11.66。帯の中の名前の字は明 14.13・暗 6.76。ホバー・フォーカスは C01 と同じ色と地なので、`site-look-list-items` の測り（明 3.64・暗 11.66）と同じになる見込み（実装で測る）
+
+#### 木の名前の切り出し（Research Needed の 5）
+- manual と `dev/` の木の行 279 を並べて見た。注はどれも、名前の後ろの空白か全角の `（` で始まる（`alias.txt（旧仕様）` だけが空白無し）。半角の `(` は名前の中にだけある（`(saori).dll`・`(element).png`・`(myghost)`・`master(またはadditional_shell)`）。2 つの名前は `a.png/b.png`（空白無しの `/`、6 行）と `a.txt または a.md`（空白で囲んだ「または」、4 行）だけ
+- 規則: `+-` の直後から空白か全角の `（` の前までを名前の並びとし、`/` で分ける。並びの後ろが「` または `」なら次の並びも名前。名前が `\.[^.()]+$` に合えばファイル名
+- 写しの数（明・暗・幅 1000・375 で同じ。`impl2` でも同じ）: 木 21（manual 17・`dev/` 4。全 40 頁でほかに `+-` の行を持つ言語の印の無いブロックは無い）、木の行 manual 243・`dev/` 36、包んだファイル名 manual 204（ファイル名の行 194 と 2 つ目の 10）・`dev/` 17。どの木も包む前後の字が同じ。木でないブロックの `span` 0
+- 名前の切り出しの結果は、`alias.txt`（注を含まない）、`readme.txt`・`readme.md`、`ok_down.png`・`ok_up.png` を確かめた
+
+#### 検索の強調の後に残る包み方（Research Needed の 6）
+- `site-look-sakura-script-highlight` と同じく、`span` を作って `textContent` を入れ、`replaceChildren()` で入れ替える。要素の入った `code` は包まない。写しの `?h=descript` で `mark` 2（帯の中 1・木のファイル名の `span` の中 1）、`?h=readme` で 12（帯の中 2・木のファイル名の中 5）。明・暗とも同じで、検索の強調はスクリプトの後に動いた
+
+#### 暗い表示の木の色（Research Needed の 7）
+- `--md-typeset-a-color` を使うと、明は紺 `#1f4e8c`（白地 8.31・コードの地 7.62）、暗は `#8fb4e8`（暗い地 7.56・コードの地 `rgb(39,42,53)` に 6.71）。直書きの色が要らず、暗い表示の値は変数の側で `@media screen` の中にあるので、暗い表示のまま印刷しても紺で出る
+- ファイル名とフォルダ名（コードの字）の明るさの比は、明 1.18（紺と `#36464e`）、暗 1.50（`#8fb4e8` と `rgba(213,216,226,.82)`）。設計の写しの画面（`screenshots/design-ghost-C15-*.png`・`design-directory-tree-dark.png`・`design-install-light.png`）で、明・暗ともファイル名の青がフォルダ名の灰色から見分けられることを見た。決めるのは設計の話し合い（`design.md` の OPEN QUESTION 3）
+- ほかの候補: C18 の線の `#7fa6dc`（コードの地に 5.69）、試作の緑 `#81c784`（7.07。紺のテーマに合わない）
+
+#### 幅 375（Research Needed の 8）
+- 帯に `overflow-wrap: anywhere` を足した写しと、足さない写しの両方で、manual の 8 頁と `dev/` の 2 頁が明・暗とも `scrollWidth` = `innerWidth` = 375 で、帯の中の名前のはみ出しも 0 だった。`(myghost)\shell\(additional_shell)\` は `\` の後ろで 2 行に折り返した。指定は足さない
+
+#### `extra_javascript` の鍵（Research Needed の 9）
+- `site-look-sakura-script-highlight` の作業木（コミット `0c94a01`・`4ce6b5e`。PR はまだ無い）は、`mkdocs.yml` に `extra_javascript: [assets/sakurascript.js]` と `pymdownx.highlight`（`use_pygments: false`）を足している。この spec は、先に入った方の鍵の並びに 1 行足す（鍵が無ければ鍵ごと足す）。2 つのスクリプトの当て先は言語の印の有る・無しで分かれ、順は問わない。`impl2` で両方を並べて build し、木の数が変わらないことを確かめた
+
+### 9.2 組み立てでの見直し（synthesis）
+- **まとめる**: 「名前の後ろの『`: `』を外す目印」と「帯の当て先」を 1 つの目印 `manual-item` にした（名前だけの `updates2.dau` にも付け、帯は 73 個すべてに同じに当たる）。頁の種類の印と名前の目印は、どちらも `main()` の同じ所（`d == 'manual'`）で決める
+- **作らずに使う**: 帯の見た目は C01 の宣言を共有し、木の色はテーマのリンクの色の変数を使い、包み方は `site-look-sakura-script-highlight` の書き方にそろえた。テンプレートの上書き・新しい依存・直書きの色は足さない
+- **削った**: 試作の flex と負の字下げと覆いの細工、フォルダ名の `span`（色を変えないので要らない）、`overflow-wrap`（幅 375 で要らなかった）、暗い表示だけの色の指定（変数で足りる）、頁の種類の印を CSS で重ねて見ること（名前の目印だけで足りる）
+- **広げすぎない**: 頁の種類の印の決まり（`page-<種類>`）だけを決め、ほかの種類の印は付けない（要件 1.4）
+
+### 9.3 設計の判断（`design.md` の「前提と OPEN QUESTION」に代わりの案）
+| 判断 | 選んだもの | わけ |
+|---|---|---|
+| 頁の種類の印 | `prepare_site.py` が題の `h1` に `page-manual` | `overrides/` を増やさず、本文の形（`.md-typeset > ul`）を変えない。題・id・目次が変わらないことを写しで確かめた |
+| 見た目の当て先 | 名前の目印 `manual-item` と `:has()` | manual の頁だけに付き、名前の無い箇条書きが後で入っても点と字下げが残る |
+| 帯の見た目 | C01 の 2 つのセレクタを広げる | 同じ宣言を 2 か所に書かない。要件 8.2 の外の 2 行の変更になる（OPEN QUESTION 2） |
+| 「`: `」 | 「`:`」を外し空白を残す | 見えず、検索の語の切れ目を保つ（OPEN QUESTION 4） |
+| 木の色 | `--md-typeset-a-color` | 7:1・4.5:1 を満たし、直書き 0、印刷も自然に明るい表示の色（OPEN QUESTION 3） |
+| 木の当て先 | `pre > code:not([class*="language-"])` と `+-` の行 | 着色の前後どちらの形にも効き、頁を問わない |
+
+### 9.4 危うさと手当て
+- 名前の後ろが規則に無い書き方の行が原稿に入る — 目印が付かず今の見え方で残る。MarkerCheck の数（73）で見つける（OPEN QUESTION 6）
+- 木の行の新しい書き方（空白を含む名前、空白の無い半角の括弧の注） — 色が名前の一部か注にまで付く。TreeCheck の数と例で見つける
+- `navigation.instant` を入れると、頁を移ったときにスクリプトが動かない — Revalidation Triggers に書いた
+- `site-look-sakura-script-highlight` との `mkdocs.yml`・`extra.css` のぶつかり — 並びと塊を両方残す（`workflow.md` の「開いている PR に追いつく」）
+- ファイル名とフォルダ名の明るさの差が小さい — 設計の話し合いで画面を見て決め、足りなければ止めて色を選び直す
