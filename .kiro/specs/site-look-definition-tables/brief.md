@@ -93,3 +93,10 @@
 ## 申し送り（site-look-list-markers より）
 - `prepare_site.py` の `main()` の `parts.append(…)` の行は、`add_markers(rel, rewrite_links(shift_headings(…), rel, dst).strip('\n'))` になった。対応・既定値の段落の末尾に `{: .bundle-support }`・`{: .bundle-default }` を足し、`notes_` の単位を `div.bundle-notes` で包む
 - 見直しが要る論点: この行に表への組み替えを足すときは、両方の関数を入れ子にして残し、目印の数（対応 1640・既定値 423・注意書き 16・札 2719）と漏れ 0 を確かめ直すこと（`.kiro/specs/completed/site-look-list-markers/design.md` の「Revalidation Triggers」・`verification.md` の「目印」）
+
+## 申し送り（site-look-manual-files より、2026-10-26）
+
+- `site-look-manual-files` は ukadoc-spec に入った（PR は `/kiro-complete` で出した 1 本。PR の単位 `site-look-visibility` は取りやめになり、spec ごとに PR を出す。roadmap の「PR の単位」）
+- `prepare_site.py` の `mark_manual()` が、`manual/` の頁の一番外の箇条書きの頭の太字の名前に `{: .manual-item }` を付け、名前の後ろの「`: `」（行の終わりの「`:`」を含む）を外す。目印は 7 頁に 73 個、外した「`:`」は 72 個。manual の頁かどうかは `main()` の `d == 'manual'` の 1 か所で見分け、`rewrite_links()` の後に通す（`.kiro/specs/completed/site-look-manual-files/design.md` の「Modified Files」）
+- 見直しが要る論点: C23 の「`- **名前**: 説明`」の見分けを `mark_manual()` の前に通すか後に通すか。後なら manual の項目は「`: `」が無くなって自然に外れ、前なら目印の付く行を表にしないよう除く必要がある。どちらにしても、manual の頁の 73 個が表にならないことを確かめる（`site-look-manual-files` の design.md の Revalidation Triggers の 2 つ目）
+- 頁の種類だけを示す印は足していない（設計の話し合いの議題 1）。頁を絞る印が要れば、`main()` の同じ見分けの所に足す

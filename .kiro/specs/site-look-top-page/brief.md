@@ -58,3 +58,11 @@
 - 原稿を変えない。ほかの site-look の spec と同じく、ukadoc-spec の `assets/`・`scripts/` を変え、1 spec = 1 PR で入れる
 - `site-look-manual-files` の PR がマージされてから始める（`roadmap.md` の PR の単位）
 - 帯の色は紺のテーマ（`--md-primary-fg-color`）のまま。暗い表示のリンクの色（`site-look-dark-link-color`）を崩さない
+
+## 申し送り（site-look-manual-files より、2026-10-26）
+
+- `site-look-manual-files` は「頁の種類の印」を足さなかった（設計の話し合いの議題 1）。この brief の「頁の種類の印」を使う書き方は、見直しが要る
+- 入ったもの（`.kiro/specs/completed/site-look-manual-files/design.md` の「Modified Files」）:
+  - `prepare_site.py` の `mark_manual()` が、`manual/` の頁（`main()` の `d == 'manual'` の 1 か所で見分ける）の一番外の箇条書きの頭の太字の名前に `{: .manual-item }` を付け、名前の後ろの「`: `」を外す
+  - `extra.css` は C01 の帯の 2 つのセレクタを `:is(.bundle-item, .manual-item)` に広げ、末尾に「ファイル名の帯と説明の字下げ」の塊（`.md-typeset > ul:has(> li > .manual-item, > li > p:first-child > .manual-item)` などで点を消し、説明を帯の下に字下げする）を足した
+- 見直しが要る論点: 「ukadocの見方」の箇条書きに同じ見え方を当てるには、`INDEX.md` から `index.md` を書く所（`main()` の `write('index.md', …)`）で `mark_manual()` を通すか、トップ用の目印を足して同じ塊のセレクタに加えるか。同じ指定を二重に書かない（この brief の目的）
