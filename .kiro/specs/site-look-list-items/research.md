@@ -181,3 +181,116 @@
 6. **`extra.css` の塊の注の頭に、spec 名と PR の単位名のどちらを書くか**
    - 仮定: spec 名（`/* site-look-list-items: <何> */`。開発者の決まりと、この作業の指示のとおり）
    - 推奨: spec 名。`workflow.md` の「開いている PR に追いつく」は単位名（`/* site-look-visibility: … */`）と書いているが、単位の中の 6 本の塊を見分けられ、開発者の決まり（注は `<spec名>: <何>` の 1 行）と合うため。`workflow.md` の記述は後で合わせる
+
+---
+
+# 設計の調査（2026-10-25、`/kiro-spec-design`）
+
+## Summary
+- **Feature**: `site-look-list-items`
+- **Discovery Scope**: Extension（既存の `prepare_site.py` と `extra.css` への追加。`design-discovery-light.md` の手順）。新しい依存は無く、外部の調べ（WebSearch）はしなかった
+- **Key Findings**:
+  - 見出しの行の `{#id .bundle-item}` は、id・¶・右の欄の目次・`hr`・`old_ids()` の検査・`_raw/` をどれも変えない（使い捨ての写しで、変更の前と HTML を突き合わせた）
+  - 暗い表示の C01 の帯の上では、PR #10 の色でも、帯の中の項目名の字の色でも、リンクが 7:1 に届かない（項目名の字 6.76:1）。帯の中のリンクだけ白と下線にすると 11.66:1 で、PR #10 の有無に依らない
+  - 試作の C02 の値に帯の内側の余白が足されると、高さ 700 に 4 項目目の終わりが入らない。値を少し詰めて 4 項目が入った。紺の帯の中の検索の強調は、テーマのままだと明るい表示で 2.71:1 になる
+
+## 読んだもの・使った決まり
+- `requirements.md`・`brief.md`・この `research.md` のギャップ分析（7 節の決定を含む）、steering の `product.md`・`tech.md`・`structure.md`・`roadmap.md`・`workflow.md`（塊の注・PR の単位）、`ukadoc-spec/CLAUDE.md`、`mkdocs.yml`
+- 手本: `.kiro/specs/completed/site-look-dark-link-color/design.md`・`verification.md`（文体・「測る所と線」・Revalidation Triggers・測りの式）
+- 試作: `.kiro/specs/completed/site-look-plan/mockups/extra.css`（C01・C02・C03・C09・C18）・`mockups/worktree.diff`（`slp_mark()`）、目標の画面 `screenshots/mock-*`
+- 後続: `.kiro/specs/site-look-list-markers/brief.md`（C04 の包み・目印の名前の決定）
+- スキル: `kiro-spec-design`（`design-principles.md`・`design-discovery-light.md`・`design-synthesis.md`・`design-review-gate.md`）、`kiro-validate-design`（`design-review.md`）。開発者の決まり「公開 CSS の注は塊ごとに 1 行、説明は spec の記録へ」に従い、指定のわけは `design.md` の「指定のわけ」に書いた
+
+## 確かめ方（使い捨ての写し）
+- 置き場: Claude のスクラッチ（`C:\Users\maz-o\AppData\Local\Temp\claude\C--home-maz-git-doc-edit\2d6cbb95-f9fb-4e11-91fb-fe22c3382b15\scratchpad\`）の下の新しいフォルダ 3 つ。どれも `git -C ukadoc-spec archive origin/main`（`afb2152`）を書き出したもの。ukadoc-spec と作業木には何も書いていない
+  - `sli-base`: 変更なし（変更の前）
+  - `sli-exp`: `prepare_site.py` に役の class、`extra.css` に 6 つの塊（`design.md` の Modified Files と同じ中身）
+  - `sli-hl`: `sli-exp` と同じ変更に、`mkdocs.yml` の `pymdownx.highlight`（`use_pygments: false`）を足したもの（着色の後の形）
+- どれも `C:\home\maz\git\doc_edit\.venv\Scripts\python scripts/prepare_site.py` と `zensical build --strict` が exit 0（「No issues found」）
+- 配り: `_site/` を `python -m http.server` で 8011（exp）・8012（base）・8013（hl）に配った（8000 は使っていない）。終わった後に止めた。頁の道は `/` から（`/ukadoc-spec/` でない）
+- 測り: HTML の数は読み取りの script（スクラッチの `sli-tools/count.py`・`units.py`）、色と位置は Claude の内蔵ブラウザの枠の JavaScript、画面は `shot.mjs`（読むだけ）
+
+## Research Log
+
+### 見出しの行に役の class を足す形（`{#id .cls}`）
+- **Context**: ギャップ分析の Research Needed の 1 つ目
+- **Findings**:
+  - 全 2027 単位で、1 行目が H1 で、`shift_headings()` の最初の見出しが単位の頭の見出しだった（頁の頭 20・項目 1875・分類 116・注意書き 16）
+  - HTML は `<h3 class="bundle-item" id="bang-lock-repaint">` になる。20 頁で、見出しの id の並び・`class="headerlink"` の数・`class="md-nav__link"` の数・`<hr />` の数が変更の前と同じ。`pre`・`code` の外の `{: `・`{#` の漏れ 0。`_raw/` は同じ。`_site_src/` で違うのは 20 頁の `index.md` と `extra.css` だけ
+  - 項目の段の内訳: `h2` 44（`spec/` の 35 と分類に入らない 9）・`h3` 1694・`h4` 137（`descript/shell-surfaces` 102・`list/propertysystem` 35）。分類: `h2` 111・`h3` 5
+  - `h4` の項目名の直後にコードブロックが来る所は 0（C18 の帯と C01 の帯が重ならない）
+- **Implications**: 案 B をそのまま採れる。`prepare_site.py` の差分は docstring の 1 行と、`shift_headings()` まわりの数行
+
+### C02 の詰めの量
+- **Context**: Research Needed「本番の C01 の帯の余白と重ねて 4 項目以上」
+- **Findings**（内蔵ブラウザの枠、幅 1024。`#charset` の上を「ヘッダの高さ + 8px」に置いたときの位置）:
+  - 試作の値（`hr .6em`・項目名 `.6em 0 .4em`・`p .5em`）＋ 帯の内側 `.35em`: `craftman` の終わり 720px（700 を越える）
+  - `hr .5em`・項目名 `.5em 0 .3em`・帯の内側 `.3em`、`p .5em`: 699px（ぎりぎり）
+  - 上に `p .4em` を足す: 680px。5 つ目の項目名の帯の下は 735px で入らない
+  - `shot.mjs`（幅 1000）で撮った画面でも、4 項目と 5 つ目の帯の頭が写った
+- **Implications**: 最後の値を採った。目標の画面（試作）は帯の内側の余白が無いので 5 つ目の項目名まで入っていた（OPEN QUESTION 4）
+
+### 帯・箱の上の字とリンクの対比
+- **Context**: Research Needed「暗い表示の C01 の帯の上のリンクの色」「暗い表示の C18 の箱の中のコードの字」
+- **Findings**: `design.md` の「測る所と線」の「写し」の列。要点:
+  - 暗い表示の帯の地は `rgb(54, 56, 64)`。項目名の字 6.76、コードの字 6.09（4.5 を満たす）。リンクを項目名の字の色にすると 6.76 で 7 に届かない。白 `#ffffff` で 11.66
+  - 明るい表示の帯の上のリンク 7.11、フォーカス 3.64（見込みどおり満たす）
+  - 暗い表示の C18 の箱の中のコードの字（半透明）は `#1d2433` の上で 7.80
+  - ¶ は C03 で 4.99、C18 で明 6.45・暗 4.99（ふだんもフォーカスも同じ色）
+- **Implications**: 6.3 は暗い表示の帯の中のリンクだけに当て、白と下線にした。PR #10 の色にも作業木の紺にも依らなくなった（6.1 の「PR #10 の色で判定」は、判定の相手を変えずに満たす）
+
+### 内蔵ブラウザの枠での測りの癖
+- 枠が隠れていると、テーマの `transition: color 125ms` が進まず、`:focus` が付いても色がふだんのまま返る。頁に `transition: none` の使い捨ての指定を足すと、フォーカスの色（明るい表示の藍 `rgb(82,108,254)`）が測れた
+- ポインタを載せる座標が頁の座標と合わず、ホバーを直に測れなかった。テーマは `:focus` と `:hover` を同じ指定にしているので、フォーカスの色で代える（OPEN QUESTION 6）
+- 明・暗の選択は口ごとの `localStorage` に残るので、別の口の頁は明・暗が違って開くことがある。測る前に `data-md-color-scheme` を見る
+
+### 検索の強調（7.1）
+- `?h=スコープ` の頁で `mark` 72 個。テーマの強調は明 `rgba(255,255,0,.5)`・暗 `rgba(66,135,255,.3)` で、字は `inherit`
+- 指定の前: C03 の帯の中の強調は明 2.71（白い字が黄緑の地 `rgb(143,167,70)`）、暗 6.27。C01 の帯の中は明 8.58・暗 4.41、C18 の箱の中は明 8.73・暗 5.31
+- 濃い帯（C03・C18 の見出しの帯）の中だけ白の地に紺の字にすると、明・暗とも 8.31
+- **Implications**: 濃い帯の中の強調の指定を足した（試作に無い。OPEN QUESTION 3）。C01 の帯・C18 の箱の中はテーマの強調のままで見える
+
+### コピーのボタン（C09）
+- コピーのボタンはテーマの JavaScript が置く `nav.md-code__nav`（`.md-clipboard` でない）
+- `list/sakura-script` の 288 個で、字の矩形とボタンの矩形の重なり: 変更の前 165 個（幅 1024）、後 0 個（幅 1024）。幅 375 では 2 個が重なったが、どれも行の終わりにぶら下がる空白で 1px だけだった。空白を除く字の重なりは 0（着色の後の形でも 0）
+- 幅 375 で `scrollWidth` = `innerWidth` = 375（`list/sakura-script`・`spec/sstp`・`manual/ghost`・`descript/shell-surfaces`、暗い表示、`shot.mjs`）
+- **Implications**: 試作の `padding-right: 2.8em` のまま採った。確かめでは空白を除いて数える
+
+### 記述例の箱（C18）の当て先と着色の後の形
+- 試作の `:is(h4, .highlight) + .highlight` は、`h4` でない所から始まる連なり（`spec/plugin`・`spec/sstp`・`descript/shell-surfaces` の 3 か所）の 2 つ目にも箱を付ける。`:is(h4, h4 + .highlight, h4 + .highlight + .highlight, h4 + .highlight + .highlight + .highlight) + .highlight` にすると、9 頁で「箱の有無が連なりの頭の `h4` と食い違う」ものが 0、点線は 36（`list/sakura-script` 33・`spec/saori-ex` 3。2 つ目以降の数 21 + 6×2 + 1×3 と合う）
+- 箱は `list/sakura-script` で 288 個（記述例の見出し 255 と続く 33）。記述例の見出しは全サイトで 289（まとめ頁 287・`spec/dll` 2）
+- 着色の後の形（`sli-hl`）: `pre.highlight` 288 個。箱 288・点線 33、箱の上端の並び（8 個おき）と高さの合計 16075px が今の形と同じ、箱の中のコードの字の対比も同じ（明 8.72・暗 7.80）。`shot.mjs` の画面は目で見て違いが無い（PNG はバイト単位では違う）
+- 箱の下の余白: 試作は `div.highlight > pre { margin: 0 }` だけで、今の形では最後の箱の下の余白が 0、着色の後の形では 1em になり、形で違った。箱の要素に `margin: 0 0 1em` を置き、中の `pre` の余白を 0 にして、両方の形で同じにした
+- 帯・箱の中のリンク: 項目名の中 31 個（`code` を含むもの 0）、分類の帯の中 0、記述例の箱の中 0
+
+### 読み物の頁
+- `manual/ghost` の `h1` の位置の画面は、変更の前と後で明・暗ともバイト単位で同じだった（画面の中にコードブロックが無い）
+- 記述例の箱は読み物の頁にも付く（`spec/dll` の 2 個。要件の「記述例の見出し」の決まりのとおり）
+
+## Architecture Pattern Evaluation
+| Option | Description | Strengths | Risks / Limitations | Notes |
+|--------|-------------|-----------|---------------------|-------|
+| 案 A 形だけ | `hr + h3` などの組み立てと `:has()` | `prepare_site.py` を触らない | 分類の最初の項目・`spec/`・深い分類で取りこぼしと付けすぎ | 要件の決定で採らない |
+| 案 B 役の class | `shift_headings()` で見出しに class | 取りこぼし 0、後続とそろう | `prepare_site.py` の差分 | 採った |
+| C02 の絞り: 単位を `div` で包む | 項目ごとに `md_in_html` の包み | 「項目の中」に厳しく絞れる | C04 の包みと入れ子、差分が大きい | 採らない |
+| C02 の絞り: `.md-typeset:has(.bundle-item)` | 帯を持つ頁を見分ける | 目印を足さない | 頁の頭の説明・注意書きも詰まる | 採った（OPEN QUESTION 7） |
+
+## Design Decisions（synthesis）
+- **一般化**: C01・C02・C03 は同じ「単位の役」の印で足りる。印は役の名前だけを持ち、見え方を持たない（`bundle-<役>`）。後続の `site-look-list-markers` も同じ決まりで印を足せる。見え方は C22（`site-look-manual-files`）が同じ値を写す
+- **作るか使うか**: 印は Python-Markdown の `attr_list`（入っている）で付け、新しい依存を足さない。帯・箱は CSS だけで作る。C18 は印を使わず HTML の形（`h4 + .highlight`）に当てる
+- **減らしたもの**: 試作の C03 の帯の中のコードの白の 20% の地（今は 0 個なので、地を消して `inherit` にした）。C18 の帯と項目名の帯が重なるときの除外（`:not(.bundle-item)`。今は 0 個なので書かず、Revalidation Triggers にした）。帯の中の `a code` の色（今は 0 個）。C02 の単位の包み
+- **足したもの**: 濃い帯の中の検索の強調（明 2.71 → 8.31）、暗い表示の帯の中のリンクの白と下線（6.3）、C18 の箱の下の余白を形に依らずそろえる指定
+
+## Risks & Mitigations
+- 原稿に、5 つ以上続く記述例のコードブロック、`h4` の項目名の直後のコードブロック、帯の中の `code` を含むリンクが入る — Revalidation Triggers に挙げ、そのときに指定を足す
+- `:has()` に対応しないブラウザ — C02 の詰めと C18 の箱が出ないだけで、読める（今の見え方）
+- 暗い表示の帯の中のリンクが白で、まわりの項目名の字（82% の白）より明るい — 下線でリンクと分かる。開発者が気にするなら色を選び直す（OPEN QUESTION 2）
+- `shot.mjs` の `#notes_escape` の暗い表示の画面で、ヘッダの題が切り替わりの途中で重なった（本文には響かない。brief の既知の癖）
+
+## 確かめていないこと
+- ポインタを載せたホバーの色（フォーカスの色で代えた）
+- 印刷の画面と CSSOM の確かめ（暗い表示だけの指定が `@media screen` の中にあることは書き方で決まる。CSSOM の確かめは実装で行う）
+- 作業木（`origin/main` の最新）での数え直し。設計の数は `afb2152` の写しの数
+- PR #10 が入った後の暗い表示（帯の中のリンクは白なので響かない見込み。帯の外のリンクは PR #10 の受け持ち）
+- `?h=記述例` の C18 の帯の中の強調（`?h=スコープ` の C03 で測った。同じ指定が当たる）
+- 目標の画面との 5 組の見比べを開発者の目で行うこと（設計では C18・C02 を目で見比べ、近いことを見ただけ）
