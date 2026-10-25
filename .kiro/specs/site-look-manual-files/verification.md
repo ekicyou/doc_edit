@@ -473,3 +473,11 @@ git diff --stat origin/main
 - 作業木の `git status` は空（未コミットの変更なし）。変えたのは 8.1 の 4 ファイルだけ
 - 直書きの色（5.3）: `git diff origin/main -- assets/extra.css assets/filetree.js` の足した行に `#…`・`rgb(…)`・`rgba(…)`・`hsl(…)` が 0。木のファイル名の色は `var(--md-typeset-a-color)` だけで、帯は C01 の塊のセレクタに `.manual-item` を足して宣言を分け合った（帯の字下げの塊は色を持たない）。暗い表示の `#8fb4e8` は前からある `extra.css` の値で、この spec は触っていない
 - 規約 Gate（ukadoc-spec の `CLAUDE.md`。8.4）: 原稿（`.md`）・`index.md` の「## 一覧」・`.nav.yml`・`INDEX.md`・`requirements.txt` は変えていない（原稿の書式・リンクの決まりは当たらない）。ファイル名は ASCII。`prepare_site.py` の注と docstring は既にある書き方（日本語・だ/である調）にそろえ、`extra.css` の注は塊ごとに `/* site-look-manual-files: <何> */` の 1 行、`filetree.js` の頭の注も 1 行（8.2）。コミットの文は ukadoc-spec の履歴の型の日本語の 1 文
+
+## 完了への引き継ぎ（5.2）
+
+- 2026-10-26 に ukadoc-spec を fetch した。`origin/main` は `b1f8ab1` のままで、作業木の先祖である。4.1 の後に進んでいないので、4.2〜4.5 のやり直しは要らない
+- この spec の PR だけで入っても壊れない: 目印（`prepare_site.py`）・見た目の指定（`extra.css`）・スクリプト（`filetree.js` と `mkdocs.yml` の読み込み）が、作業木の 1 つのコミット `75c7433` にそろって入っている
+- 最後のコミット（`75c7433`）の後で Build Gate をやり直した: `prepare_site.py` exit 0、`zensical build --strict` exit 0。`git diff --stat origin/main` は 4 ファイル（94 行足し 3 行消し）、未コミットの変更 0。規約 Gate は 5.1 のとおり（4.2・4.3 で直したものは無い）
+- ブランチ `site-look-manual-files` は push していない（PR は `/kiro-complete` で作る）
+- プレビュー（8000）と控えの配り（8010）を止め、控えの置き場 `baseline-manual-files/` を消した
