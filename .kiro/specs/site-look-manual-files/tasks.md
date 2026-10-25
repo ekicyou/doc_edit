@@ -31,7 +31,7 @@
   - _Boundary: TreeColorer, ScriptEntry_
   - _Requirements: 4.1, 4.2, 4.4, 4.5, 4.6, 4.7, 6.5, 8.6, 8.7_
 
-- [ ] 3.2 (P) `extra.css` で C01 の帯を分け合い、ファイル名の帯と説明の字下げ・木のファイル名の色の塊を足す
+- [x] 3.2 (P) `extra.css` で C01 の帯を分け合い、ファイル名の帯と説明の字下げ・木のファイル名の色の塊を足す
   - `site-look-list-items: 項目名の帯` の塊の 2 つのセレクタ（帯と、暗い表示の帯の中のリンク）だけを `:is(.bundle-item, .manual-item)` に広げ、宣言の値は変えない。C02 の詰め・`.bundle-item { margin }`・帯の中の `code` の指定は広げない
   - 設計の「Modified Files」の 2 つの塊（ファイル名の帯と説明の字下げ、木のファイル名）を、この順でファイルの末尾に足す。ほかの塊には触らない
   - 塊ごとの注は `/* site-look-manual-files: <何> */` の 1 行だけにし、わけと数は書かない（spec の記録に書く）
