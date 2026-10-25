@@ -8,7 +8,7 @@
 ## Introduction
 この spec は、UKADOC のまとめ頁で、注意書きの節・対応ベースウェア・既定値を、ほかの文とひと目で見分けられるようにする。`site-look-plan` の `decisions.md` で「採る」と決まった C04・C06・C07・C17 を、本番の書き方で ukadoc-spec に入れる。方向は決まっているので、ここでは議論し直さない。
 
-変えるのは、まとめ頁の組み立ての処理（`scripts/prepare_site.py`）が付ける目印と、その目印に当てるサイトの見た目の指定（`assets/extra.css`）で、原稿は変えない。ukadoc-spec を変えるので、PR の単位 `site-look-visibility` の作業木 `.worktrees/site-look-visibility/` で、先の `site-look-list-items` の変更の上に書き、Build Gate と規約 Gate を通す。PR は単位の最後の spec（`site-look-note-icon`）の完了のときに 1 回だけ作り、この spec の完了では作らない。
+変えるのは、まとめ頁の組み立ての処理（`scripts/prepare_site.py`）が付ける目印と、その目印に当てるサイトの見た目の指定（`assets/extra.css`）で、原稿は変えない。ukadoc-spec を変えるので、この spec の作業木 `.worktrees/site-look-list-markers/` で、先の `site-look-list-items` の PR がマージされた後の `origin/main` の上に書き、Build Gate と規約 Gate を通す。PR は原則 1 spec = 1 PR なので（開発者の指示、2026-10-25）、この spec の完了で自分の PR を作ってスクワッシュマージする。
 
 本文の主語は 2 つある。「UKADOC のサイト」は、この spec の変更を入れた後の公開サイト（とそのプレビュー）の見え方を指す。「site-look-list-markers」は、この spec の作業（ukadoc-spec への変更・確かめ・記録）を指す。
 
@@ -40,7 +40,7 @@
   - ベースウェアの名前を足すかどうか（例: areka を `**対応:**` に載せるか。`product.md` の未決の事項）
   - `dev/nar.md` の 1 個の `**対応:**`（まとめ頁の外なので目印も札も付かない）
 - **Adjacent expectations**:
-  - 土台は、作業木 `.worktrees/site-look-visibility/`（ブランチ `site-look-visibility`。ukadoc-spec の `origin/main` `a341420` に `site-look-list-items` の 3 つのコミットが載った `902a7f1`）。ukadoc-spec の `origin/main` は `46439c8` に進んだが、変わったのは `spec/saori-ex/internal_file/` の 2 ファイルと `spec/sstp/method_execute.md` だけで、対応の段落・既定値の段落・注意書きの節の数は変わらない（`research.md`）
+  - 土台は、`site-look-list-items` の PR（今は作業木 `.worktrees/site-look-list-items/` の `902a7f1`。ukadoc-spec の `origin/main` `a341420` に 3 つのコミットが載ったもの）がマージされた後の ukadoc-spec の `origin/main`。ukadoc-spec の `origin/main` は `46439c8` に進んだが、変わったのは `spec/saori-ex/internal_file/` の 2 ファイルと `spec/sstp/method_execute.md` だけで、対応の段落・既定値の段落・注意書きの節の数は変わらない（`research.md`）
   - C04 の箱は、`site-look-list-items` の項目名の帯（C01）と分類の帯（C03）が注意書きの節の見出しを除くことに依る。その spec の目印の名前の決まり（`bundle-<役>`）と、まとめ頁の段落の詰め（C02）を引き継ぐ
   - `site-look-note-icon` は、この spec の箱に入る注意書きの節の見出しにアイコンを付ける。C11（バルーン風）は、キャラクター（C12、roadmap のバックログ）が決まった後に、この spec の注意書きの節の目印のまま、見た目の指定だけで C04 と入れ替えられることを期待する
   - 「明るい表示の色付きの字は白地に 7:1 以上」の物差しは、`site-look-sakura-script-highlight`・`site-look-manual-files` も同じに使う。この spec は自分の作る札にだけ当て、ほかの spec の字の色は指定しない
@@ -145,8 +145,8 @@
 #### Acceptance Criteria
 1. The site-look-list-markers shall ukadoc-spec の中で `scripts/prepare_site.py` と `assets/extra.css` だけを変え、原稿（`.md`）・`.nav.yml`・`mkdocs.yml`・`requirements.txt`・Zensical の版を変えない
 2. The site-look-list-markers shall `assets/extra.css` のこの spec の指定を、ファイルの末尾に塊として足し、塊ごとの注を `/* site-look-list-markers: <何の指定か> */` の短い 1 行にとどめる（説明・測りの数・わけは spec の記録に書く）
-3. The site-look-list-markers shall 変更を、PR の単位の作業木 `.worktrees/site-look-visibility/`（ブランチ `site-look-visibility`）で、`site-look-list-items` の変更の上に書く
+3. The site-look-list-markers shall 変更を、この spec の作業木 `.worktrees/site-look-list-markers/`（ブランチ `site-look-list-markers`）で、`site-look-list-items` の PR がマージされた後の ukadoc-spec の `origin/main` の上に書く
 4. The site-look-list-markers shall この spec の完了の前に、Build Gate（`prepare_site.py` と `zensical build --strict` が、どちらも失敗なく終わる）と規約 Gate を通す
-5. The site-look-list-markers shall この spec の完了では PR を作らない（PR の単位 `site-look-visibility` の最後の spec の完了で、単位の 6 本をまとめて 1 回だけ作り、スクワッシュマージする。そのときの PR の説明は brief の「続きの PR の説明」に従う）
+5. The site-look-list-markers shall この spec の完了で、この spec だけの PR を作ってスクワッシュマージする（原則 1 spec = 1 PR。開発者の指示、2026-10-25。PR の説明は brief の「続きの PR の説明」に従い、一連の PR の並びは PR を出すときの roadmap による）。この spec の PR だけを入れるとサイトが壊れると分かったときは、PR を出さずに溜め、開発者に報告する
 6. If 作業の途中に、ukadoc-spec の `origin/main` が同じ `assets/extra.css`・`scripts/prepare_site.py` を変えて進み、変更とぶつかったとき, the site-look-list-markers shall `origin/main` に追いつき、この spec の指定と、ほかの spec が入れた指定の両方が残るようにする
 7. The site-look-list-markers shall 旧サイトの見た目の指定・画像・スクリプトや試作の指定を写さず、本番の書き方で書き直す（試作の指定は `html[data-slp~="Cxx"]` の下の使い捨ての書き方である）

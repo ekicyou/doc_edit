@@ -83,3 +83,9 @@
 - **参考の試作**: `.kiro/specs/completed/site-look-plan/mockups/extra.css` の C23（`html[data-slp~="C23"]` の下の使い捨ての指定）、`mockups/mockup.js` の C23 の組み替え（形の判定の見本）、`mockups/README.md` の「続く答えを受けた試作」の測り。ブラウザで組み替える使い捨ての書き方なので、写さずに組み立ての処理として書き直す
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない
 - **続きの PR の説明**（開発者の指示、2026-10-25。同じ日に一連の PR を 6 本から 3 本に改めた）: PR の説明に、この PR が UKADOC の見た目を旧サイト並みの見やすさに近づける一連の PR（`site-look-plan` の決定を切った 3 本）の 1 本であり、続きの PR を順に出すことを書く。一連の PR とその並びは `.kiro/steering/roadmap.md` の「PR の単位」と「Specs」による（今の見込み: `site-look-dark-link-color` → `site-look-visibility`（list-items・list-markers・sakura-script-highlight・manual-files・definition-tables・note-icon の 6 本の spec をまとめた 1 本）→ `site-look-sstp-playback`）。PR を出すときの roadmap に合わせて、出し済みの PR（番号）・この PR・この後に出す PR を短く並べ、メンテナが全体の中のどこにあるかを分かるようにする（最後の PR では、これで一連が終わることを書く）。あわせて、この PR だけで完結していて、続きを待たずにマージしてよいこと（先に出した PR に中身で依るときは、その PR を名指しする）を書く。この spec は PR の単位 `site-look-visibility` の 1 本で、PR は単位の最後の spec（`site-look-note-icon`）の完了のときに 1 回だけ作る。PR の説明は、単位の 6 本の spec をまとめて書く
+
+## PR の単位の改め（開発者の指示、2026-10-25）
+- 原則 1 spec = 1 PR にした。ほかの人のコミットを妨げないよう、spec を完了するたびに PR を出してスクワッシュマージする。ただし、その PR だけを入れるとサイトが壊れるなら、PR を出さずに溜める（`.kiro/steering/workflow.md`「PR の単位」）
+- この brief の「PR の単位 `site-look-visibility`」「単位の最後の spec で 1 回だけ PR を作る」「作業木を引き継ぐ」の記述は、これに読み替える。この spec の作業木は `.worktrees/<この spec の名前>/`（同じ名前のブランチ）で、依存先の PR がマージされた後の ukadoc-spec の `origin/main` から作る
+- `site-look-list-items` の 3 つのコミットは、作業木 `.worktrees/site-look-list-items/`（ブランチ `site-look-list-items`。`site-look-visibility` から名前を移した）にあり、その spec の PR で入れる
+- 「続きの PR の説明」の一連の PR の並びは、PR を出すときの roadmap による

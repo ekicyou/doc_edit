@@ -90,3 +90,9 @@
 ## 申し送り（site-look-list-items より）
 - **目印の名前**: まとめた頁の単位の頭の見出しに `bundle-item`・`bundle-category` の class が付く（`notes_` の単位と頁の頭には付かない）。名前の決まりは `bundle-<役>`。`notes_` の見出しは C01・C03 の帯の外にある。この名前か付ける見出しを変えたら確かめ直す（`site-look-list-items` の `design.md` の Revalidation Triggers）
 - **濃い帯の中の ¶**: 分類の帯と記述例の見出しの帯の中の ¶（`.headerlink`）は、状態に依らず白の 70%（`--md-primary-bg-color--light`）にしてある。見出しの頭にアイコンを付けるときは、この帯の中での見え方も見る
+
+## PR の単位の改め（開発者の指示、2026-10-25）
+- 原則 1 spec = 1 PR にした。ほかの人のコミットを妨げないよう、spec を完了するたびに PR を出してスクワッシュマージする。ただし、その PR だけを入れるとサイトが壊れるなら、PR を出さずに溜める（`.kiro/steering/workflow.md`「PR の単位」）
+- この brief の「PR の単位 `site-look-visibility`」「単位の最後の spec で 1 回だけ PR を作る」「作業木を引き継ぐ」の記述は、これに読み替える。この spec の作業木は `.worktrees/<この spec の名前>/`（同じ名前のブランチ）で、依存先の PR がマージされた後の ukadoc-spec の `origin/main` から作る
+- `site-look-list-items` の 3 つのコミットは、作業木 `.worktrees/site-look-list-items/`（ブランチ `site-look-list-items`。`site-look-visibility` から名前を移した）にあり、その spec の PR で入れる
+- 「続きの PR の説明」の一連の PR の並びは、PR を出すときの roadmap による

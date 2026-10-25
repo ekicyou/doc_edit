@@ -89,3 +89,9 @@
 - **作業木の今の状態**: 単位 `site-look-visibility` の作業木 `.worktrees/site-look-visibility/`（ブランチ `site-look-visibility`）は、`origin/main` の `a341420`（PR #10 のマージの後。上の「土台」の `afb2152` ではない）から作り、`site-look-list-items` の 3 つのコミット（`f8082c2`・`2356d5d`・`902a7f1`）が載っている。未 push。作ったときに `origin/main` を追う設定が付いたので、素の `git push` で main に送らないよう追う先を外してある（PR は単位の最後に `push -u origin site-look-visibility` で出す）
 - **作業木のコミットの名前**: ukadoc-spec の git には名前とメールの設定が無く、`git commit` が「Author identity unknown」で止まる。`site-look-list-items` は、doc_edit と同じ名前を `git -c user.name=ekicyou -c user.email=dot.station@gmail.com commit …` で渡した（設定は書き換えていない）
 - **`.venv`**: 2026-10-25 に doc_edit の `.venv` の土台の Python（uv の 3.12.13）がセッションの外で消えて動かなくなったので、同じ日に `uv venv .venv --python 3.12 --clear` と `uv pip install -r ukadoc-spec/requirements.txt` で作り直した（CI と同じ 3.12。土台は uv の `cpython-3.12-…` で、3.12 の版が上がっても切れない）。作業木 `902a7f1` で Build Gate が exit 0
+
+## PR の単位の改め（開発者の指示、2026-10-25）
+- 原則 1 spec = 1 PR にした。ほかの人のコミットを妨げないよう、spec を完了するたびに PR を出してスクワッシュマージする。ただし、その PR だけを入れるとサイトが壊れるなら、PR を出さずに溜める（`.kiro/steering/workflow.md`「PR の単位」）
+- この brief の「PR の単位 `site-look-visibility`」「単位の最後の spec で 1 回だけ PR を作る」「作業木を引き継ぐ」の記述は、これに読み替える。この spec の作業木は `.worktrees/<この spec の名前>/`（同じ名前のブランチ）で、依存先の PR がマージされた後の ukadoc-spec の `origin/main` から作る
+- `site-look-list-items` の 3 つのコミットは、作業木 `.worktrees/site-look-list-items/`（ブランチ `site-look-list-items`。`site-look-visibility` から名前を移した）にあり、その spec の PR で入れる
+- 「続きの PR の説明」の一連の PR の並びは、PR を出すときの roadmap による

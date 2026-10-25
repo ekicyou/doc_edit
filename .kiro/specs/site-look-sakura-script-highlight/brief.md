@@ -97,3 +97,9 @@ Pygments のレキサーを自作して `requirements.txt` で入れる道と、
 - **記述例の箱の地**: `site-look-list-items` の C18 は、`h4` の直後のコードブロックの箱の地を明るい表示 `#eef2f8`・暗い表示 `#1d2433`（`@media screen` の中）にした。箱の中のタグの色の対比は、この地の上で測る（`site-look-list-items` の `design.md` の Out of Boundary・Revalidation Triggers）。今のコードの字は明 8.72:1・暗 7.80:1
 - **着色の後の形**: C09（`pre > code` の右の内側の余白 2.8em）と C18 の箱は、写しに `pymdownx.highlight`（`use_pygments: false`）を足した `pre.highlight > code` の形でも、箱・点線の数・位置と高さ・対比・ボタンの重なり 0 が今の形と同じだった（`verification.md` の「着色の後の形」）。この spec で形を変えたら、C09・C18 が両方の形で同じに見えることを確かめ直す
 - **作業木**: 単位 `site-look-visibility` の作業木の状態・コミットの名前・`.venv` のことは `site-look-list-markers` の brief の「申し送り（site-look-list-items より）」にある
+
+## PR の単位の改め（開発者の指示、2026-10-25）
+- 原則 1 spec = 1 PR にした。ほかの人のコミットを妨げないよう、spec を完了するたびに PR を出してスクワッシュマージする。ただし、その PR だけを入れるとサイトが壊れるなら、PR を出さずに溜める（`.kiro/steering/workflow.md`「PR の単位」）
+- この brief の「PR の単位 `site-look-visibility`」「単位の最後の spec で 1 回だけ PR を作る」「作業木を引き継ぐ」の記述は、これに読み替える。この spec の作業木は `.worktrees/<この spec の名前>/`（同じ名前のブランチ）で、依存先の PR がマージされた後の ukadoc-spec の `origin/main` から作る
+- `site-look-list-items` の 3 つのコミットは、作業木 `.worktrees/site-look-list-items/`（ブランチ `site-look-list-items`。`site-look-visibility` から名前を移した）にあり、その spec の PR で入れる
+- 「続きの PR の説明」の一連の PR の並びは、PR を出すときの roadmap による
