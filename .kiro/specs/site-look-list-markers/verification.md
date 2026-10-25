@@ -268,3 +268,76 @@ fg は `getComputedStyle` の `color`（枠はその色）、bg は重ねた地�
 
 - `?h=エスケープ` の強調は頁の中に 1 個だけで、箱の見出しの中にあった。箱の本文の中の強調は 0 個（本文に「エスケープ」の字が無い）
 - 札の中の強調の対比は、設計の見込み（明 7.89〜10.34・暗 4.34〜6.49）の中に入った
+
+## 画面
+
+### 測った版と撮り方（4.4）
+- 日付: 2026-10-25。作業木 `f8a747c` の `zensical serve`（`http://127.0.0.1:8000/ukadoc-spec/`）。控えは `d3154d8` の配り（`http://127.0.0.1:8010/ukadoc-spec/`）
+- `site-look-plan/tools/shot.mjs` を読むだけで使い、既定の 1000×700 で明・暗を撮った。明・暗は `prefers-color-scheme` で選んだ
+
+```sh
+# spec のフォルダ（.kiro/specs/site-look-list-markers/）の中で。T = ../completed/site-look-plan/tools/shot.mjs、B = http://127.0.0.1:8000/ukadoc-spec
+node $T "$B/list/sakura-script/"  "#notes_escape"      screenshots/after-sakura-script-notes-$s.png  $s   # s = light・dark
+node $T "$B/list/sakura-script/"  "#bang-lock-repaint" screenshots/after-sakura-script-$s.png        $s
+node $T "$B/descript/ghost/"      "#charset"           screenshots/after-descript-ghost-$s.png       $s
+node $T "$B/list/propertysystem/" "#notes_sound_meta"  screenshots/after-propertysystem-notes-$s.png  $s
+```
+
+### 撮った画面（8.4・8.5）
+| 画面 | 頁 | 位置 | 見比べた目標の画面 |
+|---|---|---|---|
+| `after-sakura-script-notes-{light,dark}.png` | `list/sakura-script/` | `#notes_escape` | `mock-sakura-script-C04-{light,dark}` |
+| `after-sakura-script-{light,dark}.png` | `list/sakura-script/` | `#bang-lock-repaint` | `mock-sakura-script-C06-{light,dark}`・`mock-sakura-script-C17-light` |
+| `after-descript-ghost-{light,dark}.png` | `descript/ghost/` | `#charset` | `mock-descript-ghost-C07-{light,dark}` |
+| `after-propertysystem-notes-{light,dark}.png` | `list/propertysystem/` | `#notes_sound_meta` | なし（段が `h4` の箱） |
+
+### 撮り直し（8.8）
+- 撮り直しは **1 枚**: `after-sakura-script-light.png`。最初の画面は y ≈ 570 の所にヘッダの紺の行がもう 1 本あり、右の端にも紺の帯が出ていた（二重に重なった跡）。同じ式で撮り直し、重なりの無いことを見た
+- `after-sakura-script-notes-{light,dark}.png` のヘッダの題（「SAKURA Script」と前の題）の重なりは、題の切り替えの動きで、本文に響かないので撮り直していない（設計の「Error Handling」のとおり。目標の画面にも同じ重なりがある）
+- 残した 8 枚は、上の端のほかに紺の行が無いことを 1 枚ずつ見た
+
+### 目標の画面との見比べ
+比べたのはこの spec の 4 つの候補（C04・C06・C17・C07）の部分だけ。目標の画面のほかの候補の部分（C18 の見出しの帯・C10 の記述例の枠・C01 など）は、前の spec の分か、後の spec の分なので見ていない。
+
+| 候補 | 表示 | 同じ所 | 違う所（わけ） |
+|---|---|---|---|
+| C04 箱（`#notes_escape`・`#notes_lifespan`） | 明 | 点線の枠・見出しの中央寄せと下の点線・地 `#f5f5f5`・箱の中のリスト・コードの見た目、箱どうしの間の区切りの線 | 2 つ目の箱が試作より 17px ほど上に来る。箱の中の段落・リストの間が C02 の `.4em` の詰めのままのため（「前提と OPEN QUESTION」の 5。決めたとおり） |
+| 同上 | 暗 | 点線の枠・見出しの中央寄せと下の点線・箱の中の字とコード | 箱に地が無く、頁の地のまま（試作は箱の中にコードの地）。「前提と OPEN QUESTION」の 1 で決めたとおり。上と同じ余白の違い |
+| C06 札（`Materia` / `SSP` / `Ninix`） | 明 | 札の枠（`currentColor`）・角・字の大きさと太さ・` / ` の区切り・色の割り振り | 札の色は C17 の濃い色（下の行）。試作の C06 の明るい色は C17 で上書きされる前の色で、`C17-light` と同じになるのが目標 |
+| 同上 | 暗 | 4 つの名前の暗い色（`#ffc260`・`#81c784`・`#90caf9`）と枠、並び | 無い（「対応:」の段落の上の余白が試作より詰まるのは C02 の詰めで、この spec の外） |
+| C17 札の明るい表示の濃い色 | 明 | `Materia` `#6b4500`・`SSP` `#185a1c`・`Ninix` `#0d47a1` の字と枠が `mock-sakura-script-C17-light` と同じに見える | 無い |
+| C07 既定値（`#charset`・`name`・`type`・`craftman`） | 明 | 「既定値:」の小さい札（控えめの色・枠）と、段落の字下げ | 値の字が本文の色・本文の大きさ（試作は控えめの色・小さい字）。要件 3.2 の決定と「前提と OPEN QUESTION」の 2 のとおり |
+| 同上 | 暗 | 同上 | 同上 |
+
+### `CROW` の札と段が `h4` の箱（8.5）
+- `CROW`（`descript/ghost` の `#charset` の `SSP / CROW` と、下の項目の `Materia / SSP / CROW`）: `after-descript-ghost-{light,dark}.png` に写った。明は `#5a1a85`、暗は `#ce93d8` の字と枠で、ほかの名前の札と同じ形・大きさで並び、ほかの 3 色と見分けがつく
+- 段が `h4` の箱（`list/propertysystem` の `#notes_sound_meta`・`#notes_sound_propertyset`）: `after-propertysystem-notes-{light,dark}.png` に写った。`h2`・`h3` の箱と同じ点線の枠・見出しの中央寄せと下の点線で、見出しの字は `h4` の太字・大きさのまま。明は地 `#f5f5f5`、暗は地なし。箱の中のリンク・太字・コードは読める
+
+## 失わないもの
+
+### 幅 375（7.3）
+`shot.mjs` を幅 375×高さ 812 で、画面を書かずに（出力 `-`）流した。`scrollWidth` は縦のスクロールバーの幅を足した値（`shot.mjs` の数え方）。
+
+```sh
+node $T "$B/<頁>" "<位置>" - $s 375 812   # 位置は上の画面と同じ（descript/ghost は #charset、list/propertysystem は #notes_sound_meta、list/sakura-script は #notes_escape）
+```
+
+| 頁 | 明 `scrollWidth` / `innerWidth` | 暗 `scrollWidth` / `innerWidth` |
+|---|---|---|
+| `list/sakura-script` | 375 / 375 | 375 / 375 |
+| `descript/ghost` | 375 / 375 | 375 / 375 |
+| `list/propertysystem` | 375 / 375 | 375 / 375 |
+
+- 6 つとも 375 で、横にはみ出さない
+
+### コピーのボタン（7.4）
+- 控えの配り（8010）の `list/sakura-script/#bang-lock-repaint` を同じ式で明・暗で撮り（`scratchpad\shots\base-sakura-script-{light,dark}.png`。スクラッチだけに置いた）、`after-sakura-script-{light,dark}.png` と並べた。2 つの記述例のコピーのボタンは、どちらも同じ位置（記述例の右上）・同じ形・同じ色で、変わっていない
+- 2 つの配りの `list/sakura-script/` の HTML の `<pre` の数は、どちらも 288 で同じ
+
+### `#notes_escape` の `\`（7.5）
+- 使い捨ての `scratchpad\esc.mjs`（標準の `fetch` だけ）で、2 つの配りの `list/sakura-script/` から `id="notes_escape"` の見出しから `id="notes_lifespan"` の見出しの前までを取り、タグを除いて空白を詰めた字を比べた: **同じ**（どちらも 325 字、`\` はどちらも 8 個）。包みの `<div>` が増えても、字は変わらない
+- 画面でも、控えの `#notes_escape`（`scratchpad\shots\base-sakura-script-notes-light.png`）と `after-sakura-script-notes-light.png` の「「\」」「「\」」「「\%」」「`\q[ラベル名,ID]`」「「\]」」「`\![raise,…]`」「`\![call,…]`」は同じ字形（バックスラッシュのまま。円の記号にならない）で出ていた
+
+```sh
+node scratchpad/esc.mjs   # {"same":true,"len":[325,325],"bs":[8,8],"pre":[288,288]}
+```

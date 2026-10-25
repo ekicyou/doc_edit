@@ -79,7 +79,7 @@
   - `verification.md` の「対比」の節に、表のすべての所の字の色・地・対比、変数で出せない 8 つの札の色とその対比、切り替え・画面だけ・検索の強調の結果が書いてあり、すべて線を満たすか、開発者の判断を待つ状態で止まっている
   - _Requirements: 1.6, 1.7, 2.2, 2.6, 3.2, 3.4, 4.1, 6.1, 6.2, 7.1, 8.5, 8.6_
 
-- [ ] 4.4 変更の後の画面を撮り、目標の画面との見比べと、失わないものを確かめる
+- [x] 4.4 変更の後の画面を撮り、目標の画面との見比べと、失わないものを確かめる
   - プレビューが動いていなければ、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
   - 設計の「VerificationRecord」の画面の一覧のとおり、`shot.mjs`（読むだけで使う）で `after-` の 8 枚を明・暗で撮って spec の `screenshots/` に置く。二重に重なった跡があれば撮り直し、枚数とわけを控える
   - この spec の 4 つの候補の部分だけを、目標の画面（`mock-sakura-script-C04-*`・`C06-*`・`C17-light`、`mock-descript-ghost-C07-*`）と見比べる。`CROW` の札と段が `h4` の箱（`list/propertysystem` の `#notes_sound_meta`）を明・暗で見る
