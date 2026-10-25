@@ -1,7 +1,7 @@
 # Implementation Plan
 
 - [ ] 1. 土台: 作業木と変更の前の記録
-- [ ] 1.1 ukadoc-spec の `origin/main` の最新から作業木を作り、プレビューを起動する
+- [x] 1.1 ukadoc-spec の `origin/main` の最新から作業木を作り、プレビューを起動する
   - ukadoc-spec を fetch し、`origin/main` から spec の作業木を作る（ukadoc-spec のメインのチェックアウトは使わない）
   - 作業木で `prepare_site.py` を流してから `zensical serve` を起動する
   - 作業木の先頭が `origin/main` と同じコミットで、`/ukadoc-spec/list/sakura-script/` の頁がプレビューで開ける
