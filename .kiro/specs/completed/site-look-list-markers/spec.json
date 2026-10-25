@@ -1,0 +1,29 @@
+{
+  "feature_name": "site-look-list-markers",
+  "created_at": "2026-10-25T07:03:47Z",
+  "updated_at": "2026-10-25T09:00:41Z",
+  "language": "ja",
+  "phase": "completed",
+  "approvals": {
+    "requirements": {
+      "generated": true,
+      "approved": true
+    },
+    "design": {
+      "generated": true,
+      "approved": true
+    },
+    "tasks": {
+      "generated": true,
+      "approved": true
+    }
+  },
+  "ready_for_implementation": true,
+  "completed_at": "2026-10-25T09:00:41Z",
+  "ukadoc_spec": {
+    "pr_unit": "site-look-list-markers",
+    "pr": "https://github.com/ukatech/ukadoc-spec/pull/12",
+    "state": "MERGED",
+    "merge_commit": "0eb3fb92ab19b5c55c98c0fd93d37b6fdf297664"
+  }
+}

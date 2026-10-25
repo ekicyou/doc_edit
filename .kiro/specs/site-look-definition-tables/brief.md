@@ -89,3 +89,7 @@
 - この brief の「PR の単位 `site-look-visibility`」「単位の最後の spec で 1 回だけ PR を作る」「作業木を引き継ぐ」の記述は、これに読み替える。この spec の作業木は `.worktrees/<この spec の名前>/`（同じ名前のブランチ）で、依存先の PR がマージされた後の ukadoc-spec の `origin/main` から作る
 - `site-look-list-items` の 3 つのコミットは、作業木 `.worktrees/site-look-list-items/`（ブランチ `site-look-list-items`。`site-look-visibility` から名前を移した）にあり、その spec の PR で入れる
 - 「続きの PR の説明」の一連の PR の並びは、PR を出すときの roadmap による
+
+## 申し送り（site-look-list-markers より）
+- `prepare_site.py` の `main()` の `parts.append(…)` の行は、`add_markers(rel, rewrite_links(shift_headings(…), rel, dst).strip('\n'))` になった。対応・既定値の段落の末尾に `{: .bundle-support }`・`{: .bundle-default }` を足し、`notes_` の単位を `div.bundle-notes` で包む
+- 見直しが要る論点: この行に表への組み替えを足すときは、両方の関数を入れ子にして残し、目印の数（対応 1640・既定値 423・注意書き 16・札 2719）と漏れ 0 を確かめ直すこと（`.kiro/specs/completed/site-look-list-markers/design.md` の「Revalidation Triggers」・`verification.md` の「目印」）

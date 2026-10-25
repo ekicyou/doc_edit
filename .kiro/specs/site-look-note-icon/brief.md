@@ -96,3 +96,7 @@
 - この brief の「PR の単位 `site-look-visibility`」「単位の最後の spec で 1 回だけ PR を作る」「作業木を引き継ぐ」の記述は、これに読み替える。この spec の作業木は `.worktrees/<この spec の名前>/`（同じ名前のブランチ）で、依存先の PR がマージされた後の ukadoc-spec の `origin/main` から作る
 - `site-look-list-items` の 3 つのコミットは、作業木 `.worktrees/site-look-list-items/`（ブランチ `site-look-list-items`。`site-look-visibility` から名前を移した）にあり、その spec の PR で入れる
 - 「続きの PR の説明」の一連の PR の並びは、PR を出すときの roadmap による
+
+## 申し送り（site-look-list-markers より）
+- 注意書きの節は、`prepare_site.py` の `add_markers()` が、ファイル名が `notes_` で始まる単位を `<div class="bundle-notes" markdown="1">` で包む。包みの最初の子はいつも節の見出し（`h2` 2・`h3` 12・`h4` 2 の計 16 個）で、`extra.css` の `/* site-look-list-markers: 注意書きの節の箱 */` の塊が `.md-typeset .bundle-notes > :first-child` に中央寄せと下の点線を当てている
+- 見直しが要る論点: C26 のアイコンをこの見出しに足しても、中央寄せと点線の区切りが崩れないこと（`.kiro/specs/completed/site-look-list-markers/design.md` の「Integration & Migration Notes」「Revalidation Triggers」）

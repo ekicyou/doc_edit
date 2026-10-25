@@ -28,7 +28,7 @@
 - 目印の名前 `bundle-notes`（注意書きの節の包み）・`bundle-support`（対応の段落）・`bundle-default`（既定値の段落）・`bundle-baseware` と `bundle-baseware-<名前の小文字>`（名前の札）
 - 「形に合う部分」の決まり（名前で始まり、名前の後ろが部分の終わりか空白。後ろの字が打ち消しの語を含むなら札にしない）と、札にする名前の並び（`Materia`・`SSP`・`CROW`・`Ninix`）
 - `assets/extra.css` の、見出しのコメント `/* site-look-list-markers: … */` で始まる 3 つの塊（注意書きの節の箱・対応のベースウェアの札・既定値の札と字下げ）と、その中の札の明・暗の色 8 つ
-- この spec の記録（`.kiro/specs/site-look-list-markers/verification.md` と `screenshots/`。完了で `completed/` へ移る）: 目印の数・札にならない部分・対比・画面の見比べ・失わないものの確かめ
+- この spec の記録（`.kiro/specs/completed/site-look-list-markers/verification.md` と `screenshots/`。完了で `completed/` へ移る）: 目印の数・札にならない部分・対比・画面の見比べ・失わないものの確かめ
 
 ### Out of Boundary
 - `extra.css` のほかの塊（紺のテーマ・PR #10 の `site-look-dark-link-color:`・目次の詰め・記述例の折り返し・`site-look-list-items:` の 6 つ・後続 spec の塊）。C02 の詰め（`.md-typeset:has(.bundle-item) p`・`hr`）は箱の中にも効くが、値は変えない
@@ -105,7 +105,7 @@ ukadoc-spec（作業木 .worktrees/site-look-list-markers/、ブランチ site-l
 └── assets/
     └── extra.css                # 末尾に site-look-list-markers の塊を 3 つ足す
 
-.kiro/specs/site-look-list-markers/（doc_edit）
+.kiro/specs/completed/site-look-list-markers/（doc_edit）
 ├── verification.md              # 新規。目印の数・札にならない部分・対比・画面の見比べ・失わないものの記録
 └── screenshots/                 # 新規。下の「VerificationRecord」の画面
 ```
@@ -283,7 +283,7 @@ ukadoc-spec で変えるのは上の 2 ファイルだけである（9.1）。�
 | MarkerCheck | なし（配られた HTML を数える使い捨てのスクリプト。置き場は Claude のスクラッチ。手順と結果は `verification.md`） | 作らない |
 | ContrastProbe | なし（Edge ヘッドレス + CDP の使い捨てのスクリプト。式と結果は `verification.md`） | 作らない |
 | ShotTool | `.kiro/specs/completed/site-look-plan/tools/shot.mjs` | 読むだけで使う |
-| VerificationRecord | `.kiro/specs/site-look-list-markers/verification.md`・`screenshots/` | 新規 |
+| VerificationRecord | `.kiro/specs/completed/site-look-list-markers/verification.md`・`screenshots/` | 新規 |
 
 ## System Flows
 

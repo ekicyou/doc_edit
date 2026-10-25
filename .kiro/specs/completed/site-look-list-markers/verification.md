@@ -301,7 +301,7 @@ fg は `getComputedStyle` の `color`（枠はその色）、bg は重ねた地�
 - `site-look-plan/tools/shot.mjs` を読むだけで使い、既定の 1000×700 で明・暗を撮った。明・暗は `prefers-color-scheme` で選んだ
 
 ```sh
-# spec のフォルダ（.kiro/specs/site-look-list-markers/）の中で。T = ../completed/site-look-plan/tools/shot.mjs、B = http://127.0.0.1:8000/ukadoc-spec
+# spec のフォルダ（.kiro/specs/completed/site-look-list-markers/）の中で。T = ../site-look-plan/tools/shot.mjs、B = http://127.0.0.1:8000/ukadoc-spec
 node $T "$B/list/sakura-script/"  "#notes_escape"      screenshots/after-sakura-script-notes-$s.png  $s   # s = light・dark
 node $T "$B/list/sakura-script/"  "#bang-lock-repaint" screenshots/after-sakura-script-$s.png        $s
 node $T "$B/descript/ghost/"      "#charset"           screenshots/after-descript-ghost-$s.png       $s

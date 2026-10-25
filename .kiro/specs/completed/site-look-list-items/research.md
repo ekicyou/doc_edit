@@ -198,7 +198,7 @@
 - `requirements.md`・`brief.md`・この `research.md` のギャップ分析（7 節の決定を含む）、steering の `product.md`・`tech.md`・`structure.md`・`roadmap.md`・`workflow.md`（塊の注・PR の単位）、`ukadoc-spec/CLAUDE.md`、`mkdocs.yml`
 - 手本: `.kiro/specs/completed/site-look-dark-link-color/design.md`・`verification.md`（文体・「測る所と線」・Revalidation Triggers・測りの式）
 - 試作: `.kiro/specs/completed/site-look-plan/mockups/extra.css`（C01・C02・C03・C09・C18）・`mockups/worktree.diff`（`slp_mark()`）、目標の画面 `screenshots/mock-*`
-- 後続: `.kiro/specs/site-look-list-markers/brief.md`（C04 の包み・目印の名前の決定）
+- 後続: `.kiro/specs/completed/site-look-list-markers/brief.md`（C04 の包み・目印の名前の決定）
 - スキル: `kiro-spec-design`（`design-principles.md`・`design-discovery-light.md`・`design-synthesis.md`・`design-review-gate.md`）、`kiro-validate-design`（`design-review.md`）。開発者の決まり「公開 CSS の注は塊ごとに 1 行、説明は spec の記録へ」に従い、指定のわけは `design.md` の「指定のわけ」に書いた
 
 ## 確かめ方（使い捨ての写し）
