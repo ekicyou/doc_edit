@@ -107,7 +107,7 @@
   - `after-` の画面がそろい、`verification.md` の「画面」「失わないもの」の節に、見比べと失わないものの結果と撮り直しの枚数が書いてある
   - _Requirements: 1.1, 1.2, 1.6, 2.4, 3.1, 3.7, 4.2, 4.4, 5.5, 7.1, 7.3, 7.4, 8.3, 8.4, 8.6_
 
-- [ ] 5. 記録と単位の引き継ぎ
+- [x] 5. 記録と単位の引き継ぎ
 - [x] 5.1 `verification.md` の記録を仕上げる
   - 頭に、測った版（作業木のコミット、`origin/main` の版）と日付、流した式（重ねの計算を含む）をそのまま書く
   - 2.2・4.2〜4.6 の節がそろっていることを見て、欠けた所を埋め、変数で出せない 4 つの色とその対比、Build Gate・規約 Gate・`git diff --stat origin/main` を書く
@@ -115,7 +115,7 @@
   - `verification.md` と `screenshots/` がそろい、設計の「Testing Strategy」の各項目の結果が書いてある
   - _Requirements: 6.4, 8.3, 8.4, 8.5, 8.7, 9.1, 9.5_
 
-- [ ] 5.2 作業木を単位の次の spec に渡せる状態にする
+- [x] 5.2 作業木を単位の次の spec に渡せる状態にする
   - ukadoc-spec を fetch し、4.1 の後に `origin/main` がまた進んでいれば、4.1 と同じく追いつき、変わった所に当たる 4.2〜4.6 の確かめをやり直して `verification.md` の版と結果を直す
   - 作業木の変更をすべてコミットし（ukadoc-spec の履歴の型の日本語の 1 文）、push も PR もしない（PR は単位の最後の spec `site-look-note-icon` の完了で作る）
   - プレビューを止める。`.worktrees/_baseline-site-look-list-items/` は spec の完了まで残す
@@ -126,3 +126,4 @@
 - 変更の前の控え `.worktrees/_baseline-site-look-list-items/` は git に載らない。`/kiro-complete site-look-list-items` の後始末で消す
 - 控えの置き場の `snapshot.py`（20 頁の id・headerlink・md-nav__link・hr と `_raw/` のハッシュ）と `overlap.mjs`（ボタンの重なり、Edge ヘッドレス）を 2.2・4.4・4.6 でもそのまま使い、物差しをそろえる。変更の前の重なりは幅 1000 で 172/288（設計の 165 は幅 1024 の数）
 - doc_edit の `.venv` の土台の Python（uv の 3.12.13）が 2026-10-25 にセッションの外で消え、`.venv` が動かない。5.1 以降はスクラッチの使い捨ての venv（3.13.15）で流した。`.venv` の作り直しは開発者の判断
+- 5.2: 作業木のブランチ `site-look-visibility` は作ったときに `origin/main` を追う設定になっていたので、素の `git push` で main に送らないよう追う先を外した（`git branch --unset-upstream`）。単位の PR は `site-look-note-icon` の完了で `push -u origin site-look-visibility` する
