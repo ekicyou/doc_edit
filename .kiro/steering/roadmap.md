@@ -8,19 +8,20 @@
 
 - 切り分けの規則: 他者も使う公開リポジトリへの PR として小さく切る。Markdown 拡張を足す改造（さくらスクリプトの着色）は見た目の改造と別にする。目印を付ける後処理（`prepare_site.py`）やテンプレートの上書きは、その目印を使う見た目の改造と同じ spec に入れる。画像やブラウザで動く仕掛けを要する遊びは、視認性の改造と別にする
 - 並びの規則: 目印を作る spec が、それを使う spec より先。どの spec も `assets/extra.css` を触るので、下の並びの順に 1 本ずつ入れ、同じファイル（`extra.css`・`prepare_site.py`・`mkdocs.yml`）を触る前の spec を依存に書いた
+- PR の単位（`workflow.md`「PR の単位」）: メンテナは PR を完成品の単位で評価するので、8 本を 6 つの PR にまとめる。`site-look-lists`（list-items と list-markers。まとめ頁の帯・札・注意書きを一緒に見てもらう）と `site-look-manual-and-tables`（manual-files と definition-tables。組み立ての処理で `manual/` と箇条書きの見え方を変える）が 2 本ずつで、ほかは 1 本ずつ。Markdown 拡張を足してコードブロックの HTML を変える着色と、未決の点の重い SSTP の送信は、それぞれ単独の PR にする。別の単位の依存先は、その PR がマージされてから始める
 - 土台: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）。Markdown の原稿（`.md`）を変えるのは `site-look-sakura-script-highlight`（C25 の 6 か所）だけである。後続の 8 本はどれも ukadoc-spec の `assets/` などを変えるので、`workflow.md` の「原稿を変えない spec」には当たらない
 - どの spec も、`survey.md` の「失わないもの」（検索・ダークモード・見出しへのリンク・狭い画面・コードのコピー・記述例の字）を崩さない
 
 ## Specs (dependency order)
 - [ ] site-look-plan -- 旧サイトとの見比べと試作で見た目の方向を決め、改造 spec に切り分ける. Dependencies: none
-- [ ] site-look-dark-link-color -- 暗い表示のリンクと左の目次の今の頁を明るい紺 `#8fb4e8` にして読めるようにする（C24）. Dependencies: site-look-plan
-- [ ] site-look-list-items -- まとめ頁の項目名の帯・項目の間の詰め・分類の見出しの帯・コピーのボタンの下の折り返し・記述例の強い箱を入れる（C01・C02・C03・C09・C18）. Dependencies: site-look-plan, site-look-dark-link-color
-- [ ] site-look-list-markers -- `prepare_site.py` で目印を付け、注意書きの箱・対応ベースウェアの札・既定値の札と、明るい表示の札の濃い色を入れる（C04・C06・C07・C17）. Dependencies: site-look-list-items
-- [ ] site-look-sakura-script-highlight -- `pymdownx.highlight` とブラウザの仕掛けでさくらスクリプトのタグに色・太字・地を付け、頁の外の記述例にも届かせる（C10・C19・C20・C21・C25）. Dependencies: site-look-list-items, site-look-list-markers
-- [ ] site-look-manual-files -- `manual/` の頁でファイルごとの切れ目とファイル名の帯を見せ、ファイル構成の木のファイル名に色を付ける（C14・C15・C22）. Dependencies: site-look-list-items, site-look-list-markers, site-look-sakura-script-highlight
-- [ ] site-look-definition-tables -- 「`- **名前**: 説明`」だけが並ぶ箇条書きを、原稿を変えずに組み立ての処理で 2 列の表にする（C23）. Dependencies: site-look-list-markers, site-look-manual-files
-- [ ] site-look-note-icon -- 注釈の節・補足の項目・`!!! note` の見出しの頭に、添付の色付きのアイコンを付ける（C26）. Dependencies: site-look-list-markers, site-look-definition-tables
-- [ ] site-look-sstp-playback -- さくらスクリプトの記述例・プロパティシステム・SHIORI Event を、利用者の操作で手元のゴーストへ送れるようにする（C13）. Dependencies: site-look-sakura-script-highlight, site-look-note-icon
+- [ ] site-look-dark-link-color -- 暗い表示のリンクと左の目次の今の頁を明るい紺 `#8fb4e8` にして読めるようにする（C24）. Dependencies: site-look-plan. PR: site-look-dark-link-color
+- [ ] site-look-list-items -- まとめ頁の項目名の帯・項目の間の詰め・分類の見出しの帯・コピーのボタンの下の折り返し・記述例の強い箱を入れる（C01・C02・C03・C09・C18）. Dependencies: site-look-plan, site-look-dark-link-color. PR: site-look-lists
+- [ ] site-look-list-markers -- `prepare_site.py` で目印を付け、注意書きの箱・対応ベースウェアの札・既定値の札と、明るい表示の札の濃い色を入れる（C04・C06・C07・C17）. Dependencies: site-look-list-items. PR: site-look-lists
+- [ ] site-look-sakura-script-highlight -- `pymdownx.highlight` とブラウザの仕掛けでさくらスクリプトのタグに色・太字・地を付け、頁の外の記述例にも届かせる（C10・C19・C20・C21・C25）. Dependencies: site-look-list-items, site-look-list-markers. PR: site-look-sakura-script-highlight
+- [ ] site-look-manual-files -- `manual/` の頁でファイルごとの切れ目とファイル名の帯を見せ、ファイル構成の木のファイル名に色を付ける（C14・C15・C22）. Dependencies: site-look-list-items, site-look-list-markers, site-look-sakura-script-highlight. PR: site-look-manual-and-tables
+- [ ] site-look-definition-tables -- 「`- **名前**: 説明`」だけが並ぶ箇条書きを、原稿を変えずに組み立ての処理で 2 列の表にする（C23）. Dependencies: site-look-list-markers, site-look-manual-files. PR: site-look-manual-and-tables
+- [ ] site-look-note-icon -- 注釈の節・補足の項目・`!!! note` の見出しの頭に、添付の色付きのアイコンを付ける（C26）. Dependencies: site-look-list-markers, site-look-definition-tables. PR: site-look-note-icon
+- [ ] site-look-sstp-playback -- さくらスクリプトの記述例・プロパティシステム・SHIORI Event を、利用者の操作で手元のゴーストへ送れるようにする（C13）. Dependencies: site-look-sakura-script-highlight, site-look-note-icon. PR: site-look-sstp-playback
 
 依存の理由（同じファイルの順のほかに、中身で依るもの）:
 - `site-look-list-items` の C09・C18 は、`site-look-sakura-script-highlight` で変わるコードブロックの HTML（`pre.highlight > code`）にも効く書き方にする。着色はその後に入れる
