@@ -65,3 +65,50 @@ $PY -I $S/tools/compare.py $S/before/baseline <出力の dir>
 
 ### 画面
 - `screenshots/before-sstp-light.png`: `spec/sstp/` の最初の言語の指定の無いブロック（セレクタ `article .highlight:not(h4 + .highlight)`）、明、1000×700。式は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs http://127.0.0.1:8030/spec/sstp/ "article .highlight:not(h4 + .highlight)" <出力> light`。上の端のほかにヘッダの紺の行は無く、撮り直しは 0 枚
+
+## 字句の規則（タスク 2.2、2026-10-25）
+
+作業木の `assets/sakurascript.js`（未コミット、2.1 のまま。字は変えない）を、偽の `document` の上で Node の `vm` で流して確かめた。作業木の HEAD は `0eb3fb9`、原稿は変えていない。
+
+### 流した式（Git Bash）
+```sh
+S=/c/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/fc194b1e-28b1-4328-9e08-7d8780051c15/scratchpad
+node $S/lexer/check.mjs    # 例の表 30 例・ss・2 回流し。「cases 30 + ss + twice: NG 0」、exit 0
+node $S/lexer/corpus.mjs   # 原稿の全ブロックの数と試作との違い。最後の行「OK」、exit 0
+```
+- `check.mjs`: 偽の `code`（`textContent`・`children`・`classList.add`・`replaceChildren`）と偽の `document`（`querySelectorAll`・`createElement`）。`console.warn` を数える
+- `corpus.mjs`: 作業木の `.md`（`_site`・`_raw`・`migration` と `.` で始まる所を除く）から ```` ```sakurascript ```` のフェンスの中身を取り、末尾の改行を 1 つ除き、タブを 4 桁の区切りで空白に広げる（Python-Markdown と同じ。`event/bang-set-otherghosttalk-true-false-before-after.md`・`event/bang-set-othersurfacechange-true-false.md` の 2 ブロックがタブで始まる）。こうして取った 287 個が、作業木の `_site/list/sakura-script/index.html` の `code.language-sakurascript` の中身（実体参照を戻したもの）の集まりと同じことを確かめてから流す（インデントされたフェンスは 0）。試作の正規表現は `mockups/mockup.js` の C10 の `token` をそのファイルから読む
+
+### 例の表（設計の LexerCheck の 30 例）
+- 30 例すべてが期待どおり（`[種類:字]` と `·地の文` の並びが一致）で、どれも包んだ後の字が入力と同じ
+- 警告の数も表のとおり: 誤りの例 7 つ（`\_?` が閉じない・`[` が閉じない・`"` が閉じない・`%property[` が閉じない・末尾の `\`・`\` + 改行・`\__` + 改行）で 1 ずつ、誤りの無い 23 例で 0
+- ```` ```ss ```` の `\0\s[0]`: `language-sakurascript` が付き `[tag:\0][tag:\s[0]]`
+- 同じ `code` に 2 回流す: `[tag:\0]` のまま、2 回目は警告 1 で包まない
+
+### 原稿の全ブロック
+
+| もの | 数 |
+|---|---|
+| ```` ```sakurascript ```` のブロック | 287（`_site` の `code.language-sakurascript` 287 と字の集まりが同じ） |
+| 包んだ後の字が同じブロック | 287 |
+| タグ（`sakurascript-tag`） | 500 |
+| 環境変数（`sakurascript-env`） | 6（`%username`・`%ms`・`%mp`・`%mh`・`%me`・`%mt` が 1 つずつ） |
+| 誤り（`sakurascript-error`） | 0 |
+| 警告（`console.warn`） | 0 |
+| 試作の正規表現で切れる所 | 508 |
+
+要件の規則と違う読み方が要るブロックは無かった。
+
+### 試作の規則との違い 13 か所
+同じブロックを試作の C10 の正規表現で切った所と、`sakurascript.js` で包んだ所（ブロックの中の位置と字）を比べ、頁ごとに違う所の多い方の数を足した。設計の表と同じ。
+
+| 頁の原稿（`list/sakura-script/`） | 試作 | 本番 | か所 |
+|---|---|---|---|
+| `wait/w.md` | `\w` 4 つ（後ろの `9`・`9`・`9`・`2` が地の文） | `\w9` 3・`\w2` 1 | 4 |
+| `font/f-align.md` | `\w` 2 つ | `\w9` 2 | 2 |
+| `scope/pID.md` | `\p` 2 つ | `\p2`・`\p3`（後ろの `3`・`4` は地の文） | 2 |
+| `balloon-text/bID.md` | `\b` | `\b2` | 1 |
+| `surface/sID.md` | `\s` | `\s1` | 1 |
+| `choice/q-script.md` | `\q[その１,"script:\q[その２,script:その３はない]`（`"]` が地の文） | 全体が 1 つのタグ | 1 |
+| `balloon-text/_-q.md` | 囲みの中の `\1`・`\n` もタグ | 囲みの中は地の文 | 2 |
+| 計 | | | 13 |
