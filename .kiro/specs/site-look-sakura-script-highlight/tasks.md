@@ -17,7 +17,7 @@
   - _Requirements: 3.4, 5.2, 6.1, 7.2, 9.9, 9.10_
 
 - [ ] 2. 言語の印と着色
-- [ ] 2.1 `mkdocs.yml` に言語の印とスクリプトの読み込みを足し、`assets/sakurascript.js` を書く
+- [x] 2.1 `mkdocs.yml` に言語の印とスクリプトの読み込みを足し、`assets/sakurascript.js` を書く
   - プレビューを止めてから書く（書きかけの `_site_src/` を拾わせない）
   - 設計の「Modified Files」のとおり、`markdown_extensions` に `pymdownx.highlight`（`use_pygments: false`）を `pymdownx.superfences` の前に、`extra_css` の後に `extra_javascript` の `assets/sakurascript.js` を足す。ほかの行と `scripts/prepare_site.py`・`requirements.txt` には触らない
   - `assets/sakurascript.js` に、設計の字句の規則（番号の 4 つ・引数とエスケープ・`\\`・`\%`・囲み・環境変数の 4 つの形）と、誤りを救済せずブロックの終わりまで `sakurascript-error` にして `title` と `console.warn` を出す処理、`ss` に `language-sakurascript` を足す処理、要素のある `code` を包まない守り、字が変われば戻す守りを書く。外部の資源を読まず、注は短くし、試作の `slp-` や旧サイトのスクリプトを写さない
