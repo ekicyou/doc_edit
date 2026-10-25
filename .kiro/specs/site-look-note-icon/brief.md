@@ -13,7 +13,7 @@
   - `!!! note "注"` の注意書きの題 2 個（`dev/shell`）。Material の鉛筆のアイコン（`mask-image`）が付いている
 - `!!! tip "ヒント"`（9 個）・`!!! warning "非推奨"`（3 個）は別の種類の注意書きで、本文の「※」の行（147 行）は見出しが無い
 - 開発者の添付の絵（88×88 の PNG）の写しが、試作の写し `.kiro/specs/site-look-plan/mockups/image/slp-notes-icon.png` にある
-- `site-look-definition-tables` が同じ `prepare_site.py` に表の処理を足した後である
+- `site-look-definition-tables` の表の処理には中身で依らない。同じ `prepare_site.py` を触るが、先に入っていても、まだでもよい
 
 ## Desired Outcome
 決めた方向（`decisions.md` の判断）:
@@ -53,19 +53,19 @@
 - 絵を描き直すこと・白黒にすること
 
 ## Upstream / Downstream
-- **Upstream**: `site-look-list-markers`（C04 の箱に入る `notes_` の見出しに付ける）、`site-look-definition-tables`（同じ `prepare_site.py`・`extra.css` を先に触る）。`site-look-plan`（判断と目標の画面）
-- **Downstream**: `site-look-sstp-playback`（同じ `extra.css` などに書き足すので、この spec の後に入れる）
+- **Upstream**: `site-look-list-markers`（C26 のアイコンを、C04 の箱に入る `notes_` の見出しに付ける）。`site-look-plan`（判断と目標の画面）
+- **Downstream**: なし（この spec のアイコンに中身で依る spec は無い）
 
 ## Existing Spec Touchpoints
 - **Extends**: なし（新しい spec）
-- **Adjacent**: `site-look-list-markers`（注意書きの箱と、同じ見出し）、`site-look-definition-tables`（同じ組み立ての処理）
+- **Adjacent**: `site-look-list-markers`（注意書きの箱と、同じ見出し）、`site-look-definition-tables`（同じ `prepare_site.py` の組み立ての処理）・`site-look-sstp-playback`（同じ `assets/extra.css` などを触る）。どちらが先でもよく、ぶつかったら `origin/main` に追いつく
 
 ## Constraints
 - **方向は議論し直さない**: 候補と判断は `site-look-plan` の `decisions.md` で決まっている。この spec は、決まった見え方を本番の書き方で入れる
 - **絵の使ってよい範囲**: 絵は開発者が会話で添付した画像で、試作の写しは `.kiro/specs/site-look-plan/mockups/image/slp-notes-icon.png`（88×88）にある。ukadoc-spec は CC BY 4.0（`afb2152` の LICENSE）なので、本番に入れる前に、絵の出どころと、ukadoc-spec の CC BY 4.0 で出してよいか（または絵だけ別の許可で置くか）を開発者が確かめる。確かめが済むまで PR にしない
 - **旧サイトの素材**: 旧サイト（https://ssp.shillest.net/ukadoc-legacy/manual/ ）の画像・見た目の指定（`list.css`・`base.css`）・スクリプト（`sakura_player.js` など）は、再利用の許可が明記されていない。使わない
 - **原稿は変えない**: 変えるのは ukadoc-spec の `assets/`（絵と `extra.css`）と `scripts/prepare_site.py` で、原稿（`.md`）・`.nav.yml`・`requirements.txt`・Zensical の版は変えない。ただし ukadoc-spec を変えるので、`workflow.md` の「原稿を変えない spec」には当たらない。作業木 `.worktrees/site-look-note-icon/` で書き、Build Gate（`prepare_site.py` と `zensical build --strict`）と規約 Gate（ファイル名は ASCII）を通し、`/kiro-complete` で PR にする
-- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）の上に、先の後続 spec（`site-look-dark-link-color` から `site-look-definition-tables` まで）が入った版
+- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）の上に、中身で依る `site-look-list-markers`（と、同じ PR の単位 `site-look-lists` の `site-look-list-items`）が入った版（`site-look-lists` の PR のマージの後に始める）。ほかの後続 spec（`site-look-definition-tables` など）は先に入っていても、まだでもよい
 - **Zensical 0.0.67 の制限**: テンプレートは minijinja で描画する。partial を丸ごと写さず、CSS とブロックの上書きにとどめる。`build --strict` は、存在しない `extra_css` を指定しても検出しない。`extra.css` の中の `url(...)` の絵が無くても build は通るので、配られた絵が `serve` で 200 になることを確かめる
 - **試作で確かめた事実**:
   - 試作は `assets/extra.css` から `url("image/slp-notes-icon.png")` で絵を読んだ（`extra.css` からの相対の道）。配られた絵は 200 だった

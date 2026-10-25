@@ -2,9 +2,9 @@
 
 `candidates.md` の候補（`C01` から）を、3 頁に使い捨ての試作として当てた記録である（Requirement 3）。試作は ukadoc-spec の作業木 `.worktrees/site-look-plan/` の中だけで作り、作業木ではコミットも push もしない（Requirement 3.2・6.1）。後の `decisions.md` は、この記録と `screenshots/mock-*.png` を材料にする。
 
-- 今の見た目（`base`）を撮った版: ukadoc-spec の `c84942a`（`origin/main` と同じ。`ukadoc-spec/` のメインのチェックアウトで、原稿と設定は変えていない）。2026-10-24 に撮った
-- 作業木の起点: `c84942a`（`git -C .worktrees/site-look-plan log --oneline origin/main..HEAD` が空）
-- **土台の上げ直し（2026-10-25）**: ukadoc-spec の `417511c` でヘッダの色が緑 `#2e8233` から紺 `#1f4e8c` に変わったので、開発者の「紺に合わせて作り直して」を受けて、メインのチェックアウトと作業木を `afb2152` に進め（作業木は試作の差分を外して `--ff-only` で進め、`git apply --3way` で当て直した。3 ファイルとも衝突なし）、サブモジュールの参照を doc_edit の `28a7a20` でコミットした。C17 のリンクの上書きを外し、C18 の緑の直書きをテーマの色の変数に替え、C24 を足して、下の「撮り直し」の表の画面を `afb2152` の上で撮り直した。この節より前の記録の色（緑）は `c84942a` の時点のものである
+- 今の見た目（`base`）を撮った版: 今の `mock-*-base-*.png` は、ukadoc-spec の `afb2152` の作業木の `serve`（ポート 8000）を `?slp=` なし（候補を入れない）で撮り直したもの（2026-10-25、下の「紺への撮り直し」。`?slp=` で切り替えられない `prepare_site.py` の目印と `pymdownx.highlight` は効いている）。初めの `base` は、ukadoc-spec の `c84942a`（`origin/main` と同じ。`ukadoc-spec/` のメインのチェックアウトで、原稿と設定は変えていない）を 2026-10-24 に撮った
+- 作業木の起点: 初めは `c84942a`（`git -C .worktrees/site-look-plan log --oneline origin/main..HEAD` が空）。下の「土台の上げ直し」で `afb2152` に進めた
+- **土台の上げ直し（2026-10-25）**: ukadoc-spec の `417511c` でヘッダの色が緑 `#2e8233` から紺 `#1f4e8c` に変わったので、開発者の「紺に合わせて作り直して」を受けて、メインのチェックアウトと作業木を `afb2152` に進め（作業木は試作の差分を外して `--ff-only` で進め、`git apply --3way` で当て直した。3 ファイルとも衝突なし）、サブモジュールの参照を doc_edit の `28a7a20` でコミットした。C17 のリンクの上書きを外し、C18 の緑の直書きをテーマの色の変数に替え、C24 を足して、下の「紺への撮り直し」の画面を `afb2152` の上で撮り直した。「`list/sakura-script`」「`descript/ghost`」「`manual/ghost`」「開発者の指摘を受けた試作」の 4 節の色の記述（緑）は `c84942a`（緑のテーマ）の時点のもので、テーマの色の変数で書いた色は、今の画面では紺に写る（C18 の行は紺に直した）。「紺への撮り直し」から後の節は `afb2152` の時点の記述である
 - 作業木で変えたファイル（3.1 の時点。どれも未コミット）: `assets/mockup.js`（新規）、`mkdocs.yml`（`extra_javascript` に `assets/mockup.js` を足しただけ）。原稿・`.nav.yml`・`requirements.txt` は触らない（Requirement 6.2）
 - 作業木で変えたファイル（3.2 の時点。どれも未コミット）: `assets/extra.css`・`scripts/prepare_site.py`・`mkdocs.yml`（`pymdownx.highlight` を追加）・`assets/mockup.js`（C10 の着色を追加）。中身は `list/sakura-script` の節
 - 作業木で変えたファイル（3.3 の時点。どれも未コミット）: `assets/extra.css`（C02・C05・C07 を追加）・`scripts/prepare_site.py`（C07 の目印 `slp-default` を追加）。中身は `descript/ghost` の節
@@ -20,7 +20,7 @@
 
 ## 今の見た目の画面
 
-どれも `ukadoc-spec/` のメインのチェックアウト（`c84942a`）を `zensical serve -a 127.0.0.1:8001` で出し、`tools/shot.mjs` で幅 1000・高さ 700 に切り出した。試作の画面（`mock-<page>-<Cnn>-<light|dark>.png`）は、同じ頁の道・同じセレクタ・同じ大きさで撮る（Requirement 3.4）。
+初めは、どれも `ukadoc-spec/` のメインのチェックアウト（`c84942a`）を `zensical serve -a 127.0.0.1:8001` で出し、`tools/shot.mjs` で幅 1000・高さ 700 に切り出した。今の画面は、`afb2152` の作業木の `serve`（ポート 8000）を `?slp=` なしで、同じ道・同じセレクタ・同じ大きさで撮り直したもの（「紺への撮り直し」）。試作の画面（`mock-<page>-<Cnn>-<light|dark>.png`）は、同じ頁の道・同じセレクタ・同じ大きさで撮る（Requirement 3.4）。
 
 | 画面（明・暗） | 頁の道 | セレクタ | 写っている部分 | 使う候補 |
 |---|---|---|---|---|
@@ -51,6 +51,8 @@
   - C10 の対象: `language-sakurascript` の 287 ブロックで、タグとして包まれるのが 502 か所、環境変数が 6 か所（`%username`・`%ms`・`%mp`・`%mh`・`%me`・`%mt`）。`mockup.js` と同じ正規表現を Node で `serve` の HTML に当てて数えた。撮った位置（`#bang-lock-repaint`）には環境変数が無いので、画面に写る色はタグの色だけ
 - 375 px: `tools/shot.mjs "<頁>?slp=<候補>" body - light 375` で、両立しない C04 と C11 を分けて 2 回測った。`?slp=C01,C03,C04,C06,C08,C09,C10` が `scrollWidth` 375・`innerWidth` 375、`?slp=C01,C03,C11,C06,C08,C09,C10` も 375・375。どちらもはみ出しなし（`?slp=` を付けない頁も 375・375）
 - 失敗: なし（試作で確かめられなかった候補は無い）
+
+- 色の記述: この節の色の記述（緑）は `c84942a`（緑のテーマ）の時点のもの。画面は `afb2152`（紺）で撮り直した（「紺への撮り直し」）。テーマの色の変数（`--md-primary-fg-color` など）で書いた色は、今の画面では紺に写る。暗い表示の直書きの色（C06 の札・C10 のタグ）は変わらない
 
 | 試作の画面（明・暗） | 候補 | 見比べる `base` | 位置（セレクタ） | 写っている試作の見え方 |
 |---|---|---|---|---|
@@ -90,6 +92,8 @@
 - 失敗: なし（試作で確かめられなかった候補は無い）
   - 作業の途中の出来事: `serve` を動かしたまま `prepare_site.py` を流し直したところ、`serve` の作り直しが書きかけの `_site_src/` を拾ったらしく、ログに「38 issues found」が出て、`assets/extra.css` が 404 になった。この間に撮った C02 の画面は指定の効かない画面だったので捨てた。`serve` を止め、`zensical build --strict` が exit 0 なのを確かめてから `serve` を起動し直し、`extra.css` に C02 の指定があることを確かめてから 6 枚とも撮り直した。下の画面はどれも撮り直した後のもの
 
+- 色の記述: この節の色の記述（緑）は `c84942a`（緑のテーマ）の時点のもの。画面は `afb2152`（紺）で撮り直した（「紺への撮り直し」）。テーマの色の変数（`--md-primary-fg-color` など）で書いた色は、今の画面では紺に写る
+
 | 試作の画面（明・暗） | 候補 | 見比べる `base` | 位置（セレクタ） | 写っている試作の見え方 |
 |---|---|---|---|---|
 | `mock-descript-ghost-C02-light.png`・`mock-descript-ghost-C02-dark.png` | C02 | `mock-descript-ghost-base-*.png` | `#charset` | 高さ 700 の画面に、`charset`・`name`・`type`・`craftman` の 4 項目が入り、5 つ目の `craftmanw` の項目名が下端に写る（`base` は 3 項目） |
@@ -124,6 +128,8 @@
 - 失敗: なし（試作で確かめられなかった候補は無い）
   - 作業の途中の出来事: C14 で、最初は名前を `float` にして説明の行を下に送ろうとしたが、負の字下げの分だけ 1 行目に隙間ができ、「`: `」が名前の行の右の端（本文の幅の外）に残った。名前の外の幅を広げても同じだったので、`float` をやめて段落の `flex` の折り返しに変えた。この間の画面はどれも捨てた。また、この頁の箇条書きは 1 項目ずつ別の `<ul>` なので、`li:first-child` は全項目に効く（はじめに足した「最初の項目の線だけ緑」の指定は、そのために外した）
 
+- 色の記述: この節の色の記述（緑）は `c84942a`（緑のテーマ）の時点のもの。画面は `afb2152`（紺）で撮り直した（「紺への撮り直し」）。テーマの色の変数（`--md-primary-fg-color` など）で書いた色は、今の画面では紺に写る。C12 の絵の髪の緑は絵（`slp-character.svg`）の色で、テーマの色ではない。C15 の暗い表示は直書きの `#81c784` なので、今の画面でも明るい緑のまま
+
 | 試作の画面（明・暗） | 候補 | 見比べる `base` | 位置（セレクタ） | 写っている試作の見え方 |
 |---|---|---|---|---|
 | `mock-manual-ghost-C12-light.png`・`mock-manual-ghost-C12-dark.png` | C12 | `mock-manual-ghost-base-*.png` | `h1#ゴースト` | 題「ゴースト」の右、本文の右の端に、仮のキャラクターの絵（緑の髪・白い服）が立つ。絵は題の行とその下の余白の中にあり、「masterゴーストフォルダ…」の段落・ファイル構成の木・頭の帯に重ならない。暗い表示でも、白い服と縁の影で輪郭が地に溶けない |
@@ -150,6 +156,8 @@
 - 失敗: なし
 - 頁の移り: 開発者が「リンクをクリックしたら元の頁になるのか」と指摘した。リンクで頁を移ると `?slp=` が消えて候補が全部外れていたので、`assets/mockup.js` で `?slp=` を `sessionStorage` に覚え、`?slp=` の無い頁でも同じ候補を入れるようにした（`?slp=` を空にすると外れる）。`list/sakura-script` から `list/propertysystem/` に `?slp=` なしで移っても、C06 の札が効くのを確かめた
 
+- 色の記述: この節の色の記述（緑）は `c84942a`（緑のテーマ）の時点のもの。画面は `afb2152`（紺）で撮り直した（「紺への撮り直し」）。テーマの色の変数（`--md-primary-fg-color` など）で書いた色は、今の画面では紺に写る（C18 の行は紺に直した）。C22 の帯の中のリンクの「緑」は、今はテーマの紺である
+
 | 試作の画面（明・暗） | 候補 | 見比べる `base` | 位置（セレクタ） | 写っている試作の見え方 |
 |---|---|---|---|---|
 | `mock-sakura-script-C17-light.png`・`mock-sakura-script-C17-dark.png` | C17（`?slp=C01,C06,C08,C09,C10,C17`） | `mock-sakura-script-C06-*.png`・`mock-sakura-script-C10-*.png` | `#bang-lock-repaint` | 明るい表示で、札・タグの色が濃くなる。暗い表示は C17 なしと同じ |
@@ -158,7 +166,7 @@
 | `mock-sakura-script-C21-light.png`・`mock-sakura-script-C21-dark.png` | C21（`?slp=C01,C06,C09,C10,C17,C18,C19,C20,C21`） | `mock-sakura-script-C20-*.png` | `#bang-lock-repaint` | タグと環境変数に薄い地が付き、かたまりに見える |
 | `mock-manual-ghost-C22-light.png`・`mock-manual-ghost-C22-dark.png` | C22（`?slp=C01,C02,C03,C04,C06,C07,C09,C10,C14,C15,C17,C18,C19,C20,C21,C22`） | `mock-manual-ghost-C14-*.png` | `.md-typeset > ul`（高さ 900） | ファイル名が C01 の項目名と同じ帯になり、「: 」が消える |
 | `mock-propertysystem-C23-light.png`・`mock-propertysystem-C23-dark.png` | C23（`?slp=C01,C02,C03,C04,C06,C07,C09,C10,C14,C15,C17,C18,C19,C20,C21,C23`） | `mock-propertysystem-base-*.png`（`?slp=`） | `[id="system.cpu"]` | キーの箇条書きが「キー」「内容」の 2 列の表になる |
-| `mock-sakura-script-C18-light.png`・`mock-sakura-script-C18-dark.png` | C18（`?slp=C01,C06,C09,C10,C17,C18`） | `mock-sakura-script-C08-*.png` | `#bang-lock-repaint` | 「記述例」が濃い緑の帯の白い字になり、コードブロックに左の太い緑の線と薄い緑の地が付く |
+| `mock-sakura-script-C18-light.png`・`mock-sakura-script-C18-dark.png` | C18（`?slp=C01,C06,C09,C10,C17,C18`） | `mock-sakura-script-C08-*.png` | `#bang-lock-repaint` | 「記述例」が濃い紺の帯の白い字になり、コードブロックに左の太い紺の線と薄い紺の地が付く |
 
 ## 紺への撮り直し（2026-10-25、`afb2152`）
 

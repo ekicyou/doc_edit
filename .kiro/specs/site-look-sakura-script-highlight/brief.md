@@ -11,7 +11,7 @@
 - 原稿の ```` ```sakurascript ```` のコードブロック（287 個）の言語名は HTML に残らない（`language-*` の class が 0 個）。`mkdocs.yml` は `markdown_extensions` を明示しているので、Zensical の既定の拡張一式（`pymdownx.highlight` を含む）は入らない
 - Pygments にさくらスクリプトのレキサーは無い。`pygments_lang_class: true` だけでは `sakurascript` が `text` に落ち、言語指定の無いブロックと見分けられない（`research.md`）
 - さくらスクリプトの頁の外にある記述例 6 個は、原稿のコードブロックに言語の指定が無い（`list/propertysystem` 5 個・`spec/plugin` 1 個）
-- `site-look-list-items` の C18（記述例の箱）と C09（コピーのボタンの手前の折り返し）、`site-look-list-markers` の C17（明るい表示の色の濃さ）が入った後である
+- `site-look-list-items` の C18（記述例の箱）と C09（コピーのボタンの手前の折り返し）は、着色の前後どちらのコードブロックの HTML にも効く書き方で入るので、この spec より先に入っていても、まだでもよい。`site-look-list-markers` の C17 は C06 の札にだけ色を当て、この spec のタグ・環境変数には当てない
 
 ## Desired Outcome
 決めた方向（`decisions.md` の判断。C10・C19〜C21 は開発者の「以下を除き承認」（2026-10-25）により推奨のとおりで、開発者の付け足しにより、さくらスクリプトの頁の外の記述例にも同じく当てる）:
@@ -19,7 +19,8 @@
 - **C19 さくらスクリプトのタグを太字にする**（判断: 採る）: タグと環境変数を太字にする。折り返しの位置は変わらない。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C19-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C19-dark.png` の記述例のタグ
 - **C20 さくらスクリプトのタグの色を青から赤紫に替える**（判断: 採る）: タグを赤紫（試作は明 `#8a0d4f`・暗 `#f48fb1`）にし、地の字の青みの灰色と色相で分ける。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C20-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C20-dark.png` の記述例のタグ
 - **C21 さくらスクリプトのタグに薄い地を敷く**（判断: 採る）: タグと環境変数に、字の色を薄めた地を敷いて、面でかたまりに見せる。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C21-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C21-dark.png` の記述例のタグ
-- **C25 さくらスクリプトの頁の外の記述例も同じく強調する**（判断: 採る。開発者の指示「さくらスクリプトページ以外にも、さくらスクリプトの記述例があるが、これも同様に強調すること」）: 言語の指定の無い 6 個の記述例が、さくらスクリプトの頁の記述例と同じ色・太字・地・箱に見える。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C25-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C25-dark.png` の記述例（見比べは `.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C25before-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C25before-dark.png`）
+- **C25 さくらスクリプトの頁の外の記述例も同じく強調する**（判断: 採る。開発者の指示「さくらスクリプトページ以外にも、さくらスクリプトの記述例があるが、これも同様に強調すること」）: 言語の指定の無い 6 個の記述例が、さくらスクリプトの頁の記述例と同じ色・太字・地・箱に見える。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C25-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C25-dark.png` の記述例（見比べは `.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C25before-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C25before-dark.png`）。6 個には ```` ```sakurascript ```` を書き足す（開発者の決定、2026-10-25）。省略形の ```` ```ss ```` も `sakurascript` のエイリアスとして受け、```` ```ss ```` のブロックも同じ言語の印と見え方になる
+- 明るい表示のタグ・環境変数の濃さ（`site-look-list-markers` の C17 から、この spec の作る字の分を移した）: 明るい表示で白地（と C18・C21 の地）に 7:1 以上にする。タグの色は C20 の赤紫が決め、環境変数は試作の明 `#7a2e0a` ほど（7:1 以上）に濃くする。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C17-light.png` の環境変数の濃さ（タグの色は C20 の画面）
 - 目標の画面は、ほかの候補（C01・C06・C09・C17・C18 など）も `?slp=` に入れて撮ったものである。この spec の目標は、記述例のタグと環境変数の見え方と、C25 の 6 個に同じ見え方が届くことである
 - 画面のパスは、`site-look-plan` の完了の後、`.kiro/specs/completed/site-look-plan/screenshots/...` の下に移る
 
@@ -27,8 +28,9 @@
 `site-look-plan` で確かめた道（Markdown 拡張とブラウザの仕掛け）を取る。Markdown 拡張を足す改造なので、見た目の改造と別の spec にした（`roadmap.md` の切り分けの規則）。
 1. `mkdocs.yml` の `markdown_extensions` に `pymdownx.highlight`（`use_pygments: false`）を足す。`sakurascript` の 287 個が `<pre class="highlight"><code class="language-sakurascript">` になる。`pymdownx.highlight` は入っている pymdown-extensions の一部で、`requirements.txt` は変えない
 2. `extra_javascript` の小さな自作のスクリプトで、`code.language-sakurascript` の字のタグと環境変数を色の要素（`span`）で包む。字は `textContent` から作り直し、包んだ後の `textContent` が元と同じであることを確かめる（コピーされる字を変えない）
-3. `assets/extra.css` で、包んだ要素に C10・C19・C20・C21 の見た目（赤紫・太字・薄い地。明・暗）を当てる
+3. `assets/extra.css` で、包んだ要素に C10・C19・C20・C21 の見た目（赤紫・太字・薄い地。明・暗）と、明るい表示のタグ・環境変数の濃さ（C17 から移した分）を当てる
 4. C25: 原稿の 6 個のコードブロックの頭に `sakurascript` を書き足す（`ukadoc-spec/CLAUDE.md` の書式「さくらスクリプトは ```` ```sakurascript ```` のコードブロック」に合わせる直し）。言語の印が付けば、1〜3 がそのまま効き、`site-look-sstp-playback` の見分けにも効く
+5. `ss` のエイリアス: ```` ```ss ```` のブロックにも ```` ```sakurascript ```` と同じ言語の印と見え方を与える。`mkdocs.yml` の highlight の設定で `ss` を `sakurascript` に寄せるか、スクリプトと `extra.css` で `language-ss` を `language-sakurascript` と同じに扱うかは、この spec の設計で決める。`ukadoc-spec/CLAUDE.md` の書式の決まりに、`ss` のエイリアスを書き足す
 
 Pygments のレキサーを自作して `requirements.txt` で入れる道と、superfences の `custom_fences` に自作の関数を渡す道もある（`site-look-plan` の brief の選択肢）。どれにするかはこの spec の設計で決めてよいが、決めた方向（見え方）は変えない。
 
@@ -36,7 +38,8 @@ Pygments のレキサーを自作して `requirements.txt` で入れる道と、
 - **In**:
   - `mkdocs.yml` の `pymdownx.highlight`（と、要るなら `scripts/prepare_site.py` の `EXTENSIONS` をそろえること）
   - タグと環境変数を包むブラウザの仕掛け（`extra_javascript` と、`assets/` の自作のスクリプト）と、その字句の規則
-  - C10・C19・C20・C21 の見た目の指定（`assets/extra.css`）
+  - C10・C19・C20・C21 の見た目の指定と、明るい表示のタグ・環境変数の濃さ（`site-look-list-markers` の C17 から移した分）（`assets/extra.css`）
+  - `ss` を `sakurascript` のエイリアスにすること（```` ```ss ```` のブロックに同じ言語の印と見え方）と、`ukadoc-spec/CLAUDE.md` の書式の決まりへの `ss` の書き足し
   - C25 の原稿の 6 か所（コードブロックの頭に `sakurascript` を足すだけ）:
     - `list/propertysystem/property-system/introduction_propertysystem.md` の 3 個（`%property[baseware.name] …`・`\![get,property,OnGetSakuraName,…]`・`\![set,property,currentghost.shelllist(…).menu,hidden]`。箇条書きの中で字下げしたコードブロック）
     - `list/propertysystem/property-system/currentghost.seriko.cursor.scope-ID-.mouse-q-q-q-q-list-.path.md` の 1 個（`\![set,property,currentghost.seriko.cursor.…]`）
@@ -54,22 +57,23 @@ Pygments のレキサーを自作して `requirements.txt` で入れる道と、
 - C25 の原稿の直しは、見た目の直しと同じ PR に入れるが、`ukadoc-spec/CLAUDE.md` の規約 Gate の当て先になる
 
 ## Out of Boundary
-- 原稿の C25 の 6 か所の外の変更・`.nav.yml`・Zensical の版
+- 原稿の C25 の 6 か所と `CLAUDE.md` の書式の `ss` の書き足しの外の変更（今ある ```` ```sakurascript ```` を ```` ```ss ```` に書き換えることもしない）・`.nav.yml`・Zensical の版
 - Pygments の着色の一式（全言語の色付け）。さくらスクリプトの外の言語に色を付けることは決めていない
 - 記述例の中身（タグの誤りなど）の直し
 
 ## Upstream / Downstream
-- **Upstream**: `site-look-list-items`（C09・C18 を、着色の後のコードブロックの HTML `pre.highlight > code` にも効く書き方で入れた）、`site-look-list-markers`（C17 の明るい表示の濃さ。タグ・環境変数の色を合わせる）。`site-look-plan`（判断と目標の画面）
-- **Downstream**: `site-look-manual-files`（C15 の仕掛けを、着色の後のコードブロックの HTML に当てる）、`site-look-sstp-playback`（C10 の言語の印と C25 で記述例を見分ける）
+- **Upstream**: `site-look-plan`（判断と目標の画面）
+- **Downstream**: `site-look-sstp-playback`（C10 の言語の印と C25 で記述例を見分ける）
 
 ## Existing Spec Touchpoints
 - **Extends**: なし（新しい spec）
-- **Adjacent**: `site-look-list-items`（同じコードブロックの見た目）、`site-look-manual-files`（言語指定の無いコードブロックに仕掛けを当てる）、`site-look-sstp-playback`（同じ言語の印を使う）
+- **Adjacent**: `site-look-list-items`（同じコードブロックの見た目。C09・C18 は着色の前後どちらのコードブロックの HTML（`pre > code`・`pre.highlight > code`）にも効く書き方にするので、どちらが先に入ってもよい）、`site-look-list-markers`（C17 と同じ「明るい表示は白地に 7:1 以上」の物差しで、タグ・環境変数の濃さを決める）、`site-look-dark-link-color`・`site-look-definition-tables`・`site-look-note-icon`（同じ `assets/extra.css`・`mkdocs.yml` を触る。どちらが先でもよく、ぶつかったら `origin/main` に追いつく）、`site-look-manual-files`（言語指定の無いコードブロックに仕掛けを当てる。C15 の仕掛けは、`pymdownx.highlight` の前後どちらのコードブロックの HTML（`pre > code`・`pre.highlight > code`）にも効く書き方にするので、どちらが先に入ってもよい）、`site-look-sstp-playback`（同じ言語の印を使う）
 
 ## Constraints
 - **方向は議論し直さない**: 候補と判断は `site-look-plan` の `decisions.md` で決まっている。この spec は、決まった見え方を本番の書き方で入れる
-- **原稿を変えるのは C25 の 6 か所だけ**: 後続の 8 本の spec で原稿（`.md`）を変えるのはこの spec だけである。コードブロックの頭に `sakurascript` を足すほかは変えない。`.nav.yml`・Zensical の版は変えず、`requirements.txt` もなるべく変えない（変えるなら新しい依存として設計で理由を書く）。作業木 `.worktrees/site-look-sakura-script-highlight/` で書き、Build Gate（`prepare_site.py` と `zensical build --strict`）と規約 Gate（`ukadoc-spec/CLAUDE.md` の書式）を通し、`/kiro-complete` で PR にする
-- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）の上に、`site-look-dark-link-color`・`site-look-list-items`・`site-look-list-markers` が入った版。ukadoc-spec のライセンスは `afb2152` で CC BY 4.0 と定まった
+- **原稿を変えるのは C25 の 6 か所だけ**: 後続の 8 本の spec で原稿（`.md`）を変えるのはこの spec だけである。コードブロックの頭に `sakurascript` を足すほかは変えない（ほかに変えるのは `ukadoc-spec/CLAUDE.md` の書式の `ss` の書き足しで、原稿ではない）。`.nav.yml`・Zensical の版は変えず、`requirements.txt` もなるべく変えない（変えるなら新しい依存として設計で理由を書く）。作業木 `.worktrees/site-look-sakura-script-highlight/` で書き、Build Gate（`prepare_site.py` と `zensical build --strict`）と規約 Gate（`ukadoc-spec/CLAUDE.md` の書式）を通し、`/kiro-complete` で PR にする
+- **C25 の原稿の道は決まった**: 開発者の答え（2026-10-25）「sakurascriptと、その省略形としてssをエイリアスにしてほしい。他は承認」により、6 個のコードブロックには ```` ```sakurascript ```` を書き足す（原稿を変えずに `prepare_site.py` で印を付ける代案は取らない）。```` ```ss ```` は `sakurascript` のエイリアス（省略形）として受ける。組み立ては ```` ```ss ```` のブロックにも同じ言語の印と着色を与える（highlight の設定で `ss` を `sakurascript` に寄せるか、スクリプトと `extra.css` で `language-ss` を同じに扱うかは、この spec で決める）。`ukadoc-spec/CLAUDE.md` の書式の決まり「さくらスクリプトは ```` ```sakurascript ```` のコードブロック」に、`ss` のエイリアスを書き足す
+- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）。中身で依る後続 spec は無く、ほかの後続 spec（`site-look-dark-link-color`・`site-look-list-items`・`site-look-list-markers` など）は先に入っていても、まだでもよい。ukadoc-spec のライセンスは `afb2152` で CC BY 4.0 と定まった
 - **旧サイトの素材**: 旧サイト（https://ssp.shillest.net/ukadoc-legacy/manual/ ）の画像・見た目の指定（`list.css`・`base.css`）・スクリプト（`sakura_player.js` など）は、再利用の許可が明記されていない。着色の仕掛けも写さずに書き直す
 - **Zensical 0.0.67 の制限**: テンプレートは minijinja で描画する。partial を丸ごと写さず、CSS とブロックの上書きにとどめる。Python で拡張できるのは Markdown 拡張だけで、自作の拡張は CI（`pip install -r requirements.txt` → `prepare_site.py` → `zensical build --strict`）での import の道の用意が要る。`build --strict` は、存在しない `extra_css` を指定しても検出しない（足したスクリプトも、`serve` で 200 になることを確かめる）。`extra_javascript` が通ることは確かめ済み
 - **試作で確かめた事実**:
@@ -78,7 +82,7 @@ Pygments のレキサーを自作して `requirements.txt` で入れる道と、
   - 試作の字句の規則は簡単なもの（タグは `\` の後の 1 字か `_`・`__` と 1 字と続く `[…]`、環境変数は `%` と英字と続く `[…]`）で、`list/sakura-script` の 287 ブロックでタグ 502 か所・環境変数 6 か所（`%username`・`%ms`・`%mp`・`%mh`・`%me`・`%mt`）を包んだ。本番の規則は、タグの文法に沿ったもの（例: `\p23` は `\p2` と字の `3`）をこの spec で決める
   - 包んだ後の `textContent` が元と同じことを確かめる形にした（コピーされる字は変わらない）。仕掛けが動かない環境では色が付かないだけで、今と同じに読める
   - 等幅の字を太くするだけでは字の幅は変わらず、折り返しの位置も変わらなかった（C19）。C21 の地は `color-mix(in srgb, currentColor 9%, transparent)` で、字の色に関係なく同じ指定で効く
-  - 紺のテーマでの測り: C20 のタグは明 8.30:1・暗 6.96:1。C21 の地の上でタグ明 7.14:1・環境変数明 7.33:1、暗 5.7:1・6.61:1。環境変数の色は試作で明 `#7a2e0a`（C17）・暗 `#f6ad7b`（C10）
+  - 紺のテーマでの測り: C20 のタグは明 8.30:1・暗 6.96:1。C21 の地の上でタグ明 7.14:1・環境変数明 7.33:1、暗 5.7:1・6.61:1。環境変数の色は試作で明 `#7a2e0a`（試作では C17 の行。本番はこの spec で入れる）・暗 `#f6ad7b`（C10）
   - 暗い表示の印 `data-md-color-scheme="slate"`（明るい表示は `default`）は `<html>` でなく `<body>` に付く。暗い表示だけ・明るい表示だけの色は `[data-md-color-scheme="slate"] .md-typeset …`・`[data-md-color-scheme="default"] .md-typeset …` の形で書く
   - 色はなるべくテーマの色の変数から取る（試作の途中でテーマの色が緑から紺に変わり、直書きの色を作り直した）。タグの赤紫のように変数で出せない色は、明・暗それぞれで地（C18 の記述例の地）との対比を測って記録する
   - 試作の C25 は原稿を変えず、ブラウザの仕掛けが 1 行目を見て印を付けた。本番は原稿に `sakurascript` を書き足す（C13 の見分けにもそのまま効く）
@@ -90,5 +94,5 @@ Pygments のレキサーを自作して `requirements.txt` で入れる道と、
   - 狭い画面: `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> body - light 375` で、`scrollWidth` と `innerWidth` が同じ（375）ことを確かめる。狭い画面の画面は残さない
   - `shot.mjs` はまれに（54 枚に 5 枚）撮る途中の描き直しで二重に重なった PNG を書く。左右の端にヘッダの色の行が上の端以外にも出ていたら撮り直す
 - **失わないもの**（`survey.md` の「失わないもの」）: D15 検索（検索で引ける字を変えない）・D16 ダークモード（色は明・暗の両方で決め、どちらでも字と地の差が十分にある）・D17 見出しへのリンク（見出しの id・`a.headerlink`（¶）・右の欄の目次を変えない）・D18 狭い画面（幅 375 で `scrollWidth` = `innerWidth`）・D19 コードのコピー（コピーのボタンを残し、コピーされる字を変えない。字は色の要素で包むだけ）・D20 記述例の字（記述例の `\` を `\` のまま見せる。等幅の字の指定を変えるなら `¥` に化ける字を選ばない）
-- **参考の試作**: `.kiro/specs/site-look-plan/mockups/extra.css` の C10・C17・C19・C20・C21、`mockups/mockup.js` の C10・C25 の分岐、`mockups/worktree.diff` の `mkdocs.yml` の差分、`mockups/README.md` の測り。完了の後は `.kiro/specs/completed/site-look-plan/mockups/`。`?slp=` で切り替える使い捨ての書き方なので、写さずに書き直してよい
+- **参考の試作**: `.kiro/specs/site-look-plan/mockups/extra.css` の C10・C17（`.slp-ss-tag`・`.slp-ss-env` の 2 行）・C19・C20・C21、`mockups/mockup.js` の C10・C25 の分岐、`mockups/worktree.diff` の `mkdocs.yml` の差分、`mockups/README.md` の測り。完了の後は `.kiro/specs/completed/site-look-plan/mockups/`。`?slp=` で切り替える使い捨ての書き方なので、写さずに書き直してよい
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない

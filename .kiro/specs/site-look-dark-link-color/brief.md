@@ -43,16 +43,16 @@ ukadoc-spec の `417511c` でテーマの色が緑から紺 `#1f4e8c` に変わ�
 
 ## Upstream / Downstream
 - **Upstream**: `site-look-plan`（C24 の判断と目標の画面）。ukadoc-spec の `afb2152` の `assets/extra.css`（紺のテーマ）
-- **Downstream**: `site-look-list-items`（同じ `assets/extra.css` に書き足すので、この spec の後に入れる）
+- **Downstream**: なし（この spec の暗い表示のリンクの色に中身で依る spec は無い）
 
 ## Existing Spec Touchpoints
 - **Extends**: なし（新しい spec）
-- **Adjacent**: `site-look-list-items`（同じ `assets/extra.css` を触る次の spec）。`site-look-plan`（決定の起票元。完了の後は `completed/` の下）
+- **Adjacent**: `site-look-list-items` ほかの後続 spec（同じ `assets/extra.css` を触る。どちらが先でもよく、ぶつかったら `origin/main` に追いつく）。`site-look-plan`（決定の起票元。完了の後は `completed/` の下）
 
 ## Constraints
 - **方向は議論し直さない**: 候補と判断は `site-look-plan` の `decisions.md` で決まっている。この spec は、決まった見え方を本番の書き方で入れる
 - **原稿は変えない**: 変えるのは ukadoc-spec の `assets/extra.css` だけで、原稿（`.md`）・`.nav.yml`・`requirements.txt`・Zensical の版は変えない。ただし ukadoc-spec を変えるので、`workflow.md` の「原稿を変えない spec」には当たらない。作業木 `.worktrees/site-look-dark-link-color/` で書き、Build Gate（`prepare_site.py` と `zensical build --strict`）と規約 Gate を通し、`/kiro-complete` で PR にする
-- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`。`assets/extra.css` の `[data-md-color-primary="custom"]` で `--md-primary-fg-color` などを定める）。ukadoc-spec のライセンスは `afb2152` で CC BY 4.0 と定まった。`origin/main` が進んでいたら、その上で書く
+- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`。`assets/extra.css` の `[data-md-color-primary="custom"]` で `--md-primary-fg-color` などを定める）。中身で依る後続 spec は無く、ほかの後続 spec は先に入っていても、まだでもよい。ukadoc-spec のライセンスは `afb2152` で CC BY 4.0 と定まった。`origin/main` が進んでいたら、その上で書く
 - **旧サイトの素材**: 旧サイト（https://ssp.shillest.net/ukadoc-legacy/manual/ ）の画像・見た目の指定（`list.css`・`base.css`）・スクリプト（`sakura_player.js` など）は、再利用の許可が明記されていない。写さずに書き直す
 - **Zensical 0.0.67 の制限**: テンプレートは minijinja で描画する。partial を丸ごと写さず、CSS とブロックの上書きにとどめる。`build --strict` は、存在しない `extra_css` を指定しても検出しない（配られた `assets/extra.css` に指定があることを `serve` で確かめる）
 - **試作で確かめた事実**:

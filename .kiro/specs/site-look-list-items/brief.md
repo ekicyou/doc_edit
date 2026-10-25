@@ -56,23 +56,23 @@
 - テーマの色そのものと、暗い表示のリンクの色（`site-look-dark-link-color`）
 
 ## Upstream / Downstream
-- **Upstream**: `site-look-plan`（判断と目標の画面）、`site-look-dark-link-color`（同じ `assets/extra.css` を先に触る）。ukadoc-spec の `afb2152` の `assets/extra.css`・`scripts/prepare_site.py`
-- **Downstream**: `site-look-list-markers`（同じ `extra.css`・`prepare_site.py` に書き足す）、`site-look-sakura-script-highlight`（C09・C18 が効いたまま、コードブロックの HTML を変える）、`site-look-manual-files`（C22 が C01 の帯を使う）
+- **Upstream**: `site-look-plan`（判断と目標の画面）。ukadoc-spec の `afb2152` の `assets/extra.css`・`scripts/prepare_site.py`
+- **Downstream**: `site-look-list-markers`（C04 の箱が、C01・C03 が `notes_` の見出しを帯から除くことに依る）、`site-look-manual-files`（C22 が C01 の項目名の帯を使う）
 
 ## Existing Spec Touchpoints
 - **Extends**: なし（新しい spec）
-- **Adjacent**: `site-look-dark-link-color`（先に `extra.css` を触る）、`site-look-list-markers`（同じまとめ頁に目印を付ける。注意書きの節の見出しを除く書き方を合わせる）、`site-look-sakura-script-highlight`（C09・C18 の当て先のコードブロックの HTML を変える）、`site-look-manual-files`（C01 の帯を使う）
+- **Adjacent**: `site-look-dark-link-color`（同じ `assets/extra.css` を触る。どちらが先でもよく、ぶつかったら `origin/main` に追いつく）、`site-look-sakura-script-highlight`（C09・C18 の当て先のコードブロックの HTML を変える。C09・C18 は着色の前後どちらの HTML にも効く書き方にするので、どちらが先でもよい）、`site-look-list-markers`（同じまとめ頁に目印を付ける。注意書きの節の見出しを除く書き方を合わせる）
 
 ## Constraints
 - **方向は議論し直さない**: 候補と判断は `site-look-plan` の `decisions.md` で決まっている。この spec は、決まった見え方を本番の書き方で入れる
 - **原稿は変えない**: 変えるのは ukadoc-spec の `assets/extra.css`（と要るときだけ `scripts/prepare_site.py`）で、原稿（`.md`）・`.nav.yml`・`requirements.txt`・Zensical の版は変えない。ただし ukadoc-spec を変えるので、`workflow.md` の「原稿を変えない spec」には当たらない。作業木 `.worktrees/site-look-list-items/` で書き、Build Gate（`prepare_site.py` と `zensical build --strict`）と規約 Gate を通し、`/kiro-complete` で PR にする
-- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）の上に `site-look-dark-link-color` が入った版。ukadoc-spec のライセンスは `afb2152` で CC BY 4.0 と定まった
+- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）。中身で依る後続 spec は無く、ほかの後続 spec（`site-look-dark-link-color`・`site-look-sakura-script-highlight` など）は先に入っていても、まだでもよい。ukadoc-spec のライセンスは `afb2152` で CC BY 4.0 と定まった
 - **旧サイトの素材**: 旧サイト（https://ssp.shillest.net/ukadoc-legacy/manual/ ）の見せ方は手本にするが、画像・見た目の指定（`list.css`・`base.css`）・スクリプト（`sakura_player.js` など）は再利用の許可が明記されていない。写さずに書き直し、色・寸法は今のサイトの明・暗の色に合わせて決め直す
 - **Zensical 0.0.67 の制限**: テンプレートは minijinja で描画する。partial を丸ごと写さず、CSS とブロックの上書きにとどめる。`build --strict` は、存在しない `extra_css` を指定しても検出しない
 - **試作で確かめた事実**:
   - 暗い表示の印 `data-md-color-scheme="slate"`（明るい表示は `default`）は `<html>` でなく `<body>` に付く。暗い表示だけの色は `[data-md-color-scheme="slate"] .md-typeset …` の形で書く
   - 色はテーマの色の変数（`--md-primary-fg-color`・`--md-primary-fg-color--dark`（今は `#163a69`）・`--md-primary-bg-color`・`--md-default-fg-color--lighter`・`--md-default-fg-color--lightest` など）から取り、直書きしない。試作の途中でテーマの色が緑から紺に変わり、C18 の緑の直書きを変数に替えた。変数で出せない色（C18 の薄い紺の地 `#eef2f8`、暗い表示の線 `#7fa6dc` と地 `#1d2433`）は、明・暗それぞれで対比を測って記録する
-  - `pymdownx.highlight`（`use_pygments: false`）を足すと、全 449 コードブロックの HTML が `div.highlight > pre > code` から `pre.highlight > code` に変わる（見た目の差は出なかった）。C09・C18 の指定は両方の形に効く書き方にし、`site-look-sakura-script-highlight` の後も効くようにする（試作の C08・C18 は `:is(h4, .highlight) + .highlight` と `div.highlight > pre` の両方を書いた）
+  - `pymdownx.highlight`（`use_pygments: false`）を足すと、全 449 コードブロックの HTML が `div.highlight > pre > code` から `pre.highlight > code` に変わる（見た目の差は出なかった）。C09・C18 の指定は両方の形に効く書き方にし、`site-look-sakura-script-highlight` が先に入っても後に入っても効くようにする（試作の C08・C18 は `:is(h4, .highlight) + .highlight` と `div.highlight > pre` の両方を書いた）
   - C02 は `hr`・`h3` の余白だけでは高さ 700 に 3 項目半しか入らず、段落の上下の余白（`.5em`）まで詰めて 4 項目と 5 つ目の項目名が入った。段落の余白はサイト全体に効くので、まとめ頁の項目の中に絞る
   - C03 の帯の中の `code` と `a.headerlink`（¶）も読める色にした（試作は `--md-primary-bg-color--light`）
   - `prepare_site.py` で目印 `{: .cls }` を付けるなら、段落の末尾（空行の手前）に限る（1 行目の直後に足すと `<br />` で続く段落で本文に漏れた）。見出しの数の検査（`old_ids`）と `build --strict` には響かない

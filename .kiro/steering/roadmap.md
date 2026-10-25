@@ -15,20 +15,21 @@
 ## Specs (dependency order)
 - [ ] site-look-plan -- 旧サイトとの見比べと試作で見た目の方向を決め、改造 spec に切り分ける. Dependencies: none
 - [ ] site-look-dark-link-color -- 暗い表示のリンクと左の目次の今の頁を明るい紺 `#8fb4e8` にして読めるようにする（C24）. Dependencies: site-look-plan. PR: site-look-dark-link-color
-- [ ] site-look-list-items -- まとめ頁の項目名の帯・項目の間の詰め・分類の見出しの帯・コピーのボタンの下の折り返し・記述例の強い箱を入れる（C01・C02・C03・C09・C18）. Dependencies: site-look-plan, site-look-dark-link-color. PR: site-look-lists
+- [ ] site-look-list-items -- まとめ頁の項目名の帯・項目の間の詰め・分類の見出しの帯・コピーのボタンの下の折り返し・記述例の強い箱を入れる（C01・C02・C03・C09・C18）. Dependencies: site-look-plan. PR: site-look-lists
 - [ ] site-look-list-markers -- `prepare_site.py` で目印を付け、注意書きの箱・対応ベースウェアの札・既定値の札と、明るい表示の札の濃い色を入れる（C04・C06・C07・C17）. Dependencies: site-look-list-items. PR: site-look-lists
-- [ ] site-look-sakura-script-highlight -- `pymdownx.highlight` とブラウザの仕掛けでさくらスクリプトのタグに色・太字・地を付け、頁の外の記述例にも届かせる（C10・C19・C20・C21・C25）. Dependencies: site-look-list-items, site-look-list-markers. PR: site-look-sakura-script-highlight
-- [ ] site-look-manual-files -- `manual/` の頁でファイルごとの切れ目とファイル名の帯を見せ、ファイル構成の木のファイル名に色を付ける（C14・C15・C22）. Dependencies: site-look-list-items, site-look-list-markers, site-look-sakura-script-highlight. PR: site-look-manual-and-tables
-- [ ] site-look-definition-tables -- 「`- **名前**: 説明`」だけが並ぶ箇条書きを、原稿を変えずに組み立ての処理で 2 列の表にする（C23）. Dependencies: site-look-list-markers, site-look-manual-files. PR: site-look-manual-and-tables
-- [ ] site-look-note-icon -- 注釈の節・補足の項目・`!!! note` の見出しの頭に、添付の色付きのアイコンを付ける（C26）. Dependencies: site-look-list-markers, site-look-definition-tables. PR: site-look-note-icon
-- [ ] site-look-sstp-playback -- さくらスクリプトの記述例・プロパティシステム・SHIORI Event を、利用者の操作で手元のゴーストへ送れるようにする（C13）. Dependencies: site-look-sakura-script-highlight, site-look-note-icon. PR: site-look-sstp-playback
+- [ ] site-look-sakura-script-highlight -- `pymdownx.highlight` とブラウザの仕掛けでさくらスクリプトのタグに色・太字・地を付け、頁の外の記述例にも届かせる（C10・C19・C20・C21・C25）. Dependencies: site-look-plan. PR: site-look-sakura-script-highlight
+- [ ] site-look-manual-files -- `manual/` の頁でファイルごとの切れ目とファイル名の帯を見せ、ファイル構成の木のファイル名に色を付ける（C14・C15・C22）. Dependencies: site-look-list-items. PR: site-look-manual-and-tables
+- [ ] site-look-definition-tables -- 「`- **名前**: 説明`」だけが並ぶ箇条書きを、原稿を変えずに組み立ての処理で 2 列の表にする（C23）. Dependencies: site-look-manual-files. PR: site-look-manual-and-tables
+- [ ] site-look-note-icon -- 注釈の節・補足の項目・`!!! note` の見出しの頭に、添付の色付きのアイコンを付ける（C26）. Dependencies: site-look-list-markers. PR: site-look-note-icon
+- [ ] site-look-sstp-playback -- さくらスクリプトの記述例・プロパティシステム・SHIORI Event を、利用者の操作で手元のゴーストへ送れるようにする（C13）. Dependencies: site-look-sakura-script-highlight, site-look-definition-tables. PR: site-look-sstp-playback
 
 依存の理由（同じファイルの順のほかに、中身で依るもの）:
-- `site-look-list-items` の C09・C18 は、`site-look-sakura-script-highlight` で変わるコードブロックの HTML（`pre.highlight > code`）にも効く書き方にする。着色はその後に入れる
-- `site-look-manual-files` の C22 は C01 の帯を使い、C15 のファイル名の色は C17 の濃さに合わせ、C15 の仕掛けは着色の後のコードブロックの HTML に当てる
-- `site-look-definition-tables` は `manual/` のファイルの箇条書き（C14・C22 の当て先）を表にしないことを、`site-look-manual-files` の後に確かめる
-- `site-look-note-icon` は C04 の箱に入る `notes_` の見出しに付ける
-- `site-look-sstp-playback` は C10 の言語の印（と C25）で記述例を見分ける
+- `site-look-list-markers` の C04 の箱は、`site-look-list-items` の C01・C03 が `notes_` の見出しを帯から除くことに依る
+- `site-look-manual-files` の C22 は、C01 の項目名の帯を使う
+- `site-look-definition-tables` は、`manual/` のファイルの箇条書き（C14・C22 の当て先）を表にしないことを、`site-look-manual-files` の後に確かめる（同じ PR の単位 `site-look-manual-and-tables`。C23 は段落を 2 つ以上持つ箇条書きを初めから除く）
+- `site-look-note-icon` の C26 は、C04 の箱に入る `notes_` の見出しにアイコンを付ける
+- `site-look-sstp-playback` は、C10 の言語の印（と C25）で記述例を見分け、プロパティシステムのキーの表（C23）からプロパティの名前を組み立てる
+- `site-look-sakura-script-highlight` は `site-look-plan` だけに依る。`site-look-list-items` の C09・C18 と `site-look-manual-files` の C15 は、着色の前後どちらのコードブロックの HTML（`pre > code`・`pre.highlight > code`）にも効く書き方にするので、並びの縛りにはならない
 
 ## バックログ
 - **C12 キャラクターを頁に出す（保留）**: 本番の絵が無い（旧サイトの絵は再利用の許可が明記されていない）。決めるのに要るもの: 本番の絵（新しく描くか、管理者の許可を得て旧サイトの絵を使うか）、出す頁（`manual/` だけか全頁か）、頭の帯の題が早く切り替わるらしい副作用（`.md-content__inner { position: relative; }`）の確かめと、副作用の無い置き方の試作。決まったら、C11（バルーン）を C04 と入れ替えるかも考え直す（目印 `div.slp-notes` は同じ）
@@ -39,5 +40,5 @@
 ## 棚卸（2026-10-25・ukadoc-spec afb2152）
 - 初めての棚卸である。`site-look-plan` の決定（`decisions.md`）から、後続の 8 本の spec を切り分けた
 - 次に /kiro-start する spec: `site-look-dark-link-color`（今の本番の暗い表示では、リンクと左の目次の今の頁が暗い地に 1.94:1 しかなく、ほとんど読めない。`extra.css` の 1 か所で 7.56:1 に直る、いちばん急ぐ直しで、`site-look-plan` の完了の後、ほかの後続 spec に依らずに入れられる）
-- 見込み: `site-look-list-items` → `site-look-list-markers` → `site-look-sakura-script-highlight`
+- 見込み: `site-look-dark-link-color` の後は、互いに依らない `site-look-lists`（`site-look-list-items` → `site-look-list-markers`）と `site-look-sakura-script-highlight` を並べて進められる。`site-look-manual-and-tables` と `site-look-note-icon` は `site-look-lists` のマージの後、`site-look-sstp-playback` は `site-look-sakura-script-highlight` と `site-look-manual-and-tables` のマージの後になる
 - 開発者の判断が要るもの: 無い（C12・C16 の保留はバックログで、決めるのに要るものがそろってから起票する）

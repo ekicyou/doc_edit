@@ -11,7 +11,7 @@
 - 原稿は「`- **名前**: 説明`」の箇条書きで書かれ、サイトでは点の付いた箇条書きのまま出る
 - 組み立てたサイトの 40 頁を数えると、この形だけが 2 つ以上並ぶ箇条書きは 20 頁の 477 個（2105 行）ある（`list/shiori-event` 217・`list/shiori-event-ex` 124・`spec/saori-ex` 45・`list/sakura-script` 22・`spec/sstp` 10・`list/propertysystem` 9・`list/plugin-event` 8・`descript/shell` 7・`spec/shiori3` 7・ほか）
 - `site-look-plan` の試作では、ブラウザの仕掛け（`mockup.js`）が箇条書きを表に組み替えた見本を作った。本番は組み立ての処理で行う
-- `site-look-list-markers` が `prepare_site.py` に目印の後処理を足し、`site-look-manual-files` が `manual/` のファイルの箇条書き（C14・C22）の見え方を入れた後である
+- `site-look-manual-files` が `manual/` のファイルの箇条書き（C14・C22）の見え方を入れた後である（同じ PR の単位 `site-look-manual-and-tables`）。`site-look-list-markers` の目印の後処理には中身で依らない
 
 ## Desired Outcome
 決めた方向（`decisions.md` の判断）:
@@ -50,18 +50,18 @@
 - `manual/` のファイルの箇条書き（`site-look-manual-files` の当て先）
 
 ## Upstream / Downstream
-- **Upstream**: `site-look-list-markers`（同じ `prepare_site.py` の後処理を先に触る）、`site-look-manual-files`（`manual/` のファイルの箇条書きを表にしないことを、その見え方が入った後に確かめる）。`site-look-plan`（判断と目標の画面）
-- **Downstream**: `site-look-note-icon`（同じ `prepare_site.py`・`extra.css` に書き足す。補足の項目の見出しの印を付ける）
+- **Upstream**: `site-look-manual-files`（`manual/` のファイルの箇条書き（C14・C22 の当て先）を表にしないことを、その見え方が入った後に確かめる。C23 は段落を 2 つ以上持つ箇条書きを初めから除く。同じ PR の単位 `site-look-manual-and-tables`）。`site-look-plan`（判断と目標の画面）
+- **Downstream**: `site-look-sstp-playback`（プロパティシステムの `(キー)`・`(ID)` を含む名前を、この表のキーごとに組み立てて送る）
 
 ## Existing Spec Touchpoints
 - **Extends**: なし（新しい spec）
-- **Adjacent**: `site-look-manual-files`（同じ形の箇条書きの当て先を分ける）、`site-look-list-markers`・`site-look-note-icon`（同じ組み立ての処理を触る）、`site-look-sstp-playback`（プロパティシステムの `(キー)`・`(ID)` を含む名前を、この表のキーごとに組み立てて送る案がある）
+- **Adjacent**: `site-look-manual-files`（同じ形の箇条書きの当て先を分ける）、`site-look-list-markers`・`site-look-note-icon`（同じ `prepare_site.py`・`assets/extra.css` の組み立ての処理を触る。どちらが先でもよく、ぶつかったら `origin/main` に追いつく）
 
 ## Constraints
 - **方向は議論し直さない**: 候補と判断は `site-look-plan` の `decisions.md` で決まっている。開発者の方針「Markdownはいじらず、対応するパターンが出てきたら表htmlにする」に従う
 - **原稿は変えない**: 変えるのは ukadoc-spec の `scripts/prepare_site.py`（か自作の Markdown 拡張と `mkdocs.yml`）と `assets/extra.css` で、原稿（`.md`）・`.nav.yml`・Zensical の版は変えない。ただし ukadoc-spec を変えるので、`workflow.md` の「原稿を変えない spec」には当たらない。作業木 `.worktrees/site-look-definition-tables/` で書き、Build Gate（`prepare_site.py` と `zensical build --strict`）と規約 Gate を通し、`/kiro-complete` で PR にする
-- **HTML の変わる量が大きい**: 20 頁の 477 個（2105 行）の HTML が変わるので、ほかの見た目の改造と分けた小さな PR にした。レビューの人が見比べられるよう、表になる箇条書きの数え上げと、外した形の例を PR の本文に書く
-- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）の上に、先の後続 spec（`site-look-dark-link-color` から `site-look-manual-files` まで）が入った版。ukadoc-spec のライセンスは `afb2152` で CC BY 4.0 と定まった
+- **HTML の変わる量が大きい**: 20 頁の 477 個（2105 行）の HTML が変わる。PR は `site-look-manual-files` と同じ単位（`site-look-manual-and-tables`）にまとめるが、spec はほかの見た目の改造と分けた。レビューの人が見比べられるよう、表になる箇条書きの数え上げと、外した形の例を PR の本文に書く
+- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）の上に、中身で依る `site-look-manual-files`（と、その依存先の `site-look-list-items`）が入った版（`site-look-manual-files` と同じ PR の単位 `site-look-manual-and-tables` の作業木を引き継ぐ）。ほかの後続 spec は先に入っていても、まだでもよい。ukadoc-spec のライセンスは `afb2152` で CC BY 4.0 と定まった
 - **旧サイトの素材**: 旧サイト（https://ssp.shillest.net/ukadoc-legacy/manual/ ）の 2 列の表は手本にするが、画像・見た目の指定（`list.css`・`base.css`）・スクリプト（`sakura_player.js` など）は再利用の許可が明記されていない。写さずに書き直す
 - **Zensical 0.0.67 の制限**: テンプレートは minijinja で描画する。partial を丸ごと写さず、CSS とブロックの上書きにとどめる。Python で拡張できるのは Markdown 拡張だけ。`build --strict` は、存在しない `extra_css` を指定しても検出しない
 - **試作で確かめた事実**:

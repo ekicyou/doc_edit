@@ -6,7 +6,7 @@
 - 変更の種類は、`見た目の指定だけ`・`頁の組み立て`・`サイトを作る処理`・`画像を足す`・`ブラウザの仕掛け` の 5 つから選ぶ
 - 試作では、候補ごとの見た目の指定を `html[data-slp~="Cxx"]` の下に書き、URL の `?slp=C01,C03` で入れたり外したりする（design.md の MockupWorkbench）。`prepare_site.py` の目印と `mkdocs.yml` の `pymdownx.highlight` は `?slp=` で切り替えられず、試作の build の全体に効く。目印は付けても、見た目の指定が無ければ見え方は変わらない
 - 旧サイトの見せ方を手本にする候補でも、旧サイトの見た目の指定（`list.css`・`base.css`）は写さずに書き直す。色・寸法は今のサイトの明・暗の色（Material の色の変数）に合わせて決め直す
-- 原稿（Markdown）の変更が要る候補は無い。原稿に依る部分が残るものは、その候補の「原稿」に書いた
+- 原稿（Markdown）の変更が要る候補は C25 だけである（`list/propertysystem` 5 個・`spec/plugin` 1 個のコードブロックに `sakurascript` を書き足す推奨。代案は組み立ての処理で印を付けて原稿を変えない）。ほかの候補で原稿に依る部分が残るものは、その候補の「原稿」に書いた
 
 ## 一覧
 
@@ -36,11 +36,11 @@
 | C22 | ゴーストの作り方のファイル名を項目名と同じ帯にする | 視認性 | 開発者の指摘（4.2） | `見た目の指定だけ`・`頁の組み立て` | `manual/ghost` |
 | C23 | 「名前: 説明」の箇条書きを表にする | 視認性 | 開発者の指摘（4.2） | `サイトを作る処理`・`見た目の指定だけ` | `list/propertysystem`・`list/sakura-script`・`list/shiori-event` |
 | C24 | 暗い表示のリンクを明るい紺にする | 視認性 | テーマの色の変更（`417511c`） | `見た目の指定だけ` | `list/sakura-script` |
-| C25 | さくらスクリプトの頁の外の記述例も同じく強調する | 視認性 | 開発者の指摘（4.2） | `見た目の指定だけ` | `list/propertysystem` |
+| C25 | さくらスクリプトの頁の外の記述例も同じく強調する | 視認性 | 開発者の指摘（4.2） | `見た目の指定だけ`（ほかに原稿の直しが要る） | `list/propertysystem` |
 | C26 | 注釈の見出しに添付のアイコンを付ける | 遊び | 開発者の指摘（4.2） | `画像を足す`・`見た目の指定だけ` | `list/sakura-script` |
 | C27 | 注釈の見出しに白黒のベクターのアイコンを付ける | 遊び | 開発者の指摘（4.2） | `画像を足す`・`見た目の指定だけ` | `list/sakura-script` |
 
-- 当て先ごとの候補: `list/sakura-script` に C01・C03・C04・C06・C08・C09・C10・C11、`descript/ghost` に C02・C05・C07、`manual/ghost` に C12・C14・C15。C13・C16 は試作しない
+- 当て先ごとの候補: `list/sakura-script` に C01・C03・C04・C06・C08・C09・C10・C11・C17・C18・C19・C20・C21・C23・C24・C26・C27、`descript/ghost` に C02・C05・C07、`manual/ghost` に C12・C14・C15・C22、`list/propertysystem` に C23・C25、`list/shiori-event` に C23。C13・C16 は試作しない
 
 ## どの候補も守ること
 
@@ -80,7 +80,7 @@
 - 区別: 視認性
 - 解く差: D06
 - 変更の種類: `見た目の指定だけ`
-- 見込み: 分類の見出しは `h2`（例: `#scope`）なので、`.md-typeset h2` を濃い色の帯に白い字にする。注意書きの節の `h2`（id が `notes_` で始まる。C04・C11）は除く（`h2:not([id^="notes_"])`）。帯の色はヘッダの緑（`--md-primary-fg-color`）か、それと並ぶ濃い色にし、暗い表示でも白い字との差を保つ
+- 見込み: 分類の見出しは `h2`（例: `#scope`）なので、`.md-typeset h2` を濃い色の帯に白い字にする。注意書きの節の `h2`（id が `notes_` で始まる。C04・C11）は除く（`h2:not([id^="notes_"])`）。帯の色はヘッダのテーマの色（`--md-primary-fg-color`。作った時は緑、今は紺 `#1f4e8c`）か、それと並ぶ濃い色にし、暗い表示でも白い字との差を保つ
 - 原稿: 要らない
 - 波及: サイト全体の `h2` が帯になる（まとめ頁の分類のほか、`manual/` などの頁の節の `h2` も）。分類だけに絞る目印は今の HTML に無い
 - 試作の当て先: `list/sakura-script`（位置: `#scope`）
@@ -200,7 +200,7 @@
 - 見込み: 旧サイトの `sakura_player.js` と同じく、記述例ごとに「実行」ボタンを付け、選んだゴーストへ `OnUkadocScriptExample` を SSTP で送る。記述例を見分けるには言語の印が要るので、C10 と同じ `pymdownx.highlight` の設定（`サイトを作る処理`）に依る。印が付けば `code.language-sakurascript` の 287 個が対象になり、旧サイトで `noplay` だった `\![vanishbymyself]` の 1 例は原稿で言語指定が無いので、自然に対象の外になる。ゴーストを選ぶ欄と「読み込み」ボタンは、テンプレートの上書き（`頁の組み立て`）で置く。実用（記述例をその場で試す）にもまたがる
 - 原稿: 要らない
 - 素材: 旧サイトの `sakura_player.js` は再利用の許可が明記されていない。流用せず書き直す
-- 波及: `list/sakura-script` の頁だけに出す（ほかの頁の記述例は対象にしない）。`highlight` の波及は C10 と同じ
+- 波及: `list/sakura-script` の頁だけに出す（ほかの頁の記述例は対象にしない）。ただし下の「広げる案」（`list/propertysystem`・`list/shiori-event`）と、C25（`list/propertysystem`・`spec/plugin` の記述例にも言語の印が付く）を採ると、当て先はその頁にも広がる。`highlight` の波及は C10 と同じ
 - 広げる案（開発者の指摘、4.2 の提示の場、2026-10-25「さくらスクリプトの送信、プロパティシステムや SHIORI EVENT でも対応して欲しい」）:
   - `list/propertysystem`: 項目ごとに「値を見る」ボタンを付け、`%property[プロパティ名]` を埋めたスクリプト（例: `\0%property[system.cpu.name]\e`）を送って、手元のベースウェアの今の値をゴーストに喋らせる。`(キー)`・`(ID)` を含む名前は、C23 の表のキーごとに組み立てる。書き込みのできるプロパティ（`\![set,property,…]`）は送らない
   - `list/shiori-event`: 項目ごとに「発生させる」ボタンを付け、SSTP の `NOTIFY` で `Event: OnBoot` などを手元のゴーストに送る。Reference の値の例が無いイベントや、ゴーストの状態を変えるイベント（`OnVanishSelected`・`OnFirstBoot` などの終わり・消滅・初回の系）を送ってよいかの線引きが論点になる
@@ -300,7 +300,7 @@
 - 区別: 視認性
 - 解く差: 開発者の指摘（4.2 の提示の場、2026-10-25）「ゴーストの作り方、例えば「descript.txt」は、SHIORI Event でいう OnBoot などと同じ装飾で。今はのっぺりしてる」。D12 にも効く
 - 変更の種類: `見た目の指定だけ`・`頁の組み立て`
-- 見込み: C14 で 1 行に置いたファイル名（`li > p:first-child > strong:first-child`、説明の無い `updates2.dau` は `li > strong:only-child`）に、C01 の項目名と同じ帯（左の太い線・下の細い線・薄い地・`h3` と同じ字の大きさ）を付け、C14 のファイルの間の線は外す。帯の中のリンクは項目名と同じ字の色にする（暗い表示でリンクの緑が帯の灰色に沈むため）。名前の後ろの「`: `」は、試作では `assets/mockup.js` が外す（本番は C14 と同じく `prepare_site.py` かテンプレートで外す）。C14 が要り、頁の絞り方も C14 と同じ
+- 見込み: C14 で 1 行に置いたファイル名（`li > p:first-child > strong:first-child`、説明の無い `updates2.dau` は `li > strong:only-child`）に、C01 の項目名と同じ帯（左の太い線・下の細い線・薄い地・`h3` と同じ字の大きさ）を付け、C14 のファイルの間の線は外す。帯の中のリンクは項目名と同じ字の色にする（暗い表示でリンクのテーマの色（試作の時は緑、今は紺）が帯の灰色に沈むため）。名前の後ろの「`: `」は、試作では `assets/mockup.js` が外す（本番は C14 と同じく `prepare_site.py` かテンプレートで外す）。C14 が要り、頁の絞り方も C14 と同じ
 - 原稿: 要らない
 - 波及: C14 と同じ（`manual/` の頁に印を付けるなら `manual/*` の 8 頁）
 - 試作の当て先: `manual/ghost`（位置: `.md-typeset > ul`）
@@ -329,8 +329,8 @@
 - 題: さくらスクリプトの頁の外の記述例も同じく強調する
 - 区別: 視認性
 - 解く差: 開発者の指摘（4.2 の答え、2026-10-25）「さくらスクリプトページ以外にも、さくらスクリプトの記述例があるが、これも同様に強調すること」。例は `list/propertysystem` の `\![set,property,currentghost.seriko.cursor.scope(0).mouseuplist(Head).path,頭.cur]…`
-- 変更の種類: `見た目の指定だけ`
-- 見込み: C10 の印（`code.language-sakurascript`）は原稿のコードブロックの言語の指定から付くので、指定の無い記述例には C10・C19〜C21 が効かない。組み立てたサイトで、言語の指定が無く 1 行目がさくらスクリプトのタグか環境変数で始まるブロックは 6 個（`list/propertysystem` 5 個: `%property[baseware.name] …`・`\![get,property,OnGetSakuraName,…]`・`\![set,property,currentghost.shelllist(…).menu,hidden]`・`\![set,property,currentghost.seriko.cursor.…]`・`\![set,property,currentghost.seriko.tooltip.…]`、`spec/plugin` 1 個: `\![raiseplugin,…]`）。ほかの頁（`spec/sstp` の SSTP の要求、`spec/update-file`、`spec/fmo-mutex`、`descript/install`）の指定の無いブロックは、1 行目がタグで始まらないので外れる。`list/sakura-script` の `\![vanishbymyself]` の 1 例（旧サイトの `noplay`）も、1 行目が日本語なので外れる
+- 変更の種類: `見た目の指定だけ`（ほかに原稿の直しが要る。下の「原稿」）
+- 見込み: C10 の印（`code.language-sakurascript`）は原稿のコードブロックの言語の指定から付くので、指定の無い記述例には C10・C19〜C21 が効かない。組み立てたサイトで、言語の指定が無く 1 行目がさくらスクリプトのタグか環境変数で始まるブロックは 6 個（`list/propertysystem` 5 個: `%property[baseware.name] …`・`\![get,property,OnGetSakuraName,…]`・`\![set,property,currentghost.shelllist(…).menu,hidden]`・`\![set,property,currentghost.seriko.cursor.…]`・`\![set,property,currentghost.seriko.tooltip.…]`、`spec/plugin` 1 個: `\![raiseplugin,…]`）。ほかの頁（`spec/sstp` の SSTP の要求、`spec/update-file`、`spec/fmo-mutex`、`descript/install`）の指定の無いブロックは、1 行目がタグで始まらないので外れる。`list/sakura-script` の `\![vanishbymyself]` の 1 例（旧サイトの `noplay`）も、1 行目が日本語なので外れる。開発者の答え（2026-10-25）「sakurascriptと、その省略形としてssをエイリアスにしてほしい。他は承認」により、6 個には `sakurascript` を書き足し、```` ```ss ```` も `sakurascript` のエイリアス（省略形）として同じ言語の印と見え方にする（エイリアスの付け方は `site-look-sakura-script-highlight` で決める）
 - 原稿: 要る。この 6 個のコードブロックの頭に `sakurascript` を書き足す（`ukadoc-spec/CLAUDE.md` の書式「さくらスクリプトは ```` ```sakurascript ```` のコードブロック」に合わせる直し）。代案（原稿を変えない）: `prepare_site.py` かブラウザの仕掛けで 1 行目を見て印を付ける。原稿の方が書式の決まりに合い、C13 の送る仕掛けの見分けにもそのまま効くので、原稿を直す方を推す
 - 波及: 6 個のコードブロック。C18 の箱は `h4` に続く記述例にはすでに効いている
 - 試作の当て先: `list/propertysystem`（位置: `[id="currentghost.seriko.cursor.scope-ID-.mouse-q-q-q-q-list-.path"]`）。試作では `assets/mockup.js` が 1 行目を見て印を付けた（原稿は変えない）
