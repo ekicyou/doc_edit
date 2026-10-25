@@ -48,7 +48,7 @@
   - 作業木の `assets/extra.css` の末尾に、設計どおりの 3 つの塊があり、`site-look-list-markers:` の見出しのコメントが 3 つある
   - _Requirements: 1.1, 1.6, 1.7, 1.8, 2.1, 2.2, 2.6, 2.9, 3.1, 3.2, 3.3, 3.4, 4.1, 4.2, 4.3, 6.1, 6.2, 7.3, 9.2, 9.7_
 
-- [ ] 3.2 Build Gate と規約 Gate を通し、変更の範囲を確かめる
+- [x] 3.2 Build Gate と規約 Gate を通し、変更の範囲を確かめる
   - プレビューを止めてから、作業木で `prepare_site.py` と `zensical build --strict` を流す
   - 規約 Gate（ukadoc-spec の `CLAUDE.md` の決まり）に照らす
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`git diff --stat origin/main` が `assets/extra.css` と `scripts/prepare_site.py` だけである
