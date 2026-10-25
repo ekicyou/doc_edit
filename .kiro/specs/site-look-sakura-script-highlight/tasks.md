@@ -106,7 +106,7 @@
   - _Requirements: 3.1, 3.2, 5.3, 6.1, 7.3, 9.6, 9.7, 9.9, 9.11_
 
 - [ ] 5. 記録と PR に出せる状態
-- [ ] 5.1 `verification.md` の記録を仕上げる
+- [x] 5.1 `verification.md` の記録を仕上げる
   - 頭に、測った版（作業木のコミット、`origin/main` の版）と日付、流した式（Build Gate・LexerCheck・PageCheck・測りのスクリプト）をそのまま書く
   - 1.2・2.2・3.1〜3.4・4.1〜4.3 の節がそろっていることを見て欠けを埋め、Build Gate・規約 Gate・`git diff --stat origin/main` を書く
   - 開発者に画面やプレビューを見せるときは Ctrl+F5 を頼むことを書き、見せるときに実際に頼む

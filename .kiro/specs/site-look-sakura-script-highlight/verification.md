@@ -1,5 +1,61 @@
 # 確かめの記録: site-look-sakura-script-highlight
 
+## 版と日付・流した式（タスク 5.1）
+
+- 日付: 2026-10-25
+- 測った版: 作業木 `.worktrees/site-look-sakura-script-highlight/` の HEAD `4ce6b5e`（ukadoc-spec の `origin/main` `0eb3fb9` の上。`origin/main` は作業木の先祖）。変更の前の控えは `0eb3fb9`
+- 開発者に画面やプレビュー（serve・控え）を見せるときは、古い `extra.css`・`sakurascript.js` が残らないよう Ctrl+F5 を頼む（9.12）
+
+| 式 | 中身 | 書いてある節 |
+|---|---|---|
+| Build Gate | `prepare_site.py`・`zensical build --strict` | 「Build Gate と規約 Gate」（3.1）・「変更の前」（1.2） |
+| LexerCheck | `node $S/lexer/check.mjs`・`node $S/lexer/corpus.mjs` | 「字句の規則」（2.2） |
+| PageCheck（静的） | `measure_static.py`・`served_prefix.py`・`check_serve.py`・`compare.py` | 「変更の前」（1.2）・「配りと数」（3.2） |
+| PageCheck（ブラウザ） | `measure_browser.mjs`・`check_page33.mjs`・`check_copy34.mjs` | 「形と折り返し」（3.3）・「誤りの見え方」（3.4） |
+| ContrastProbe | `check42.mjs` | 「対比」（4.2） |
+| 画面 | `shot.mjs`（読むだけ）・`shot-viewport.mjs`（スクラッチの写し） | 「画面」（4.3） |
+
+道具はすべて Claude のスクラッチ（`$S/tools`・`$S/lexer` など）にあり、ukadoc-spec には足していない。
+
+### 設計の「Testing Strategy」と結果の在りか
+
+| 項目 | 結果 | 節 |
+|---|---|---|
+| Build Gate（10.1・10.2・10.5） | exit 0・0、`git diff --stat origin/main` は 4 ファイルだけ | 「Build Gate と規約 Gate」 |
+| 規約 Gate（8.1・8.2） | `CLAUDE.md` は 7 番目の 1 行だけ、```` ```sakurascript ```` 287 のまま | 「Build Gate と規約 Gate」 |
+| 字句の規則（2.1〜2.11・9.3・9.13） | 30 例すべて合う、287・500・6・誤り 0・警告 0、試作との違い 13 か所 | 「字句の規則」 |
+| 誤りの見え方（2.11・3.8・9.13） | 波線・`title`・`console.warn` が明・暗で出て、字とコピーが同じ。下線の対比 5.00〜6.80 | 「誤りの見え方」 |
+| 配りと数（1.1・1.3・9.1・9.2） | 449・287・162・41 頁、読み込み 41 頁すべてで 1 | 「配りと数」 |
+| 字とコピー（5.1・5.2・9.4） | 包む前後の字の違い 0、コピーの違い 0、ボタンの 3 つが同じ | 「字とコピー」 |
+| 形と折り返し（3.4・6.1・6.2・9.9） | 高さの違い 0（1000・375、312 個）、箱 255・点線 33・重なり 0。言語の指定の無いブロックの字は控えと違い 0 | 「形と折り返し」・「配りと数」 |
+| 見出し（7.2・9.10） | id・¶・目次・`hr`・本文の字が控えと違う頁 0 | 「配りと数」 |
+| `ss` と読み物の頁（1.2・1.4・9.5） | `language-ss` 2・言語の印 290、`memo/memo` も同じ見え方 | 「`ss` と読み物の頁」 |
+| 対比と表示（3.5・3.6・4.1・4.2・7.1・7.3・5.4・5.5） | 線に届かない所 0（最小 明 7.06・暗 5.95）、切り替え・画面だけ・検索の強調・幅 375・スクリプトを切った頁・外部の読み込みとも満たす | 「対比」・「画面」の「幅 375」・「字とコピー」の「動かないときと外部の読み込み」 |
+| 目標の画面との見比べ（3.1・3.2・5.3・9.6・9.7・9.11） | `screenshots/` の 12 枚。撮り直し 1.2 で 0、3.4 で 1 回（2 枚）、4.3 で 2 枚 | 「画面」・「誤りの見え方」の「画面」 |
+
+欠けている項目は無い。
+
+## Build Gate と規約 Gate（タスク 3.1、5.1 で流し直し、2026-10-25）
+
+serve（8000）が作業木で動いているので、作業木の HEAD `4ce6b5e` を `git archive` でスクラッチ（`$S/copy51/src`）に書き出した写しで流した。終わったら写しを消した。作業木は `git status --short` が空。
+
+| もの | 結果 |
+|---|---|
+| `prepare_site.py` | exit 0 |
+| `zensical build --strict` | exit 0（「No issues found」） |
+| `git diff --stat origin/main` | `CLAUDE.md` 2（+1 −1）・`assets/extra.css` +15・`assets/sakurascript.js` +95（新しいファイル）・`mkdocs.yml` +6。4 ファイル、117 行の足しと 1 行の削り。ほかのファイル 0 |
+| `CLAUDE.md` の差分 | 書式の 7 番目の 1 行だけ（「省略形の ```` ```ss ```` も同じ言語として使える」を足した） |
+| 原稿の ```` ```sakurascript ```` のフェンス | 287（原稿の `.md` は変えていない） |
+| `origin/main` が HEAD の先祖 | はい |
+
+```sh
+# S・PY・W は「配りと数」の流した式と同じ
+mkdir -p $S/copy51/src && git -C $W archive HEAD | tar -x -C $S/copy51/src
+cd $S/copy51/src && $PY scripts/prepare_site.py && /c/home/maz/git/doc_edit/.venv/Scripts/zensical.exe build --strict
+git -C $W diff --stat origin/main; git -C $W diff origin/main -- CLAUDE.md
+rm -rf $S/copy51
+```
+
 ## 変更の前（タスク 1.2、2026-10-25）
 
 ### 控えの置き場と版
