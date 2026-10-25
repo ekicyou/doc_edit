@@ -82,3 +82,50 @@ manual の頁の数（控え）:
 - 2026-10-25 に ukadoc-spec を fetch した。`origin/main` は `b1f8ab1` のままで、作業木の分岐点から進んでいない。merge はせず、1.2 の控え（`b1f8ab1`）をそのまま使う
 - 測る版: 作業木 `site-look-manual-files` の `75c7433`（3.3 のコミット。`origin/main` の `b1f8ab1` の上に 1 つ）。4.2〜4.5 はこの版で測る
 - Build Gate（3.3）: `prepare_site.py` exit 0、`zensical build --strict` exit 0。`git diff --stat origin/main` は `assets/extra.css`・`assets/filetree.js`・`mkdocs.yml`・`scripts/prepare_site.py` の 4 ファイル
+
+## 配り（4.2）
+
+- 日付: 2026-10-25。測った版: 作業木 `site-look-manual-files` の `75c7433`（`origin/main` の `b1f8ab1` の上に 1 つ）。プレビューを止め、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動し直したもの（`http://127.0.0.1:8000/ukadoc-spec/`）
+- 控え: 1.2 の置き場を `http://127.0.0.1:8010/` で配ったもの（`b1f8ab1`）。配った控えの全 40 頁の題・id の並び・¶・目次の数・本文の字が `before.json` と同じことも見た
+- `/ukadoc-spec/assets/extra.css`: 200。`site-look-manual-files:` のコメント 2、`:is(.bundle-item, .manual-item)` 2
+- `/ukadoc-spec/assets/filetree.js`: 200。`filetree-file` を含む
+- `assets/filetree.js` の読み込み: 全 40 頁に 1 つずつ
+
+## 目印（4.2）
+
+配られた全 40 頁の HTML（8000）を頁ごとに数えた。manual の外の 32 頁は `class="manual-item"` が 0。
+
+| 頁 | 名前の目印 | 外した「`:`」 | うち場合分け | うち名前だけ | 段落に分かれない形 | ¶ | 目次 | id | 漏れ | `filetree.js` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `manual/balloon` | 22 | 22 | 0 | 0 | 7 | 1 | 56 | 1 | 0 | 1 |
+| `manual/directory` | 12 | 12 | 0 | 0 | 3 | 3 | 62 | 3 | 0 | 1 |
+| `manual/ghost` | 10 | 9 | 0 | 1（`updates2.dau`） | 1 | 1 | 56 | 1 | 0 | 1 |
+| `manual/install` | 7 | 7 | 5 | 0 | 0 | 1 | 56 | 1 | 0 | 1 |
+| `manual/owner-draw-menu` | 3 | 3 | 0 | 0 | 0 | 1 | 56 | 1 | 0 | 1 |
+| `manual/shell` | 12 | 12 | 0 | 0 | 1 | 1 | 56 | 1 | 0 | 1 |
+| `manual/translator` | 0 | 0 | 0 | 0 | 0 | 1 | 56 | 1 | 0 | 1 |
+| `manual/update` | 7 | 7 | 3 | 0 | 0 | 1 | 56 | 1 | 0 | 1 |
+| 計 | 73 | 72 | 8 | 1 | 12 | | | | 0 | |
+
+- 数え方: 名前の目印は `class="manual-item"` の数。外した「`:`」は控えと後の本文の字の「`:`」の数の差。場合分けは、目印の名前の字に拡張子の「`.`」もパスの「`\`」も無いもの（`install` の「標準的なゴーストの場合」など 5、`update` の「ゴーストの場合」など 3）。名前だけは、`li` の中で名前の後に字が無いもの。段落に分かれない形は `<li><strong class="manual-item">` の数
+- 設計の MarkerCheck の表（73・72・場合分け 8・名前だけ 1・段落に分かれない形 12）と同じ。`shell` の 12 に字下げした `※1,※2` は入らない
+- 漏れ: 全 40 頁の `article` の中の、`pre`・`code`（と `script`・`style`）の外の字に `{:`・`{#`・`{.` が 0
+
+変わらないこと（控えと全 40 頁で比べた）:
+
+- 題・`article` の中の見出しの id の並び・`class="headerlink"` の数（¶）・`md-nav__link` の数（目次）: 40 頁すべて同じ（manual の頁は `directory` が ¶ 3・目次 62、ほかが ¶ 1・目次 56）
+- manual の外の 32 頁: `article` の本文の字（タグを外し空白を詰めたもの）が同じ
+- manual の 8 頁: 控えとの本文の字の違いを `difflib` で取り、違いがすべて「`:`」（と前後の空白）を消すことだけで、ほかの字の違いが 0。消えた「`:`」は計 72
+- `directory` の名前の `\`: `\` を含む目印の名前 12 個（`(myghost)\`・`(myghost)\ghost\master\`・`(myballoon)\` など）の字が、すべて控えの本文にそのまま入っている
+- `_raw/`（2049 ファイル）の sha256 がすべて控えと同じ。`llms.txt` は配られたもの・作業木の `_site/llms.txt` とも控えと sha256 が同じ
+
+流した式（`tools` = `C:/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/95cb4bf7-32a6-4bf5-b971-42e18f7e2f04/scratchpad/tools/`、`PY` = doc_edit の `.venv/Scripts`）:
+
+```sh
+# 作業木の _raw/・llms.txt を数える（build は流さず、serve の前に作ったものを読むだけ）
+PY/python -I snapshot.py <WT の絶対パス> after.json
+# 8000 の serve と 8010 の控えから全 40 頁の HTML と assets を取り、数えて比べる（最後に ALL OK）
+PY/python -I markercheck.py after.json
+```
+
+- `markercheck.py`: 配り（7.1）、頁ごとの数・漏れ・読み込み（1.1・1.2・2.9・3.3・7.2）、控えとの比べ（1.3・2.4・2.6・2.7・3.4・3.7・6.1・6.3・6.6・7.4）、`_raw/`・`llms.txt`（6.7）を 1 度に見て、合わないものを `NG` で出す。結果は `ALL OK`（`NG` 0）

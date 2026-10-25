@@ -56,7 +56,7 @@
   - `origin/main` が作業木の先祖で、Build Gate が exit 0 で、測る版が `verification.md` に書いてある
   - _Requirements: 8.6_
 
-- [ ] 4.2 配りと、目印の数・漏れ・変わらないことを、プレビューの頁の HTML で数える
+- [x] 4.2 配りと、目印の数・漏れ・変わらないことを、プレビューの頁の HTML で数える
   - プレビューを止め、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動し直す
   - 控えが配られていなければ、`verification.md` に書いた置き場から配り直す。置き場が無ければ、書いたコミットから 1.2 の手順で作り直す
   - 配られた `/ukadoc-spec/assets/extra.css` が 200 で `site-look-manual-files:` のコメントが 2 つと `:is(.bundle-item, .manual-item)` が 2 つ、`/ukadoc-spec/assets/filetree.js` が 200 で `filetree-file` を含むことを見る。無ければ起動し直す
