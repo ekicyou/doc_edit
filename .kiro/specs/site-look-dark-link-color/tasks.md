@@ -29,7 +29,7 @@
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`origin/main` との差分が `assets/extra.css` だけである
   - _Requirements: 6.1, 6.3_
 
-- [ ] 3. 配られた頁での確かめ
+- [x] 3. 配られた頁での確かめ
 - [x] 3.1 プレビューを起動し直し、配られた見た目の指定に塊があることを確かめる
   - プレビューを起動し直し、内蔵ブラウザの枠（使えないときは Claude in Chrome）で頁を開く
   - 配られた `/ukadoc-spec/assets/extra.css` に `site-look-dark-link-color:` の塊があることを見る。無ければプレビューを止め、`prepare_site.py` → `build --strict` → 起動し直す
@@ -46,7 +46,7 @@
   - 表のすべての所の `fg`・`bg`・対比が測ってあり、すべて線を満たすか、開発者の判断を待つ状態で止まっている
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 2.1, 2.2, 2.4, 3.1, 3.2, 3.3, 3.4, 5.3, 5.4_
 
-- [ ] 3.3 変更の後の画面を撮り、見比べと、失わないものを確かめる
+- [x] 3.3 変更の後の画面を撮り、見比べと、失わないものを確かめる
   - 変更の後の `#bang-lock-repaint` を明・暗の両方で撮り、`after-` の 2 枚として置く。二重に重なった跡があれば撮り直す
   - `after-sakura-script-dark.png` のリンクと左の目次の今の頁の色を、目標の画面 `mock-sakura-script-C24-dark.png`（と light）と見比べる（色だけを比べる）
   - `before-` と `after-sakura-script-light.png` に、リンクと目次の色の違いが無いことを見る
@@ -68,3 +68,7 @@
   - PR は作らない。PR は開発者の完了の承認の後に `/kiro-complete` で作り、マージしない
   - 作業木が `origin/main` の最新の上にあり、Build Gate が通り、PR の説明の下書きが `verification.md` に置いてある
   - _Requirements: 6.4, 6.5, 6.7_
+
+## Implementation Notes
+- 設計の切り出し `#bang-lock-repaint` にはリンクも目次の今の項目も写らず、変更の前と後の画面がバイト単位で同じになった。開発者の判断（2026-10-25）「設計の 4 枚はそのまま残し、本文のリンクが入る位置で暗い表示の前と後を 2 枚足して」により、`#bang-move`（本文のリンク「※下記参照」が写る）で `before-`・`after-sakura-script-move-dark.png` を足した。変更の前は `origin/main` の仮の作業木を別の口（8001）で配って撮り、撮った後に片付けた
+- `zensical serve` を動かしている作業木で、ほかの人が `prepare_site.py` や `build` を流すと、配りが 404 になる。確かめ役には build を流させるか、流した後に serve を起動し直す
