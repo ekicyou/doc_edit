@@ -1,13 +1,13 @@
 # Implementation Plan
 
-- [ ] 1. 土台: 作業木と変更の前の記録
+- [x] 1. 土台: 作業木と変更の前の記録
 - [x] 1.1 ukadoc-spec の `origin/main` の最新から作業木を作り、プレビューを起動する
   - ukadoc-spec を fetch し、`origin/main` から spec の作業木を作る（ukadoc-spec のメインのチェックアウトは使わない）
   - 作業木で `prepare_site.py` を流してから `zensical serve` を起動する
   - 作業木の先頭が `origin/main` と同じコミットで、`/ukadoc-spec/list/sakura-script/` の頁がプレビューで開ける
   - _Requirements: 6.2_
 
-- [ ] 1.2 変更の前の明・暗の画面を撮り、明るい表示の色の基準を測る
+- [x] 1.2 変更の前の明・暗の画面を撮り、明るい表示の色の基準を測る
   - `shot.mjs`（読むだけで使う）で `list/sakura-script` の `#bang-lock-repaint` を明・暗の両方で撮り、`before-` の 2 枚として spec の `screenshots/` に置く
   - 二重に重なった跡（上の端以外の左右の端のヘッダの紺の行）があれば撮り直す
   - 明るい表示の本文のリンク・左の目次の今の頁の字の色と、明・暗のヘッダの地の色を測り、変更の前の値として控える
