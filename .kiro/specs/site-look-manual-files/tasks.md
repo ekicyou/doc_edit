@@ -66,7 +66,7 @@
   - `verification.md` の「配り」「目印」の節に、頁ごとの数の表と、漏れ 0・変わらないことの結果が書いてある
   - _Requirements: 1.1, 1.2, 1.3, 2.4, 2.6, 2.7, 2.9, 3.3, 3.4, 3.7, 6.1, 6.3, 6.6, 6.7, 7.1, 7.2, 7.4_
 
-- [ ] 4.3 ブラウザで開いた後の木の数と字を数え、着色の後のコードブロックの形でも同じことを確かめる
+- [x] 4.3 ブラウザで開いた後の木の数と字を数え、着色の後のコードブロックの形でも同じことを確かめる
   - プレビューが動いていなければ、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
   - manual の 8 頁と `dev/nar`・`dev/update` を Edge ヘッドレス + CDP で開き、言語の印の無いコードブロックごとに、`+-` の行の数・`span.filetree-file` の数と字・包んだ後の `textContent` が `fetch` で取り直した同じ頁の字と同じことを数える（設計の写しでは木 21、manual のファイル名 204・`dev/` 17）。木でないブロックの `span.filetree-file` が 0 であることを見る（着色の `span` は数えない）
   - 作業木がまだ今の形（`div.highlight > pre > code`）なら、作業木の HEAD を使い捨ての置き場に書き出し、その写しの `mkdocs.yml` に、`.worktrees/site-look-sakura-script-highlight/mkdocs.yml` の `pymdownx.highlight` の 2 か所（無ければその spec の `design.md` の差分）を足して build し、8000・控えの口以外で配って同じ数になることを見る。終わったら配りを止め、写しを消す（作業木が既に着色の後の形なら、そのことを書いて省く）

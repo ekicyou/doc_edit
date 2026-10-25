@@ -129,3 +129,65 @@ PY/python -I markercheck.py after.json
 ```
 
 - `markercheck.py`: 配り（7.1）、頁ごとの数・漏れ・読み込み（1.1・1.2・2.9・3.3・7.2）、控えとの比べ（1.3・2.4・2.6・2.7・3.4・3.7・6.1・6.3・6.6・7.4）、`_raw/`・`llms.txt`（6.7）を 1 度に見て、合わないものを `NG` で出す。結果は `ALL OK`（`NG` 0）
+
+## 木（4.3）
+
+作業木 `site-look-manual-files` の `75c7433` を `zensical serve`（`http://127.0.0.1:8000/ukadoc-spec/`）で配り、`_site` の 40 頁すべてを Edge ヘッドレス + CDP で開いて数えた（2026-10-25）。言語の印の無いコードブロック（`pre > code:not([class*="language-"])`）ごとに、`+-` の行の数・`span.filetree-file` の数と字を数え、包んだ後の `textContent` を、`fetch` で取り直した同じ頁の HTML（スクリプトが動く前）の同じ順のブロックの字と比べた。`filetree.js` は直していない。
+
+### 頁ごとの数（着色の後の形 `pre.highlight > code`）
+
+| 頁 | 木 | 木の行 | ファイル名（包んだ数） | うち「`/`」「または」の 2 つ目 | フォルダの行 | 字の違い | 木でないブロックの `span` |
+|---|---|---|---|---|---|---|---|
+| `manual/balloon` | 1 | 40 | 42 | 3 | 1 | 0 | 0 |
+| `manual/directory` | 2 | 59 | 59 | 7 | 7 | 0 | 0 |
+| `manual/ghost` | 1 | 14 | 11 | 0 | 3 | 0 | 0 |
+| `manual/install` | 6 | 48 | 29 | 0 | 19 | 0 | 0 |
+| `manual/owner-draw-menu` | 1 | 18 | 15 | 0 | 3 | 0 | 0 |
+| `manual/shell` | 1 | 18 | 15 | 0 | 3 | 0 | 0 |
+| `manual/translator` | 2 | 14 | 8 | 0 | 6 | 0 | 0 |
+| `manual/update` | 3 | 32 | 25 | 0 | 7 | 0 | 0 |
+| manual の計 | 17 | 243 | 204 | 10 | 49 | 0 | 0 |
+| `dev/nar` | 3 | 26 | 12 | 0 | 14 | 0 | 0 |
+| `dev/update` | 1 | 10 | 5 | 0 | 5 | 0 | 0 |
+
+- 設計の「TreeCheck」の期待の表とすべての欄で同じ。40 頁で木は 21 個（ほかの 30 頁に木は無い）
+- 40 頁の言語の印の無いブロックは 162 個（生の HTML でも 162 個）。木でない 141 個の `span.filetree-file` は 0。頁の中の `span.filetree-file` はすべて木の中にあり、言語の印のあるブロック（さくらスクリプトの着色の `span` を含む）には 0
+- 包んだ後の `textContent` と生の HTML の字の違いは 40 頁で 0（コピーのボタンが写す字も変わらない。6.5）。`filetree` の `console.warn` は 0 回
+- 包んだ字の見本: `manual/ghost` の 11 個は `descript.txt`・`shiori.dll`・`(saori).dll`・`makoto.dll`・`updates2.dau`・`updates.txt`・`*.ico`・`*.cur`・`thumbnail.png`・`ai0.png`・`ai0_dark.png`（設計の写しと同じ）。`manual/shell` の `alias.txt（旧仕様）` は `alias.txt` だけ、`manual/balloon` の `ok_down.png`・`ok_up.png`、`manual/directory` の `readme.txt`・`readme.md` と `terms.txt`・`terms.md` はどちらも包まれた
+
+### 例の表
+
+3.1 の `tools/treecheck.js`（Node の `vm` の偽の `document`）を作業木の `assets/filetree.js` にもう一度流し、設計の例の表の 13 行・`+-` の無い行だけのブロック・全行を 1 つの木にした 12 個・言語の印のあるブロック・要素の入った木・字が変わるときの戻しのすべてが合った（`ALL OK`）。
+
+### 両方の形の比べ（4.8）
+
+作業木は `origin/main`（`529d092` の #13 を含む）の上にあり、`mkdocs.yml` に `pymdownx.highlight`（`use_pygments: false`）が既にあるので、作業木そのものが着色の後の形（`pre.highlight > code`）である。そのため「着色を足した写し」の build は省いた。代わりに今の形（着色の前）を確かめるため、作業木の HEAD を `git archive` で使い捨ての置き場に書き出し、写しの `mkdocs.yml` から `pymdownx.highlight` の 2 行を外して build し（`prepare_site.py` exit 0・`zensical build --strict` exit 0）、`http://127.0.0.1:8020/` で配って同じスクリプトで 40 頁を数えた。
+
+| 形 | コードブロックの HTML | 言語の印の無いブロック | 木 | 木の行 | ファイル名 | 2 つ目 | フォルダの行 | 字の違い | 木でないブロックの `span` |
+|---|---|---|---|---|---|---|---|---|---|
+| 着色の後（作業木） | `pre.highlight > code` | 162 | 21 | 279 | 221 | 10 | 68 | 0 | 0 |
+| 今の形（写し） | `div.highlight > pre > code` | 449 | 21 | 279 | 221 | 10 | 68 | 0 | 0 |
+
+- 頁ごとの木・行・ファイル名・フォルダの数と、包んだ字の並びは 2 つの形で 1 つも違わない
+- 今の形では言語の名前が `code` でなく `div.highlight` の class に付くので、言語のあるブロックもセレクタに入り 449 個になる。どれも `+-` の行を持たないので包まれず（`span` 0、`console.warn` 0）、字も変わらない
+- 終わった後、8020 の配りを止め、写しの置き場を消した（8020 は応答しない。作業木の `git status` は空、8000 の配りはそのまま）
+
+### 流した式
+
+```sh
+# 頁の一覧（作業木の _site の 40 頁）
+find _site -name index.html | sed 's#^_site/##; s#index.html$##' | sort > pages.txt
+# 着色の後の形（作業木の serve）
+node treecount.mjs http://127.0.0.1:8000/ukadoc-spec/ $(cat pages.txt) > after-all.json
+# 例の表
+node treecheck.js .worktrees/site-look-manual-files/assets/filetree.js
+# 今の形（使い捨ての写し）
+git -C .worktrees/site-look-manual-files archive HEAD | tar -x -C oldform
+#   oldform/mkdocs.yml から「- pymdownx.highlight:」「use_pygments: false」の 2 行を外す
+.venv/Scripts/python.exe scripts/prepare_site.py && .venv/Scripts/zensical.exe build --strict   # oldform で
+python -m http.server 8020 --bind 127.0.0.1   # oldform/_site で
+node treecount.mjs http://127.0.0.1:8020/ $(cat pages.txt) > old-all.json
+#   配りを止め、oldform を消す
+```
+
+`treecount.mjs` と `treecheck.js` は spec の外のスクラッチの `tools/` に置いた使い捨てのスクリプトである。
