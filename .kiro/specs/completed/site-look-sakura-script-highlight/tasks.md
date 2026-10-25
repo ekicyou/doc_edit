@@ -130,3 +130,4 @@
 
 ## Implementation Notes
 - どのタスクも同じ作業木の同じブランチにコミットし、プレビュー（`serve`）と `_site_src/` を共にするので、`(P)` は付けない
+- 完了時の棚卸: その場で解決 0 件、申し送り 1 件（`site-look-sstp-playback` の brief に `ss` の印・読み込みの順・誤りの扱い）、起票 0 件

@@ -88,3 +88,9 @@
 - **参考**: 試作は無い。論点の元は `.kiro/specs/completed/site-look-plan/candidates.md` の C13と design.md の Security Considerations
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない。3 種類のボタンを 1 つの PR にするか分けるかは、設計で決めてよい
 - **続きの PR の説明**（開発者の指示、2026-10-25。同じ日に一連の PR を 6 本から 3 本に改めた）: PR の説明に、この PR が UKADOC の見た目を旧サイト並みの見やすさに近づける一連の PR（`site-look-plan` の決定を切った 3 本）の 1 本であり、続きの PR を順に出すことを書く。一連の PR とその並びは `.kiro/steering/roadmap.md` の「PR の単位」と「Specs」による（今の見込み: `site-look-dark-link-color` → `site-look-visibility`（list-items・list-markers・sakura-script-highlight・manual-files・definition-tables・note-icon の 6 本の spec をまとめた 1 本）→ `site-look-sstp-playback`）。PR を出すときの roadmap に合わせて、出し済みの PR（番号）・この PR・この後に出す PR を短く並べ、メンテナが全体の中のどこにあるかを分かるようにする（最後の PR では、これで一連が終わることを書く）。あわせて、この PR だけで完結していて、続きを待たずにマージしてよいこと（先に出した PR に中身で依るときは、その PR を名指しする）を書く
+
+## 申し送り（site-look-sakura-script-highlight より）
+- **`ss` の印**: 配る HTML では ```` ```ss ```` は `code.language-ss` のまま残る。`assets/sakurascript.js` が頁の読み込みの時に `language-sakurascript` を足す（`pymdownx.highlight` の `use_pygments: false` では設定で寄せられない）。記述例を HTML の段で見分けるなら `language-ss` も、ブラウザの段で見分けるなら `sakurascript.js` の後に動けば `language-sakurascript` だけで足りる（今の原稿に `ss` は 0 個）
+- **読み込みの順と `code` の中**: `sakurascript.js` は `extra_javascript` でテーマの `bundle` の直後に読む。`code` の中が字のノードだけのときに限り、タグ・環境変数を `span.sakurascript-tag`・`span.sakurascript-env` で包む（要素の入った `code` は包まずに警告する）。再生の仕掛けは `code` の中に要素を足さず、`pre` の外か `code` の外に置くこと。送る字は `code.textContent`（包んでも字は変わらない）から取れる
+- **記述例の誤り**: 閉じない `[` などの誤りは `span.sakurascript-error`（波線と `title`）で示し、救済しない。誤りのあるブロックを送るかどうかは、この spec で決める論点（今の原稿の誤りは 0）
+- 参照: `.kiro/specs/completed/site-look-sakura-script-highlight/design.md` の「Modified Files」と「Highlighter」、`verification.md` の「字句の規則」

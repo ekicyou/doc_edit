@@ -17,7 +17,7 @@
 - [x] site-look-dark-link-color -- 暗い表示のリンクと左の目次の今の頁を明るい紺 `#8fb4e8` にして読めるようにする（C24）. Dependencies: site-look-plan. PR: site-look-dark-link-color
 - [x] site-look-list-items -- まとめ頁の項目名の帯・項目の間の詰め・分類の見出しの帯・コピーのボタンの下の折り返し・記述例の強い箱を入れる（C01・C02・C03・C09・C18）. Dependencies: site-look-plan
 - [x] site-look-list-markers -- `prepare_site.py` で目印を付け、注意書きの箱・対応ベースウェアの札・既定値の札と、明るい表示の札の濃い色を入れる（C04・C06・C07・C17）. Dependencies: site-look-list-items
-- [ ] site-look-sakura-script-highlight -- `pymdownx.highlight` とブラウザの仕掛けでさくらスクリプトのタグに色・太字・地を付ける（C10・C19・C20・C21）. Dependencies: site-look-plan
+- [x] site-look-sakura-script-highlight -- `pymdownx.highlight` とブラウザの仕掛けでさくらスクリプトのタグに色・太字・地を付ける（C10・C19・C20・C21）. Dependencies: site-look-plan
 - [ ] site-look-manual-files -- `manual/` の頁でファイルごとの切れ目とファイル名の帯を見せ、ファイル構成の木のファイル名に色を付ける（C14・C15・C22）. Dependencies: site-look-list-items
 - [ ] site-look-definition-tables -- 「`- **名前**: 説明`」だけが並ぶ箇条書きを、原稿を変えずに組み立ての処理で 2 列の表にする（C23）. Dependencies: site-look-manual-files
 - [ ] site-look-note-icon -- 注釈の節・補足の項目・`!!! note` の見出しの頭に、添付の色付きのアイコンを付ける（C26）. Dependencies: site-look-list-markers
