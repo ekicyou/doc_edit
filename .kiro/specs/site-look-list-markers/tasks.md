@@ -55,7 +55,7 @@
   - _Requirements: 9.1, 9.4_
 
 - [ ] 4. 配られた頁での確かめ
-- [ ] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
+- [x] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `extra.css` は両方の塊を並べ、`prepare_site.py` は両方の変更（`main()` の行は両方の関数を入れ子に）を残して直す
   - merge したときは、Build Gate（3.2）をやり直す。原稿か `prepare_site.py` が変わっていれば、控えを新しい `origin/main` から 1.2 と同じ手順で作り直し（`verification.md` の「変更の前」の節のコミットと数を直す）、2.2 の数え方もやり直して `verification.md` の「目印」の節を直す
   - 4.2〜4.4 はこの版で測る（測る版を `verification.md` に書く）

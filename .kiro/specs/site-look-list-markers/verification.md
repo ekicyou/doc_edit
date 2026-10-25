@@ -159,3 +159,7 @@ $PY snapshot.py compare before.json after.json   # SAME、exit 0
 | `Materia / SSP / CROW / *※推奨　SSP2.6.72以上*` | 1 |
 
 - 札にならない部分は `Materia廃止仕様`（名前の直後が空白でない）・`Ref1以降は2.4.85`・`*※推奨…*`（名前で始まらない）の 3 種で、同じ行のほかの部分は札になった
+
+## 測る版
+- 2026-10-25 に ukadoc-spec を fetch した。`origin/main` は `d3154d8` のまま進んでおらず、作業木の先祖である。merge はしていない
+- 4.2〜4.4 は作業木の `f8a747c`（`prepare_site.py` の `02e71e2` と `extra.css` の `f8a747c`）で測る。Build Gate（3.2）: `prepare_site.py` exit 0、`zensical build --strict` exit 0（No issues found）。`git diff --stat origin/main` は `assets/extra.css`（+56）と `scripts/prepare_site.py`（+46 −1）だけ
