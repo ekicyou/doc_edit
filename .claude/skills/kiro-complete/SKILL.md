@@ -251,6 +251,7 @@ PR が `MERGED` であることを確かめたら、作業木とブランチを�
 ```powershell
 git -C ukadoc-spec worktree remove ../.worktrees/{pr}   # 未追跡がビルドの生成物（.cache/ _raw/ _site/ _site_src/）だけなら --force
 git -C ukadoc-spec branch -D {pr}                       # squash マージなので -D。MERGED を確かめた後に限る
+git -C ukadoc-spec push origin --delete {pr}            # マージされた自分の PR のリモートのブランチも消す（ほかの人のブランチは消さない）
 git -C ukadoc-spec checkout main                        # ukadoc-spec/ が main で未コミットの変更が無いときだけ。違えば止めて報告する
 git -C ukadoc-spec pull --ff-only origin main
 git add -- ukadoc-spec .kiro/specs/completed/{feature-name} .kiro/specs/{feature-name} <ステップ5・6 と冒頭ステップで触ったパス>
@@ -280,6 +281,7 @@ git push {remote} {default-branch}
    ```powershell
    git -C ukadoc-spec worktree remove ../.worktrees/{pr}   # 未追跡がビルドの生成物だけなら --force
    git -C ukadoc-spec branch -D {pr}                       # squash マージなので -D
+   git -C ukadoc-spec push origin --delete {pr}            # マージされた自分の PR のリモートのブランチも消す
    git -C ukadoc-spec checkout main
    git -C ukadoc-spec pull --ff-only origin main
    ```
@@ -319,11 +321,11 @@ workflow.md「開いている PR に追いつく（ぶつかったとき）」�
 - [ ] 参照パス更新済み（ステップ5）※繰り返し仕様はスキップ
 - [ ] ロードマップ・ステアリング更新済み（該当する場合）
 - [ ] ukadoc-spec へ PR を作成しマージ（ステップ7）: origin/main を取り込み → push → gh pr create → gh pr view で OPEN・MERGEABLE・head を確認 → gh pr merge --squash --match-head-commit（squash の本文は Co-Authored-By の行で終える）→ gh pr view で MERGED を確認
-- [ ] 後始末と記録（ステップ8）: 作業木とブランチを片付け、ukadoc-spec/ を main の最新に進め、spec.json に PR の URL・"state": "MERGED"・merge_commit を書き、参照コミットと一緒に doc_edit の main に自分のパスだけコミットして push
+- [ ] 後始末と記録（ステップ8）: 作業木とブランチ（手元とリモート）を片付け、ukadoc-spec/ を main の最新に進め、spec.json に PR の URL・"state": "MERGED"・merge_commit を書き、参照コミットと一緒に doc_edit の main に自分のパスだけコミットして push
 - [ ] ※マージの許可が無いとき: PR を作って OPEN を確かめて止め、spec.json に "state": "OPEN" を書いて記録だけ行う（作業木・ブランチ・参照コミットはそのまま）
 - [ ] ※単位の途中の spec: PR も push もせず、spec.json に "pr_unit" と "state": "PENDING" を書き、作業木は単位の次の spec に引き継ぐ
 - [ ] ※開いている PR がぶつかったとき: 作業木で origin/main を merge して両方を残して直し、Build Gate をやり直して push（rebase・force push はしない）
-- [ ] ※開いたまま残った PR のマージ後の再実行: MERGED を確かめてから作業木とブランチを片付け、ukadoc-spec/ を main の最新に進め、spec.json に merge_commit を書き、参照コミットと一緒にコミットして push
+- [ ] ※開いたまま残った PR のマージ後の再実行: MERGED を確かめてから作業木とブランチ（手元とリモート）を片付け、ukadoc-spec/ を main の最新に進め、spec.json に merge_commit を書き、参照コミットと一緒にコミットして push
 - [ ] ※原稿を変えない spec: 作業木にコミット・未コミットの変更が無いことを確かめ、Build・規約 Gate は「当てはまらない」と記録し、ステップ2・7 を飛ばし、作業木とブランチを消し、参照コミットは進めない（spec.json に "pr": "none"）
 ```
 

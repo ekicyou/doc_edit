@@ -190,6 +190,9 @@ git -C .worktrees/<pr> push
 git -C ukadoc-spec worktree remove ../.worktrees/<feature>
 git -C ukadoc-spec branch -D <feature>
 
+# マージされた PR のリモートのブランチも消す（開発者の決まり、2026-10-25。自分の PR のブランチだけで、ほかの人のブランチは消さない）
+git -C ukadoc-spec push origin --delete <feature>
+
 # 記録している版を、マージ後の main に進める
 git -C ukadoc-spec checkout main
 git -C ukadoc-spec pull --ff-only origin main
