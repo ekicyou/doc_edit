@@ -7,7 +7,9 @@
   "phase": "completed",
   "ukadoc_spec": {
     "pr_unit": "site-look-list-items",
-    "state": "PENDING"
+    "pr": "https://github.com/ukatech/ukadoc-spec/pull/11",
+    "state": "MERGED",
+    "merge_commit": "d3154d861671332202a495738217d4247ba9bf89"
   },
   "approvals": {
     "requirements": {
