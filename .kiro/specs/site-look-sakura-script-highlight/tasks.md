@@ -46,7 +46,7 @@
   - _Requirements: 8.1, 8.2_
 
 - [ ] 3. 配られた頁の数と字の確かめ
-- [ ] 3.1 Build Gate と規約 Gate を通し、変更の範囲を確かめる
+- [x] 3.1 Build Gate と規約 Gate を通し、変更の範囲を確かめる
   - プレビューを止めてから、作業木で `prepare_site.py` と `zensical build --strict` を流す
   - 規約 Gate（ukadoc-spec の `CLAUDE.md` の決まり）に照らす
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`git diff --stat origin/main` が `mkdocs.yml`・`CLAUDE.md`・`assets/extra.css`・`assets/sakurascript.js` だけである
