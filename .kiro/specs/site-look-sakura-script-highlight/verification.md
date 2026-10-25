@@ -412,3 +412,76 @@ mkdir -p $S/after42
 node $S/tools/check42.mjs http://127.0.0.1:8000/ukadoc-spec/ $S/after42/check42.json $S/after42
 ```
 - `check42.mjs`: `spec/sstp` で箱の外のコードの地と頁の地を明・暗（切り替え）で測り、`list/sakura-script` で `extra.css` の規則の木をたどり、最初の箱の中のタグ・環境変数の色と地・薄い地の対比（測った地と、白・コードの地に重ねた計算）と頁の全部のタグ・環境変数の最小を明で測り、切り替えて暗で同じく測り、もう一度切り替えて戻す。続いて `?h=raise`・`?h=username`・`?h=喋る` を明で開いて `mark` を数え、最初の強調を真ん中に寄せて撮り、切り替えて暗で同じく数えて撮る
+
+## 画面（タスク 4.3、2026-10-25）
+
+### 撮った版と撮り方
+- 作業木 `4ce6b5e`（`origin/main` `0eb3fb9` の上）の `zensical serve`（http://127.0.0.1:8000/ukadoc-spec/ ）。serve は止めず、作業木で `prepare_site.py` は流していない。作業木の変更 0
+- `.kiro/specs/completed/site-look-plan/tools/shot.mjs` を読むだけで使った（1000×700、明・暗は `prefers-color-scheme` の `light`・`dark`。頁の palette が `media` で選ぶので、そのまま明・暗の表示になる）。直していない
+- 頁の終わりに近い `#environmentvariable` の 2 枚だけは、スクラッチに写した `S\tools43\shot-viewport.mjs` で撮り直した。`shot.mjs` との違いは `Page.captureScreenshot` の引数から `captureBeyondViewport: true` と `clip` を除いた 1 行だけ（ビューポートだけを撮る。3.4 の「誤りの見え方」と同じ手当て）
+
+### 撮った画面（`screenshots/`）
+
+| 画面 | 頁 | 位置 | 道具 |
+|---|---|---|---|
+| `after-sakura-script-light.png`・`after-sakura-script-dark.png` | `list/sakura-script/` | `#bang-lock-repaint` | `shot.mjs` |
+| `after-environmentvariable-light.png`・`after-environmentvariable-dark.png` | `list/sakura-script/` | `#environmentvariable` | `shot-viewport.mjs`（撮り直し） |
+| `after-pID-light.png`・`after-pID-dark.png` | `list/sakura-script/` | `#pID` | `shot.mjs` |
+| `after-q-script-light.png`・`after-q-script-dark.png` | `list/sakura-script/` | `#q-script` | `shot.mjs` |
+| `after-sstp-light.png` | `spec/sstp/` | `article .highlight:not(h4 + .highlight)`（`before-sstp-light.png` と同じ） | `shot.mjs` |
+
+- 9 枚すべてを開いて見た。ヘッダの紺の行は上の端だけ、ボタンのフォーカスの枠・コピーの知らせは無い（撮り直した後）
+
+### 撮り直し（9.11）
+- **2 枚**: `after-environmentvariable-light.png`・`after-environmentvariable-dark.png`。最初は `shot.mjs` のまま撮ったところ、明はヘッダが写らず上の端に紺の線だけが残り、暗は画面の下半分に同じ所（見出し「環境変数の記述例」と記述例）がもう一度写り、間に紺の行が入った（頁の終わりを越えた `captureBeyondViewport`＋`clip` の切り出し）。上の `shot-viewport.mjs` で撮り直し、2 枚ともヘッダが上の端に 1 つだけ写ることを見た
+- 撮り直した 2 枚はビューポートだけを撮ったので、右の端に頁と目次のスクロールバーが写る（ほかの 7 枚には無い）。記述例の見え方には関わらない
+- ほかの 7 枚は 1 回で撮れた（撮り直し 0）
+
+### 目標の画面との見比べ（9.6・9.7。記述例のタグと環境変数の見え方だけ）
+- `after-sakura-script-light` と `mock-sakura-script-C21-light`: 2 つの記述例の `\s[0]`・`\i[500]`・`\![lock,repaint]`・`\![unlock,repaint]` が、どちらも赤紫の太字に薄い地のかたまりで、地の文と分かれる。字の色・太さ・地の濃さは同じに見える。折り返しの位置も同じ（「アニメ / ーション」で折れる）
+- `after-sakura-script-dark` と `mock-sakura-script-C21-dark`: 同じタグが桃色の太字に薄い地で、紺の地の上で読める。目標の画面の桃色がわずかに赤寄りに見えるが、色の値は 4.2 で測った `#f48fb1`（線を満たす）で、同じ見え方の内とした
+- 途中の段: `C10-light` はタグが青の細字で地なし（言語の印だけの段）、`C19-light` は紺の太字、`C20-light` は赤紫の太字で地なし。今の画面は最後の段（C21: 赤紫の太字に薄い地）に当たる
+- 目標の画面との違いのうち、記述例の外のもの（項目の間の余白、見出しの帯や「対応:」の行の高さ）はほかの候補（C06 など）による違いで、比べない
+- 環境変数（`after-environmentvariable-*`）: 目標の画面は無い（9.7）。`%username`・`%ms`・`%mp`・`%mh`・`%me`・`%mt` の 6 つが、明は茶の太字、暗は橙の太字に薄い地で、赤紫・桃色のタグと色で分かれる。`mock-sakura-script-C17-light` は同じ位置に環境変数が写っていない画面で、その記述例の字の濃さ（細字の青）よりも濃い太字になっている。色の値と対比は 4.2 の表（明 8.41・7.24、暗 8.27・6.92）
+- 要件の規則による違い（試作の正規表現との違い。2.2 の「試作の規則との違い 13 か所」）:
+  - `after-pID-*`: `\p2`・`\p3` が数字まで 1 つのタグで、後ろの `3人めが`・`4人めが` の `3`・`4` は地の文。試作では `\p` だけがタグで `2`・`3` が地の文だった。下の `\p[2]`・`\p[3]` は角かっこまで 1 つのタグ
+  - `after-q-script-*`: `\q[その１,"script:\q[その２,script:その３はない]"]` が、引用符の中の `]` で切れずに全体で 1 つのタグ（2 行にまたがって同じ色）。試作では `"]` が地の文だった
+  - `\w9`（`wait/w.md`・`font/f-align.md`）も数字まで 1 つのタグ、`balloon-text/_-q.md` の囲みの中は地の文。どちらも画面は撮っていない（設計の一覧に無い）。数は 2.2 の表のとおり
+- 誤りは 1 つも写っていない（全頁の誤り 0。3.3）
+
+### `\` の見え方と言語の印の無いブロック（5.3・6.1・9.9）
+- `before-sstp-light.png` と `after-sstp-light.png`: 同じ位置・同じ大きさで、ブロックの地（コードの地）・字・ボタン・余白・目次まで見分けの付く違いは無い。言語の印の無いブロックに色は付かない
+- この最初のブロックには `\` が無いので、`\` を含むブロック（`#method_send-基本的なスクリプト再生サンプル` の `Script: \h\s[0]こんにちは。\w5\u\s[10]ご機嫌いかが？\e`）を、控え（8030）と作業木（8000）で `shot.mjs` で撮って見比べた（スクラッチの `S\after43\before-sstp-send-light.png`・`after-sstp-send-light.png`。spec には残さない）。どちらも `\` は `\` のまま見え、円記号にならない。2 枚に違いは無い
+- `list/sakura-script` の画面でも、タグの中の `\` は `\` のまま見える（明・暗）
+- C18 の箱・C09 の点線・ボタンと字の重なりは 3.3 の数（箱 255・点線 33・重なり 0）のとおり変わらず、画面でもボタンは字と重ならない
+
+### 幅 375（7.3）
+`shot.mjs` を出力 `-`（画面を残さない）で `list/sakura-script/`・`#bang-lock-repaint`・375×700 で流した。
+
+| 表示 | `scrollWidth`（`shot.mjs` の値） | `innerWidth` |
+|---|---|---|
+| 明 | 375 | 375 |
+| 暗 | 375 | 375 |
+
+- `shot.mjs` の `scrollWidth` は `document.documentElement.scrollWidth + innerWidth - clientWidth`（縦のスクロールバーの幅を足して `innerWidth` と同じ物差しにしたもの）。375 = 375 なので、`document.documentElement.scrollWidth` は `clientWidth`（3.3 で測った 360。スクロールバー 15 px を除いた幅）と同じで、横のはみ出しは無い
+
+### 流した式（Git Bash、doc_edit の中で）
+```sh
+S=/c/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/fc194b1e-28b1-4328-9e08-7d8780051c15/scratchpad
+T=.kiro/specs/completed/site-look-plan/tools/shot.mjs; O=.kiro/specs/site-look-sakura-script-highlight/screenshots; U=http://127.0.0.1:8000/ukadoc-spec
+for s in light dark; do
+ for p in "sakura-script:#bang-lock-repaint" "environmentvariable:#environmentvariable" "pID:#pID" "q-script:#q-script"; do
+  n=${p%%:*}; sel=${p#*:}; node $T $U/list/sakura-script/ "$sel" $O/after-$n-$s.png $s
+ done
+done
+node $T $U/spec/sstp/ "article .highlight:not(h4 + .highlight)" $O/after-sstp-light.png light
+# 撮り直し: ビューポートだけを撮る写し
+mkdir -p $S/tools43 && cp $T $S/tools43/shot-viewport.mjs
+sed -i "s/format: 'png', captureBeyondViewport: true, clip: { x: 0, y, width, height, scale: 1 },/format: 'png', \/\/ 4.3: ビューポートだけを撮る（頁の終わりで clip がヘッダを二重に写すため）/" $S/tools43/shot-viewport.mjs
+for s in light dark; do node $S/tools43/shot-viewport.mjs $U/list/sakura-script/ "#environmentvariable" $O/after-environmentvariable-$s.png $s; done
+# \ の見え方（スクラッチ）
+node $T http://127.0.0.1:8030/spec/sstp/ "#method_send-基本的なスクリプト再生サンプル" $S/after43/before-sstp-send-light.png light
+node $T $U/spec/sstp/ "#method_send-基本的なスクリプト再生サンプル" $S/after43/after-sstp-send-light.png light
+# 幅 375
+for s in light dark; do node $T $U/list/sakura-script/ "#bang-lock-repaint" - $s 375 700; done
+```

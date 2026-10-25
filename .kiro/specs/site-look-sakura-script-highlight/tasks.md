@@ -97,7 +97,7 @@
   - `verification.md` の「対比」の節に、表のすべての所の色・地・対比、変数で出せない 6 色とその対比、切り替え・画面だけ・検索の強調の結果が書いてあり、すべて線を満たすか、開発者の判断を待つ状態で止まっている
   - _Requirements: 3.1, 3.2, 3.5, 3.6, 3.7, 4.1, 4.2, 7.1, 9.8_
 
-- [ ] 4.3 変更の後の画面を撮り、目標の画面と見比べ、幅 375 を確かめる
+- [x] 4.3 変更の後の画面を撮り、目標の画面と見比べ、幅 375 を確かめる
   - プレビューが動いていなければ、`prepare_site.py` → `build --strict` → `serve` の順に起動する
   - 設計の「VerificationRecord」の画面の一覧のとおり、`shot.mjs`（読むだけで使う）で `after-sakura-script-*`・`after-environmentvariable-*`・`after-pID-*`・`after-q-script-*` を明・暗で、`after-sstp-light.png` を撮って spec の `screenshots/` に置く。二重に重なった跡があれば撮り直し、枚数とわけを控える
   - 記述例のタグと環境変数の見え方だけを、目標の画面（`mock-sakura-script-C21-*`、途中の段の `C10-*`・`C19-*`・`C20-*`、環境変数の濃さの `C17-light`）と見比べ、`\p2`・`\w9` の番号や囲みの中の地の文の違いを要件の規則による違いとして書く。`before-sstp-light.png` と `after-sstp-light.png` を見比べ、`\` が `\` のまま見えることを見る
