@@ -85,3 +85,4 @@
 - **遊びの条件**: 字の大きさ・行間を変えない。絵は飾りで、読み上げに出さない。本文の読み取りを妨げない
 - **参考の試作**: `.kiro/specs/completed/site-look-plan/mockups/extra.css` の C26（`html[data-slp~="C26"]` の下の使い捨ての指定）、`mockups/mockup.js` の `slp-note-head` を付ける分岐、`mockups/README.md` の「判断の答えの付け足しを受けた試作」と「続く答えを受けた試作」。写さずに書き直してよい
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない
+- **続きの PR の説明**（開発者の指示、2026-10-25）: PR の説明に、この PR が UKADOC の見た目を旧サイト並みの見やすさに近づける一連の PR（`site-look-plan` の決定を切った 6 本）の 1 本であり、続きの PR を順に出すことを書く。一連の PR とその並びは `.kiro/steering/roadmap.md` の「PR の単位」と「Specs」による（今の見込み: `site-look-dark-link-color` → `site-look-lists` と `site-look-sakura-script-highlight` → `site-look-manual-and-tables` と `site-look-note-icon` → `site-look-sstp-playback`）。PR を出すときの roadmap に合わせて、出し済みの PR（番号）・この PR・この後に出す PR を短く並べ、メンテナが全体の中のどこにあるかを分かるようにする（最後の PR では、これで一連が終わることを書く）。あわせて、この PR だけで完結していて、続きを待たずにマージしてよいこと（先に出した PR に中身で依るときは、その PR を名指しする）を書く

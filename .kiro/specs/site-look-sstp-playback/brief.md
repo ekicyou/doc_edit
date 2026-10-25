@@ -87,3 +87,4 @@
 - **遊びの条件**（`candidates.md` の C13）: ボタンが記述例の読み取りとコピーを妨げない。「読み込み」の前はボタンを出さない。SSP の無い環境・狭い画面では、何も出ないか、邪魔にならない。明るい表示とダークモードの両方で、ボタンが読める
 - **参考**: 試作は無い。論点の元は `.kiro/specs/completed/site-look-plan/candidates.md` の C13と design.md の Security Considerations
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない。3 種類のボタンを 1 つの PR にするか分けるかは、設計で決めてよい
+- **続きの PR の説明**（開発者の指示、2026-10-25）: PR の説明に、この PR が UKADOC の見た目を旧サイト並みの見やすさに近づける一連の PR（`site-look-plan` の決定を切った 6 本）の 1 本であり、続きの PR を順に出すことを書く。一連の PR とその並びは `.kiro/steering/roadmap.md` の「PR の単位」と「Specs」による（今の見込み: `site-look-dark-link-color` → `site-look-lists` と `site-look-sakura-script-highlight` → `site-look-manual-and-tables` と `site-look-note-icon` → `site-look-sstp-playback`）。PR を出すときの roadmap に合わせて、出し済みの PR（番号）・この PR・この後に出す PR を短く並べ、メンテナが全体の中のどこにあるかを分かるようにする（最後の PR では、これで一連が終わることを書く）。あわせて、この PR だけで完結していて、続きを待たずにマージしてよいこと（先に出した PR に中身で依るときは、その PR を名指しする）を書く
