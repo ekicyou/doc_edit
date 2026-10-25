@@ -13,11 +13,11 @@
 本文の主語は 2 つある。「UKADOC のサイト」は、この spec の変更を入れた後の公開サイト（とそのプレビュー）の見え方を指す。「site-look-list-items」は、この spec の作業（ukadoc-spec への変更・確かめ・記録）を指す。
 
 言葉の決まり（この文書の中で）:
-- **まとめ頁**: `descript/<名前>/`・`list/<名前>/`・`spec/<名前>/` のディレクトリを 1 頁にまとめた頁（今は 20 頁。`spec/` の 6 頁を含む。OPEN QUESTION 3）。`manual/`・`dev/`・`memo/` の頁、`spec/` の 1 ファイルの頁（`spec/dll`・`spec/headline`・`spec/plugin`）、トップの頁はまとめ頁でない（以下「読み物の頁」）
+- **まとめ頁**: `descript/<名前>/`・`list/<名前>/`・`spec/<名前>/` のディレクトリを 1 頁にまとめた頁（今は 20 頁。`spec/` の 6 頁を含む）。`manual/`・`dev/`・`memo/` の頁、`spec/` の 1 ファイルの頁（`spec/dll`・`spec/headline`・`spec/plugin`）、トップの頁はまとめ頁でない（以下「読み物の頁」）
 - **項目**: まとめ頁の中で、`## 一覧` に並ぶ 1 つの `.md`（頭の説明の `introduction_*` を含む）。**項目名**はその頭の見出し
 - **分類**: まとめ頁の中で、`## 一覧` に並ぶサブディレクトリ。**分類の見出し**はその `index.md` の頭の見出し
 - **注意書きの節**: 原稿の `notes_*.md` の単位。見出しの id が `notes_` で始まる
-- **記述例の見出し**: まとめ頁・読み物の頁を問わず、本文の 4 段目の見出し（`h4`）のうち、直後にコードブロックが続くもの（brief の C18 の当て先。仮定。OPEN QUESTION 4）
+- **記述例の見出し**: まとめ頁・読み物の頁を問わず、本文の 4 段目の見出し（`h4`）のうち、直後にコードブロックが続くもの（brief の C18 の当て先。題が「記述例」でないもの ― `descript/` の頭の説明・`spec/dll` の関数の宣言・`spec/sstp` の要求と応答の例 ― も含める）
 
 目標の画面は `.kiro/specs/completed/site-look-plan/screenshots/` の `mock-sakura-script-C01-*.png`・`mock-descript-ghost-C02-*.png`・`mock-sakura-script-C03-*.png`・`mock-sakura-script-C09-*.png`・`mock-sakura-script-C18-*.png`（さくらスクリプトの頁の外の記述例は `mock-propertysystem-C25-*.png`）の明・暗である。これらの画面には採ると決まったほかの候補（タグの色 C10・C20、対応の札 C06 など）も入っているので、見比べるのはこの spec の 5 つの候補の部分だけである。
 
@@ -35,7 +35,7 @@
   - 原稿（`.md`）・`.nav.yml`・`requirements.txt`・Zensical の版、`mkdocs.yml`（`markdown_extensions` の `pymdownx.highlight` は `site-look-sakura-script-highlight` が足す）
   - テーマの色そのものと、暗い表示のリンクの色そのもの（`site-look-dark-link-color`）
 - **Adjacent expectations**:
-  - 土台は ukadoc-spec の `origin/main`（いまは `afb2152`）。`site-look-dark-link-color` の PR #10（暗い表示のリンクを `#8fb4e8` にする）はマージ待ちで、作業木はそれを前提にしない。どちらが先にマージされても効くようにする
+  - 土台は ukadoc-spec の `origin/main`（いまは `afb2152`）。`site-look-dark-link-color` の PR #10（暗い表示のリンクを `#8fb4e8` にする）はマージ待ちで、マージされる前提で進めてよい（開発者、2026-10-25）。暗い表示の帯の上のリンクは PR #10 の色で判定する。作業木は `origin/main` から作って PR #10 のコミットを入れず、どちらが先にマージされてもぶつからないようにする
   - `site-look-sakura-script-highlight` は、コードブロックの HTML を今の形（`div.highlight > pre > code`）から着色の後の形（`pre.highlight > code`）に変える。C09・C18 は、どちらの形にも同じく効くようにし、どちらが先に入ってもよい。記述例の箱の地の上のタグの色の対比は、その spec が測る
   - `site-look-list-markers` は、この spec の項目名の帯と分類の帯が注意書きの節の見出しを除くことに依る（C04 の箱）。同じまとめ頁に目印を付けるので、注意書きの節を見分ける書き方と目印の付け方をそろえられる形にする
   - `site-look-manual-files` は、この spec の項目名の帯と同じ見え方を `manual/` のファイル名に使う（C22）
@@ -49,7 +49,7 @@
 #### Acceptance Criteria
 1. While まとめ頁を見ているとき, the UKADOC のサイト shall 各項目の項目名を、左のテーマの色の太い線・下の細い線・薄い地の帯で表示する（目標の画面 `mock-sakura-script-C01-light.png`・`mock-sakura-script-C01-dark.png` の項目名の帯）
 2. While まとめ頁を見ているとき, the UKADOC のサイト shall 帯の中の項目名の、コードの字で書いた部分の灰色の地を消し、字を帯の地の上に直接表示する
-3. The UKADOC のサイト shall 項目名の帯を、見出しの段（`h2`・`h3`・`h4`）や前の区切りの線の有無に依らず、すべての項目に付ける。分類の最初の項目（前に区切りの線が無い。`list/sakura-script` で 13 個）、`spec/` のまとめ頁の項目（段が `h2`）、深い分類の中の項目（`descript/shell-surfaces`・`list/propertysystem` で段が `h4`）にも付ける（仮定: 項目名は見出しの段でなく、まとめ頁の組み立ての役で決める。OPEN QUESTION 1）
+3. The UKADOC のサイト shall 項目名の帯を、見出しの段（`h2`・`h3`・`h4`）や前の区切りの線の有無に依らず、すべての項目に付ける。分類の最初の項目（前に区切りの線が無い。`list/sakura-script` で 13 個）、`spec/` のまとめ頁の項目（段が `h2`）、深い分類の中の項目（`descript/shell-surfaces`・`list/propertysystem` で段が `h4`）にも付ける（項目名と分類の見出しは、見出しの段でなく、まとめ頁の組み立ての役で決める。頭の説明 `introduction_*` も項目である）
 4. If 見出しが注意書きの節の見出しであるとき, the UKADOC のサイト shall その見出しに項目名の帯を付けない
 5. If 見出しが分類の見出し、または項目の中の節の見出し（例: `spec/sstp` の「requestサンプル」、記述例の見出し）であるとき, the UKADOC のサイト shall その見出しに項目名の帯を付けない
 6. Where 頁が読み物の頁であるとき, the UKADOC のサイト shall 見出しを今のままの見え方で表示する
@@ -72,7 +72,7 @@
 2. The UKADOC のサイト shall 分類の帯の白い字を、明・暗の表示とも帯の地に対して 7:1 以上の対比で表示する（試作の測りでは明・暗とも 8.31:1）
 3. If 見出しが注意書きの節の見出しであるとき, the UKADOC のサイト shall その見出しに分類の帯を付けない（`list/sakura-script` の頁の頭の 2 つ）
 4. If 見出しが項目名であるとき（`spec/` のまとめ頁の、段が `h2` の項目名を含む）, the UKADOC のサイト shall その見出しに分類の帯を付けない
-5. The UKADOC のサイト shall 分類の中の分類（`descript/shell-surfaces` で 3 個・`list/propertysystem` で 2 個の、段が `h3` の分類の見出し）にも同じ分類の帯を付ける（仮定。OPEN QUESTION 2）
+5. The UKADOC のサイト shall 分類の中の分類（`descript/shell-surfaces` で 3 個・`list/propertysystem` で 2 個の、段が `h3` の分類の見出し）にも同じ分類の帯を付ける
 6. The UKADOC のサイト shall 分類の帯の中のコードの字を帯の地に対して 4.5:1 以上で、見出しの横のリンクの印（¶）をふだんもホバー・フォーカスのときも 3:1 以上で表示する（テーマのホバーの藍 `#526cfe` は紺の地に約 1.95:1 しかない）
 7. Where 頁が読み物の頁であるとき, the UKADOC のサイト shall 段が `h2` の見出しを今のままの見え方で表示する（`manual/` などの節を帯にしない）
 
@@ -102,7 +102,7 @@
 **Objective:** As a 明・暗のどちらでも UKADOC を読むゴースト制作者, I want 帯や箱の上に来たリンクと字が読めること, so that 見た目の直しのせいで読めない所が増えない（D16 ダークモード。`site-look-dark-link-color` からの申し送り）
 
 #### Acceptance Criteria
-1. While 明・暗のどちらかの表示で項目名の帯の上のリンク（`descript/balloon` の 26 個・`list/sakura-script` の 5 個の項目名の中のリンク）を見ているとき, the UKADOC のサイト shall リンクの字を帯の地に対して 7:1 以上の対比で表示する（本文のリンクの線。明るい表示の紺 `#1f4e8c` はギャップ分析の見込みで約 7.1:1。仮定: 暗い表示のリンクの色は PR #10 の `#8fb4e8` として測る。OPEN QUESTION 5）
+1. While 明・暗のどちらかの表示で項目名の帯の上のリンク（`descript/balloon` の 26 個・`list/sakura-script` の 5 個の項目名の中のリンク）を見ているとき, the UKADOC のサイト shall リンクの字を帯の地に対して 7:1 以上の対比で表示する（本文のリンクの線。明るい表示の紺 `#1f4e8c` はギャップ分析の見込みで約 7.1:1。暗い表示のリンクの色は PR #10 の `#8fb4e8` として判定し、PR #10 の無い作業木の紺 `#1f4e8c` での数は参考として記録する）
 2. When 明・暗のどちらかの表示で項目名の帯の上のリンクにポインタを載せたとき、またはキーボードでフォーカスしたとき, the UKADOC のサイト shall そのときの字を帯の地に対して 3:1 以上の対比で表示する
 3. If 帯・箱の上のリンクまたはそのホバー・フォーカスの字が 6.1・6.2 の線に満たないとき, the site-look-list-items shall その帯・箱の上だけ、線を満たす字の色にする（ギャップ分析の見込みでは、暗い表示の帯の上で、リンクは約 5.5:1、ホバーは約 2.8:1 で満たさない）
 4. When 記述例の箱または分類の帯の中にリンクがあるとき, the site-look-list-items shall その数を数えて記録し、記述例の箱の中のリンクはコードの地のリンクの線（4.5:1 以上、ホバー・フォーカスは 3:1 以上）で、分類の帯の中のリンクは 7:1 以上で測る（今はどちらも 0 個）
@@ -135,10 +135,10 @@
 
 #### Acceptance Criteria
 1. The site-look-list-items shall ukadoc-spec の中で `assets/extra.css` と、効く所を絞る目印が要るときだけ `scripts/prepare_site.py` を変え、原稿（`.md`）・`.nav.yml`・`mkdocs.yml`・`requirements.txt`・Zensical の版を変えない
-2. The site-look-list-items shall `assets/extra.css` のこの spec の指定を、ファイルの末尾に塊として足し、塊ごとの注を `/* site-look-list-items: <何の指定か> */` の短い 1 行にとどめる（説明・測りの数・わけは spec の記録に書く）
-3. The site-look-list-items shall 変更を、ukadoc-spec の `origin/main` の最新から作った PR の単位の作業木 `.worktrees/site-look-visibility/`（ブランチ `site-look-visibility`）で書き、`site-look-dark-link-color` の PR #10 の変更を前提にしない
+2. The site-look-list-items shall `assets/extra.css` のこの spec の指定を、ファイルの末尾に塊として足し、塊ごとの注を `/* site-look-list-items: <何の指定か> */` の短い 1 行にとどめる（頭は PR の単位の名前でなく spec 名にし、単位の中の 6 本の塊を見分けられるようにする。説明・測りの数・わけは spec の記録に書く）
+3. The site-look-list-items shall 変更を、ukadoc-spec の `origin/main` の最新から作った PR の単位の作業木 `.worktrees/site-look-visibility/`（ブランチ `site-look-visibility`）で書き、`site-look-dark-link-color` の PR #10 のコミットを入れない（暗い表示のリンクの色だけは、PR #10 がマージされる前提で判定する。6.1）
 4. Where 目印を足したとき, the site-look-list-items shall 見出しの id・見出しの数の検査・リンクの書き換え・サイトに置く生の Markdown 原稿を今のまま保ち、組み立ての処理の一覧の検査を通す
 5. The site-look-list-items shall この spec の完了の前に、Build Gate（`prepare_site.py` と `zensical build --strict` が、どちらも失敗なく終わる）と規約 Gate を通す
-6. The site-look-list-items shall この spec の完了では PR を作らない（PR の単位 `site-look-visibility` の最後の spec の完了で、単位の 6 本をまとめて 1 回だけ作る。そのときの PR の説明は brief の「続きの PR の説明」に従う）
+6. The site-look-list-items shall この spec の完了では PR を作らない（PR の単位 `site-look-visibility` の最後の spec の完了で、単位の 6 本をまとめて 1 回だけ作る。そのときの PR の説明は brief の「続きの PR の説明」に従い、暗い表示の帯の上のリンクの読みやすさが PR #10 に依ることを名指しする）
 7. If 作業の途中に、ukadoc-spec の `origin/main` が同じ `assets/extra.css` を変えて進み（PR #10 のマージなど）、変更とぶつかったとき, the site-look-list-items shall `origin/main` に追いつき、この spec の指定と、ほかの spec が入れた指定の両方が残るようにする
 8. The site-look-list-items shall 旧サイトの見た目の指定・画像・スクリプトや試作の指定を写さず、本番の書き方で書き直す（試作の指定は `html[data-slp~="Cxx"]` の下の使い捨ての書き方である）
