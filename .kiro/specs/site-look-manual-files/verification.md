@@ -47,7 +47,7 @@ manual の頁の数（控え）:
 | 名前だけ | `- **[updates2.dau](update.md)**` | `- **[updates2.dau](update.md)**{: .manual-item }` |
 | 行の終わりの「`:`」 | `- **sstp.png**:` | `- **sstp.png**{: .manual-item }` |
 | `\*` を含む名前 | `- **[surfaces\*\*.txt](x.md)**: SSP専用。` | `- **[surfaces\*\*.txt](x.md)**{: .manual-item } SSP専用。` |
-| `\` と名前の一部のリンク | `- **(myghost)\[delete.txt](x.md)**: 説明` | `- **(myghost)\[delete.txt](x.md)**{: .manual-item } 説明` |
+| `\` と名前の一部のリンク | `- **(myghost)\\[delete.txt](x.md)**: 説明` | `- **(myghost)\\[delete.txt](x.md)**{: .manual-item } 説明` |
 | 名前の終わりの `\*` | `- **foo\***: 説明` | `- **foo\***{: .manual-item } 説明` |
 | 字下げした `※1,※2` | `    - **※1,※2**: 説明` | 変わらない |
 | 形に合わない（空白） | `- **名前** 説明` | 変わらない |
