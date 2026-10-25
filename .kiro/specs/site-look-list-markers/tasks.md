@@ -68,7 +68,7 @@
   - `verification.md` の「配り」の節に、配られた `extra.css` に 3 つの塊が入っていることを確かめた結果が書いてある
   - _Requirements: 8.1_
 
-- [ ] 4.3 箱・札の字とリンクと枠の対比、切り替え、印刷の指定、検索の強調を明・暗で測る
+- [x] 4.3 箱・札の字とリンクと枠の対比、切り替え、印刷の指定、検索の強調を明・暗で測る
   - プレビューが動いていなければ、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
   - 設計の ContrastProbe の測り方（`getComputedStyle` の色と、要素から `html` までの地を重ねた色から WCAG 2.x の対比）で、「測る所と線」の表の所をすべて明・暗で測る。`CROW` の札は `descript/ghost` の `#charset` でも測る
   - ホバーは本当にポインタを載せて、フォーカスはフォーカスの模擬を入れて `focus()` して、アニメーションが終わってから測る
