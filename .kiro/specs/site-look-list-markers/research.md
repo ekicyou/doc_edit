@@ -185,3 +185,109 @@ brief の「名前、または名前と空白と数字の版」は、「版」�
 3. **注意書きの箱の中のリンクの線（［仮定 A3］）**: requirements は `site-look-list-items` の帯の上のリンクと同じく明・暗とも 7:1 とした。試作の箱の地（コードの地）では暗い表示が 6.69:1 で届かない。7:1 を守って箱の地か箱の中のリンクの色を変えるか、箱の中は 4.5:1 でよいとするか
 4. **既定値の値の字（［仮定 A5］）**: 「本文の色に近づける」を 7:1 以上と読んだ。字の大きさ（試作は `.85em` で小さい）も本文と同じにするか、小さいまま色だけ濃くするか
 5. **箱の枠の線の対比（［仮定 A2］）**: brief に無い 3:1（文字でないものの線）を足した。要るか
+
+# 設計の調査（2026-10-25、`/kiro-spec-design`）
+
+## Summary
+- **Feature**: `site-look-list-markers`
+- **Discovery Scope**: Extension（既存の `prepare_site.py` の後処理と `extra.css` への追加。`design-discovery-light.md` の手順）。新しい依存は無く、外部の調べ（WebSearch）はしなかった
+- **土台の変化**: ギャップ分析の後に `site-look-list-items` の PR #11 がスクワッシュマージされ、ukadoc-spec の `origin/main` は `d3154d8` になった（`46439c8` の上に PR #11 の 1 コミット）。この spec は、そこから作る自分の作業木 `.worktrees/site-look-list-markers/`（ブランチ `site-look-list-markers`）で書く（PR の単位の改め。ギャップ分析の頭の「`.worktrees/site-look-visibility/` を広げる」は、これに読み替える）。数は `d3154d8` で数え直し、ギャップ分析の数と 1 つも違わなかった
+- **Key Findings**:
+  - 試作の `slp_mark()` と同じ形の後処理（名前は `bundle-<役>`）を `d3154d8` の写しに入れると、目印は対応の段落 1640・既定値の段落 423・注意書きの包み 16・札 2719（`SSP` 1606・`Materia` 446・`CROW` 433・`Ninix` 234）で、要件の数と合う。全 40 頁で、見出しの id の並び・`a.headerlink`・`md-nav__link`・`article` の中の `hr` の数・本文の字（`article` の中の字を空白を詰めて比べた）が変更の前と同じ、本文への `{: `・`{#` の漏れ 0、`_raw/` は同じ。`prepare_site.py` と `zensical build --strict` は exit 0
+  - 既定値の字下げを `.md-typeset .bundle-default`（詳細度 0,2,0）で書くと、C02 の `.md-typeset:has(.bundle-item) p`（0,2,1。`:has()` は中の `.bundle-item` の詳細度を持つ）に負けて字下げが消える。`.md-typeset p.bundle-default`（0,2,1）にし、末尾に書いて勝たせる。`margin-left` だけを書くので C02 の上下の詰めは残る
+  - 暗い表示で箱の中のリンク（`#8fb4e8`）を 7:1 以上にできる箱の地は、頁の地 `#1e2129`（7.55）との違いが 1.04〜1.08 の色しか無く、地の違いは目に見えない。暗い表示は箱の地を敷かず（頁の地のまま）、点線の枠と中央寄せの見出しで箱に見せる
+
+## 読んだもの・使った決まり
+- `requirements.md`・`brief.md`・この `research.md` のギャップ分析（6 節の決定を含む）、steering の `product.md`・`tech.md`・`structure.md`・`roadmap.md`・`workflow.md`（PR の単位・作業木・後始末・タスク生成ルール）、`ukadoc-spec/CLAUDE.md`
+- 手本: `.kiro/specs/completed/site-look-list-items/design.md`（構成・詳しさ・塊と差分の書き方）・`verification.md`（測りの式・数え方・画面の撮り方）・`research.md` の「設計の調査」
+- 試作: `.kiro/specs/completed/site-look-plan/mockups/extra.css`（C04・C06・C07・C17）・`mockups/worktree.diff`（`slp_mark()`・`slp_bw()`）、目標の画面 `screenshots/mock-sakura-script-C04-*`・`C06-*`・`C17-light`・`mock-descript-ghost-C07-*`。写さずに書き直した
+- スキル: `kiro-spec-design`（`design-principles.md`・`design-discovery-light.md`・`design-synthesis.md`・`design-review-gate.md`）、`kiro-validate-design`（`design-review.md`）。開発者の決まり「公開 CSS の注は塊ごとに 1 行、説明は spec の記録へ」に従い、指定のわけは `design.md` の「指定のわけ」に書いた
+
+## 確かめ方（使い捨ての写し）
+- 置き場: Claude のスクラッチ（`C:\Users\maz-o\AppData\Local\Temp\claude\C--home-maz-git-doc-edit\490c6014-b3f2-4a44-9cba-1fe20055985b\scratchpad\list-markers-design\`）の下。`git -C ukadoc-spec archive HEAD`（`d3154d8`。`origin/main` と同じ）を 2 つ書き出した。ukadoc-spec とどの作業木にも何も書いていない
+  - `base`: 変更なし（変更の前）
+  - `exp`: `design.md` の「Modified Files」と同じ中身（`prepare_site.py` の差分と `extra.css` の 3 つの塊）
+- どちらも `C:\home\maz\git\doc_edit\.venv\Scripts\python scripts/prepare_site.py` と `zensical build --strict` が exit 0（「No issues found」）
+- 数え方: `tools/count.py`（標準の `html.parser` で 2 つの `_site/` の全 `index.html` を読み、目印・札・漏れ・id・¶・目次・`hr`・本文の字を比べる。読むだけ）。札にならない部分は `exp/_site_src/` の対応の行を読んで数えた
+- 配りと画面: `exp/_site/` を `python -m http.server 8021` で配り（頁の道は `/` から）、`shot.mjs`（読むだけ）で明・暗の画面と幅 375 を撮った。終わった後に止めた。画面は `shots/`（スクラッチ。記録には写さない）
+- 対比: `tools/contrast.py`（WCAG 2.x の相対輝度の式。半透明の色は地に重ねてから測った。テーマの変数の値は `palette.*.min.css` の値）。ブラウザでの測りは実装で行い、それを正とする
+
+## Research Log
+
+### 目印の数と変わらないこと（5.1〜5.5・5.7・7.2・8.2・8.3）
+- **Context**: ギャップ分析の Research Needed の 1・3・5 つ目
+- **Findings**（`d3154d8` の写し。40 頁）:
+  - 頁ごとの数は `design.md` の MarkerCheck の表。合計は対応の段落 1640・既定値の段落 423・注意書きの包み 16・札 2719（名前ごとの内訳は上）
+  - 注意書きの包みの最初の子は、どれも節の見出し（`h2` 2・`h3` 12・`h4` 2）。`h4` の 2 個の id は `notes_sound_meta`・`notes_sound_propertyset`
+  - 包みの中のリンクは 58 個で、うち ¶ が 16 個、本文のリンクは 42 個（`list/sakura-script` 36・`list/propertysystem` 6）。包みの中の `code` は 20 個
+  - `<strong>既定値:</strong>` で始まる段落で目印の無いもの 0。`<strong>対応:</strong>` で目印の無いものは `dev/nar` の 1 個だけ（読み物の頁。要件どおり）。札で対応の段落の外にあるもの 0
+  - 変わらないもの: 全 40 頁で、`article` の中の見出しの id の並び、`class="headerlink"`・`class="md-nav__link"` の数、`article` の中の `hr`（全体 1921）、本文の字（`article` の中の字。空白を詰めて比べた）が変更の前と同じ。`list/sakura-script` は id 649（`notes_` 14）・¶ 649・`md-nav__link` 832・`href="#notes_` 89、`list/propertysystem` は id 206（`notes_` 2）・¶ 206・`md-nav__link` 382・`href="#notes_` 12 で、前後とも同じ
+  - `_site_src/` で違うのは、目印の付く 15 頁の `index.md` と `assets/extra.css` だけ（目印の無い `spec/` の残りの 5 頁は前と同じ）。`_raw/` は同じ
+  - 見出しだけの単位の後ろに線を入れない決まり（`heading_only`）は、包んだ単位の字の頭が `<div` になっても、注意書きの節はどれも本文を持つので変わらない（`hr` の数が同じ）
+- **Implications**: 試作の形のまま採れる。`add_markers()` は `rewrite_links()` の後、`---` でつなぐ前に通す
+
+### 札にならない部分（2.4・8.7）
+- `exp/_site_src/` で、札にならない部分を含む対応の行は 5 通り・7 行（`Materia廃止仕様 / SSP` 3・`Materia廃止仕様 / SSP 複数指定は2.4.26～ ダークモードは2.8.56～` 1・`SSP 2.4 / Ref1以降は2.4.85` 1・`Materia / SSP / CROW / *※推奨　SSP2.5.05以上*` 1・`Materia / SSP / CROW / *※推奨　SSP2.6.72以上*` 1）。札にならない部分は `Materia廃止仕様`・`Ref1以降は2.4.85`・`*※推奨…*` の 3 種で、同じ行のほかの部分は札になる
+- 打ち消しの字（`非対応`・`未対応`・`廃止`）を名前の後ろに持つ「形に合う部分」は 0。打ち消しの確かめ（2.10）を入れても札の数は 2719 のまま
+- 一語ずつの確かめ（`baseware()` に直に渡した）: `SSP`・`SSP 2.8.40`・`SSP (2.3.83)`・`SSP 2.7 RC1` は名前だけ札、`Materia廃止仕様`・`SSP 非対応`・`*※推奨　SSP2.5.05以上*`・`SSPX`・`Ninix-aya` は札にならない。コードブロックの中の `**対応:**` は字を変えず目印も付かない。`<br />` で続く既定値の段落は、最後の行の後ろに目印が付く
+
+### 既定値の段落の字（3.2・3.3）
+- 既定値の 423 段落に、斜めの字になる `*…*`・`_…_` は無い（`_` を含む 4 段落は語の中の `_` で、強調にならない）。既定値の段落の中のリンクは 2 個（`descript/shell-surfaces`）
+- 試作は段落を `.85em`・控えめの色にしていた。本番は段落の字の色と大きさに触れず、札（`strong:first-child`）だけを控えめの色・`.75em`（試作の `.85em × .9em` ≒ `.765em` に近い）にする
+
+### 箱の地と対比（1.6・1.7）
+- 見込み（`contrast.py`。地は不透明の色、字は地に重ねて測った）:
+
+| 箱の地 | 表示 | リンク | ホバーの藍 `#526cfe` | 本文の字 | 枠（控えめの色）と箱の地 | 箱の地と頁の地 |
+|---|---|---|---|---|---|---|
+| コードの地 `#f5f5f5` | 明 | 7.62 | 3.90 | 15.00 | 4.52 | 1.09 |
+| 地なし（白） | 明 | 8.31 | 4.26 | 16.10 | 4.61 | 1.00 |
+| コードの地 `#272a35`（試作） | 暗 | **6.69** | 3.35 | 8.02 | 4.59 | 1.13 |
+| `hsl(225,15%,17%)` `#252832` | 暗 | 6.90 | 3.45 | 8.24 | 4.67 | 1.09 |
+| `hsl(225,15%,16.5%)` `#242730` | 暗 | 7.01 | 3.51 | 8.35 | 4.71 | 1.08 |
+| `hsl(225,15%,15.5%)` `#22252d` | 暗 | 7.23 | 3.62 | 8.57 | 4.79 | 1.04 |
+| 地なし（頁の地 `#1e2129`） | 暗 | 7.55 | 3.78 | 8.89 | 4.91 | 1.00 |
+| `hsl(225,15%,12%)` `#1a1c23`（頁より暗い） | 暗 | 7.97 | 3.99 | 9.30 | 5.04 | 1.06 |
+
+- 枠と頁の地: 明 4.61・暗 4.91（どの地でも 3:1 を越える）
+- 暗い表示で 7:1 に届く明るい側の地は `#242730` までで、頁の地との違いは 1.08 以下。暗い側も 1.06 ほどで、どちらも地の違いとしては見えない
+- 地なしにすると、箱の中のコードの字（`code` の地 `#272a35`）が箱の地から浮いて見える。明るい表示は箱の地とコードの地が同じ `#f5f5f5` で、コードは字の形と色だけで分かる（目標の画面と同じ）
+- **Implications**: 明るい表示はコードの地（テーマの変数）、暗い表示は地なし（`@media screen` の中で `transparent`）にした。テーマの変数で出せない色を増やさない。OPEN QUESTION 1 に残す
+
+### 札の色（2.2・2.6・4.1）
+- 明るい表示の札（C17 の色。白地）: `Materia` `#6b4500` 8.48・`SSP` `#185a1c` 8.34・`CROW` `#5a1a85` 10.93・`Ninix` `#0d47a1` 8.63
+- 暗い表示の札（C06 の色。頁の地 `#1e2129`）: `Materia` `#ffc260` 10.06・`SSP` `#81c784` 7.99・`CROW` `#ce93d8` 6.73・`Ninix` `#90caf9` 9.19
+- 枠は `currentColor` なので字と同じ対比
+- 札は対応の段落（頁の地の上）にしか出ないので、箱の地の上の札は無い
+- 明るい表示の色を素の指定（表示の条件なし）に置き、暗い表示の色を `@media screen` の中の `[data-md-color-scheme="slate"]` に置くと、試作の 2 段（C06 の色を C17 で上書き）が 1 段になり、暗い表示のまま印刷すると明るい表示の色になる（6.2）
+
+### 検索の強調（7.1）
+- テーマの強調（明 `rgba(255,255,0,.5)`・暗 `rgba(66,135,255,.3)`、字は `inherit`）を頁の地に重ねた地の上の札の字: 明 7.89〜10.34、暗 4.34（`CROW`）〜6.49。どれも見えて読める見込み（実装で `?h=SSP` などで目で見て測る）
+- 箱の中の強調はテーマのまま（明はコードの地、暗は頁の地の上）
+
+### 画面（8.4・8.5・7.3）
+- 写しの画面（スクラッチの `shots/`）で、`#notes_escape`（箱 2 つ）・`#bang-lock-repaint`（`Materia / SSP / Ninix` の札）・`descript/ghost` の `#charset`（`SSP / CROW`。`CROW` の札が写る）・`list/propertysystem` の `#notes_sound_meta`（段が `h4` の箱）を明・暗で見た。目標の画面の 4 つの候補の部分と同じ形で、既定値の値の字は本文と同じ色・大きさになった
+- 幅 375: `list/sakura-script`（明）・`descript/ghost`（暗）で `scrollWidth` = `innerWidth` = 375
+
+## Architecture Pattern Evaluation
+| Option | Description | Strengths | Risks / Limitations | Notes |
+|--------|-------------|-----------|---------------------|-------|
+| A 後処理を 1 つ足す | `main()` で単位ごとに `add_markers()` を通し、`extra.css` の末尾に塊を足す | 試作で確かめた形。差分が小さい | `site-look-definition-tables` が同じ行を触るとぶつかる | 採る（ギャップ分析の推す道） |
+| B 別のファイル | `scripts/` に目印の module を置く | 組み立てと目印が分かれる | ファイルが増え、PR が大きく見える | 採らない |
+| C 見た目の指定だけ | 見出しの id と兄弟の要素で枠を描く | `prepare_site.py` を触らない | 節の終わりまで 1 つの箱に囲えない。札はスクリプトが要る | 要件を満たさない |
+
+## Design Decisions（synthesis）
+- **Generalization**: 3 つの目印（段落の印 2 種と単位の包み）は、どれも「まとめ頁の単位の字に、コードブロックの外で目印を足す」同じ仕事なので、1 つの関数 `add_markers()` にまとめた。名前の札も同じ関数の中で対応の行だけに当てる。札にする名前は `BASEWARE` の 1 か所に置き、正規表現はそこから作る（2.9）
+- **Build vs. Adopt**: Python-Markdown の `attr_list`（段落の末尾の `{: .cls }`）と `md_in_html`（`<div markdown="1">`）を使う。どちらも `mkdocs.yml` と `EXTENSIONS` にあり、設定を変えない。名前の札は生の `<span>` で包む（`attr_list` の行の中の印は直前の要素にしか付かず、名前だけを包む要素が無いため）。新しい依存は無い
+- **Simplification**: 試作の C17 の 2 段の色（C06 の色を C17 で上書き）を 1 段にした。段落の印のうち `bundle-support` は、この spec の見た目の指定では使わない（札は `span` に当てる）が、5.1 が目印を求め、2.7 の確かめ（札が対応の段落の外に無い）にも使うので残す。C04 の見出しは段を名指しせず「包みの最初の子」に当て、`h4` の取りこぼしを無くした。暗い表示の箱の地は敷かず、変数で出せない色を増やさない
+
+## Risks & Mitigations
+- 既定値の札の字（控えめの色）は明 4.61・暗 4.91 の見込みで、4.5 の線との差が小さい — 実装でブラウザで測り、届かなければ止めて開発者に提示する（代わりの案は本文の色 `--md-default-fg-color`。明 16.10・暗 8.89）
+- 暗い表示の箱が地を持たないので、目標の画面（地のある箱）と見え方が少し違う — OPEN QUESTION 1。7:1 を守る地は目に見えないことを数で示す
+- `site-look-definition-tables` が `main()` の同じ行に後処理を足すと、merge がぶつかる — 両方の関数を入れ子にして残し、Build Gate と MarkerCheck をやり直す（`workflow.md` の「開いている PR に追いつく」）
+- 原稿に新しい書き方の `**対応:**` 行（名前の直後に空白の無い字など）が入ると、札にならない部分が増える — 実装のときに数え直し、`verification.md` に種類と行の数を残す（8.7）
+
+## 確かめていないこと（実装で確かめる）
+- ブラウザでの対比（`getComputedStyle` の色と重ねた地）。上の数は手元の計算の見込み
+- 明・暗の切り替え（6.1）と、暗い表示だけの指定が `@media screen` の中にあること（6.2）のブラウザでの確かめ
+- 検索の強調の画面（7.1）、コピーのボタン（7.4。コードブロックには触れないので変わらない見込み）

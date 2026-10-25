@@ -1,16 +1,16 @@
 {
   "feature_name": "site-look-list-markers",
   "created_at": "2026-10-25T07:03:47Z",
-  "updated_at": "2026-10-25T07:11:47Z",
+  "updated_at": "2026-10-25T07:44:42Z",
   "language": "ja",
-  "phase": "requirements-generated",
+  "phase": "design-generated",
   "approvals": {
     "requirements": {
       "generated": true,
-      "approved": false
+      "approved": true
     },
     "design": {
-      "generated": false,
+      "generated": true,
       "approved": false
     },
     "tasks": {
