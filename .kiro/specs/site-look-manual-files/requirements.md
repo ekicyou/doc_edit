@@ -8,13 +8,13 @@
 ## Introduction
 この spec は、UKADOC の `manual/` の頁で、ファイルごとの説明の切れ目とファイル名をひと目で見分けられるようにし、ファイル構成の木でファイルとフォルダを見分けられるようにする。`site-look-plan` の `decisions.md` で「採る」と決まった C14・C15・C22 を、本番の書き方で ukadoc-spec に入れる。方向は決まっているので、ここでは議論し直さない。
 
-変えるのは、`manual/` の頁を見分ける頁の種類の印（テンプレートの上書きか組み立ての処理 `scripts/prepare_site.py`）、ファイル名の後ろの「`: `」を外す目印、その印に当てるサイトの見た目の指定（`assets/extra.css`）、木の名前を包む小さな自作のスクリプト（`assets/` と `mkdocs.yml` の `extra_javascript`）で、原稿は変えない。ukadoc-spec を変えるので、この spec の作業木 `.worktrees/site-look-manual-files/`（ブランチ `site-look-manual-files`）で、依存先の `site-look-list-items` の PR（#11、マージのコミット `d3154d8`）が入った ukadoc-spec の `origin/main` の上に書き、Build Gate と規約 Gate を通す。PR は原則 1 spec = 1 PR なので（開発者の指示、2026-10-25）、この spec の完了で自分の PR を作ってスクワッシュマージする。
+変えるのは、組み立ての処理 `scripts/prepare_site.py` が manual の頁にだけ付けるファイル名の目印（ファイル名の後ろの「`: `」も外す）、その目印に当てるサイトの見た目の指定（`assets/extra.css`）、木の名前を包む小さな自作のスクリプト（`assets/` と `mkdocs.yml` の `extra_javascript`）で、原稿は変えない。ukadoc-spec を変えるので、この spec の作業木 `.worktrees/site-look-manual-files/`（ブランチ `site-look-manual-files`）で、依存先の `site-look-list-items` の PR（#11、マージのコミット `d3154d8`）が入った ukadoc-spec の `origin/main` の上に書き、Build Gate と規約 Gate を通す。PR は原則 1 spec = 1 PR なので（開発者の指示、2026-10-25）、この spec の完了で自分の PR を作ってスクワッシュマージする。
 
 本文の主語は 2 つある。「UKADOC のサイト」は、この spec の変更を入れた後の公開サイト（とそのプレビュー）の見え方を指す。「site-look-manual-files」は、この spec の作業（ukadoc-spec への変更・確かめ・記録）を指す。
 
 言葉の決まり（この文書の中で。数は ukadoc-spec `0eb3fb9` の原稿をサイトと同じ Markdown 拡張で手元で HTML にして数えた見込みで、実装のときに build の HTML で数え直す。`research.md`）:
 - **manual の頁**: `manual/` の 8 頁（`balloon`・`directory`・`ghost`・`install`・`owner-draw-menu`・`shell`・`translator`・`update`）。ほかの頁（まとめ頁・`dev/`・`memo/`・`spec/` の 1 ファイルの頁・トップの頁）は manual の頁でない
-- **頁の種類の印**: 頁の HTML の中で、その頁が manual の頁だと見分けられる目印
+- **manual の頁の見分け**: 組み立ての処理が、頁が `manual/` の下にあることから manual の頁を見分けること。HTML には頁の種類だけを示す印を足さず、見分けた結果はファイルの箇条書きの目印が運ぶ
 - **ファイルの箇条書き**: manual の頁の本文の一番外の箇条書きの項目のうち、頭が太字の名前のもの。今は 7 頁に 73 個（`balloon` 22・`directory` 12・`ghost` 10・`install` 7・`owner-draw-menu` 3・`shell` 12・`update` 7。`translator` は 0）。原稿の空行のため、どれも 1 項目ずつ別の箇条書きになる。注記の箱（`!!! tip`）の中など、一番外でない箇条書きの項目（今は `shell` の「`※1,※2`」の 1 個）は含めない
   - 名前の後ろが「`: 説明`」のもの 63 個、名前の後ろが「`:`」だけで説明が次の段落・木・入れ子の箇条書きから始まるもの 9 個（`balloon` の `sstp.png` 1、`install` の「標準的なゴーストの場合」などの場合分け 5、`update` の場合分け 3）、名前だけのもの 1 個（`ghost` の `updates2.dau`）
   - 説明が名前と同じ行だけで、段落に分かれないもの 12 個（`balloon` の `balloonk*.pna` など 7、`directory` 3、`ghost` の `updates2.dau` 1、`shell` の `(element).pna` 1）。ほかの 61 個は 1 つ以上の段落を持ち、2 つ以上の段落を持つものが 56 個ある
@@ -29,14 +29,14 @@
 
 ## Boundary Context
 - **In scope**:
-  - manual の頁の頁の種類の印（Requirement 1）
+  - manual の頁の見分け（Requirement 1）
   - C14・C22 のファイルの箇条書きの見え方と、ファイル名の後ろの「`: `」を見せないこと（Requirement 2・3）
   - C15 の木のファイル名の色と、その明るい表示の濃さ（`site-look-list-markers` の C17 から移した分。Requirement 4・5）
   - 帯と木の色の字とリンクの読みやすさ、明・暗の切り替え、印刷の見え方（Requirement 5）
   - 明・暗の画面と 375 px の確かめ、数と対比の測りの記録（Requirement 7）
 - **Out of scope**:
   - `updates2.dau` と `updates.txt` が 1 つの説明を共有している見え方（D12。原稿の書き方による。roadmap のバックログ）
-  - `spec/shiori3` のヘッダの値を列にそろえること（C16。保留で roadmap のバックログ。頁の種類の印は共有できる形にしておくだけ）
+  - `spec/shiori3` のヘッダの値を列にそろえること（C16。保留で roadmap のバックログ。頁を絞る印が要れば、その spec が同じ見分けの所に足す）
   - キャラクターを頁に出すこと（C12。保留）
   - manual の頁の外の、頭が太字の箇条書き（`spec/shiori3` のヘッダ、`dev/` の頁など）の見え方。「名前: 説明」を表にすることは `site-look-definition-tables`
   - 言語指定の無いほかのコードブロック（木でないもの。SSTP の要求の例など）の着色。さくらスクリプトの記述例の着色（`site-look-sakura-script-highlight`）
@@ -47,21 +47,21 @@
   - ファイル名の帯は、`site-look-list-items` の C01 の項目名の帯の見え方（左の太い線・下の細い線・薄い地・`h3` と同じ字の大きさ）を使う。帯の上のリンクの読みやすさの線（帯の地に 7:1 以上、ポインタ・フォーカスは 3:1 以上）も、その spec の Requirement 6.1・6.2 と同じにする
   - `site-look-sakura-script-highlight` は、コードブロックの HTML を今の形（`div.highlight > pre > code`）から着色の後の形（`pre.highlight > code`）に変え、`mkdocs.yml` に `extra_javascript` を足し、言語の印の付いた記述例だけにスクリプトを当てる。この spec の木の色は、どちらの HTML の形にも効き、どちらが先に入ってもよい。この spec のスクリプトは言語の印の無いブロックだけに当て、記述例のブロックの字と見え方を変えない
   - 「明るい表示の色付きの字は白地に 7:1 以上」の物差しは、`site-look-list-markers` の C17 と同じものを使う。この spec は自分の作る木のファイル名の字にだけ当てる。その spec の札の指定は木のファイル名に色を当てないので、どちらが先に入っても色の勝ち負けは変わらない
-  - `site-look-definition-tables` は、この spec の後に、manual の頁のファイルの箇条書き（C14・C22 の当て先）を表にしないことを確かめる。この spec は、ファイルの箇条書きの当て先を頁の種類の印で見分けられる形にしておく
-  - 後で C16（`spec/shiori3`）や C12 が頁を絞るときに、この spec の頁の種類の印と同じ形の印を使えることを期待する
+  - `site-look-definition-tables` は、この spec の後に、manual の頁のファイルの箇条書き（C14・C22 の当て先）を表にしないことを確かめる。この spec は、ファイルの箇条書きの当て先を目印で見分けられる形にしておく
+  - 後で C16（`spec/shiori3`）や C12 が頁を絞るときは、この spec の頁の見分けの所（組み立ての処理）に、その spec が自分の印を足すことを期待する
   - 目標の画面・試作・測りは `site-look-plan`（`.kiro/specs/completed/site-look-plan/`）のものを読むだけで、書き換えない
 
 ## Requirements
 
-### Requirement 1: manual の頁の種類の印
-**Objective:** As a doc_edit の開発者と ukadoc-spec のメンテナ, I want manual の頁だけに頁の種類の印が付くこと, so that ファイルの箇条書きの見た目が manual の頁だけに効き、同じ形の箇条書きを持つほかの頁（`spec/shiori3` など）を変えない
+### Requirement 1: manual の頁の見分け
+**Objective:** As a doc_edit の開発者と ukadoc-spec のメンテナ, I want ファイルの箇条書きの目印が manual の頁にだけ付くこと, so that ファイルの箇条書きの見た目が manual の頁だけに効き、同じ形の箇条書きを持つほかの頁（`spec/shiori3` など）を変えない
 
 #### Acceptance Criteria
-1. The UKADOC のサイト shall manual の頁の 8 頁のすべてに、頁の種類の印を 1 つずつ付ける（ファイルの箇条書きの無い `manual/translator` にも付ける）
-2. If 頁が manual の頁でないとき, the UKADOC のサイト shall その頁に manual の頁の種類の印を付けない
-3. The UKADOC のサイト shall 頁の種類の印を付けても、頁の題・見出しの id・見出しの横のリンクの印（¶）・右の欄の目次・検索で引ける字を変えない
-4. The site-look-manual-files shall 頁の種類の印を、manual の外の種類の頁（`spec/shiori3` など）にも同じ形で別の種類の印を付けられる形にする（ほかの種類の印を付けるかどうかは決めない。C16・C12 が後で使いうる）
-5. The site-look-manual-files shall 頁の種類の印を、頁が `manual/` の下にあることから付け、サイトの見た目の指定で頁の題や見出しの id（試作の `:has(h1#ゴースト)`）によって頁を見分けない
+1. The site-look-manual-files shall manual の頁かどうかを、組み立ての処理の 1 か所で、頁が `manual/` の下にあることから見分け、ファイルの箇条書きの目印を manual の頁の 8 頁の中だけに付ける（ファイルの箇条書きの無い `manual/translator` も manual の頁として扱う）
+2. If 頁が manual の頁でないとき, the UKADOC のサイト shall その頁にファイルの箇条書きの目印を付けない
+3. The UKADOC のサイト shall 目印を付けても、頁の題・見出しの id・見出しの横のリンクの印（¶）・右の欄の目次・検索で引ける字（外す「`: `」を除く）を変えない
+4. The site-look-manual-files shall この spec の見た目の指定が使わない、頁の種類だけを示す印を HTML に足さない（後の spec ― C16・C12 ― が頁を絞る印を要るときは、その spec が同じ見分けの所に自分の印を足す。設計の話し合いの議題 1）
+5. The site-look-manual-files shall サイトの見た目の指定で、頁の題や見出しの id（試作の `:has(h1#ゴースト)`）によって頁を見分けない
 
 ### Requirement 2: ファイルごとの説明の切れ目（C14）
 **Objective:** As a manual の頁でゴーストなどの作り方を読むゴースト制作者, I want ファイル名が 1 行に置かれ、説明が字下げされて下に並ぶこと, so that どこからどこまでが 1 つのファイルの説明かを追える（D12）
@@ -128,11 +128,11 @@
 7. The site-look-manual-files shall サイトに置く生の Markdown 原稿（`_raw/`）と `llms.txt` を今のまま保ち、組み立ての処理の一覧の検査・見出しの数の検査・リンクの書き換えを今のまま通す
 
 ### Requirement 7: 表示の確かめと記録
-**Objective:** As a doc_edit の開発者, I want 変更が配られた頁に効いていることと、目標の画面との見比べ・数・対比が残っていること, so that 見落としなく PR に出せ、後続の spec が頁の種類の印や帯を使うときに測りを引ける
+**Objective:** As a doc_edit の開発者, I want 変更が配られた頁に効いていることと、目標の画面との見比べ・数・対比が残っていること, so that 見落としなく PR に出せ、後続の spec が目印や帯を使うときに測りを引ける
 
 #### Acceptance Criteria
 1. When 変更を確かめるとき, the site-look-manual-files shall ローカルのプレビュー（頁の道は `/ukadoc-spec/` から始まる）で配られた見た目の指定のファイルと、足したスクリプトのファイルを開き、どちらも読めて（200）この spec の中身が入っていることを確かめる（サイトを作る処理の厳しい検査は、指定したファイルが無くても気づかないため）
-2. The site-look-manual-files shall プレビューの頁の HTML を取ってきて、頁の種類の印が manual の頁の 8 頁にだけ 1 つずつあること、「`: `」を外す目印の数（今は 72。頁ごとの数を含む）、本文に漏れた目印の書きかけの字（`{: ` など）が 0 であること、足したスクリプトの読み込みが全頁に 1 つずつあることを数えて記録する
+2. The site-look-manual-files shall プレビューの頁の HTML を取ってきて、ファイルの箇条書きの目印が manual の頁にだけあること（今は 7 頁に 73 個）、「`: `」を外す目印の数（今は 72。頁ごとの数を含む）、本文に漏れた目印の書きかけの字（`{: ` など）が 0 であること、足したスクリプトの読み込みが全頁に 1 つずつあることを数えて記録する
 3. The site-look-manual-files shall ブラウザで頁を開いた後の木を数え、木ごとのファイル名とフォルダ名の数（今の見込みは「言葉の決まり」の数）と、色を付けた後の木の字が元の字と同じことを記録する
 4. The site-look-manual-files shall 変更の前と後で、manual の頁の見出しの id の並び・`a.headerlink`（¶）の数・右の欄の目次の項目の数が同じことを確かめて記録する
 5. The site-look-manual-files shall 変更の後の画面を、目標の画面と同じ頁・同じ位置・同じ大きさで明・暗の両方で撮り、この spec の 3 つの候補の部分を見比べた結果を記録する（C14・C15 は `manual/ghost` の `h1#ゴースト` で幅 1000・高さ 700、C22 は `.md-typeset > ul` で幅 1000・高さ 900）
@@ -143,11 +143,11 @@
 10. When 開発者に画面を見せるとき, the site-look-manual-files shall 古い写しが残らないよう、ブラウザでの強制の再読み込み（Ctrl+F5）を頼む
 
 ### Requirement 8: 変更の範囲と PR
-**Objective:** As a ukadoc-spec のメンテナ, I want 小さく、頁の種類の印・目印・見た目の指定・小さなスクリプトに限った変更を受け取ること, so that 他者も使う公開リポジトリでもレビューしやすい
+**Objective:** As a ukadoc-spec のメンテナ, I want 小さく、目印・見た目の指定・小さなスクリプトに限った変更を受け取ること, so that 他者も使う公開リポジトリでもレビューしやすい
 
 #### Acceptance Criteria
 1. The site-look-manual-files shall ukadoc-spec の中で `assets/`（`extra.css` と足すスクリプト）・`scripts/prepare_site.py`・`mkdocs.yml`・`overrides/`（テンプレートの上書きにするとき）だけを変え、原稿（`.md`）・`.nav.yml`・`requirements.txt`・Zensical の版を変えない
-2. The site-look-manual-files shall `assets/extra.css` のこの spec の指定を、ファイルの末尾に塊として足し、塊ごとの注を `/* site-look-manual-files: <何の指定か> */` の短い 1 行にとどめる（説明・測りの数・わけは spec の記録に書く）
+2. The site-look-manual-files shall `assets/extra.css` のこの spec の指定を、ファイルの末尾に塊として足し、塊ごとの注を `/* site-look-manual-files: <何の指定か> */` の短い 1 行にとどめる（説明・測りの数・わけは spec の記録に書く）。ただし C01 の帯の見た目は、`site-look-list-items` の「項目名の帯」の塊の 2 つのセレクタ（帯と、暗い表示の帯の中のリンク）に `.manual-item` を足して分け合い、同じ宣言を 2 か所に書かない（設計の話し合いの議題 2）
 3. The site-look-manual-files shall 変更を、この spec の作業木 `.worktrees/site-look-manual-files/`（ブランチ `site-look-manual-files`）で、`site-look-list-items` の PR（#11）がマージされた後の ukadoc-spec の `origin/main` の上に書く
 4. The site-look-manual-files shall この spec の完了の前に、Build Gate（`prepare_site.py` と `zensical build --strict` が、どちらも失敗なく終わる）と規約 Gate を通す
 5. The site-look-manual-files shall この spec の完了で、この spec だけの PR を作ってスクワッシュマージする（原則 1 spec = 1 PR。PR の説明は brief の「続きの PR の説明」に従い、一連の PR の並びは PR を出すときの roadmap による）。この spec の PR だけを入れるとサイトが壊れると分かったときは、PR を出さずに溜め、開発者に報告する

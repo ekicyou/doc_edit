@@ -3,19 +3,19 @@
 ## Overview
 **Purpose**: UKADOC の `manual/` の頁（8 頁）でゴーストなどの作り方を読むゴースト制作者に、ファイルごとの説明の切れ目とファイル名をひと目で見分けられる見え方と、ファイル構成の木でファイルとフォルダを見分けられる見え方を届ける。`site-look-plan` で「採る」と決まった C14（ファイルごとの説明の切れ目）・C15（木のファイル名の色）・C22（ファイル名を項目名と同じ帯に）を、本番の書き方で ukadoc-spec に入れる。
 **Users**: manual の頁を読むゴースト制作者（明・暗の表示、幅 375 の狭い画面、印刷、検索から開く頁を含む）。木の色は `dev/nar`・`dev/update` の木にも付く（要件 4.9）。ほかの頁の頭が太字の箇条書きの見え方は変えない。
-**Impact**: ukadoc-spec の `scripts/prepare_site.py` に、manual の頁の題に頁の種類の印を付け、ファイルの箇条書きの頭の名前に目印を付けて「`: `」を外す関数 `mark_manual()` を足し、`main()` の読み物の頁の写しの 1 か所から呼ぶ。`assets/extra.css` は、C01 の項目名の帯の 2 つのセレクタに manual の名前の目印を足し、末尾に 2 つの塊を足す。`assets/filetree.js`（新規）が木のファイル名を `span` で包み、`mkdocs.yml` の `extra_javascript` に 1 行足す。原稿・`.nav.yml`・`overrides/` は変えない。
+**Impact**: ukadoc-spec の `scripts/prepare_site.py` に、manual の頁のファイルの箇条書きの頭の名前に目印を付けて「`: `」を外す関数 `mark_manual()` を足し、`main()` の読み物の頁の写しの 1 か所から呼ぶ。`assets/extra.css` は、C01 の項目名の帯の 2 つのセレクタに manual の名前の目印を足し、末尾に 2 つの塊を足す。`assets/filetree.js`（新規）が木のファイル名を `span` で包み、`mkdocs.yml` の `extra_javascript` に 1 行足す。原稿・`.nav.yml`・`overrides/` は変えない。
 
-目印は、まとめ頁の目印（`site-look-list-items`・`site-look-list-markers`）と同じく組み立ての処理で付け、名前を `page-<種類>`（頁の種類の印）と `<種類>-<役>`（その種類の頁の中の役。まとめ頁の `bundle-<役>` と並ぶ）の決まりにした。使い捨ての写し（ukadoc-spec `0eb3fb9`。Claude のスクラッチ）で、この設計の差分そのものを build し、目印の数・木の数・字・見出し・対比・幅 375 を確かめた（`research.md` の「9. 設計の調査」）。
+目印は、まとめ頁の目印（`site-look-list-items`・`site-look-list-markers`）と同じく組み立ての処理で付け、名前を `<種類>-<役>`（その種類の頁の中の役。まとめ頁の `bundle-<役>` と並ぶ）の決まりにした。この spec の見た目の指定が使わない、頁の種類だけを示す印は足さない（設計の話し合いの議題 1）。使い捨ての写し（ukadoc-spec `0eb3fb9`。Claude のスクラッチ）で、この設計の差分そのものを build し、目印の数・木の数・字・見出し・対比・幅 375 を確かめた（`research.md` の「9. 設計の調査」）。
 
 ### Goals
-- manual の頁 8 頁のすべてに頁の種類の印 `page-manual` を 1 つずつ付け、ほかの頁には付けない
+- manual の頁かどうかを `prepare_site.py` の 1 か所で見分け、目印を manual の頁にだけ付ける。頁の種類だけを示す印は足さない
 - ファイルの箇条書き 73 個の頭の名前を、C01 の項目名の帯と同じ見え方の帯にして 1 行に置き、説明のすべてを同じ字下げで帯の下に並べる。名前の後ろの「`: `」（「`:`」だけのものを含む 72 個）を見せない
 - 木 21 個（manual 17・`dev/` 4）の木の行で、ファイル名（manual 204 個・`dev/` 17 個）だけに色を付け、木の字を 1 字も変えない
 - 木のファイル名を、明るい表示で白地とコードの地に 7:1 以上、暗い表示で暗い地とコードの地に 4.5:1 以上にする。帯の中のリンクを C01 と同じ扱い（明は紺、暗は白と下線）にする
 
 ### Non-Goals
 - `updates2.dau` と `updates.txt` が 1 つの説明を共有している見え方（D12。原稿の書き方による）
-- C16（`spec/shiori3` のヘッダの値の列）・C12（キャラクター）。頁の種類の印を同じ形で使える形にしておくだけ
+- C16（`spec/shiori3` のヘッダの値の列）・C12（キャラクター）。頁を絞る印が要れば、その spec が `prepare_site.py` の同じ見分けの所に足す
 - manual の頁の外の頭が太字の箇条書き、「名前: 説明」の表（`site-look-definition-tables`）
 - 木でない言語指定の無いコードブロックの着色、さくらスクリプトの記述例の着色（`site-look-sakura-script-highlight`）
 - 原稿（`.md`）・`.nav.yml`・`requirements.txt`・Zensical の版、木の書き方（名前と注の間の空白など）を原稿で直すこと
@@ -25,7 +25,7 @@
 
 ### This Spec Owns
 - `scripts/prepare_site.py` の、manual の頁に目印を付ける処理: 定数 `MANUAL_ITEM`、関数 `mark_manual()`、`main()` の読み物の頁の写しの呼び出し 1 か所、モジュールの docstring の 1 項目
-- 目印の名前と形: 頁の種類の印 `page-manual`（manual の頁の最初の `#` 見出しの class）と、その決まり `page-<種類>`。ファイルの箇条書きの頭の名前の目印 `manual-item`（`strong` の class）
+- 目印の名前と形: ファイルの箇条書きの頭の名前の目印 `manual-item`（`strong` の class）と、その決まり `<種類>-<役>`
 - 「ファイルの箇条書きの頭の名前」を見分ける規則（コードブロックの外で、行の頭が `- **名前**` で、後ろが「`: `」・行の終わりの「`:`」・行の終わりのどれか。名前の中の `\*`・`\\` は名前の字）と、「`: `」の外し方
 - `assets/filetree.js`（新規）: 木を見分ける規則、木の行の名前の切り出しとファイル名・フォルダ名の見分けの規則、ファイル名を `span.filetree-file` で包む処理
 - `mkdocs.yml` の `extra_javascript` の `assets/filetree.js` の 1 行
@@ -40,14 +40,14 @@
 - 原稿・`.nav.yml`・`requirements.txt`・Zensical の版・`overrides/`・`INDEX.md`、`site-look-plan` の成果物（目標の画面・試作・`tools/shot.mjs`）
 
 ### Allowed Dependencies
-- `prepare_site.py` の既にある部品: `FENCE`・`HEADING_LINE`・`error()`・`main()` の読み物の頁の流れ（`rewrite_links()` の後に書き出す）
+- `prepare_site.py` の既にある部品: `FENCE`・`main()` の読み物の頁の流れ（`rewrite_links()` の後に書き出す）
 - Python-Markdown の `attr_list`（行の中の `**…**{: .cls }` と見出しの `{: .cls }`）。`mkdocs.yml` と `EXTENSIONS` の今の設定のまま
 - `site-look-list-items` の C01 の帯の宣言（`padding`・左の線・下の線・地）と、暗い表示の帯の中のリンクの指定（白・下線）。C02 の詰めは `.bundle-item` のある頁だけに効き、manual の頁には効かないこと
 - テーマ（Zensical 0.0.67 の classic）の変数 `--md-typeset-a-color`（明は `--md-primary-fg-color` の紺、暗は `site-look-dark-link-color` の `#8fb4e8`）、`<body>` の `data-md-color-scheme`、暗い表示の変数を `@media screen` の中だけで定める作り、`extra_javascript` を `bundle.*.min.js` の直後に読む作り、検索の強調（`?h=`）が索引を待ってから字のノードに `mark` を入れる順
 - 確かめの道具: `zensical serve`、`python -m http.server`（変更の前の控えを配る）、Edge ヘッドレス + CDP の使い捨てのスクリプト、Node（偽の `document` で `filetree.js` を流す）、`.kiro/specs/completed/site-look-plan/tools/shot.mjs`（読むだけ）
 
 ### Revalidation Triggers
-- 頁の種類の印の名前・置き場（manual の頁の最初の `#` 見出しの class）を変えたとき: C16・C12 を入れる後の spec が確かめ直す
+- manual の頁の見分け（`main()` の `d == 'manual'`）を変えたとき: 目印の数を数え直す。C16・C12 を入れる後の spec は、同じ所に自分の印を足す
 - 名前の目印 `manual-item` の名前か、「`: `」の外し方を変えたとき: `site-look-definition-tables` が、manual の頁のファイルの箇条書きを表にしないことを確かめ直す（その spec の「名前: 説明」の形の見分けから、目印の付いた項目は外れる）
 - 原稿に、manual の頁の一番外の箇条書きで規則に合わない書き方（`- **名前** 説明`・`- **名前**:説明` など）が入ったとき、manual の頁が増えたとき: 目印の数を数え直す（今は 73・「`: `」72）
 - 原稿に、木の行の新しい書き方（名前と注の間に空白も全角の括弧も無い注、「または」「`/`」の外の並べ方、空白を含む名前）が入ったとき: 木の数と字を数え直す
@@ -66,7 +66,7 @@
 - `extra_javascript` は `bundle.*.min.js` の直後に読まれ、DOM はできている。検索の強調はその後に動き、字のノードに `mark` を入れる
 
 ### Architecture Pattern & Boundary Map
-選んだ形は、ギャップ分析の推す組み合わせ A（組み立ての処理が目印を付け、見た目の指定はその目印だけに当て、木は中身でスクリプトが包む）。頁の種類の印は、ギャップ分析の P2（`prepare_site.py` で `h1` に印）にした。
+選んだ形は、ギャップ分析の推す組み合わせ A（組み立ての処理が目印を付け、見た目の指定はその目印だけに当て、木は中身でスクリプトが包む）。頁の種類だけを示す印（ギャップ分析の T・P1・P2）は足さず、manual の頁の見分けは `main()` の `d == 'manual'` が持つ（設計の話し合いの議題 1）。
 
 ```mermaid
 graph LR
@@ -81,20 +81,20 @@ graph LR
     Theme[テーマの変数と body の data-md-color-scheme] --> Band
     Theme --> TreeColor
     DefTables[site-look-definition-tables] -.manual-item の項目を表にしない.-> Mark
-    Later[C16 と C12] -.page-種類 の印.-> Mark
+    Later[C16 と C12] -.同じ見分けの所に自分の印を足す.-> Mark
 ```
 
-- **目印の役**: `page-manual` は「この頁は manual の頁」という頁の種類の印、`manual-item` は「manual の頁のファイルの箇条書きの頭の名前」という役の印。見え方の名前（帯・字下げ）にしないので、見た目を替えるときは `extra.css` だけを替えればよい
-- **見た目の当て先**: 帯と字下げは `manual-item` に当てる（`:has()` で項目と箇条書きを選ぶ）。`manual-item` は manual の頁にしか付かないので、頁の種類の印を CSS で重ねて見ない（「前提と OPEN QUESTION」の 1）。`page-manual` は、要件 1 の印として全頁で数を確かめ、C16・C12 が後で `.md-typeset:has(> h1.page-<種類>)` で頁を絞る入口にする
-- **木**: 頁を問わず、中身（`+-` の行）で見分ける（要件 4.9）。頁の種類の印は見ない
+- **目印の役**: `manual-item` は「manual の頁のファイルの箇条書きの頭の名前」という役の印。見え方の名前（帯・字下げ）にしないので、見た目を替えるときは `extra.css` だけを替えればよい
+- **見た目の当て先**: 帯と字下げは `manual-item` に当てる（`:has()` で項目と箇条書きを選ぶ）。`manual-item` は manual の頁にしか付かないので、頁を絞る印は要らない（「設計の話し合いで決めたこと」の 1）
+- **木**: 頁を問わず、中身（`+-` の行）で見分ける（要件 4.9）。頁は見ない
 - **色**: 帯は C01 の宣言を共有し（`:is(.bundle-item, .manual-item)`）、木のファイル名はリンクの色の変数 `--md-typeset-a-color` を使う。直書きの色は足さない。暗い表示の色は変数の側で `@media screen` の中だけにあるので、この spec に `@media screen` の指定は無い
 
 ### Technology Stack
 
 | Layer | Choice / Version | Role in Feature | Notes |
 |-------|------------------|-----------------|-------|
-| 組み立ての処理 | Python 3.12・`scripts/prepare_site.py` | 頁の種類の印・名前の目印を足し「`: `」を外す | 依存は足さない（`re`） |
-| Markdown | Python-Markdown の `attr_list`（`mkdocs.yml` のまま） | `**…**{: .manual-item }` を `<strong class="manual-item">`、`# 題 {: .page-manual }` を `<h1 class="page-manual">` にする | 設定は変えない |
+| 組み立ての処理 | Python 3.12・`scripts/prepare_site.py` | 名前の目印を足し「`: `」を外す | 依存は足さない（`re`） |
+| Markdown | Python-Markdown の `attr_list`（`mkdocs.yml` のまま） | `**…**{: .manual-item }` を `<strong class="manual-item">` にする | 設定は変えない |
 | ブラウザの仕掛け | 素の JavaScript（ES2020）の 1 ファイル `assets/filetree.js` | 木のファイル名を `span` で包む | ライブラリ・外部の資源を読まない |
 | 見た目の指定 | CSS（`assets/extra.css`） | 帯・字下げ・木のファイル名の色 | `:has()`・`:is()` は既にある塊も使っている |
 | サイト生成 | Zensical 0.0.67（`requirements.txt` のまま） | `extra_javascript` の配り | 版は変えない |
@@ -122,19 +122,18 @@ ukadoc-spec で変えるのは上の 4 ファイルだけである（8.1）。�
 ### Modified Files
 
 #### `scripts/prepare_site.py`（ukadoc-spec の作業木）
-変える所は 4 か所で、ほかの関数は変えない。差分（`0eb3fb9` に対して。写しで build を通したもの）:
+変える所は 4 か所で、ほかの関数は変えない。差分（`0eb3fb9` に対して。写しで build を通したものから、設計の話し合いの議題 1 で頁の種類の印を外した）:
 
 ```diff
-@@ -10,6 +10,8 @@
+@@ -10,6 +10,7 @@
  - まとめた頁の分類と項目の頭の見出しに、役の class（bundle-category・bundle-item）を付ける（見た目は assets/extra.css）
  - まとめた頁の対応・既定値の段落と注意書きの節に目印（bundle-support・bundle-default・bundle-notes）を付け、
    対応のベースウェアの名前を札（bundle-baseware）で包む（見た目は assets/extra.css）
-+- manual/ の頁の題に頁の種類の印（page-manual）を付け、ファイルの箇条書きの頭の名前に目印（manual-item）を付けて
-+  名前の後ろの「: 」を外す（見た目は assets/extra.css）
++- manual/ の頁のファイルの箇条書きの頭の名前に目印（manual-item）を付け、名前の後ろの「: 」を外す（見た目は assets/extra.css）
  原稿そのものは書き換えない。
  """
  import os
-@@ -39,6 +41,7 @@
+@@ -39,6 +40,7 @@
  BASEWARE = ['Materia', 'SSP', 'CROW', 'Ninix']   # 札にする名前。足すときは assets/extra.css に明・暗の札の色も足す
  BASEWARE_PART = re.compile(rf'^({"|".join(BASEWARE)})(?=\s|$)(.*)$')
  NEGATION = re.compile(r'非対応|未対応|廃止')
@@ -142,51 +141,39 @@ ukadoc-spec で変えるのは上の 4 ファイルだけである（8.1）。�
  
  ERRORS = []
  UNIT = {}      # 元ページ（ROOT からの相対パス）→ (まとめたページ, ページ内の id, {元の見出しの id: まとめたページでの id})
-@@ -274,6 +277,31 @@
+@@ -274,6 +276,20 @@
      return text
  
  
-+def mark_manual(rel, text):
-+    """manual/ の頁の題（最初の # の見出し）に {: .page-manual } を足し、
-+    ファイルの箇条書きの頭の名前に {: .manual-item } を足して、名前の後ろの「: 」を外す"""
++def mark_manual(text):
++    """manual/ の頁のファイルの箇条書きの頭の名前に {: .manual-item } を足し、名前の後ろの「: 」を外す"""
 +    lines = text.split('\n')
 +    in_fence = False
-+    titled = False
 +    for i, line in enumerate(lines):
 +        if FENCE.match(line):
 +            in_fence = not in_fence
 +            continue
-+        if in_fence:
-+            continue
-+        h = HEADING_LINE.match(line)
-+        if h and not titled and h.group(1) == '#':
-+            lines[i] = f'{line} {{: .page-manual }}'
-+            titled = True
-+            continue
-+        m = MANUAL_ITEM.match(line)
++        m = None if in_fence else MANUAL_ITEM.match(line)
 +        if m:
 +            lines[i] = m.group(1) + '{: .manual-item }' + (' ' if m.group(2) == ': ' else '') + line[m.end():]
-+    if not titled:
-+        error(f'{rel}: 頁の題（# の見出し）が無い')
 +    return '\n'.join(lines)
 +
 +
  # ---------------------------------------------------------------- 本体
  
  def page_dirs():
-@@ -340,7 +368,8 @@
+@@ -340,7 +356,8 @@
              for name in sorted(files):
                  rel = os.path.relpath(os.path.join(dirpath, name), ROOT).replace(os.sep, '/')
                  if name.endswith('.md') and rel not in bundled:
 -                    write(rel, rewrite_links(read(rel), rel, rel))
 +                    text = rewrite_links(read(rel), rel, rel)
-+                    write(rel, mark_manual(rel, text) if d == 'manual' else text)
++                    write(rel, mark_manual(text) if d == 'manual' else text)
      write('index.md', rewrite_links(read('INDEX.md'), 'INDEX.md', 'index.md'))
 ```
 
-- **頁の種類を決める所**: `main()` の `for d in DIRS` の `d == 'manual'`（頁が `manual/` の下にあること。1.5）。原稿の題や見出しの id では見分けない。C16 などで別の種類の印を付けるときは、同じ所に種類を足し、題の見出しに `page-<種類>` を付ける（1.4。今は足さない）
-- **頁の種類の印**: 最初の `#` 見出しの行の後ろに ` {: .page-manual }` を足す。`attr_list` が `h1` の class にし、見出しの字・id・目次・頁の題（`<title>`）は変わらない（写しで 8 頁を確かめた。1.3）。題の見出しが無い manual の頁は `error()` で build を止める（1.1 を黙って欠かない）
-- **名前の目印**: 行の頭の `- **名前**` の後ろが「`: `」なら `**名前**{: .manual-item } 説明`（「`:`」を外し、空白 1 つを残す）、行の終わりの「`:`」なら `**名前**{: .manual-item }`、行の終わりなら `**名前**{: .manual-item }` にする。残した空白は、名前が `display: block` の帯になるので行の頭の空白として消え、見えない。検索の字では名前と説明の語の切れ目になる（「前提と OPEN QUESTION」の 4）
+- **manual の頁を見分ける所**: `main()` の `for d in DIRS` の `d == 'manual'`（頁が `manual/` の下にあること。1.1・1.5）。原稿の題や見出しの id では見分けない。頁の種類だけを示す印は HTML に足さない（1.4。「設計の話し合いで決めたこと」の 1）。C16 などで頁を絞る印が要るときは、その spec が同じ所に自分の印を足す
+- **名前の目印**: 行の頭の `- **名前**` の後ろが「`: `」なら `**名前**{: .manual-item } 説明`（「`:`」を外し、空白 1 つを残す）、行の終わりの「`:`」なら `**名前**{: .manual-item }`、行の終わりなら `**名前**{: .manual-item }` にする。残した空白は、名前が `display: block` の帯になるので行の頭の空白として消え、見えない。検索の字では名前と説明の語の切れ目になる（「設計の話し合いで決めたこと」の 4）
 - **名前の字**: `(?:\\.|[^\\*])+` で、`\*`・`\\` を 1 字の組として読み、`**` の切れ目を取り違えない（`surfaces\*\*.txt`・`(myghost)\\ghost\\`・名前の一部だけのリンク `(myghost)\\[delete.txt](…)` を含む）
 - **当てない所**: 字下げした行（注記の箱 `!!! tip` の中の `shell` の「`※1,※2`」など。2.7）、コードブロックの中、形に合わない行（`- **名前** 説明`・`- **名前**:説明`。今は 0 個。Revalidation Triggers）
 - 写しで確かめた結果: 下の MarkerCheck の数。`prepare_site.py` と `zensical build --strict` は exit 0、`_raw/` と `llms.txt` は変わらない
@@ -317,14 +304,14 @@ ukadoc-spec で変えるのは上の 4 ファイルだけである（8.1）。�
 ```
 
 指定のわけ（注に書かず、ここに残す）:
-- **帯の共有**（3.1・3.6）: C01 の帯の見た目（`padding`・左の太い線・下の細い線・薄い地）と、暗い表示の帯の中のリンク（白・下線）を、セレクタを広げて共有した。同じ宣言を 2 か所に書かないので、C01 の帯が変われば manual の帯もそろって変わる。C02 の詰め（`.md-typeset:has(.bundle-item) p` など）と `.md-typeset .bundle-item { margin }` は広げない（manual の頁に `.bundle-item` は無く、詰めは効かない）。帯の中の `code` の指定も広げない（73 個の名前に `code` は無い）。この 2 行は `site-look-list-items` の塊の中の変更になる（「前提と OPEN QUESTION」の 2）
-- **帯の形**（2.1・3.1・3.2・3.3）: 名前の `strong` を `display: block` にして 1 行に置き、説明はその次の行から始まる（`<p>` の有る形も無い形も同じ。2.5）。字の大きさは `h3` と同じ `1.25em`、太さは C01 の帯（`h3`）と同じ `400`、行の高さ `1.5`。上下の余白は C01 の帯（`.5em 0 .3em`）にそろえた（「前提と OPEN QUESTION」の 5）
+- **帯の共有**（3.1・3.6）: C01 の帯の見た目（`padding`・左の太い線・下の細い線・薄い地）と、暗い表示の帯の中のリンク（白・下線）を、セレクタを広げて共有した。同じ宣言を 2 か所に書かないので、C01 の帯が変われば manual の帯もそろって変わる。C02 の詰め（`.md-typeset:has(.bundle-item) p` など）と `.md-typeset .bundle-item { margin }` は広げない（manual の頁に `.bundle-item` は無く、詰めは効かない）。帯の中の `code` の指定も広げない（73 個の名前に `code` は無い）。この 2 行は `site-look-list-items` の塊の中の変更で、要件 8.2 の例外として決めた（「設計の話し合いで決めたこと」の 2）
+- **帯の形**（2.1・3.1・3.2・3.3）: 名前の `strong` を `display: block` にして 1 行に置き、説明はその次の行から始まる（`<p>` の有る形も無い形も同じ。2.5）。字の大きさは `h3` と同じ `1.25em`、太さは C01 の帯（`h3`）と同じ `400`、行の高さ `1.5`。上下の余白は C01 の帯（`.5em 0 .3em`）にそろえた（「設計の話し合いで決めたこと」の 5）
 - **字下げ**（2.2・2.3）: 箇条書きの左の余白を 0 にし、項目を `1.2rem`（本文の字の 1.5 字）字下げして点を消す。帯は `-1.2rem` で本文の左の端に戻す。説明の段落・入れ子の箇条書き・表・コードブロック・木・注記の箱は、どれも項目の中にあるので同じ左の端にそろう。入れ子の箇条書きの点は残る（テーマの `ul` の指定のまま。写しの `balloon` で `disc`）
 - **2 つの形をそろえる**（3.2・3.3）: 名前は `li > p:first-child > strong`（61 個）か `li > strong`（12 個）のどちらかにあり、どちらも項目の中身の左の端から始まる。`p` の上の余白を 0 にして、帯の上の端もそろえた。写しで 73 個の帯の左の端（16px）と幅（711px）が 1 通りだった（試作は `updates2.dau` が 6px ずれた）。目標の画面の帯は、試作の負の字下げが帯の字の大きさで 6px 大きく効いて、本文の左の端より 6px 左にあった。この設計は C01 の帯と同じく本文の左の端に置く
-- **`:has()` で選ぶわけ**: 項目と箇条書きは、名前の目印を持つものだけを選ぶ。manual の頁に名前の無い箇条書きが後で入っても、その点と字下げは今のまま残る（「前提と OPEN QUESTION」の 1）
+- **`:has()` で選ぶわけ**: 項目と箇条書きは、名前の目印を持つものだけを選ぶ。manual の頁に名前の無い箇条書きが後で入っても、その点と字下げは今のまま残る（「設計の話し合いで決めたこと」の 1）
 - **幅 375**（6.4）: 帯の名前は、`\`・`(`・空白などの折り返せる所で折り返す。`overflow-wrap` などの指定は要らなかった（写しで manual の 8 頁と `dev/` の 2 頁が明・暗とも `scrollWidth` = `innerWidth` = 375。`(myghost)\shell\(additional_shell)\` は `\` の後ろで 2 行になった）
-- **木のファイル名の色**（4.1・5.1・5.2・5.3）: テーマのリンクの色の変数 `--md-typeset-a-color` を使う。明るい表示は `--md-primary-fg-color` の紺 `#1f4e8c`（白地 8.31・コードの地 7.62）、暗い表示は `site-look-dark-link-color` の `#8fb4e8`（暗い地 7.56・コードの地 6.71）。変数で出せない色は足さない。暗い表示の値は変数の側で `@media screen` の中にあるので、暗い表示のまま印刷すると紺で出る（5.6）。紺のテーマに合い、テーマの色が変われば付いてくる（「前提と OPEN QUESTION」の 3）
-- **ファイル名とフォルダ名の差**（4.3）: 明るさの比は明 1.18・暗 1.50 と小さく、色合い（明は紺と灰色、暗は明るい青と明るい灰色）で分かれる。設計の写しの明・暗の画面（`screenshots/design-ghost-C15-*.png`・`design-directory-tree-dark.png`）で、どちらの表示でもファイル名の青がフォルダ名の灰色から見分けられることを見た。開発者が設計の話し合いで画面を見て決める（「前提と OPEN QUESTION」の 3）
+- **木のファイル名の色**（4.1・5.1・5.2・5.3）: テーマのリンクの色の変数 `--md-typeset-a-color` を使う。明るい表示は `--md-primary-fg-color` の紺 `#1f4e8c`（白地 8.31・コードの地 7.62）、暗い表示は `site-look-dark-link-color` の `#8fb4e8`（暗い地 7.56・コードの地 6.71）。変数で出せない色は足さない。暗い表示の値は変数の側で `@media screen` の中にあるので、暗い表示のまま印刷すると紺で出る（5.6）。紺のテーマに合い、テーマの色が変われば付いてくる（「設計の話し合いで決めたこと」の 3）
+- **ファイル名とフォルダ名の差**（4.3）: 明るさの比は明 1.18・暗 1.50 と小さく、色合い（明は紺と灰色、暗は明るい青と明るい灰色）で分かれる。設計の写しの明・暗の画面（`screenshots/design-ghost-C15-*.png`・`design-directory-tree-dark.png`）で、どちらの表示でもファイル名の青がフォルダ名の灰色から見分けられることを見た。開発者が設計の話し合いで画面を見て決める（「設計の話し合いで決めたこと」の 3）
 - **注**: 塊ごとの注は `/* site-look-manual-files: <何の指定か> */` の 1 行だけにした（8.2）。測りの数・わけはこの文書と `verification.md` に書く
 
 ### 部品とファイルの対応
@@ -390,11 +377,11 @@ flowchart TD
 
 | Requirement | Summary | Components | Interfaces | Flows |
 |-------------|---------|------------|------------|-------|
-| 1.1 | manual の 8 頁すべてに印を 1 つ（`translator` を含む） | ManualMarker, MarkerCheck | `h1.page-manual`、題が無ければ `error()` | H |
-| 1.2 | ほかの頁に印を付けない | ManualMarker（`d == 'manual'` だけ）, MarkerCheck | 全 40 頁の数 | H |
+| 1.1 | 1 か所で頁の置き場から見分け、目印を manual の頁の中だけに | ManualMarker（`for d in DIRS` の `d == 'manual'`）, MarkerCheck | 頁ごとの `manual-item` の数 | H |
+| 1.2 | ほかの頁に目印を付けない | ManualMarker（`d == 'manual'` だけ）, MarkerCheck | 全 40 頁の数 | H |
 | 1.3 | 題・id・¶・目次・検索の字を変えない | ManualMarker（`attr_list` の class だけ）, MarkerCheck | `<title>`・id の並び・`headerlink`・`md-nav__link`・本文の字 | C, H |
-| 1.4 | ほかの種類にも同じ形で印を付けられる | ManualMarker（`page-<種類>` の決まり、種類を決める所が 1 か所） | `h1.page-<種類>` | — |
-| 1.5 | 頁が `manual/` の下にあることから付け、題や id で見分けない | ManualMarker（`for d in DIRS` の `d`）, BandStyle（`h1#…` を使わない） | `d == 'manual'` | — |
+| 1.4 | 使わない頁の種類の印を足さない | ManualMarker（見分けは 1 か所、HTML の印は `manual-item` だけ） | `git diff` | — |
+| 1.5 | 見た目の指定で題や id で頁を見分けない | BandStyle（`h1#…` を使わない） | — | — |
 | 2.1 | 名前を 1 行に置き、説明を次の行から | BandStyle（`display: block`）, ShotTool | `strong.manual-item` | I |
 | 2.2 | 説明のすべてを同じ字下げの左の端に | BandStyle（項目の `margin-left`）, ShotTool, ContrastProbe | 説明の左の端（写しで 40px） | I, K |
 | 2.3 | 頭の点を見せない | BandStyle（`list-style: none`） | 項目の `list-style-type` | K |
@@ -435,7 +422,7 @@ flowchart TD
 | 6.6 | 帯の中の `\` を今のまま | ManualMarker, MarkerCheck, ShotTool | `directory` の画面 | H, I |
 | 6.7 | `_raw/`・`llms.txt`・一覧の検査・見出しの数の検査・リンクの書き換え | ManualMarker（`rewrite_links()` の後に足すだけ）, MarkerCheck | 控えと同じ、Build Gate | F, H |
 | 7.1 | 配られた `extra.css` と `filetree.js` が 200 で中身がある | MarkerCheck | `/ukadoc-spec/assets/…` | H |
-| 7.2 | 頁の種類の印・「`: `」の目印の数・漏れ・スクリプトの読み込み | MarkerCheck | 下の表 | H |
+| 7.2 | 目印の数・「`: `」の目印の数・漏れ・スクリプトの読み込み | MarkerCheck | 下の表 | H |
 | 7.3 | 木ごとのファイル名・フォルダ名の数と字 | TreeCheck | 下の表 | H |
 | 7.4 | 前後で id・¶・目次の数が同じ | MarkerCheck | 控えとの比べ | C, H |
 | 7.5 | 目標の画面と同じ位置・大きさで明・暗を見比べる | ShotTool, VerificationRecord | 画面の一覧 | I |
@@ -456,7 +443,7 @@ flowchart TD
 
 | Component | Domain/Layer | Intent | Req Coverage | Key Dependencies | Contracts |
 |-----------|--------------|--------|--------------|------------------|-----------|
-| ManualMarker | 組み立ての処理（`prepare_site.py`） | manual の頁の題に頁の種類の印、ファイルの箇条書きの名前に目印を付け「`: `」を外す | 1.1〜1.5, 2.4, 2.6, 2.7, 2.9, 3.3, 3.4, 3.7, 6.1, 6.3, 6.6, 6.7, 8.1, 8.4, 8.7 | `attr_list`（P0）、`FENCE`・`HEADING_LINE`・`main()` の流れ（P0） | Batch |
+| ManualMarker | 組み立ての処理（`prepare_site.py`） | manual の頁のファイルの箇条書きの名前に目印を付け「`: `」を外す | 1.1〜1.4, 2.4, 2.6, 2.7, 2.9, 3.3, 3.4, 3.7, 6.1, 6.3, 6.6, 6.7, 8.1, 8.4, 8.7 | `attr_list`（P0）、`FENCE`・`main()` の流れ（P0） | Batch |
 | TreeColorer | ブラウザの仕掛け（`assets/filetree.js`） | 木のファイル名を `span` で包む | 4.1〜4.9, 6.1, 6.2, 6.5, 8.1, 8.7 | テーマの bundle の順（P1） | Service, State |
 | ScriptEntry | 設定（`mkdocs.yml`） | 全頁で `filetree.js` を 1 回読む | 4.6, 7.1, 7.2, 8.1, 8.6 | Zensical の `extra_javascript`（P0） | State |
 | BandStyle | 見た目の指定 | ファイル名の帯と説明の字下げ | 1.5, 2.1〜2.3, 2.5, 2.6, 2.8, 3.1, 3.2, 3.5, 3.6, 5.4〜5.7, 6.4, 8.2, 8.6, 8.7 | ManualMarker（P0）、C01 の帯の宣言（P0）、テーマの変数（P0） | State |
@@ -473,12 +460,11 @@ flowchart TD
 
 | Field | Detail |
 |-------|--------|
-| Intent | manual の頁の写しの字に、頁の種類の印と、ファイルの箇条書きの頭の名前の目印を足し、名前の後ろの「`: `」を外す |
-| Requirements | 1.1〜1.5, 2.4, 2.6, 2.7, 2.9, 3.3, 3.4, 3.7, 6.1, 6.3, 6.6, 6.7, 8.1, 8.4, 8.7 |
+| Intent | manual の頁の写しの字に、ファイルの箇条書きの頭の名前の目印を足し、名前の後ろの「`: `」を外す |
+| Requirements | 1.1〜1.4, 2.4, 2.6, 2.7, 2.9, 3.3, 3.4, 3.7, 6.1, 6.3, 6.6, 6.7, 8.1, 8.4, 8.7 |
 
 **Responsibilities & Constraints**
-- 頁の種類: `main()` の読み物の頁の流れで、`d == 'manual'` の頁だけを `mark_manual()` に通す。まとめ頁・`dev/`・`memo/`・トップの頁は通さない
-- 頁の種類の印: コードブロックの外の最初の `#`（1 段）の見出しの行の後ろに ` {: .page-manual }` を足す。無ければ `error()`（build を止める）
+- 頁の見分け: `main()` の読み物の頁の流れで、`d == 'manual'` の頁だけを `mark_manual()` に通す。まとめ頁・`dev/`・`memo/`・トップの頁は通さない
 - 名前の目印: コードブロックの外で `MANUAL_ITEM` に合う行（行の頭の `- **名前**`、後ろが「`: `」・行の終わりの「`:`」・行の終わり）の `**名前**` の直後に `{: .manual-item }` を足し、「`: `」は空白 1 つに、行の終わりの「`:`」は無しにする
 - 名前の字・説明の字・リンク・見出しの行・コードブロックの中・原稿は変えない
 
@@ -489,16 +475,16 @@ flowchart TD
 - Interface:
   ```python
   MANUAL_ITEM: re.Pattern[str]                  # group(1) は "- **名前**"、group(2) は ": " か ":" か ""
-  def mark_manual(rel: str, text: str) -> str: ...  # rel は ROOT からの相対パス（エラーの文に使う）、text は rewrite_links() の後の頁の字
+  def mark_manual(text: str) -> str: ...  # text は rewrite_links() の後の頁の字
   ```
-- Input / validation: manual の頁の、`rewrite_links()` を通した字。形に合わない行はそのまま通す（エラーにしない）。題の見出しが無い頁だけを `error()` にする
-- Output / destination: `_site_src/manual/<名前>.md` の題の行の後ろに ` {: .page-manual }`、名前の直後に `{: .manual-item }`。HTML は `<h1 class="page-manual" id="…">` と `<strong class="manual-item">…</strong>`（後ろに空白 1 つと説明の字）
+- Input / validation: manual の頁の、`rewrite_links()` を通した字。形に合わない行はそのまま通す（エラーにしない。「設計の話し合いで決めたこと」の 6）
+- Output / destination: `_site_src/manual/<名前>.md` の名前の直後に `{: .manual-item }`。HTML は `<strong class="manual-item">…</strong>`（後ろに空白 1 つと説明の字）
 - Idempotency & recovery: 毎回 `_site_src/` を作り直すので、何度流しても同じ。原稿は書き換えない
 
 **Implementation Notes**
 - Integration: `mark_manual()` は `rewrite_links()` の後に通す（名前の中のリンクの書き換えは先に済む）。`site-look-definition-tables` が読み物の頁の同じ行に後処理を足すときは、両方を入れ子にして残し、目印の数と表にならないことを確かめ直す
 - Validation: MarkerCheck（下）と、`mark_manual()` に字を直に渡す例（Testing Strategy）
-- Risks: 名前の後ろが規則に無い書き方の行は目印が付かず、点の付いた今の見え方のまま残る（今は 0 個。数の確かめで見つける。「前提と OPEN QUESTION」の 6）
+- Risks: 名前の後ろが規則に無い書き方の行は目印が付かず、点の付いた今の見え方のまま残る（今は 0 個。数の確かめで見つける。「設計の話し合いで決めたこと」の 6）
 
 ### ブラウザの仕掛け
 
@@ -558,7 +544,7 @@ ScriptEntry・BandStyle・TreeStyle は、どれも新しい境目を持たな�
 
 **Responsibilities & Constraints**
 - 配り（7.1）: 作業木の `serve` の `/ukadoc-spec/assets/extra.css` が 200 で、`site-look-manual-files:` の見出しのコメントが 2 つと `:is(.bundle-item, .manual-item)` が 2 つある。`/ukadoc-spec/assets/filetree.js` が 200 で、`filetree-file` を含む
-- 数（1.1・1.2・2.9・3.3・7.2）: 全頁の HTML を `serve` から取り、`class="page-manual"`・`class="manual-item"` を頁ごとに数える。全頁の HTML で `assets/filetree.js` の読み込みが 1 つずつ
+- 数（1.1・1.2・2.9・3.3・7.2）: 全頁の HTML を `serve` から取り、`class="manual-item"` を頁ごとに数える。全頁の HTML で `assets/filetree.js` の読み込みが 1 つずつ
 - 漏れ（7.2）: 全頁の `article` の中の、`pre`・`code` の外の字に `{:`・`{#`・`{.` が 0
 - 変わらないこと（1.3・2.4・2.6・3.4・3.7・6.1・6.3・6.6・7.4）: 変更の前の控え（8010 などで配る）と全頁で、`<title>`・`article` の中の見出しの id の並び・`class="headerlink"` の数・`md-nav__link` の数が同じ。`article` の中の字（タグを外し空白を詰めたもの）が、manual の外の頁で同じ、manual の頁で「`:`」の数（頁ごとの「`: `」の目印の数）だけ少ない
 - `_raw/` と `llms.txt` が控えと同じ（6.7）。`prepare_site.py` が exit 0（一覧の検査・見出しの数の検査）
@@ -567,7 +553,6 @@ ScriptEntry・BandStyle・TreeStyle は、どれも新しい境目を持たな�
 ```typescript
 interface MarkerCount {
   page: string;            // 例: "manual/ghost/"
-  pageMarker: number;      // class="page-manual"（manual の頁 1、ほか 0）
   items: number;           // class="manual-item"
   colonsRemoved: number;   // 控えとの本文の字の数の差（「:」の数）
   scripts: number;         // assets/filetree.js の読み込み（1 であること）
@@ -587,19 +572,19 @@ interface MarkerCheck {
 
 期待の数（`0eb3fb9` の写しで数えた。実装で数え直し、それを正とする）:
 
-| 頁 | 頁の種類の印 | 名前の目印 | 外した「`:`」 | うち場合分け | うち名前だけ |
-|---|---|---|---|---|---|
-| `manual/balloon` | 1 | 22 | 22 | 0 | 0 |
-| `manual/directory` | 1 | 12 | 12 | 0 | 0 |
-| `manual/ghost` | 1 | 10 | 9 | 0 | 1（`updates2.dau`） |
-| `manual/install` | 1 | 7 | 7 | 5 | 0 |
-| `manual/owner-draw-menu` | 1 | 3 | 3 | 0 | 0 |
-| `manual/shell` | 1 | 12 | 12 | 0 | 0 |
-| `manual/translator` | 1 | 0 | 0 | 0 | 0 |
-| `manual/update` | 1 | 7 | 7 | 3 | 0 |
-| 計 | 8 | 73 | 72 | 8 | 1 |
+| 頁 | 名前の目印 | 外した「`:`」 | うち場合分け | うち名前だけ |
+|---|---|---|---|---|
+| `manual/balloon` | 22 | 22 | 0 | 0 |
+| `manual/directory` | 12 | 12 | 0 | 0 |
+| `manual/ghost` | 10 | 9 | 0 | 1（`updates2.dau`） |
+| `manual/install` | 7 | 7 | 5 | 0 |
+| `manual/owner-draw-menu` | 3 | 3 | 0 | 0 |
+| `manual/shell` | 12 | 12 | 0 | 0 |
+| `manual/translator` | 0 | 0 | 0 | 0 |
+| `manual/update` | 7 | 7 | 3 | 0 |
+| 計 | 73 | 72 | 8 | 1 |
 
-- ほかの 32 頁は 3 つとも 0 で、本文の字は控えと同じ。全 40 頁で `<title>`・id の並び・¶・`md-nav__link` の数が同じ（manual の頁の ¶ は `directory` 3・ほか 1、`md-nav__link` は `directory` 62・ほか 56）
+- ほかの 32 頁は 2 つとも 0 で、本文の字は控えと同じ。全 40 頁で `<title>`・id の並び・¶・`md-nav__link` の数が同じ（manual の頁の ¶ は `directory` 3・ほか 1、`md-nav__link` は `directory` 62・ほか 56）
 - 名前の目印 73 のうち、`<li><strong class="manual-item">`（段落に分かれない形）は 12
 - 漏れ 0、`filetree.js` の読み込みは 40 頁すべてに 1 つ
 
@@ -767,12 +752,11 @@ interface ContrastProbe {
 | 起きること | 見分け方 | 対し方 |
 |---|---|---|
 | `serve` が書きかけの `_site_src/` を拾い、`extra.css` か `filetree.js` が 404 か古い | MarkerCheck の `served()` が偽 | `serve` を止め、`prepare_site.py` → `build --strict` → 起動し直す |
-| manual の頁に題の見出しが無い | `prepare_site.py` が `error()` で止まる | 原稿を直さず、止めて開発者に提示する（今は 8 頁すべてにある） |
 | 名前の目印の数が合わない、本文に `{:` が漏れる、id・¶・目次・題・本文の字が変わる | MarkerCheck | `mark_manual()` を見直す。原稿の新しい書き方が理由なら、原稿は直さず数と行を記録して開発者に提示する |
 | 木の数・ファイル名の数が合わない、字が変わる、木でないブロックが包まれる | TreeCheck | `filetree.js` を直す。要件の規則と違う読み方が要るときは止めて開発者に提示する |
 | 検索の強調がスクリプトより先に動いた（`mark` の入った木は包まれない） | ContrastProbe の `marks()` で木に `span` が無く `mark` だけがある、`console.warn` | 頁の読み込みの順を記録し、開発者に提示する（今の順では起きない。起きるなら字のノードごとに包む書き方に替える） |
 | 撮る途中の描き直しで画面が二重に重なる | 上の端以外の左右の端にヘッダの紺の行がある | 撮り直す（7.9） |
-| 対比が線に届かない、色合いの差が足りないと開発者が見た | ContrastProbe、画面 | 色を勝手に選び直さず、そこで作業を止め、測った数と代わりの案（「前提と OPEN QUESTION」の 3）を添えて開発者に提示して判断を待つ |
+| 対比が線に届かない、色合いの差が足りないと開発者が見た | ContrastProbe、画面 | 色を勝手に選び直さず、そこで作業を止め、測った数と代わりの案（「設計の話し合いで決めたこと」の 3）を添えて開発者に提示して判断を待つ |
 | `origin/main` が `extra.css`・`prepare_site.py`・`mkdocs.yml` を変えて進み、ぶつかる | merge のぶつかり | `extra.css` は両方の塊を並べて残し、C01 の 2 つのセレクタの `.manual-item` を保つ。`mkdocs.yml` は `extra_javascript` の並びに両方を残す。`prepare_site.py` は両方の変更を残し、Build Gate・MarkerCheck・TreeCheck をやり直す（`workflow.md` の「開いている PR に追いつく」） |
 | 開発者のブラウザに古い `extra.css`・`filetree.js` が残る | 開発者の画面だけ帯・色が出ない | Ctrl+F5 を頼む（7.10） |
 
@@ -781,8 +765,8 @@ interface ContrastProbe {
 自動のテストは無い（ukadoc-spec に CSS・スクリプト・`prepare_site.py` のテストの仕組みは無く、足さない）。次の確かめを `verification.md` に記録する。
 
 - **Build Gate**: 作業木で `python scripts/prepare_site.py`（一覧の検査・見出しの数の検査を含む）と `zensical build --strict` がどちらも exit 0（6.7・8.4）。`git diff --stat origin/main` が `mkdocs.yml`・`scripts/prepare_site.py`・`assets/extra.css`・`assets/filetree.js` だけ（8.1）
-- **名前の目印の例**: `mark_manual()` に次の字を直に渡し、結果を記録する: `# ゴースト`（印が付く）、`- **[descript.txt](…)**: 説明`（目印、「`:`」を外す）、`- **[updates2.dau](update.md)**`（目印だけ）、`- **sstp.png**:`（目印、「`:`」を外す）、`- **[surfaces\*\*.txt](…)**: SSP専用。`・`- **(myghost)\\[delete.txt](…)**: …`・`- **foo\***: …`（名前の字を取り違えない）、`    - **※1,※2**: …`（字下げ。付かない）、`- **名前** 説明`・`- **名前**:説明`（付かない）、コードブロックの中の `- **x**: y`（付かない）、題の無い頁（`error()`）（1.1・2.4・2.7・3.4）
-- **目印の数**: 頁ごとの数が MarkerCheck の表と合う（8・73・72、場合分け 8、名前だけ 1）、ほかの頁 0、漏れ 0、スクリプトの読み込みが全頁に 1（1.1・1.2・2.9・3.3・7.2）
+- **名前の目印の例**: `mark_manual()` に次の字を直に渡し、結果を記録する: `# ゴースト`（変わらない）、`- **[descript.txt](…)**: 説明`（目印、「`:`」を外す）、`- **[updates2.dau](update.md)**`（目印だけ）、`- **sstp.png**:`（目印、「`:`」を外す）、`- **[surfaces\*\*.txt](…)**: SSP専用。`・`- **(myghost)\\[delete.txt](…)**: …`・`- **foo\***: …`（名前の字を取り違えない）、`    - **※1,※2**: …`（字下げ。付かない）、`- **名前** 説明`・`- **名前**:説明`（付かない）、コードブロックの中の `- **x**: y`（付かない）（1.1・2.4・2.7・3.4）
+- **目印の数**: 頁ごとの数が MarkerCheck の表と合う（73・72、場合分け 8、名前だけ 1）、ほかの頁 0、漏れ 0、スクリプトの読み込みが全頁に 1（1.1・1.2・2.9・3.3・7.2）
 - **変わらないこと**: 変更の前の控えと、全 40 頁の題・id の並び・¶・目次の数が同じ、manual の外の本文の字が同じ、manual の頁の本文の字の違いが外した「`:`」だけ、`_raw/`・`llms.txt` が同じ（1.3・2.4・2.6・3.7・6.1・6.3・6.7・7.4）
 - **木**: TreeCheck の例の表がすべて合う。頁ごとの数が TreeCheck の表と合い、字の違い 0、木でないブロックの `span` 0。着色の後の形でも同じ数（4.1〜4.5・4.7〜4.9・6.5・7.3）
 - **位置と対比**: 帯の左の端・幅・説明の左の端が 1 通り、点が消え入れ子の点が残る（2.2・2.3・3.2）。「測る所と線」のすべての行が線を満たす（3.5・5.1・5.2・5.4）。切り替えで読み込み直さずに変わる（5.5）。暗い表示だけの指定が `@media screen` の中（5.6）
@@ -793,14 +777,14 @@ interface ContrastProbe {
 - 作業木: `.worktrees/site-look-manual-files/`（ブランチ `site-look-manual-files`）を `origin/main`（PR #11 の後。今は `0eb3fb9`）から作り、作った直後に追う先を外す。コミットは `-c user.name=ekicyou -c user.email=dot.station@gmail.com` で名前を渡す（System Flows の A・B・D）
 - `site-look-sakura-script-highlight`: 作業木 `.worktrees/site-look-sakura-script-highlight/` に `mkdocs.yml`（`extra_javascript` と `pymdownx.highlight`）・`assets/extra.css`（末尾の塊）・`assets/sakurascript.js` の変更があり、PR はまだ無い（2026-10-25）。どちらが先に入っても、`extra_javascript` の並びに両方を残し、`extra.css` は末尾の塊を並べる（8.6）。後から入る方が `origin/main` に追いつき、木の数（TreeCheck）とさくらスクリプトの包みの数を確かめ直す
 - PR（8.5）: `/kiro-complete` で、この spec だけの PR を作ってスクワッシュマージする。説明は brief の「続きの PR の説明」に従い、PR を出すときの roadmap の並び（出し済みの PR の番号・この PR・この後の PR）を短く並べ、この PR だけで完結してマージしてよいこと、中身で依る先が `site-look-list-items` の PR #11（C01 の帯の宣言と、その塊の 2 つのセレクタを広げたこと）であることを書く。この PR だけでサイトは壊れない（目印・見た目の指定・スクリプトがそろって入る）
-- 後続: `site-look-definition-tables` は、manual の頁の `strong.manual-item` の項目（「`: `」が外れている）を表にしないことを確かめる。C16・C12 は `h1.page-<種類>` の決まりで頁を絞れる
+- 後続: `site-look-definition-tables` は、manual の頁の `strong.manual-item` の項目（「`: `」が外れている）を表にしないことを確かめる。C16・C12 が頁を絞る印は、その spec が `main()` の同じ見分けの所に足す
 
-## 前提と OPEN QUESTION
-設計で、確かめた事実か要件の決定に基づいて決めた。開発者の判断で変わりうるものを挙げる（詳しいわけは `research.md` の「9. 設計の調査」）。
+## 設計の話し合いで決めたこと
+2026-10-25、開発者の「承認」で全議題を推奨案のとおりに決めた（詳しいわけは `research.md` の「9. 設計の調査」と「10. 設計の話し合い」）。
 
-1. **頁の種類の印の置き場と使い方**（［仮定］1.1・1.4・1.5）: 印は `prepare_site.py` が manual の頁の題の `h1` に付ける class `page-manual` にし、この spec の見た目の指定は名前の目印 `manual-item` だけに当てた（印は全頁の数の確かめと、C16・C12 の入口に使う）。名前の目印は manual の頁にしか付かず、`:has()` で目印のある項目だけを選べば、manual の頁に名前の無い箇条書きが後で入っても今の見え方が残るため。代わりの案: (a) 見た目の指定を `.md-typeset:has(> h1.page-manual) > ul` で頁の印にも絞る（印に CSS の役ができるが、名前の無い箇条書きも点が消える）、(b) テンプレートの上書き（`overrides/main.html`）で頁の要素に印を付ける（`overrides/` と `theme.custom_dir` が増え、minijinja で頁の道を比べる書き方が未確認）、(c) `prepare_site.py` で頁の中身を `<div class="page-manual" markdown="1">` で包む（`.md-typeset > ul` が `.md-typeset > div > ul` になり、要件 7.5 の撮る位置のセレクタと後続 spec の当て先が変わる）
-2. **C01 の帯の共有の仕方**（［仮定］3.1・3.6・8.2）: `site-look-list-items` の塊の 2 つのセレクタを `:is(.bundle-item, .manual-item)` に広げた（値は変えず、同じ宣言を 2 か所に書かない）。要件 8.2 の「この spec の指定を末尾に塊として足す」の外の 2 行の変更になる。代わりの案: この spec の塊に同じ宣言（帯の 4 行と暗い表示のリンクの 2 行）を書き直す（8.2 に字のとおり合い、ほかの塊に触れないが、C01 の帯が変わったときに 2 か所を直す）
-3. **木のファイル名の色**（［仮定］4.3・5.2・5.3）: テーマのリンクの色の変数 `--md-typeset-a-color` にした（明は紺 `#1f4e8c`、暗は `#8fb4e8`。直書きの色 0、印刷は自然に紺）。設計の写しの画面（`screenshots/design-ghost-C15-*.png`・`design-directory-tree-dark.png`）で、明・暗ともファイル名の青がフォルダ名の灰色から見分けられると見た。リンクと同じ色なので、木の名前が押せるものに見えるおそれがある（明るい表示は試作の C15 から同じ紺で、承認済みの見え方）。代わりの案: 暗い表示だけ別の色を直書きする（例: C18 の線の `#7fa6dc`、コードの地に 5.69:1。`@media screen` の 1 行が増え、対比を記録する）
-4. **「`: `」を外した後の空白**（［仮定］2.4・6.1）: 「`:`」だけを外し、空白 1 つを残した（帯の後ろの行の頭の空白として消え、見えない。検索の字で名前と説明の語の切れ目になる）。代わりの案: 空白も外す（要件の「`: `」を字のとおりに外すが、検索の字で名前と説明がつながる。例: `descript.txtゴーストを識別する…`）
-5. **帯のまわりの余白**（［仮定］2.1・3.1）: 帯の上下の余白を C01 の帯と同じ `.5em 0 .3em` にした。目標の画面（試作は項目の上に `.8em` の余白を足した）より、説明の終わりから次の帯までがやや詰まる（写しで約 37px、目標の画面で約 45px）。代わりの案: 項目の上に `.8em` を足して目標の画面に合わせる
-6. **形に合わない名前の行**（［仮定］Revalidation Triggers）: `- **名前** 説明`・`- **名前**:説明` など規則に合わない行は目印を付けず、今の見え方のまま残し、数の確かめで見つける（今は 0 個）。代わりの案: `prepare_site.py` で manual の頁の一番外の `- **` の行が目印にならなかったら `error()` で build を止める（原稿の書き方の揺れを見落とさないが、見た目のために build が止まる）
+1. **頁の種類の印は足さない**（1.1・1.4・1.5）: 設計の初めの案は manual の頁の `h1` に `page-manual` を付けたが、この spec の見た目の指定は使わず、使われない class が公開の PR に入る。manual の頁の見分けは `prepare_site.py` の 1 か所（`d == 'manual'`）が持ち、結果は `manual-item` が運ぶ。C16・C12 が頁を絞る印を要るときは、その spec が同じ所に自分の印を足す（roadmap の「印は、それを使う見た目と同じ spec に入れる」）。要件 1 をこの形に改めた
+2. **C01 の帯は、`site-look-list-items` の塊の 2 つのセレクタを `:is(.bundle-item, .manual-item)` に広げて分け合う**（3.1・3.6・8.2）: 帯の宣言を 1 か所に保ち、C01 の帯が変われば manual の帯もそろって変わる。要件 8.2 にこの 2 行の例外を書き足した
+3. **木のファイル名の色はリンクの色の変数 `--md-typeset-a-color`**（4.3・5.2・5.3）: 明は紺 `#1f4e8c`、暗は `#8fb4e8`。直書きの色 0、印刷は自然に紺。設計の写しの画面（`screenshots/design-ghost-C15-*.png`・`design-directory-tree-dark.png`）で、明・暗ともファイル名の青がフォルダ名の灰色から見分けられることを開発者と見た
+4. **「`:`」を外した後の空白 1 つは残す**（2.4・6.1）: 帯の後ろの行の頭の空白として見えず、検索の字で名前と説明の語の切れ目になる
+5. **帯の上下の余白は C01 の帯と同じ `.5em 0 .3em`**（2.1・3.1）: サイトの中で項目の間合いがそろう。目標の画面より、説明の終わりから次の帯までがやや詰まる（写しで約 37px、目標の画面で約 45px）
+6. **形に合わない名前の行は目印を付けずに残し、build は止めない**（Revalidation Triggers）: `- **名前** 説明`・`- **名前**:説明` など（今は 0 個）は今の見え方のまま。数の確かめで見つける
