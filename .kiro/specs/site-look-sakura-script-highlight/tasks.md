@@ -60,7 +60,7 @@
   - `verification.md` の「配りと数」の節に、配りの結果・数の表・控えと違う頁 0 が書いてある
   - _Requirements: 1.1, 1.3, 6.2, 7.2, 9.1, 9.2, 9.10_
 
-- [ ] 3.3 ブラウザの頁で、字・コピー・高さ・形・検索の字・動かないときと外部の読み込みを確かめる
+- [x] 3.3 ブラウザの頁で、字・コピー・高さ・形・検索の字・動かないときと外部の読み込みを確かめる
   - プレビューが動いていなければ、`prepare_site.py` → `build --strict` → `serve` の順に起動する。内蔵ブラウザの枠（使えないときは Edge ヘッドレス + CDP）で開く。スクリプトを切った頁とボタンのコピー（クリップボードの許し）は CDP が要るので Edge ヘッドレス + CDP で見る
   - `list/sakura-script` で、`fetch` で取り直した HTML の記述例の字と包んだ後の `textContent` を 287 個比べて違い 0、包みの数がタグ 500・環境変数 6、`span.sakurascript-error` 0・`sakurascript:` の警告 0 を見る
   - 287 個の `code.innerText.trimEnd()` と、幅 1000・375 の高さが 1.2 の控えと同じこと、`#bang-lock-repaint`・`#q-script`・`#environmentvariable` の記述例のボタンでコピーした字が控えと同じことを見る

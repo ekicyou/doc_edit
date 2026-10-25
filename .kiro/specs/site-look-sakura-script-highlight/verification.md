@@ -161,3 +161,71 @@ $PY -I $S/tools/measure_static.py $W/_site $S/after32     # 1.2 と同じ道具�
 $PY -I $S/tools/check_serve.py $W/_site $S/before/baseline $S/after32   # 形の数・読み込み・控えとの静的な比べ。exit 0
 ```
 - `check_serve.py` は、形の数が期待どおりで、読み込みが 1 でない頁が無く、控えとの静的な比べ（頁ごとの id の並び・¶・目次・`hr`・本文の字）と `search.json` の項目の字と題に違いが無いときだけ exit 0。ブラウザの比べ（`browser.json`）は 3.3 で行う
+
+## 字とコピー（タスク 3.3、2026-10-25）
+
+作業木の serve（http://127.0.0.1:8000/ukadoc-spec/ 、作業木の HEAD `4ce6b5e`）と控え（http://127.0.0.1:8030/）を、Edge ヘッドレス + CDP（明、幅 1000）で同じ手順で測った。
+
+### 包む前後の字と包みの数（`list/sakura-script`）
+- `fetch(location.href)` で取り直した HTML を `DOMParser` で読み、`article code.language-sakurascript` の `textContent` を、包んだ後の頁の同じ `code` の `textContent` と順に比べた
+
+| もの | 数 |
+|---|---|
+| 取り直した HTML の `code.language-sakurascript` | 287 |
+| 頁の `code.language-sakurascript` | 287 |
+| 包む前後で字の違うブロック | 0 |
+| `span` が入ったブロック | 287 |
+| タグ（`.sakurascript-tag`） | 500 |
+| 環境変数（`.sakurascript-env`） | 6 |
+| 誤り（`span.sakurascript-error`） | 0 |
+| 言語の印の無い `code` の中の包み | 0 |
+| `sakurascript:` を含む `console.warn`（`list/sakura-script`・`spec/sstp`・`manual/install`） | 0・0・0 |
+
+### コピーの字（`innerText.trimEnd()`）
+- 1.2 の `measure_browser.mjs` で作業木の側を測り、`compare.py` で控え（`S\before\baseline\`）と比べて「違い 0」（exit 0）
+- `list/sakura-script` の `pre > code` 288 個（287 が記述例、1 つが言語の名前の無いブロック）の `innerText.trimEnd()` が幅 1000・375 とも控えと 288 個すべて同じ。`spec/sstp` 18 個・`manual/install` 6 個も同じ
+
+### ボタンのコピー
+- `Browser.grantPermissions`（`clipboardReadWrite`・`clipboardSanitizedWrite`）と `Emulation.setFocusEmulationEnabled` を与え、見出しの後の最初の `.highlight` のコピーのボタン（`button.md-code__button`、`data-md-type="copy"`）を `userGesture` 付きで押し、`navigator.clipboard.readText()` で読んだ（押す前にクリップボードを別の字で埋めた）
+
+| 見出し | 字の数 | 控えと同じ | ブロックの `innerText.trimEnd()` と同じ |
+|---|---|---|---|
+| `#bang-lock-repaint` | 71 | 同じ | 同じ |
+| `#q-script` | 71 | 同じ | 同じ |
+| `#environmentvariable` | 56 | 同じ | 同じ |
+
+### 検索の字
+- `search.json` の各項目の `location`・題・字は 3.2 の `check_serve.py` で控えと違い 0（「配りと数」の節）。空白を詰めない違いは各ブロックの末尾の改行 1 つだけ
+
+### 動かないときと外部の読み込み
+- スクリプトを切った頁（`Emulation.setScriptExecutionDisabled` を true にして `list/sakura-script` を開き、`DOM` ドメインで数えた）: `pre > code` 288（うち `code.language-sakurascript` 287）、`code` の中の `span` 0、子に字のノードでないものを持つ `code` 0。ボタン（`.md-code__nav`）も 0 で、控えと同じ（控えも `span` 0・字のノードだけ）
+- ふつうの頁の通信（`Network.requestWillBeSent`、`data:`・`blob:` を除く）: `127.0.0.1` の外への読み込みは 3 頁とも控えと同じ集まり（`list/sakura-script` 8 件＝`fonts.googleapis.com` 1・`fonts.gstatic.com` 5・`api.github.com` 2、`spec/sstp` 6 件、`manual/install` 4 件。`api.github.com` は最初の頁だけで、テーマの倉庫の情報の読み込み）。控えより増えたのは 3 頁とも `127.0.0.1` の `assets/sakurascript.js` 1 件だけ
+
+## 形と折り返し（タスク 3.3、2026-10-25）
+
+1.2 の `measure_browser.mjs` で作業木の側を測り、`compare.py` で控えと比べた。違い 0。
+
+| 頁 | 幅 | `pre > code` | ボタン | 箱 | 点線 | 重なり | `.highlight` の地 | `code` の地 | 高さの合計（px） | `scrollWidth` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `list/sakura-script` | 1000 | 288 | 288 | 255 | 33 | 0 | `rgb(238, 242, 248)` 288 | 透明 288 | 16458.09 | 985 |
+| `list/sakura-script` | 375 | 288 | 288 | 255 | 33 | 0 | `rgb(238, 242, 248)` 288 | 透明 288 | 27401.06 | 360 |
+| `spec/sstp` | 1000 | 18 | 18 | 3 | 0 | 0 | 透明 15・`rgb(238, 242, 248)` 3 | `rgb(245, 245, 245)` 15・透明 3 | 2300.16 | 985 |
+| `spec/sstp` | 375 | 18 | 18 | 3 | 0 | 0 | 同上 | 同上 | 2471.44 | 360 |
+| `manual/install` | 1000 | 6 | 6 | 0 | 0 | 0 | 透明 6 | `rgb(245, 245, 245)` 6 | 1202.72 | 985 |
+| `manual/install` | 375 | 6 | 6 | 0 | 0 | 0 | 透明 6 | `rgb(245, 245, 245)` 6 | 1370.19 | 360 |
+
+- どの行も控えの数と同じ。ブロックごとの高さも 312 個（3 頁）すべて控えと同じ（合計だけでなく 1 個ずつ比べた）
+- `div.highlight` → `pre.highlight` の形の変わりで、C18 の箱・C09 の点線・ボタンと字の重なり・地の色は変わっていない
+
+### 流した式（Git Bash）
+```sh
+S=/c/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/fc194b1e-28b1-4328-9e08-7d8780051c15/scratchpad
+PY=/c/home/maz/git/doc_edit/.venv/Scripts/python.exe
+mkdir -p $S/after33 && cp $S/after32/static.json $S/after32/search.json $S/after33/   # 静的な数は 3.2 のもの
+node $S/tools/measure_browser.mjs http://127.0.0.1:8000/ukadoc-spec/ $S/after33
+PYTHONIOENCODING=utf-8 $PY -I $S/tools/compare.py $S/before/baseline $S/after33       # 「違い 0」、exit 0
+# 包む前後の字・包みの数・警告・ボタンのコピー・スクリプトを切った頁・通信（作業木と控えで同じ手順）
+node $S/tools/check_page33.mjs http://127.0.0.1:8000/ukadoc-spec/ $S/after33/page33.json
+node $S/tools/check_page33.mjs http://127.0.0.1:8030/ $S/before/page33.json
+# 2 つの page33.json のコピーの字・外への読み込み・127.0.0.1 の中の読み込みを比べた（node -e の使い捨て）
+```
