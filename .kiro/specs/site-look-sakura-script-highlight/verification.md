@@ -229,3 +229,82 @@ node $S/tools/check_page33.mjs http://127.0.0.1:8000/ukadoc-spec/ $S/after33/pag
 node $S/tools/check_page33.mjs http://127.0.0.1:8030/ $S/before/page33.json
 # 2 つの page33.json のコピーの字・外への読み込み・127.0.0.1 の中の読み込みを比べた（node -e の使い捨て）
 ```
+
+## `ss` と読み物の頁（タスク 3.4、2026-10-25）
+
+作業木の HEAD `4ce6b5e` を `git archive` で使い捨ての写し（`S\copy34\src\`）に書き出し、原稿に記述例を足して build し、http://127.0.0.1:8032/ で配って測った。終わったら配りを止め、写しのフォルダごと消した（結果の JSON だけ `S\after34\check34.json` に残した）。作業木は `git status` で変更 0、HEAD は `4ce6b5e` のまま。serve（8000）は止めていない。
+
+### 足した記述例（写しの中だけ）
+- `list/sakura-script/environment-variable/environmentvariable.md` の末尾: ```` ```ss ```` で `\0\s[5]%msの話をするね。\e`
+- `memo/memo.md` の末尾: 見出し `## 記述例の確かめ`、```` ```ss ```` で `\0\s[0]%usernameさん、こんにちは。\e`、閉じない `[` のある ```` ```sakurascript ```` で `\1\s[10]選んでね。\n\q[はい,OnYes`
+- `prepare_site.py` と `zensical build --strict` はどちらも exit 0（「No issues found」）
+
+### 数（写しの `_site` の HTML）
+
+| もの | 数 | 期待 |
+|---|---|---|
+| `class="language-ss"` | 2（`list/sakura-script` 1・`memo/memo` 1） | 2 |
+| `class="language-sakurascript"` | 288（287 + `memo/memo` の誤りのブロック） | — |
+| 言語の印（上の 2 つの合計） | 290 | 290 |
+
+### ブラウザ（Edge ヘッドレス + CDP、明、幅 1000）
+
+| 頁 | 印の付いた `code` | 字の違い | コピーの字の違い | `span` の入った `code` | タグ | 環境変数 | 誤り | `sakurascript:` の警告 |
+|---|---|---|---|---|---|---|---|---|
+| `list/sakura-script` | 288 | 0 | 0 | 288 | 503 | 7 | 0 | 0 |
+| `memo/memo` | 2 | 0 | 0 | 2 | 6 | 1 | 1 | 1 |
+
+- `language-ss` の `code` は 2 つとも `class` が `language-ss language-sakurascript` になり、中が `[tag:\0][tag:\s[5]][env:%ms]…[tag:\e]`（`memo/memo` は `[tag:\0][tag:\s[0]][env:%username]…[tag:\e]`）の並び
+- 見え方は `list/sakura-script` と `memo/memo` で同じ: タグ `rgb(138, 13, 79)`、環境変数 `rgb(122, 46, 10)`・太さ 700（明）。`memo/memo` の暗はタグ `rgb(244, 143, 177)`・環境変数 `rgb(246, 173, 123)`・太さ 700
+- 字の違いは、`fetch` で取り直した HTML の `code` の `textContent` と頁の `textContent` を順に比べた数。コピーの字の違いは、頁の `innerText.trimEnd()` と取り直した `textContent.trimEnd()` を比べた数
+
+## 誤りの見え方（タスク 3.4、2026-10-25）
+
+上の写しの `memo/memo` の誤りのブロック（`\1\s[10]選んでね。\n\q[はい,OnYes`）を、明（`default`）で開いて測り、ヘッダの切り替え（「ダークモードに切り替え」のラベル）を押して `data-md-color-scheme` が `slate` になってから、読み込み直さずに同じく測った。
+
+| もの | 明 | 暗 |
+|---|---|---|
+| `span.sakurascript-error` の数 | 1 | 1 |
+| 誤りの字 | `\q[はい,OnYes`（`\q[` からブロックの終わりまで。後ろは空の字のノードだけ） | 同じ |
+| 前の包み | `\1`・`\s[10]`・`\n` がタグ（誤りの前は読み進める） | 同じ |
+| `title` | `閉じる ] が無い（引数の " が閉じていないときも）` | 同じ |
+| `text-decoration`（computed） | `underline`・`wavy`・`rgb(198, 40, 40)`（`#c62828`）、`text-decoration-skip-ink: none` | `underline`・`wavy`・`rgb(255, 138, 128)`（`#ff8a80`）、同じ |
+| 字の色・太さ・地 | `rgb(54, 70, 78)`（`code` と同じ）・400・透明 | `rgba(213, 216, 226, 0.82)`（`code` と同じ）・400・透明 |
+| 包む前後の字（`textContent`） | 同じ | 同じ |
+| コピー（`innerText.trimEnd()`） | 同じ | 同じ |
+| ボタンのコピー（クリップボード） | `\1\s[10]選んでね。\n\q[はい,OnYes`（`innerText.trimEnd()` と同じ） | 同じ |
+
+### 警告
+- 頁を開いたとき `console.warn` が 1 つ: `sakurascript: 閉じる ] が無い（引数の " が閉じていないときも）`・`/memo/memo/#記述例の確かめ`・`\q[はい,OnYes`（わけ・頁と見出しの id・誤りの頭）
+- 暗のまま読み込み直しても同じ 1 つが出る（`data-md-color-scheme` は `slate` のまま）
+
+### 下線の対比
+地は要素から `html` までの `backgroundColor` を重ねた色（`site-look-list-items` の「流した式」の `bgOf`・`ratio`）。誤りのブロックは見出しの後でない（箱でない）ので、測った地はコードの地。箱の地の値は、測った下線の色と 3.3・`site-look-list-items` で測った箱の地から同じ式で計算した。
+
+| 測る所 | 表示 | 下線 | 地 | 対比 | 見込み | 線 | 判定 |
+|---|---|---|---|---|---|---|---|
+| 誤りの下線 / コードの地 | 明 | `#c62828` | `#f5f5f5`（測った） | 5.16 | 4.9 | 3（3.8） | 満たす |
+| 誤りの下線 / 箱の地 | 明 | `#c62828` | `#eef2f8`（計算） | 5.00 | 5.1 | 3（3.8） | 満たす |
+| 誤りの下線 / コードの地 | 暗 | `#ff8a80` | `#272a35`（測った） | 6.26 | 6.4 | 3（3.8） | 満たす |
+| 誤りの下線 / 箱の地 | 暗 | `#ff8a80` | `#1d2433`（計算） | 6.80 | 7.0 | 3（3.8） | 満たす |
+
+- 設計の見込み（明 5.1・暗 7.0）は丸めた色からの値で、測った下線の色からの計算が上の値。下線の色はタグの赤紫（明 `rgb(138, 13, 79)`・暗 `rgb(244, 143, 177)`）と別の色
+
+### 画面
+- `screenshots/after-error-light.png`・`screenshots/after-error-dark.png`: 写しの `memo/memo/`、1000×700、見出し「記述例の確かめ」を頭に寄せた位置（頁の終わりに当たるので、実際の位置は頁の最下部）。明は `prefers-color-scheme: light` で開き、暗はヘッダの切り替えの後。波線は誤りの所（`\q[はい,OnYes`）の下だけに出ている
+- 撮り直し 1 回: 最初は `shot.mjs` と同じく `captureBeyondViewport` と `clip` で撮ったところ、明の画面の下にヘッダの紺の行が二重に写り（頁の終わりを越えた切り出し）、暗の画面にコピーの知らせとボタンのフォーカスの枠が写った。ビューポートだけを撮る形に替え、コピーの確かめより先に、フォーカスを外して 3 秒待ってから撮り直した。撮り直した 2 枚はヘッダの紺の行が上の端だけ
+
+### 流した式（Git Bash）
+```sh
+S=/c/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/fc194b1e-28b1-4328-9e08-7d8780051c15/scratchpad
+PY=/c/home/maz/git/doc_edit/.venv/Scripts/python.exe
+W=/c/home/maz/git/doc_edit/.worktrees/site-look-sakura-script-highlight
+mkdir -p $S/copy34/src && git -C $W archive 4ce6b5e | tar -x -C $S/copy34/src
+# 上の記述例を cat <<'EOF' >> で 2 つの .md の末尾に足す（printf はバックスラッシュを解釈するので使わない）
+cd $S/copy34/src && $PY scripts/prepare_site.py && /c/home/maz/git/doc_edit/.venv/Scripts/zensical.exe build --strict
+grep -o 'class="language-[a-z]*"' -r --include=*.html _site | awk -F: '{print $2}' | sort | uniq -c   # 288・2
+$PY -m http.server 8032 --bind 127.0.0.1 --directory $S/copy34/src/_site    # 別の口で配る
+node $S/tools/check_copy34.mjs http://127.0.0.1:8032/ $S/after34/check34.json /c/home/maz/git/doc_edit/.kiro/specs/site-look-sakura-script-highlight/screenshots
+# 配りを止め、rm -rf $S/copy34。git -C $W status --short が空
+```
+- `check_copy34.mjs`: `list/sakura-script`・`memo/memo` の印・包み・字・コピーを数え、`memo/memo` の誤りのブロックの範囲・`title`・`text-decoration`・下線と地の対比・ボタンのコピーを明で測り、画面を撮り、ヘッダの切り替えで暗にして同じく測って撮り、暗のまま読み込み直して警告を見る

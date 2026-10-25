@@ -71,7 +71,7 @@
   - `verification.md` の「字とコピー」「形と折り返し」の節に、違い 0 の結果と数が書いてある
   - _Requirements: 3.3, 3.4, 5.1, 5.2, 5.4, 5.5, 6.1, 6.2, 7.1, 9.4, 9.9, 9.13_
 
-- [ ] 3.4 使い捨ての写しで、`ss`・読み物の頁の記述例・誤りの見え方を確かめる
+- [x] 3.4 使い捨ての写しで、`ss`・読み物の頁の記述例・誤りの見え方を確かめる
   - 作業木の HEAD を新しいスクラッチのフォルダに書き出し、`list/sakura-script/environment-variable/environmentvariable.md` の末尾に ```` ```ss ```` 1 つ、`memo/memo.md` の末尾に見出しと ```` ```ss ```` 1 つ・```` ```sakurascript ```` 1 つ、閉じない `[` のある ```` ```sakurascript ```` 1 つを足して build し、別の口で配る
   - `language-ss` 2・言語の印 290 を数え、ブラウザで `language-ss` の `code` に `language-sakurascript` が付いて `span` が入ること、`memo/memo` でも同じ見え方になることを見る
   - 誤りのブロックで、明・暗とも誤りの所からブロックの終わりまで波線が出て、`title` にわけがあり、頁・見出しの id・誤りの頭を添えた `console.warn` が出て、字とコピーが変わらないことを見る。下線の色と地の対比を明・暗で測る。`after-error-{light,dark}.png` を撮る
