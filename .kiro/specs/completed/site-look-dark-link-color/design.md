@@ -23,7 +23,7 @@
 ### This Spec Owns
 - ukadoc-spec の `assets/extra.css` の、見出しのコメント `site-look-dark-link-color:` で始まる塊 1 つ（暗い表示・画面だけ・紺のテーマのときの `--md-typeset-a-color` の値）
 - その塊の注に書く、明るい紺と紺の対の関係と、暗い地との対比の数
-- この spec の記録（`.kiro/specs/site-look-dark-link-color/verification.md` と `screenshots/`）: 測った対比の数・画面の見比べ・失わないものの確かめ
+- この spec の記録（`.kiro/specs/completed/site-look-dark-link-color/verification.md` と `screenshots/`）: 測った対比の数・画面の見比べ・失わないものの確かめ
 
 ### Out of Boundary
 - `extra.css` のほかの塊（`[data-md-color-primary="custom"]` のテーマの紺、目次の詰め、記述例の折り返し、後続 spec が足す塊）
@@ -85,7 +85,7 @@ ukadoc-spec（作業木 .worktrees/site-look-dark-link-color/）
 └── assets/
     └── extra.css                # 末尾に site-look-dark-link-color の塊を足す（変更はこの 1 ファイルだけ）
 
-.kiro/specs/site-look-dark-link-color/（doc_edit）
+.kiro/specs/completed/site-look-dark-link-color/（doc_edit）
 ├── verification.md              # 新規。測った対比の数・画面の見比べ・失わないものの確かめの記録
 └── screenshots/                 # 新規。list/sakura-script の #bang-lock-repaint の画面
     ├── before-sakura-script-light.png   # 変更の前の明るい表示（2.3 の見比べ）
@@ -117,7 +117,7 @@ ukadoc-spec（作業木 .worktrees/site-look-dark-link-color/）
 | DarkLinkOverride | `assets/extra.css`（ukadoc-spec の作業木） | 変える |
 | ContrastProbe | なし（内蔵ブラウザの枠の JavaScript で流す使い捨ての手順。式と結果は `verification.md` に書く） | 作らない |
 | ShotTool | `.kiro/specs/completed/site-look-plan/tools/shot.mjs` | 読むだけで使う |
-| VerificationRecord | `.kiro/specs/site-look-dark-link-color/verification.md`・`screenshots/` | 新規 |
+| VerificationRecord | `.kiro/specs/completed/site-look-dark-link-color/verification.md`・`screenshots/` | 新規 |
 
 ## System Flows
 
