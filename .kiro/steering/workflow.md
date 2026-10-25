@@ -32,6 +32,8 @@ git -C ukadoc-spec fetch origin
 git -C ukadoc-spec worktree add ../.worktrees/<pr> -b <pr> origin/main
 ```
 
+- `worktree add -b <pr> origin/main` はブランチに `origin/main` を追う設定を付けるので、作った直後に `git -C .worktrees/<pr> branch --unset-upstream` で外す（素の `git push` が ukadoc-spec の `main` に送ってしまわないため。PR の時に `push -u origin <pr>` が追う先を付け直す）
+- ukadoc-spec の git には名前とメールの設定が無いので、作業木のコミットは doc_edit の `user.name`・`user.email` を `git -C .worktrees/<pr> -c user.name=<名前> -c user.email=<メール> commit …` で渡す（設定は書き換えない）
 - 最初に原稿を書き換える段（ふつうは `/kiro-impl` の最初のタスク）で作る。既にあればそのまま使う（単位の後の spec は、前の spec が残した作業木を引き継ぐ）
 - 原稿の編集・確認・コミットは、すべてこの作業木の中で行う（`git -C .worktrees/<pr> ...`）
 - 原稿を読むだけなら `ukadoc-spec/` でよい。ただし spec を書く前に `git -C ukadoc-spec fetch origin` して、`origin/main` との差を意識する

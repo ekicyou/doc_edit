@@ -25,7 +25,7 @@
 ### This Spec Owns
 - `scripts/prepare_site.py` の、まとめた頁の単位の頭の見出しに役の class を付ける処理（`shift_headings()` の 1 か所と、その呼び出しの引数）と、class の名前 `bundle-item`・`bundle-category`（目印の名前の決まり `bundle-<役>` を含む）
 - `assets/extra.css` の、見出しのコメント `/* site-look-list-items: … */` で始まる 6 つの塊（項目名の帯・項目の間の詰め・分類の見出しの帯・記述例の箱・濃い帯の中の ¶ と検索の強調・コピーのボタンの手前で折り返す）
-- この spec の記録（`.kiro/specs/site-look-list-items/verification.md` と `screenshots/`）: 目印の数・対比・画面の見比べ・失わないものの確かめ
+- この spec の記録（`.kiro/specs/completed/site-look-list-items/verification.md` と `screenshots/`）: 目印の数・対比・画面の見比べ・失わないものの確かめ
 
 ### Out of Boundary
 - `extra.css` のほかの塊（紺のテーマ・目次の詰め・記述例の折り返し `pre > code { white-space; word-break }`、PR #10 の `site-look-dark-link-color:` の塊、後続 spec の塊）
@@ -99,7 +99,7 @@ ukadoc-spec（作業木 .worktrees/site-look-visibility/、ブランチ site-loo
 └── assets/
     └── extra.css                # 末尾に site-look-list-items の塊を 6 つ足す
 
-.kiro/specs/site-look-list-items/（doc_edit）
+.kiro/specs/completed/site-look-list-items/（doc_edit）
 ├── verification.md              # 新規。目印の数・対比・画面の見比べ・失わないものの確かめの記録
 └── screenshots/                 # 新規。下の「VerificationRecord」の画面
 ```
@@ -247,7 +247,7 @@ ukadoc-spec（作業木 .worktrees/site-look-visibility/、ブランチ site-loo
 | ContrastProbe | なし（内蔵ブラウザの枠の JavaScript。式と結果は `verification.md`） | 作らない |
 | ShapeCheck | なし（作業木の HEAD を書き出した使い捨ての写し。`mkdocs.yml` に `pymdownx.highlight` を足して build する） | 作らない |
 | ShotTool | `.kiro/specs/completed/site-look-plan/tools/shot.mjs` | 読むだけで使う |
-| VerificationRecord | `.kiro/specs/site-look-list-items/verification.md`・`screenshots/` | 新規 |
+| VerificationRecord | `.kiro/specs/completed/site-look-list-items/verification.md`・`screenshots/` | 新規 |
 
 ## System Flows
 

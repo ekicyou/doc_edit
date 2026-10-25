@@ -127,3 +127,4 @@
 - 控えの置き場の `snapshot.py`（20 頁の id・headerlink・md-nav__link・hr と `_raw/` のハッシュ）と `overlap.mjs`（ボタンの重なり、Edge ヘッドレス）を 2.2・4.4・4.6 でもそのまま使い、物差しをそろえる。変更の前の重なりは幅 1000 で 172/288（設計の 165 は幅 1024 の数）
 - doc_edit の `.venv` の土台の Python（uv の 3.12.13）が 2026-10-25 にセッションの外で消え、`.venv` が動かない。5.1 以降はスクラッチの使い捨ての venv（3.13.15）で流した。`.venv` の作り直しは開発者の判断
 - 5.2: 作業木のブランチ `site-look-visibility` は作ったときに `origin/main` を追う設定になっていたので、素の `git push` で main に送らないよう追う先を外した（`git branch --unset-upstream`）。単位の PR は `site-look-note-icon` の完了で `push -u origin site-look-visibility` する
+- 完了時の棚卸（2026-10-25）: その場で解決 0 件、申し送り 4 件（`site-look-list-markers`・`site-look-manual-files`・`site-look-sakura-script-highlight`・`site-look-note-icon` の brief.md。作業木の状態・目印の名前・C01 の帯の値・箱の地）、起票 0 件。steering の `workflow.md` に、作業木の追う先を外すことと、コミットの名前を `-c` で渡すことを足した。`.venv` の作り直しは開発者の判断として残す
