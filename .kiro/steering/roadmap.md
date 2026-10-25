@@ -7,7 +7,7 @@
 後続の spec は、その決定を小さな PR の単位に切ったものである。方向は議論し直さず、各 spec の brief から要件へ進む。
 
 - 切り分けの規則: 他者も使う公開リポジトリへの PR として小さく切る。Markdown 拡張を足す改造（さくらスクリプトの着色）は見た目の改造と別にする。目印を付ける後処理（`prepare_site.py`）やテンプレートの上書きは、その目印を使う見た目の改造と同じ spec に入れる。画像やブラウザで動く仕掛けを要する遊びは、視認性の改造と別にする
-- 並びの規則: 目印を作る spec が、それを使う spec より先。どの spec も `assets/extra.css` を触るので、下の並びの順に 1 本ずつ入れ、同じファイル（`extra.css`・`prepare_site.py`・`mkdocs.yml`）を触る前の spec を依存に書いた
+- 並びの規則: 目印を作る spec が、それを使う spec より先。`Dependencies:` には中身で依るものだけを書く（`workflow.md`「依存する spec の PR」）。どの spec も `assets/extra.css` を触り、多くが `prepare_site.py`・`mkdocs.yml` も触るが、同じファイルを触るだけでは依存にしない。互いに依らない単位は同時に進めて PR を出し、先にマージされた PR とぶつかったら、残りの PR が `origin/main` に追いつく（`workflow.md`「開いている PR に追いつく」）。下の並びは、依存を満たす並びの 1 つである
 - PR の単位（`workflow.md`「PR の単位」）: メンテナは PR を完成品の単位で評価するので、8 本を 6 つの PR にまとめる。`site-look-lists`（list-items と list-markers。まとめ頁の帯・札・注意書きを一緒に見てもらう）と `site-look-manual-and-tables`（manual-files と definition-tables。組み立ての処理で `manual/` と箇条書きの見え方を変える）が 2 本ずつで、ほかは 1 本ずつ。Markdown 拡張を足してコードブロックの HTML を変える着色と、未決の点の重い SSTP の送信は、それぞれ単独の PR にする。別の単位の依存先は、その PR がマージされてから始める
 - 土台: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）。Markdown の原稿（`.md`）を変えるのは `site-look-sakura-script-highlight`（C25 の 6 か所）だけである。後続の 8 本はどれも ukadoc-spec の `assets/` などを変えるので、`workflow.md` の「原稿を変えない spec」には当たらない
 - どの spec も、`survey.md` の「失わないもの」（検索・ダークモード・見出しへのリンク・狭い画面・コードのコピー・記述例の字）を崩さない
@@ -23,7 +23,7 @@
 - [ ] site-look-note-icon -- 注釈の節・補足の項目・`!!! note` の見出しの頭に、添付の色付きのアイコンを付ける（C26）. Dependencies: site-look-list-markers. PR: site-look-note-icon
 - [ ] site-look-sstp-playback -- さくらスクリプトの記述例・プロパティシステム・SHIORI Event を、利用者の操作で手元のゴーストへ送れるようにする（C13）. Dependencies: site-look-sakura-script-highlight, site-look-definition-tables. PR: site-look-sstp-playback
 
-依存の理由（同じファイルの順のほかに、中身で依るもの）:
+依存の理由（どれも中身で依るもの。同じファイルを触るだけのものは書かない）:
 - `site-look-list-markers` の C04 の箱は、`site-look-list-items` の C01・C03 が `notes_` の見出しを帯から除くことに依る
 - `site-look-manual-files` の C22 は、C01 の項目名の帯を使う
 - `site-look-definition-tables` は、`manual/` のファイルの箇条書き（C14・C22 の当て先）を表にしないことを、`site-look-manual-files` の後に確かめる（同じ PR の単位 `site-look-manual-and-tables`。C23 は段落を 2 つ以上持つ箇条書きを初めから除く）
