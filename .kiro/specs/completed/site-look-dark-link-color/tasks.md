@@ -72,3 +72,4 @@
 ## Implementation Notes
 - 設計の切り出し `#bang-lock-repaint` にはリンクも目次の今の項目も写らず、変更の前と後の画面がバイト単位で同じになった。開発者の判断（2026-10-25）「設計の 4 枚はそのまま残し、本文のリンクが入る位置で暗い表示の前と後を 2 枚足して」により、`#bang-move`（本文のリンク「※下記参照」が写る）で `before-`・`after-sakura-script-move-dark.png` を足した。変更の前は `origin/main` の仮の作業木を別の口（8001）で配って撮り、撮った後に片付けた
 - `zensical serve` を動かしている作業木で、ほかの人が `prepare_site.py` や `build` を流すと、配りが 404 になる。確かめ役には build を流させるか、流した後に serve を起動し直す
+- 完了の後、開発者の指示（2026-10-25）で `extra.css` の注を 1 行に縮めた（`f28d011`。PR #10 に push）。公開する CSS の注は塊ごとに見出しの 1 行にとどめ、説明は spec の記録に書く。design.md の「Modified Files」の 3 行の注は、この直しの前の形である
