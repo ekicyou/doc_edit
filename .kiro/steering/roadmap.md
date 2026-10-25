@@ -39,6 +39,7 @@
 - **`site_url` と転送先の食い違い（解けた）**: 公開サイトは `https://ukatech.github.io/ukadoc-spec/` から `https://ukatech.shillest.net/ukadoc-spec/` へ 301 で転送されるのに、`mkdocs.yml` の `site_url` が github.io のままだった（`survey.md` の「見た目の外の問題」）。ukadoc-spec の `3d8e4a7`（PR #1）で `site_url` が `https://ukatech.shillest.net/ukadoc-spec/` に直った。残る作業は無い
 - **C25 さくらスクリプトの頁の外の記述例も同じく強調する（外した）**: 判断は「採る」だったが、`list/propertysystem` 5 個・`spec/plugin` 1 個のコードブロックに ```` ```sakurascript ```` を書き足すには原稿を変える。見た目の直しを原稿を変えない 1 本の PR（`site-look-visibility`）にまとめたので外した（開発者の判断、2026-10-25）。入れれば `site-look-sakura-script-highlight` の着色と `site-look-sstp-playback` の見分けがそのまま届く。決めるのに要るもの: 原稿を直す spec として起票するか、原稿を変えずに `prepare_site.py` で印を付ける代案にするか。目標の画面は `.kiro/specs/completed/site-look-plan/screenshots/mock-propertysystem-C25-light.png`・`mock-propertysystem-C25-dark.png`
 - **`manual/ghost` の `updates2.dau`**: 旧サイトでは `updates.txt` と 1 つの説明を共有しているが、今のサイトでは説明の無い箇条書きになる（D12）。原稿の書き方による見え方で、直すには原稿の spec が要る。`site-look-manual-files` の C14・C22 では直らない
+- **暗い表示のまま印刷したリンクの色（記録だけ）**: 暗い表示を選んだまま印刷すると、本文のリンク・C01 と C22 の帯の中のリンク・C15 の木のファイル名が、明るい表示の印刷の紺 `#1f4e8c` でなく、テーマの既定の藍 `#4051b5` になる（`site-look-manual-files` の 4.4 で見つけた。PR #10 の前からある振る舞い）。テーマの `:root` の `--md-typeset-a-color` が、紺のテーマの印 `data-md-color-primary` の無い `html` で解かれるため。白い紙に 6.86 で読める。開発者の判断（2026-10-26）で `site-look-manual-files` の 5.6 は設計の確かめ方（CSSOM）で満たすとし、直すかどうかはここに残す。決めるのに要るもの: 直すなら、印刷のときにリンクの色の変数を紺に戻す指定をどの spec で入れるか
 
 ## 棚卸（2026-10-25・ukadoc-spec afb2152）
 - 初めての棚卸である。`site-look-plan` の決定（`decisions.md`）から、後続の 8 本の spec を切り分けた

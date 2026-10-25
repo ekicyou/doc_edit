@@ -192,6 +192,121 @@ node treecount.mjs http://127.0.0.1:8020/ $(cat pages.txt) > old-all.json
 
 `treecount.mjs` と `treecheck.js` は spec の外のスクラッチの `tools/` に置いた使い捨てのスクリプトである。
 
+<!-- 4.4 の結果。測った日 2026-10-25、作業木 75c7433 の zensical serve（http://127.0.0.1:8000/ukadoc-spec/）、幅 1000・高さ 700、Edge ヘッドレス + CDP -->
+
+## 位置（4.4）
+
+測った頁: manual の 8 頁（`translator` は帯 0）。明（`default`）で測った。
+
+| 頁 | 帯 | 帯の左の端 | 帯の幅 | 説明の左の端（行の頭） | 一番外の項目の点 | 入れ子の箇条書きの点 | 帯の中のリンク |
+|---|---|---|---|---|---|---|---|
+| `manual/balloon` | 22 | 16 | 711 | 40（段落 30・帯の後ろの字 20・同じ段落の各行の頭 15） | `none` | `disc` × 10 | 2 |
+| `manual/directory` | 12 | 16 | 711 | 40 | `none` | （無い） | 2 |
+| `manual/ghost` | 10 | 16 | 711 | 40 | `none` | （無い） | 4 |
+| `manual/install` | 7 | 16 | 711 | 40（`pre.highlight` 5・注記の箱 1 を含む） | `none` | （無い） | 2 |
+| `manual/owner-draw-menu` | 3 | 16 | 711 | 40 | `none` | （無い） | 0 |
+| `manual/shell` | 12 | 16 | 711 | 40（表 1 を含む） | `none` | （無い） | 6 |
+| `manual/update` | 7 | 16 | 711 | 40（`pre.highlight` 3 を含む） | `none` | （無い） | 2 |
+| 計 | **73** | **16 の 1 通り** | **711 の 1 通り** | **40 の 1 通り** | **`none` だけ** | **`disc` が残る** | **18** |
+
+- 判定: 73 個の帯の左の端・幅が 1 通り（3.2）、説明の左の端が 1 通り（2.2）、一番外の項目の点が `none`（2.3）、入れ子の箇条書きの点が `disc` のまま（2.3）。設計の写し（16px・711px・40px・`disc`）と同じ。**満たす**
+- 説明の左の端の測り方: 項目（`li`）の帯の外の子の要素の左、帯の後ろの最初の字の左、帯と同じ段落の字を 1 字ずつ行（縦の中央が 8px 以内）にまとめた各行の頭の左
+- 40 でない箱が 2 種類あったが、中身の頭は 40 だった（記録だけ）
+  - 入れ子の `ul`（`balloon` の 3 個）は箱が 50。テーマの `ul` の `margin-left: .625em`（10px）で、ほかの頁の箇条書きと同じ字下げ。点は `disc`
+  - `shell` の `surface*.pna` の表は、包みの `div.md-typeset__scrollwrap` が 24（`margin-left: -16px`）で、中の `table` が 40
+- 最初の素朴な測り（帯の後ろの字の節をすべて並べたもの）では 44・88.81・145.48 などが出たが、行の途中の `code` や字の節を拾っただけで、行の頭ではなかった（`code` の字は `code` の内側の余白の分 44。`code` の箱は 40）
+
+## 対比（4.4）
+
+fg は `getComputedStyle` の `color`、bg は要素から `html` までの `backgroundColor` を白の上に外から重ねた地。半透明の字は地に重ねた色を括弧に書き、その色で対比を出した。対比は WCAG 2.x、小数 2 桁。各行の「数」は同じ値になった要素の数。
+
+| 測る所 | セレクタ（測った要素） | 表示 | 状態 | fg | bg | 対比 | 線 | 判定 |
+|---|---|---|---|---|---|---|---|---|
+| 木のファイル名 / コードの地 | `.filetree-file`（manual 8 頁 204 個・`dev/nar` 12・`dev/update` 5 の計 221 個） | 明 | ふだん | `rgb(31, 78, 140)` | `rgb(245, 245, 245)` | 7.62（221 個とも） | 7（5.1） | 満たす |
+| 木のファイル名 / 白地 | 同上（地は `.md-content__inner` まで重ねた頁の地） | 明 | ふだん | `rgb(31, 78, 140)` | `rgb(255, 255, 255)` | 8.31（221 個とも） | 7（5.1） | 満たす |
+| 木のファイル名 / コードの地 | 同上 | 暗 | ふだん | `rgb(143, 180, 232)` | `rgb(39, 42, 53)` | 6.71（221 個とも） | 4.5（5.2） | 満たす |
+| 木のファイル名 / 暗い地 | 同上（頁の地） | 暗 | ふだん | `rgb(143, 180, 232)` | `rgb(30, 33, 41)` | 7.56（221 個とも） | 4.5（5.2） | 満たす |
+| 参考: ファイル名とフォルダ名の明るさの比 | `.filetree-file` と親の `code`（同じコードの地に重ねた色どうし） | 明 | — | `rgb(31, 78, 140)` と `rgb(54, 70, 78)` | `rgb(245, 245, 245)` | 1.18 | 色合いで見分ける（4.3。4.5 の画面で見る） | 記録だけ |
+| 同上 | 同上 | 暗 | — | `rgb(143, 180, 232)` と `rgba(213, 216, 226, 0.82)`（`rgb(182, 185, 195)`） | `rgb(39, 42, 53)` | 1.08（設計の写しの 1.50 は半透明を重ねない値と見られる） | 同上 | 記録だけ |
+| 帯の中の名前の字 | `.manual-item`（リンクの無い 55 個。最初は `balloon` の `readme.txt`） | 明 | ふだん | `rgba(0, 0, 0, 0.87)`（`rgb(31, 31, 31)`） | `rgb(237, 237, 237)` | 14.13（55 個とも） | 4.5（5.4） | 満たす |
+| 同上 | 同上 | 暗 | ふだん | `rgba(226, 228, 233, 0.82)`（`rgb(195, 197, 203)`） | `rgb(54, 56, 64)` | 6.76（55 個とも） | 4.5（5.4） | 満たす |
+| 参考: リンクを含む帯の名前の字 | `.manual-item`（リンクのある 18 個） | 明 / 暗 | ふだん | 上と同じ | 上と同じ | 14.13 / 6.76 | 4.5（5.4） | 満たす |
+| 帯の中のリンク | `.manual-item a:not(.headerlink)`（18 個。最初は `balloon` の `descript.txt`） | 明 | ふだん | `rgb(31, 78, 140)`（下線なし） | `rgb(237, 237, 237)` | 7.11（18 個とも） | 7（3.5） | 満たす |
+| 同上 | 同上 | 明 | ホバー（ポインタを載せた。`:hover` 真） | `rgb(82, 108, 254)` | `rgb(237, 237, 237)` | 3.64（18 個とも） | 3（3.5） | 満たす |
+| 同上 | 同上 | 明 | フォーカス（`:focus`・`:focus-visible` 真） | `rgb(82, 108, 254)` | `rgb(237, 237, 237)` | 3.64（18 個とも） | 3（3.5） | 満たす |
+| 同上 | 同上 | 暗 | ふだん | `rgb(255, 255, 255)`（下線） | `rgb(54, 56, 64)` | 11.66（18 個とも） | 7（3.5・3.6） | 満たす |
+| 同上 | 同上 | 暗 | ホバー（ポインタを載せた） | `rgb(255, 255, 255)`（下線） | `rgb(54, 56, 64)` | 11.66（18 個とも） | 3（3.5） | 満たす |
+| 同上 | 同上 | 暗 | フォーカス | `rgb(255, 255, 255)`（下線） | `rgb(54, 56, 64)` | 11.66（18 個とも） | 3（3.5） | 満たす |
+| 帯の中の検索の強調（リンク） | `manual/ghost/?h=descript` の `.manual-item mark`（1 個） | 明 | — | `rgb(31, 78, 140)` | `rgb(246, 246, 119)`（`mark` の地 `rgba(255, 255, 0, 0.5)` を重ねた） | 7.27 | 見える（6.2） | 記録だけ（6.2 は 4.5 の受け持ち） |
+| 同上 | 同上 | 暗 | — | `rgb(255, 255, 255)` | `rgb(57, 80, 121)`（`rgba(66, 135, 255, 0.3)` を重ねた） | 8.08 | 同上 | 同上 |
+| 帯の中の検索の強調（名前の字） | `manual/directory/?h=readme` の `.manual-item mark`（2 個） | 明 | — | `rgba(0, 0, 0, 0.87)`（`rgb(32, 32, 15)`） | `rgb(246, 246, 119)` | 14.41 | 同上 | 同上 |
+| 同上 | 同上 | 暗 | — | `rgba(226, 228, 233, 0.82)`（`rgb(196, 201, 213)`） | `rgb(57, 80, 121)` | 4.88 | 同上 | 同上 |
+| 木の中の検索の強調 | `.filetree-file mark`（`?h=descript` 1・`?h=readme` 5） | 明 | — | `rgb(31, 78, 140)` | `rgb(250, 250, 123)` | 7.53 | 同上 | 同上 |
+| 同上 | 同上 | 暗 | — | `rgb(143, 180, 232)` | `rgb(47, 70, 114)` | 4.41 | 同上 | 同上 |
+
+- `mark` の数: `?h=descript` で全 2（帯の中 1・木のファイル名の中 1）、`?h=readme` で全 12（帯の中 2・木のファイル名の中 5）。明・暗とも同じ。設計の写しと同じ
+- ホバーとフォーカスの測りの注: 1 回目の流しでは、明るい表示のフォーカスが 18 個のうち 16 個で `rgb(31, 78, 140)` のまま（`:focus` は真だが `:focus-visible` が偽。`focus()` だけではテーマの `:focus-visible` の色が付かない）、ホバーが 1 個（`update` の `delete.txt`、頁を開いた直後）で色が変わる前だった。2 回目はフォーカスを `focus()` の後に本当のキーで Shift+Tab → Tab と戻して載せ（`activeElement` が同じ要素に戻ることを確かめた）、待ちを 2 秒にした。表は 2 回目の値。`update` の `delete.txt` のホバーは 3 回目に `getAnimations()` が 0 の状態で 3.64 を確かめた
+
+### 切り替え（5.5）
+`manual/ghost/` を明で開き、ヘッダの切り替え（`label[for=__palette_1]`／`__palette_0` の `click()`。サイトの切り替えと同じ入力）で明 → 暗 → 明と移した。頁に置いた印（`window.__m`）が最後まで残り、読み込み直していない。
+
+| 表示（`body` の `data-md-color-scheme`） | 帯の地 | 帯の字 | 帯の左の線 | 帯の中のリンク | 木のファイル名 |
+|---|---|---|---|---|---|
+| `default`（1 回目） | `rgba(0, 0, 0, 0.07)` | `rgba(0, 0, 0, 0.87)` | `rgb(31, 78, 140)` | `rgb(31, 78, 140)`・下線なし | `rgb(31, 78, 140)` |
+| `slate` | `rgba(226, 228, 233, 0.12)` | `rgba(226, 228, 233, 0.82)` | `rgb(31, 78, 140)` | `rgb(255, 255, 255)`・下線 | `rgb(143, 180, 232)` |
+| `default`（戻した） | `rgba(0, 0, 0, 0.07)` | `rgba(0, 0, 0, 0.87)` | `rgb(31, 78, 140)` | `rgb(31, 78, 140)`・下線なし | `rgb(31, 78, 140)` |
+
+- 判定: 帯と木のファイル名の色が、読み込み直さずに切り替わる。**満たす**。10 頁すべてで、暗い表示の測りも同じ切り替えで移り、印が残った
+
+### 画面だけの指定（5.6。設計の確かめ方 = CSSOM）
+頁の `document.styleSheets` の `http://127.0.0.1:8000/ukadoc-spec/assets/extra.css` の規則を入れ子までたどった。
+
+- `data-md-color-scheme` を含む規則 12 個が、すべて `media` が `screen` の `CSSMediaRule` の中にある（`[data-md-color-scheme="slate"][data-md-color-primary="custom"]`、帯の中のリンクの白と下線 `[data-md-color-scheme="slate"] .md-typeset :is(.bundle-item, .manual-item) a:not(.headerlink)`、`h4:has(+ .highlight)` ほか 1、`.bundle-notes`、`.bundle-baseware-*` 4、`.sakurascript-*` 3）
+- `--md-typeset-a-color` を持つ規則は 1 個（`[data-md-color-scheme="slate"][data-md-color-primary="custom"]`、値 `#8fb4e8`）で、`screen` の中にある
+- 判定: 設計の確かめ方では **満たす**
+
+### 印刷の media で測った色（5.6 の追いの確かめ。記録だけ）
+CSSOM に加え、`Emulation.setEmulatedMedia({ media: 'print' })` で `manual/ghost/` の色を測った（遷移が残っていないことを `getAnimations()` が 0 で確かめた）。
+
+| 表示 | media | 帯の地 | 帯の字 | 帯の中のリンク | 木のファイル名 | `body` の `--md-typeset-a-color` |
+|---|---|---|---|---|---|---|
+| 明 | screen | `rgba(0, 0, 0, 0.07)` | `rgba(0, 0, 0, 0.87)` | `rgb(31, 78, 140)` | `rgb(31, 78, 140)` | `#1f4e8c` |
+| 明 | print | `rgba(0, 0, 0, 0.07)` | `rgba(0, 0, 0, 0.87)` | `rgb(31, 78, 140)` | `rgb(31, 78, 140)` | `#1f4e8c` |
+| 暗 | screen | `rgba(226, 228, 233, 0.12)` | `rgba(226, 228, 233, 0.82)` | `rgb(255, 255, 255)`・下線 | `rgb(143, 180, 232)` | `#8fb4e8` |
+| 暗 | print | `rgba(0, 0, 0, 0.07)` | `rgba(0, 0, 0, 0.87)` | **`rgb(64, 81, 181)`**・下線なし | **`rgb(64, 81, 181)`** | **`#4051b5`** |
+
+- 帯の地・帯の字は、暗い表示のまま印刷しても明るい表示の印刷と同じ。暗い表示だけの白・`#8fb4e8` は印刷に出ない
+- ただし帯の中のリンクと木のファイル名は、暗い表示のまま印刷すると `#4051b5`（テーマの既定の藍）になり、明るい表示の印刷の `#1f4e8c` と同じにならない。要件 5.6 の「明るい表示で印刷したときと同じ色」に、字の上では届かない（白い紙に対して `#4051b5` は 6.86、コードの地 `#f5f5f5` に 6.29、帯の地 `rgb(237, 237, 237)` に 5.86。どれも見える色で、暗い表示だけの色ではない）
+- わけ（CSSOM で調べた）: テーマの `main.*.css` の `:root, [data-md-color-scheme="default"] { --md-typeset-a-color: var(--md-primary-fg-color) }` は、明るい表示では `body`（`data-md-color-scheme="default"`・`data-md-color-primary="custom"`）で解かれて `#1f4e8c` になる。暗い表示では `body` の属性が `slate` なので `body` では当たらず、`:root`（`html`。`data-md-color-primary` が無い）で解かれた `#4051b5` を受け継ぐ。テーマの `palette.*.css` の `[data-md-color-scheme="slate"]` の値と `extra.css` の `#8fb4e8` は、どちらも `screen` の中なので印刷では外れる
+- この spec が足した規則は `.md-typeset .filetree-file { color: var(--md-typeset-a-color) }` と、C01 のセレクタを広げただけで、変数の解け方は変えていない。帯の外の本文のリンクも、C01 の `.bundle-item` の帯の中のリンクも、暗い表示のまま印刷すると同じ `#4051b5` になる（PR #10 からある振る舞いと見られる。控えの 8010 には触れず、CSSOM の解け方から判断した）
+- 開発者の判断（2026-10-26）: 5.6 は設計の確かめ方（CSSOM で、暗い表示の指定がすべて `screen` の中）を正とし、満たすとする。暗い表示のまま印刷したときの `#4051b5` は、この spec の前からある振る舞いとして記録だけにする。直すかどうかは roadmap のバックログに残した。色や値は選び直していない
+
+### 流した式
+```sh
+# スクリプトの置き場: C:/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/95cb4bf7-32a6-4bf5-b971-42e18f7e2f04/scratchpad/tools/
+# Edge は使い捨てのプロファイル（tools/edge44-*。終わりに消した）と --remote-debugging-port=9347。幅 1000・高さ 700、prefers-color-scheme は light
+node probe44.mjs  http://127.0.0.1:8000/ukadoc-spec/ > out44.json   # 位置・全要素の対比・切り替え・CSSOM・検索の強調
+node probe44d.mjs http://127.0.0.1:8000/ukadoc-spec/ > out44d.json  # 帯の中のリンク 18 個のホバー（待ち 0.9 秒）とフォーカス（Shift+Tab → Tab、待ち 2 秒）、印刷の media
+node probe44e.mjs http://127.0.0.1:8000/ukadoc-spec/ > out44e.json  # update のリンクのホバーと印刷の色を getAnimations() を終えてから
+node probe44c.mjs http://127.0.0.1:8000/ukadoc-spec/ > out44c.json  # 暗い表示 + print で当たる規則と --md-typeset-a-color の出どころ（CSSOM）
+node probe44g.mjs http://127.0.0.1:8000/ukadoc-spec/ > out44g.json  # 説明の左の端を要素の種類ごとに
+node probe44h.mjs http://127.0.0.1:8000/ukadoc-spec/                # balloon の同じ段落の説明の各行の頭
+```
+
+- 明・暗: 頁を明で開き、`body` の `data-md-color-scheme` が `default` であることを確かめてから測り、ヘッダの切り替えのラベルを `click()` して `slate` に移して測った（読み込み直さない）
+- ホバー: `Input.dispatchMouseEvent`（`mouseMoved`）で要素の最初の行の箱の左から 8px・縦の中央にポインタを載せ、`:hover` が真であることを確かめた。測る前後でポインタは左下の隅（1, 699）へ外した
+- フォーカス: `Emulation.setFocusEmulationEnabled({ enabled: true })` を入れ、`focus()` の後に `Input.dispatchKeyEvent` の Shift+Tab → Tab で同じ要素に戻した（`:focus`・`:focus-visible` が真）
+- 対比の式は `site-look-list-items` の `verification.md` の「流した式」のまま（頁の中で流した）:
+
+```js
+const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return { r: m[0], g: m[1], b: m[2], a: m.length > 3 ? m[3] : 1 }; };
+const over = (f, b) => ({ r: f.r*f.a + b.r*(1-f.a), g: f.g*f.a + b.g*(1-f.a), b: f.b*f.a + b.b*(1-f.a), a: 1 });
+const bgOf = (el) => { const chain = []; for (let e = el; e; e = e.parentElement) chain.push(getComputedStyle(e).backgroundColor); let c = { r: 255, g: 255, b: 255, a: 1 }; for (const s of chain.reverse()) c = over(parse(s), c); return c; };
+const lum = (c) => { const [r,g,b] = [c.r,c.g,c.b].map(v => { v/=255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); }); return 0.2126*r + 0.7152*g + 0.0722*b; };
+const ratio = (a, b) => { const [x,y] = [lum(a), lum(b)].sort((p,q)=>q-p); return Math.round((x+0.05)/(y+0.05)*100)/100; };
+// 字: fg = over(parse(getComputedStyle(el).color), bgOf(el))。「頁の地」は bgOf(.md-content__inner)
+```
+
 ## 画面（4.5）
 
 - 日付: 2026-10-25。撮った版: 作業木 `site-look-manual-files` の `75c7433` を `zensical serve` で配ったもの（`http://127.0.0.1:8000/ukadoc-spec/`。止めず・build し直さずにそのまま使った）

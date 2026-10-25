@@ -48,7 +48,7 @@
   - _Depends: 2, 3.1, 3.2_
   - _Requirements: 8.1, 8.4_
 
-- [ ] 4. 配られた頁での確かめ
+- [x] 4. 配られた頁での確かめ
 - [x] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `extra.css` は両方の塊を並べて C01 の 2 つのセレクタの `.manual-item` を保ち、`mkdocs.yml` は `extra_javascript` の並びに両方を残し、`prepare_site.py` は両方の変更を残す
   - merge したときは Build Gate（3.3）をやり直し、1.2 の控えを、作業木の HEAD でなく新しい `origin/main` のコミットから 1.2 の手順で作り直す（HEAD にはこの spec の変更が入っているため）。控えの置き場・コミットを `verification.md` に書き直す
@@ -74,7 +74,7 @@
   - `verification.md` の「木」の節に、頁ごとの数の表・例の表の結果・字の違い 0・両方の形の比べが書いてあり、使い捨ての写しが残っていない
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.7, 4.8, 4.9, 6.5, 7.3_
 
-- [ ] 4.4 帯の位置と、帯・木の字とリンクの対比を明・暗で測る
+- [x] 4.4 帯の位置と、帯・木の字とリンクの対比を明・暗で測る
   - プレビューが動いていなければ、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
   - `site-look-list-items` の `verification.md` の「流した式」に従い、`getComputedStyle` の字の色と要素から `html` までの地を重ねた色から、設計の「測る所と線」の表の所をすべて測る（幅 1000）。ホバーは本当にポインタを載せ、フォーカスは `setFocusEmulationEnabled` を入れて測る
   - 73 個の帯の左の端と幅が 1 通り、説明の左の端が 1 通り、一番外の項目の点が `none`、入れ子の箇条書きの点が残ることを見る
