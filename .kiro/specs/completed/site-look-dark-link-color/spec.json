@@ -1,7 +1,7 @@
 {
   "feature_name": "site-look-dark-link-color",
   "created_at": "2026-10-25T01:19:48Z",
-  "updated_at": "2026-10-25T03:06:11Z",
+  "updated_at": "2026-10-25T04:15:36Z",
   "language": "ja",
   "phase": "completed",
   "approvals": {
@@ -23,6 +23,7 @@
   "ukadoc_spec": {
     "pr_unit": "site-look-dark-link-color",
     "pr": "https://github.com/ukatech/ukadoc-spec/pull/10",
-    "state": "OPEN"
+    "state": "MERGED",
+    "merge_commit": "a341420c08e8a06cf0da81b605120afbcdcf382f"
   }
 }
