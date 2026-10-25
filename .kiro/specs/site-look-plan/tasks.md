@@ -12,7 +12,7 @@
   - 完了の状態: 試し撮りの 4 回が exit 0 で、存在しないセレクタを渡すと exit 1 と理由の 1 行が出る。終わった後に、道具が起動した Edge のプロセスが残っていない（試作の確かめ 3）
   - _Requirements: 1.6, 3.5, 3.6, 3.9_
 
-- [ ] 2. 旧サイトと今のサイトを見比べ、候補を洗い出す
+- [x] 2. 旧サイトと今のサイトを見比べ、候補を洗い出す
 - [x] 2.1 4 組の頁を見比べて差を記録する
   - `survey.md` を作る。「組」表に `list/sakura-script`・`descript/ghost`・`spec/shiori3`・`manual/ghost` の 4 組を、旧サイトの URL と、今のサイトの `site_url`（`https://ukatech.github.io/ukadoc-spec/...`）の URL と転送先の URL を並べて書く
   - 組ごとに 6 つの観点（項目の切れ目・パラメータ・既定値・対応ベースウェア・記述例・注記）の表を書く。当てはまらない観点は「該当なし」と書く
@@ -31,7 +31,7 @@
   - 完了の状態: 記録の確かめ 2 が通る（各候補に区別・解く差・変更の種類・当て先があり、解く差の ID がすべて `survey.md` にあり、遊びに条件、送信・外部読み込みに論点がある）。3 頁それぞれに当てる候補が 1 つ以上ある
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 4.5_
 
-- [ ] 3. 3 頁に使い捨ての試作を当てる
+- [x] 3. 3 頁に使い捨ての試作を当てる
 - [x] 3.1 試作の土台を作り、今の見た目を撮る
   - 作業木が `origin/main` から始まっていることを確かめる（`git -C .worktrees/site-look-plan log --oneline origin/main..HEAD` が空）。`ukadoc-spec/` のメインのチェックアウトが `origin/main` と同じ版で汚れていないことも確かめる（`git -C ukadoc-spec rev-parse HEAD` が `origin/main` と同じ、`status --porcelain` が空）。どちらかが外れたら止めて開発者に報告する
   - 作業木に、候補の切り替えの仕掛けを足す: `assets/mockup.js`（URL の `?slp=C01,C03` を読んで `<html data-slp="C01 C03">` を付ける）と、`mkdocs.yml` の `extra_javascript`。原稿・`.nav.yml`・`requirements.txt` は触らない
@@ -68,7 +68,7 @@
   - 完了の状態: `git -C .worktrees/site-look-plan status --short` の各行が、`mockups/` の写しか `worktree.diff` に載っている。記録の確かめ 3 が通る
   - _Requirements: 3.8, 6.1_
 
-- [ ] 4. 見た目の方向を決める
+- [x] 4. 見た目の方向を決める
 - [x] 4.1 候補ごとの推奨を書く
   - `decisions.md` を作り、全候補を 1 行ずつ載せて「推奨」（採る／採らない／保留）と理由を書く。「判断」「理由」「目標」「保留」「行き先」の欄は空のままにする
   - 推奨が「採る」の候補には、目標にする画面（`mock-*.png`）とどこの見え方を目指すかの案を、推奨の理由に添える。「保留」を推奨する候補には、決めるのに要るものの案を添える
@@ -102,7 +102,7 @@
   - 完了の状態: 記録の確かめ 5 が通る（「採る」の行き先の spec ごとに 11 の節がそろった `brief.md` があり、Desired Outcome に候補の ID と画面のパスがある）
   - _Requirements: 5.3, 5.4, 5.7, 5.8_
 
-- [ ] 6. 計画の成果物の整合と作業木の片付け
+- [x] 6. 計画の成果物の整合と作業木の片付け
   - roadmap と brief: どの候補にも行き先がある、spec 名が kebab-case の英語、次の spec が名指しされている（記録の確かめ 1〜5 を通しで流す）
   - 試作の写し（`mockups/`）がそろっている（`status --short` の各行が写しか `worktree.diff` に載っている。欠けていたら戻す前に写しを足す）
   - 作業木を `origin/main` と同じ状態に戻す（コミット 0・未コミットの変更 0）: `serve` を止め、作業木で変えたファイルを `git -C .worktrees/site-look-plan checkout -- <file>` で 1 つずつ戻し、未追跡のファイルを 1 つずつ消す（`git clean -fd` は使わない）。作業木に `origin/main` からのコミットがあれば、戻さずに止めて開発者に報告する。作業木とブランチそのものは消さない

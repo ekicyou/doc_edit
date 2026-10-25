@@ -1,6 +1,7 @@
 # Product Overview
 
-doc_edit は、伺かの仕様書「UKADOC」の正本 `ukatech/ukadoc-spec`（公開先 https://ukatech.github.io/ukadoc-spec/ ）を更新するための作業台であり、その作業記録である。
+doc_edit は、伺かの仕様書「UKADOC」の正本 `ukatech/ukadoc-spec`（公開先 https://ukatech.shillest.net/ukadoc-spec/ 。旧 URL の https://ukatech.github.io/ukadoc-spec/ からは 301 で転送される）を更新するための作業台であり、その作業記録である。
+ukadoc-spec の内容は CC BY 4.0 で公開される（`ukadoc-spec/LICENSE`）。そこに入れる画像などの素材は、この条件で出してよいものに限る。
 成果物は ukadoc-spec への PR であって、doc_edit 自体は公開物ではない。
 
 ## Core Capabilities
@@ -25,6 +26,7 @@ doc_edit は、伺かの仕様書「UKADOC」の正本 `ukatech/ukadoc-spec`（�
 - **視認性**: 項目の切れ目、パラメータ、対応ベースウェア、記述例が、旧サイト並みにひと目で見分けられる
 - **楽しさ**: 伺かの文化を感じさせる遊びを、読みやすさを損なわない範囲で加える
 - 見た目の変更も ukadoc-spec への PR になる。他者も使うリポジトリなので、原稿の書式（`ukadoc-spec/CLAUDE.md`）を崩さず、サイトの設定やスタイルの側で実現するのを基本にする
+- 何をどの見た目にするかは計画の spec `site-look-plan` で決めた（候補と判断は、その spec の `decisions.md`）。後続の spec の並びと次に始める spec は `.kiro/steering/roadmap.md` にある
 
 ## 参照サイト
 
@@ -44,4 +46,4 @@ doc_edit は、伺かの仕様書「UKADOC」の正本 `ukatech/ukadoc-spec`（�
 - ukadoc-spec は他者も使う公開リポジトリなので、変更は小さく、レビューしやすい単位の PR にする
 
 ---
-_updated_at: 2026-10-24_
+_updated_at: 2026-10-25_

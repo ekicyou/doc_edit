@@ -232,3 +232,10 @@
 | `scripts/prepare_site.py` | 変更 | `worktree.diff` の差分 |
 
 `worktree.diff` は `git -C .worktrees/site-look-plan diff`（変更した 3 ファイル）と、未追跡のファイルの一覧（末尾のコメント）である。
+
+## 片付け（タスク 6、2026-10-25）
+
+- 戻す前の確かめ: 上の表の 6 つの写しは、作業木のファイルとバイトごとに同じだった（`cmp`）。`worktree.diff` は `git -C .worktrees/site-look-plan diff` の出力と同じで、その後に未追跡の 5 ファイルの一覧のコメントが続く。作業木の `log --oneline origin/main..HEAD` は空（`HEAD` も `origin/main` も `afb2152`）
+- 戻し方: 変えた 3 ファイルを `git -C .worktrees/site-look-plan checkout -- <file>` で 1 つずつ戻し、未追跡の 5 ファイルを 1 つずつ消して、空になった `overrides/` を消した（`git clean` は使っていない）。`serve` はその前に止めてあった
+- 戻した後: `log --oneline origin/main..HEAD`・`status --porcelain`・`diff --name-only origin/main` はどれも空。gitignore 済みの組み立ての生成物（`_raw/`・`_site/`・`_site_src/`・`.cache/`）だけが残る。作業木とブランチ `site-look-plan` は残してあり、`/kiro-complete` の「原稿を変えない spec」の分岐が消す
+- `screenshots/` の合計: 80 枚（見比べ `survey-*` 10 枚・試作と今の見た目 `mock-*` 70 枚）で 10,316,266 バイト（約 9.84 MiB、10 進で 10.3 MB）。10 MB の目安とほぼ同じで、10 進の MB では少し超える。撮り直しと開発者の指摘の付け足しで枚数が増えたため。画面を減らすと記録の参照が切れるので、そのままにした

@@ -12,6 +12,11 @@
 **Location**: `.kiro/specs/<feature>/`
 **Purpose**: ukadoc-spec に対する 1 つの変更のまとまり（要件・設計・タスク）。PR 1 本か、関連する数本に対応させる
 **Example**: `.kiro/specs/ssp-2-8-sakura-script/`（SSP の新しいタグを書き足す、など）
+**Note**: 計画の spec（`design.md` に「この spec は原稿を変えない spec である」と書いたもの。例: `site-look-plan`）は PR を持たず、後続の spec の `brief.md` と roadmap を成果物にする
+
+### spec の並び（roadmap）
+**Location**: `.kiro/steering/roadmap.md`
+**Purpose**: spec の依存の順と、保留の候補（バックログ）と、次に `/kiro-start` する spec。`/kiro-next` が読み、`/kiro-complete` が完了の印を付ける
 
 ### 更新対象
 **Location**: `ukadoc-spec/`
@@ -50,4 +55,4 @@
 
 ---
 _Document patterns, not file trees. New files following patterns shouldn't require updates_
-_updated_at: 2026-10-24_
+_updated_at: 2026-10-25_

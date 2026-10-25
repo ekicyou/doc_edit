@@ -16,6 +16,7 @@ doc_edit は、cc-sdd の作業環境（ルート）と、4 つの git サブモ
 - **サイト生成**: Zensical（Material テーマ、設定は `mkdocs.yml`）。左メニューは `.nav.yml`（mkdocs-awesome-nav）
 - **前処理**: `scripts/prepare_site.py` が各 `index.md` の `## 一覧` と中身を照合し、`_site_src/` に写す
 - **公開**: `main` への push で GitHub Actions がビルドし、GitHub Pages に出す（Python 3.12）
+- **見た目の指定**: `assets/extra.css`。色はなるべく Material のテーマの色の変数（`--md-primary-fg-color` など）から取り、テーマの色が変わってもついてくるようにする。変数で出せない色（暗い表示のリンクの明るい紺、さくらスクリプトのタグの色、ベースウェアの札など）は、明・暗の地との対比を測って記録する（`site-look-plan` の試作で、テーマが緑から紺に変わったときに分かった）
 
 編集規約（書式・文体・リンク・項目の追加手順）の正本は `ukadoc-spec/CLAUDE.md` である。steering には写さず、そちらに従う。
 
@@ -54,4 +55,4 @@ zensical serve                   # http://127.0.0.1:8000/ukadoc-spec/ でプレ�
 - **migration/tools で再生成しない**: ukadoc-spec の Markdown は旧 HTML 版から変換したものだが、再生成するとこのリポジトリでの修正が上書きされる（ukadoc-spec の規約）
 
 ---
-_updated_at: 2026-10-24_
+_updated_at: 2026-10-25_
