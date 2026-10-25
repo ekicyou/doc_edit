@@ -113,7 +113,7 @@
   - `verification.md` と `screenshots/` がそろい、設計の「Testing Strategy」の各項目の結果が書いてある
   - _Requirements: 9.2, 9.3, 9.4, 9.8, 9.12, 9.13_
 
-- [ ] 5.2 作業木を `/kiro-complete` で PR に出せる状態にする
+- [x] 5.2 作業木を `/kiro-complete` で PR に出せる状態にする
   - ukadoc-spec を fetch し、4.1 の後に `origin/main` がまた進んでいれば、4.1 と同じく追いつき、変わった所に当たる確かめをやり直して `verification.md` の版と結果を直す
   - この PR だけでサイトが壊れないこと（言語の印・スクリプト・見た目の指定がそろって入り、Build Gate が通り、スクリプトが動かなくても今の見え方）を確かめる。壊れると分かったら PR に出さずに溜め、開発者に報告する
   - 作業木の変更をすべてコミットし、push も PR もしない（PR は `/kiro-complete` で作る）

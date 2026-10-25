@@ -541,3 +541,10 @@ node $T $U/spec/sstp/ "#method_send-基本的なスクリプト再生サンプ�
 # 幅 375
 for s in light dark; do node $T $U/list/sakura-script/ "#bang-lock-repaint" - $s 375 700; done
 ```
+
+## PR に出せる状態（タスク 5.2、2026-10-25）
+
+- fetch の後も `origin/main` は `0eb3fb9` で作業木 `4ce6b5e` の先祖。追いつきと確かめのやり直しは要らない
+- この PR だけで壊れない: 言語の印・スクリプト・見た目の指定は 1 コミット（`0c94a01`）にそろって入り、Build Gate は exit 0（「Build Gate と規約 Gate」）、スクリプトを切った頁は今の見え方（「字とコピー」）
+- 作業木に未コミットの変更 0、ブランチ `site-look-sakura-script-highlight` は追う先なしで未 push（`ls-remote` 0 件）。PR は `/kiro-complete` で作る
+- プレビュー（8000）と控えの配り（8030）を止め、スクラッチの控え（`before/`）を消した
