@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. 土台: 作業木と変更の前の控え
+- [x] 1. 土台: 作業木と変更の前の控え
 - [x] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューを起動する
   - ukadoc-spec を fetch し、`site-look-list-items` の PR #11 を含む `origin/main` から作業木 `.worktrees/site-look-list-markers/` とブランチ `site-look-list-markers` を作る。ukadoc-spec のメインのチェックアウトは使わない
   - 作った直後に追う先を外す（素の `git push` で `main` に送らないため）
@@ -16,7 +16,7 @@
   - 控えが配られて開け、`verification.md` の「変更の前」の節に数が書いてある
   - _Requirements: 5.7, 7.2, 8.3_
 
-- [ ] 2. まとめ頁の目印
+- [x] 2. まとめ頁の目印
 - [x] 2.1 組み立ての処理で、対応・既定値の段落と注意書きの節に目印を付け、対応の名前を札で包む
   - プレビューを止めてから書く（書きかけの `_site_src/` を拾わせない）
   - 設計の「Modified Files」の 4 か所（docstring の 1 項目、定数、`baseware()` と `add_markers()`、`main()` の呼び出しの 1 か所）だけを変え、ほかの処理には触らない
@@ -38,7 +38,7 @@
   - `verification.md` の「目印」の節に、頁ごとの数の表、漏れ 0・付けないもの 0・変わらないことの結果、札にならない部分の種類と行の数が書いてある
   - _Requirements: 1.2, 1.3, 1.4, 1.5, 2.3, 2.4, 2.7, 2.8, 2.10, 3.5, 3.6, 3.7, 5.1, 5.2, 5.3, 5.4, 5.5, 5.7, 7.2, 7.5, 8.2, 8.3, 8.7_
 
-- [ ] 3. 見た目の指定
+- [x] 3. 見た目の指定
 - [x] 3.1 `extra.css` の末尾に、注意書きの節の箱・対応のベースウェアの札・既定値の札と字下げの塊を足す
   - 設計の「Modified Files」の 3 つの塊を、この順でファイルの末尾（`site-look-list-items` の最後の塊の後ろ）に足す。ほかの塊には触らない
   - 塊ごとの注は `/* site-look-list-markers: <何> */` の 1 行だけにし、わけと数は書かない（spec の記録に書く）
@@ -54,7 +54,7 @@
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`git diff --stat origin/main` が `assets/extra.css` と `scripts/prepare_site.py` だけである
   - _Requirements: 9.1, 9.4_
 
-- [ ] 4. 配られた頁での確かめ
+- [x] 4. 配られた頁での確かめ
 - [x] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `extra.css` は両方の塊を並べ、`prepare_site.py` は両方の変更（`main()` の行は両方の関数を入れ子に）を残して直す
   - merge したときは、Build Gate（3.2）をやり直す。原稿か `prepare_site.py` が変わっていれば、控えを新しい `origin/main` から 1.2 と同じ手順で作り直し（`verification.md` の「変更の前」の節のコミットと数を直す）、2.2 の数え方もやり直して `verification.md` の「目印」の節を直す
@@ -87,7 +87,7 @@
   - `after-` の画面がそろい、`verification.md` の「画面」「失わないもの」の節に、見比べと失わないものの結果と撮り直しの枚数が書いてある
   - _Requirements: 1.1, 1.2, 2.1, 3.1, 3.3, 7.3, 7.4, 7.5, 8.4, 8.5, 8.8_
 
-- [ ] 5. 記録と PR に出せる状態
+- [x] 5. 記録と PR に出せる状態
 - [x] 5.1 `verification.md` の記録を仕上げる
   - 頭に、測った版（作業木のコミット、`origin/main` の版）と日付、流した式（Build Gate・測りのスクリプト・重ねの計算）をそのまま書く
   - 1.2・2.1・2.2・4.1〜4.4 の節がそろっていることを見て、欠けた所を埋め、Build Gate・規約 Gate・`git diff --stat origin/main` を書く
@@ -95,7 +95,7 @@
   - `verification.md` と `screenshots/` がそろい、設計の「Testing Strategy」の各項目の結果が書いてある
   - _Requirements: 8.6, 8.7, 8.9, 9.1, 9.4_
 
-- [ ] 5.2 作業木を `/kiro-complete` で PR に出せる状態にする
+- [x] 5.2 作業木を `/kiro-complete` で PR に出せる状態にする
   - ukadoc-spec を fetch し、4.1 の後に `origin/main` がまた進んでいれば、4.1 と同じく追いつき、変わった所に当たる 2.2・4.2〜4.4 の確かめをやり直して `verification.md` の版と結果を直す
   - この PR だけでサイトが壊れないこと（目印と見た目の指定がそろって入り、Build Gate が通る）を確かめる。壊れると分かったら PR に出さずに溜め、開発者に報告する
   - 作業木の変更をすべてコミットし、push も PR もしない（PR は `/kiro-complete` で作る）

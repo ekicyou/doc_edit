@@ -23,13 +23,14 @@ git diff --stat origin/main
 #  2 files changed, 102 insertions(+), 1 deletion(-)
 ```
 - 規約 Gate: 原稿（`.md`）・`index.md` の「## 一覧」・`.nav.yml`・`INDEX.md`・`mkdocs.yml` は変えていない。頁も足していない。`prepare_site.py` の注と docstring は既にある書き方（日本語・だ/である調）にそろえ、`extra.css` の注は塊ごとに `/* site-look-list-markers: <何> */` の 1 行だけ（9.1・9.2・9.4）
+- PR に出せる状態（5.2）: 2026-10-25 に fetch し直した `origin/main` は `d3154d8` のままで、作業木の先祖である。作業木に未コミットの変更は無く、ブランチ `site-look-list-markers` は push していない。目印（`prepare_site.py`）と見た目の指定（`extra.css`）がそろって入り Build Gate が通るので、この PR だけでサイトは壊れない。プレビューと控えの配りを止め、スクラッチの控えを消した
 
 ## 変更の前
 
 ### 測った版と控えの置き場
 - 日付: 2026-10-25
 - 作業木のコミット: `d3154d861671332202a495738217d4247ba9bf89`（`.worktrees/site-look-list-markers/` の HEAD = `origin/main`、PR #11 の後）
-- 控えの置き場（git に載らない。spec の完了まで残す）: `C:\Users\maz-o\AppData\Local\Temp\claude\C--home-maz-git-doc-edit\0d9dc02d-eea9-4c04-8263-111d75655dca\scratchpad\baseline\`（以下 `B`）
+- 控えの置き場（git に載らない。5.2 で配りを止めて消した）: `C:\Users\maz-o\AppData\Local\Temp\claude\C--home-maz-git-doc-edit\0d9dc02d-eea9-4c04-8263-111d75655dca\scratchpad\baseline\`（以下 `B`）
 
 | ファイル | 中身 |
 |---|---|
