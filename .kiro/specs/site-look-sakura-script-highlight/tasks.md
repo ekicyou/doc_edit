@@ -32,7 +32,7 @@
   - `verification.md` の「字句の規則」の節に、30 例の結果、全ブロックの数、誤り 0・警告 0、試作との違い 13 か所が書いてある
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 5.1, 9.3, 9.13_
 
-- [ ] 2.3 `extra.css` の末尾に、タグ・環境変数・誤りの見た目の塊を足し、言語の印と着色を 1 コミットにする
+- [x] 2.3 `extra.css` の末尾に、タグ・環境変数・誤りの見た目の塊を足し、言語の印と着色を 1 コミットにする
   - 設計の「Modified Files」の塊を、今の末尾（`site-look-list-markers:` の最後の塊）の後ろに足す。ほかの塊・テーマの色・リンク・箱の地・地の文の色・札の色には触らない
   - 注は `/* site-look-sakura-script-highlight: 記述例のタグと環境変数 */` の 1 行だけにし、わけと数は書かない。暗い表示だけの 3 色は `@media screen` の中の `[data-md-color-scheme="slate"]` に置き、`padding` や字の大きさ・形の指定を足さない
   - 作業木で `mkdocs.yml`・`assets/sakurascript.js`・`assets/extra.css` を 1 コミットにする（ukadoc-spec の履歴の型の日本語の 1 文、名前は `-c user.name=ekicyou -c user.email=dot.station@gmail.com` で渡す）
