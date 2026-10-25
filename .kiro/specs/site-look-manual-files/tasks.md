@@ -23,7 +23,7 @@
   - _Requirements: 1.1, 1.2, 1.4, 2.4, 2.7, 2.9, 3.4, 3.7, 6.7, 8.7_
 
 - [ ] 3. 木の仕掛けと見た目の指定
-- [ ] 3.1 (P) 木のファイル名を包むスクリプトを足し、全頁で読み込ませる
+- [x] 3.1 (P) 木のファイル名を包むスクリプトを足し、全頁で読み込ませる
   - 設計の「Modified Files」の `assets/filetree.js` を新しく置き、`mkdocs.yml` の `extra_javascript` に 1 行足す。`extra_javascript:` の鍵が既にあれば（`site-look-sakura-script-highlight` が入っていれば）、並びの後ろに 1 行だけ足し、ほかのスクリプトを残す
   - 字を作るのに `innerHTML` を使わず、`span` に `textContent` を入れる。包んだ後の字が違えば元に戻して `console.warn`、要素の入った木は包まずに `console.warn` にする。試作の `slp-` を写さない
   - 作業木の `filetree.js` そのものを Node の `vm` で偽の `document` の上に流し、設計の「TreeCheck」の例の表の行をすべて試す
