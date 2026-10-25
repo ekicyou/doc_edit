@@ -97,3 +97,65 @@ $PY snapshot.py compare before.json after.json   # SAME で exit 0、違えば�
 | `spec/x/notes_a.md`: `# t\n\nbody` | `<div class="bundle-notes" markdown="1">\n\n# t\n\nbody\n\n</div>` | 空行を置いて包む ○ |
 
 作業木の Build Gate は `prepare_site.py` exit 0・`zensical build --strict` exit 0（No issues found）。`_site_src/` の `.md` で数えた目印は `{: .bundle-support }` 1640 行・`{: .bundle-default }` 423 行・`<div class="bundle-notes" markdown="1">` 16 個・札 2719 個で、設計の MarkerCheck の計と同じ。`{: .bundle-support }` の直前の行はどれも `**対応:**` の行。
+
+## 目印
+
+作業木の `serve`（8000、`02e71e2` を build したもの）の 40 頁の HTML を、使い捨ての `B/markers.py`（標準の `html.parser`。bs4 は venv に無い）で数えた。`_site_src/` の対応の行も同じスクリプトが読む（`prepare_site` を import し、`SUPPORT_LINE`・`baseware()`・`BASEWARE_PART`・`NEGATION` をそのまま使う）。数え方は、合成した小さな HTML で目印なしの既定値の段落・漏れ・札の外・包みの最初の子が 1 つずつ数えられることを assert で確かめてから流した。
+
+```sh
+# B の中で
+$PY -X utf8 markers.py C:/home/maz/git/doc_edit/.worktrees/site-look-list-markers http://127.0.0.1:8000/ukadoc-spec
+$PY snapshot.py C:/home/maz/git/doc_edit/.worktrees/site-look-list-markers http://127.0.0.1:8000/ukadoc-spec after.json
+$PY snapshot.py compare before.json after.json   # SAME、exit 0
+```
+
+### 頁ごとの数
+| 頁 | 対応の段落 | 札（`SSP` / `Materia` / `CROW` / `Ninix`） | 既定値の段落 | 注意書きの包み |
+|---|---|---|---|---|
+| `descript/balloon` | 169 | 299（169 / 65 / 65 / 0） | 168 | |
+| `descript/ghost` | 74 | 108（74 / 18 / 16 / 0） | 74 | |
+| `descript/headline` | 9 | 18（9 / 4 / 5 / 0） | 9 | |
+| `descript/install` | 17 | 32（17 / 7 / 8 / 0） | 14 | |
+| `descript/plugin` | 13 | 30（13 / 8 / 9 / 0） | 13 | |
+| `descript/shell` | 102 | 176（102 / 40 / 34 / 0） | 102 | |
+| `descript/shell-surfaces` | 137 | 202（137 / 35 / 30 / 0） | 37 | |
+| `descript/shell-surfacetable` | 6 | 6（6 / 0 / 0 / 0） | 6 | |
+| `list/plugin-event` | 19 | 19（19 / 0 / 0 / 0） | | |
+| `list/propertysystem` | 193 | 215（190 / 0 / 25 / 0） | | 2 |
+| `list/sakura-script` | 357 | 675（347 / 104 / 99 / 125） | | 14 |
+| `list/shiori-event` | 310 | 538（309 / 72 / 71 / 86） | | |
+| `list/shiori-event-ex` | 42 | 74（42 / 16 / 16 / 0） | | |
+| `list/shiori-resource` | 160 | 295（140 / 77 / 55 / 23） | | |
+| `spec/saori-ex` | 32 | 32（32 / 0 / 0 / 0） | | |
+| 計 | **1640** | **2719**（1606 / 446 / 433 / 234） | **423** | **16** |
+
+- 設計の MarkerCheck の表と全部の頁・全部の欄で合った。ほかの 25 頁は 4 つとも 0
+- 包みの最初の子（`h2` 2・`h3` 12・`h4` 2。設計と同じ）:
+  - `list/sakura-script`: `h2` `notes_escape`・`notes_lifespan`、`h3` `notes_move`・`notes_sound`・`notes_sound_spectrum`・`notes_inputbox-option`・`notes_inputbox-id`・`notes_selectfile`・`notes_passivemode`・`notes_inductionmode`・`notes_executehttp`・`notes_executeical`・`notes_executerss`・`notes_environmentvariable`
+  - `list/propertysystem`: `h4` `notes_sound_meta`・`notes_sound_propertyset`
+
+### 付けないもの・漏れ
+| 見たもの | 数 |
+|---|---|
+| 札で `p.bundle-support` の外にあるもの | 0 |
+| 読み物の頁の目印（`dev/nar` の `<strong>対応:</strong>` 1 個は目印なし。`<strong>対応:</strong>` は全体で 1641 個、うち目印なしはこの 1 個だけ） | 0 |
+| `<strong>既定値:</strong>` で始まる段落（423 個）のうち `bundle-default` の無いもの | 0 |
+| `article` の中で `pre`・`code` の外の字に `{: `・`{#` | 0 |
+
+### 変わらないこと
+- `snapshot.py compare before.json after.json` は **SAME**（exit 0）。全 40 頁の `article` の中の見出しの id の並び・`headerlink` の数・`md-nav__link` の数・`href="#notes_` の数・`hr` の数・本文の字（空白を 1 つに詰めたもの）と、`_raw/` の 2049 ファイルの SHA-256 が控えと同じ。包みの端の空白で字が違うことも無かった（詰めた後の字で比べて同じ）
+
+### 札にならない部分
+`_site_src/` の対応の行 1640 行のうち、札にならない部分を含む行は **5 通り・7 行**（設計と同じ）。打ち消しの語で札にしなかった部分は **0**。
+
+この数は `prepare_site.py` の正規表現を使って数えたので、レビューで別に、原稿の `**対応:**` の行（コードブロックの外）を ` / ` で区切って部分ごとに見るスクリプトで数え直した。行 1640・札 2719（名前ごとの内訳も同じ）・打ち消し 0・5 通り・7 行で合った。
+
+| 対応の行（`**対応:** ` の後ろ） | 行 |
+|---|---|
+| `Materia廃止仕様 / SSP` | 3 |
+| `Materia廃止仕様 / SSP 複数指定は2.4.26～ ダークモードは2.8.56～` | 1 |
+| `SSP 2.4 / Ref1以降は2.4.85` | 1 |
+| `Materia / SSP / CROW / *※推奨　SSP2.5.05以上*` | 1 |
+| `Materia / SSP / CROW / *※推奨　SSP2.6.72以上*` | 1 |
+
+- 札にならない部分は `Materia廃止仕様`（名前の直後が空白でない）・`Ref1以降は2.4.85`・`*※推奨…*`（名前で始まらない）の 3 種で、同じ行のほかの部分は札になった

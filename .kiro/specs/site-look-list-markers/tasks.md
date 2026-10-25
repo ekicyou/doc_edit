@@ -27,7 +27,7 @@
   - `prepare_site.py` と `zensical build --strict` が exit 0 で、一語ずつの確かめが設計の期待（名前だけ札・札にしない）どおりで、`_site_src/` の対応・既定値の段落の後ろに `{: .bundle-support }`・`{: .bundle-default }` がある
   - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.8, 2.1, 2.3, 2.4, 2.5, 2.7, 2.8, 2.9, 2.10, 3.1, 3.5, 3.6, 3.7, 5.3, 5.6, 9.1, 9.7_
 
-- [ ] 2.2 目印の数・漏れ・変わらないことを、プレビューの頁の HTML で数える
+- [x] 2.2 目印の数・漏れ・変わらないことを、プレビューの頁の HTML で数える
   - プレビューが動いていなければ、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
   - プレビューから 40 頁の HTML を取り、頁ごとに `p.bundle-support`・`p.bundle-default`・`div.bundle-notes`・名前ごとの `span.bundle-baseware-*` を数え、設計の MarkerCheck の表（計 1640・423・16・2719、名前ごとの内訳）と合わせる。包みの最初の子の段と id を並べる（`h2` 2・`h3` 12・`h4` 2）
   - 札で `p.bundle-support` の外にあるもの 0、読み物の頁の目印 0（`dev/nar` を含む）、`<strong>既定値:</strong>` の段落で目印の無いもの 0、`pre`・`code` の外の本文の `{: `・`{#` 0 を見る
