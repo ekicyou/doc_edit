@@ -144,7 +144,7 @@
 **Objective:** As a ukadoc-spec のメンテナ, I want 小さく、言語の印と見た目の指定に限った変更を、この spec だけの PR で受け取ること, so that 他者も使う公開リポジトリでもレビューしやすい
 
 #### Acceptance Criteria
-1. The site-look-sakura-script-highlight shall ukadoc-spec の中で、`mkdocs.yml`・`assets/extra.css`・`assets/` に足す自作のスクリプト・`ukadoc-spec/CLAUDE.md`（`ss` の書き足しだけ）と、要るときだけ `scripts/prepare_site.py`（見出しの id の計算の設定をそろえる所と、［仮定 A4］を改めて配る HTML の中まで `ss` の印をそろえるときの、その扱い）を変え、原稿（`.md`）・`.nav.yml`・Zensical の版を変えない
+1. The site-look-sakura-script-highlight shall ukadoc-spec の中で、`mkdocs.yml`・`assets/extra.css`・`assets/` に足す自作のスクリプト・`ukadoc-spec/CLAUDE.md`（`ss` の書き足しだけ）と、要るときだけ `scripts/prepare_site.py`（見出しの id の計算の設定をそろえる所だけ。`ss` のためには変えない。［仮定 A4］）を変え、原稿（`.md`）・`.nav.yml`・Zensical の版を変えない
 2. The site-look-sakura-script-highlight shall `requirements.txt` を変えない。変えるときは、新しい依存として設計に理由を書く
 3. The site-look-sakura-script-highlight shall `assets/extra.css` のこの spec の指定を、ファイルの末尾に塊として足し、塊ごとの注を `/* site-look-sakura-script-highlight: <何の指定か> */` の短い 1 行にとどめる（説明・測りの数・わけは spec の記録に書く）。足すスクリプトの注も短くする
 4. The site-look-sakura-script-highlight shall 変更を、この spec の作業木 `.worktrees/site-look-sakura-script-highlight/`（ブランチ `site-look-sakura-script-highlight`）で、ukadoc-spec の `origin/main` の上に書く
@@ -154,8 +154,9 @@
 8. The site-look-sakura-script-highlight shall 旧サイトの見た目の指定・スクリプト（`sakura_player.js` など）や試作の指定・スクリプトを写さず、本番の書き方で書き直す（試作は `html[data-slp~="Cxx"]` の下の使い捨ての書き方である）。目印の名前に試作の `slp-` の接頭辞を使わない
 
 ## 仮定（要件のディスカッションで確かめる）
-- **A1**: 暗い表示のタグ・環境変数の対比の線を 4.5:1 とした。brief の 7:1 は明るい表示だけの物差しで、`site-look-list-markers` の暗い表示の札も 4.5:1 に決まった（2026-10-25）のにそろえた（`research.md` の OPEN QUESTION 1）
-- **A2**: 明るい表示の 7:1 を、白地・記述例の箱の地・薄い地の 3 つの上で守るとした。手元の見込みでは、薄い地の上のタグが 7.04:1（試作の測りは 7.14:1）でぎりぎりなので、ブラウザで 7:1 を割ったら、赤紫の色相のままタグの色を濃くするか、薄い地を薄くしてよいとした（OPEN QUESTION 2）
+A1・A2・A4・A5 は、要件のディスカッションで推奨のとおりに確定した（開発者の答え、2026-10-25）。
+- **A1**（確定）: 暗い表示のタグ・環境変数の対比の線を 4.5:1 とした。brief の 7:1 は明るい表示だけの物差しで、`site-look-list-markers` の暗い表示の札も 4.5:1 に決まった（2026-10-25）のにそろえた（`research.md` の OPEN QUESTION 1）
+- **A2**（確定）: 明るい表示の 7:1 を、白地・記述例の箱の地・薄い地の 3 つの上で守るとした。手元の見込みでは、薄い地の上のタグが 7.04:1（試作の測りは 7.14:1）でぎりぎりなので、ブラウザで 7:1 を割ったら、赤紫の色相のままタグ（か環境変数）の色を濃くする。薄い地（字の色の 9%）は変えない（C21 のかたまりに見せる効き目を弱めないため。OPEN QUESTION 2）
 - **A3**: 字句の規則は、UKADOC の各タグの項目の書き方（`\pID番号` の「0〜9」など）を正とし、areka の字句解析（`areka/crates/areka-parsers/src/sakura/lexer.rs`）を突き合わせに使った。閉じない `[` の扱い（2.5）は areka と違い、見え方のためにタグの名前までにとどめる（OPEN QUESTION 3）
-- **A4**: ```` ```ss ```` の言語の印は、頁を開いた後のブラウザの中で `sakurascript` と同じになればよいとした（配る HTML の中まで同じにするかは設計で決める。OPEN QUESTION 4）
-- **A5**: ```` ```ss ```` の確かめは、原稿に残さない使い捨ての写しで行う（OPEN QUESTION 5）
+- **A4**（確定）: ```` ```ss ```` の言語の印は、頁を開いた後のブラウザの中で `sakurascript` と同じになればよい。`pymdownx.highlight` の設定では `use_pygments: false` のまま `ss` を寄せられない（`research.md`）ので、足すスクリプトの中でそろえ、配る HTML には `language-ss` が残る。`scripts/prepare_site.py` は `ss` のためには変えない（OPEN QUESTION 4）
+- **A5**（確定）: ```` ```ss ```` の確かめは、原稿に残さない使い捨ての写しに ```` ```ss ```` のブロックを 1 つ足して build し、確かめた後に捨てる（OPEN QUESTION 5）
