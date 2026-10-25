@@ -58,14 +58,14 @@
   - _Requirements: 9.1, 9.5_
 
 - [ ] 4. 配られた頁での確かめ
-- [ ] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
+- [x] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `extra.css` は両方の塊を並べ、`prepare_site.py` は両方の変更を残して直す
   - merge したときは、Build Gate（3.3）をやり直し、`prepare_site.py` か原稿が変わっていれば 2.2 の数え方もやり直して `verification.md` の「目印」の節を直す
   - 4.2〜4.6 はこの版で測る（測る版を `verification.md` に書く）
   - `origin/main` が作業木の先祖で、Build Gate が exit 0 で、測る版が `verification.md` に書いてある
   - _Requirements: 9.5, 9.7_
 
-- [ ] 4.2 プレビューを起動し直し、配られた見た目の指定に 6 つの塊があることを確かめる
+- [x] 4.2 プレビューを起動し直し、配られた見た目の指定に 6 つの塊があることを確かめる
   - プレビューを起動し直し、内蔵ブラウザの枠（使えないときは Claude in Chrome）で頁を開く
   - 配られた `/ukadoc-spec/assets/extra.css` が 200 で、`site-look-list-items:` の見出しのコメントが 6 つあることを見る。無ければプレビューを止め、`prepare_site.py` → `build --strict` → 起動し直す
   - `verification.md` の「配り」の節に、配られた `extra.css` に 6 つの塊が入っていることを確かめた結果が書いてある

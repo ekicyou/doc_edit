@@ -121,7 +121,13 @@
 - 1.2 と同じ `snapshot.py` で、serve から `after.json` を出した（控えの置き場）。`before.json` と**バイト単位で同じ**だった
 - つまり 20 頁の見出しの id の並び（合計 2440）・`headerlink`（2440）・`md-nav__link`（4932）・`<hr />`（1921）の数と、`_raw/` の 2049 ファイルの SHA-256 が、変更の前とすべて同じ
 
+## 測る版（4.1）
+- 2026-10-25 に ukadoc-spec を fetch した。`origin/main` は `a341420` のままで、作業木の分岐点から進んでいない。merge は要らず、Build Gate（3.3）も数え方（2.2）もやり直さない
+- 4.2〜4.6 は作業木の `902a7f1`（2.1 `f8082c2`・3.1 `2356d5d`・3.2 `902a7f1`）で測る。`origin/main`（`a341420`）は作業木の先祖
+- Build Gate: この版で `prepare_site.py` exit 0・`zensical build --strict` exit 0（No issues found）。`git diff --stat origin/main` は `assets/extra.css`（+89）と `scripts/prepare_site.py`（+9 −4）だけ
+
 ## 配り
+- 4.2: serve を止めて `prepare_site.py` → `build --strict` → `zensical serve` で起動し直した。配られた `http://127.0.0.1:8000/ukadoc-spec/assets/extra.css` は 200 で、`site-look-list-items:` の見出しのコメントが 6 つ（項目名の帯・項目の間の詰め・分類の見出しの帯・記述例の箱・濃い帯の中の ¶ と検索の強調・コピーのボタンの手前で折り返す）ある
 
 ## 対比
 
