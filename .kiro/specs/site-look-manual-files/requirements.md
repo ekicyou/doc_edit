@@ -61,7 +61,7 @@
 2. If 頁が manual の頁でないとき, the UKADOC のサイト shall その頁に manual の頁の種類の印を付けない
 3. The UKADOC のサイト shall 頁の種類の印を付けても、頁の題・見出しの id・見出しの横のリンクの印（¶）・右の欄の目次・検索で引ける字を変えない
 4. The site-look-manual-files shall 頁の種類の印を、manual の外の種類の頁（`spec/shiori3` など）にも同じ形で別の種類の印を付けられる形にする（ほかの種類の印を付けるかどうかは決めない。C16・C12 が後で使いうる）
-5. The site-look-manual-files shall 頁の種類の印を、頁の道や頁の題の字（試作の `:has(h1#ゴースト)`）に頼らずに付ける
+5. The site-look-manual-files shall 頁の種類の印を、頁が `manual/` の下にあることから付け、サイトの見た目の指定で頁の題や見出しの id（試作の `:has(h1#ゴースト)`）によって頁を見分けない
 
 ### Requirement 2: ファイルごとの説明の切れ目（C14）
 **Objective:** As a manual の頁でゴーストなどの作り方を読むゴースト制作者, I want ファイル名が 1 行に置かれ、説明が字下げされて下に並ぶこと, so that どこからどこまでが 1 つのファイルの説明かを追える（D12）
