@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. 土台: 作業木と変更の前の控え
+- [x] 1. 土台: 作業木と変更の前の控え
 - [x] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューを起動する
   - ukadoc-spec を fetch し、`site-look-list-markers` の PR #12 を含む `origin/main` から作業木 `.worktrees/site-look-note-icon/` とブランチ `site-look-note-icon` を作る。ukadoc-spec のメインのチェックアウトは使わない
   - 作った直後に追う先を外す（素の `git push` で `main` に送らないため）
@@ -16,7 +16,7 @@
   - 控えが配られて開け、`verification.md` の「変更の前」の節に数が書いてある
   - _Requirements: 5.5, 6.1, 6.2, 7.3_
 
-- [ ] 2. 補足の項目の目印
+- [x] 2. 補足の項目の目印
 - [x] 2.1 組み立ての処理で、`note-<数>.md` の単位の頭の見出しに補足の目印を足す
   - プレビューを止めてから書く（書きかけの `_site_src/` を拾わせない）
   - 設計の「Modified Files」の 3 か所（docstring の 1 項目、定数 `NOTE_FILE`、`shift_headings()` の役の class を決める所の 2 行）だけを変え、ほかの処理には触らない。`bundle-item` は残して `bundle-supplement` を足す
@@ -35,7 +35,7 @@
   - `verification.md` の「目印」の節に、頁ごとの数の表、付けないもの 0・漏れ 0・変わらないことの結果が書いてある
   - _Requirements: 2.3, 5.2, 5.4, 5.5, 5.6, 6.1, 6.2, 6.4, 6.5, 7.2, 7.3, 7.7_
 
-- [ ] 3. 見た目の指定
+- [x] 3. 見た目の指定
 - [x] 3.1 `extra.css` の末尾に、注釈の見出しの絵と注の題の絵の塊を足す
   - 設計の「Modified Files」の 2 つの塊を、この順でファイルの末尾（`site-look-list-markers` の最後の塊の後ろ）に足す。ほかの塊（C04 の中央寄せと点線、C01 の帯を含む）には触らない
   - 絵は `assets/logo.png` を `url("logo.png")` で読み、ファイルは足さない。色・`filter` は指定せず、明・暗で同じ指定にし、`@media screen` で包まない
@@ -51,7 +51,7 @@
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`git diff --stat origin/main` が `assets/extra.css` と `scripts/prepare_site.py` だけである（足したファイルが無い）
   - _Requirements: 8.1, 8.5_
 
-- [ ] 4. 配られた頁での確かめ
+- [x] 4. 配られた頁での確かめ
 - [x] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `extra.css` は両方の塊を並べ、`prepare_site.py` は両方の変更を残して直す
   - merge したときは、Build Gate（3.2）をやり直す。原稿か `prepare_site.py` が変わっていれば、控えを新しい `origin/main` から 1.2 と同じ手順で作り直し、2.2 の数え方もやり直して `verification.md` の「変更の前」「目印」の節を直す
@@ -84,7 +84,7 @@
   - `after-` の画面がそろい、`verification.md` の「画面」「失わないもの」の節に、見比べ・幅 375・折り返し・失わないものの結果と撮り直しの枚数が書いてある
   - _Requirements: 1.2, 1.3, 2.2, 3.2, 4.2, 4.4, 4.6, 6.3, 6.4, 6.5, 7.4, 7.5, 7.6, 7.7_
 
-- [ ] 5. 記録と PR に出せる状態
+- [x] 5. 記録と PR に出せる状態
 - [x] 5.1 `verification.md` の記録を仕上げる
   - 頭に、測った版（作業木のコミット、`origin/main` の版）と日付、流した式（Build Gate・調べのスクリプト）をそのまま書く
   - 1.2・2.1・2.2・4.1〜4.4 の節がそろっていることを見て、欠けた所を埋め、Build Gate・規約 Gate・`git diff --stat origin/main` を書く
