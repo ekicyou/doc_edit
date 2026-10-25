@@ -1,7 +1,7 @@
 # Implementation Plan
 
 - [ ] 1. 土台: 作業木と変更の前の控え
-- [ ] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューを起動する
+- [x] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューを起動する
   - ukadoc-spec を fetch し、`origin/main` から作業木 `.worktrees/site-look-sakura-script-highlight/` とブランチ `site-look-sakura-script-highlight` を作る。ukadoc-spec のメインのチェックアウトは使わない
   - 作った直後に追う先を外す（素の `git push` で `main` に送らないため）
   - 作業木で `prepare_site.py` と `zensical build --strict` を流してから `zensical serve` を起動する（doc_edit の `.venv` を使う）
