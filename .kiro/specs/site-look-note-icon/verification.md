@@ -89,3 +89,24 @@ $PY -X utf8 snapshot.py compare before.json after.json   # SAME で exit 0、違
 | `list/sakura-script` | 649 / 649 / 832 / 374 | `spec/sstp` | 43 / 43 / 128 / 10 |
 | `list/shiori-event` | 360 / 360 / 774 / 328 | `spec/update-file` | 9 / 9 / 72 / 5 |
 | `list/shiori-event-ex` | 229 / 229 / 482 / 213 | `spec/web` | 4 / 4 / 62 / 2 |
+
+## 一語ずつの確かめ
+`prepare_site.py` の定数 `NOTE_FILE`（`re.compile(r'note-\d+\.md')`）の `fullmatch` に、ファイル名を直に渡した（2.4・5.2）。
+
+```sh
+# 作業木の中で
+$PY -c "import sys; sys.path.insert(0,'scripts'); import prepare_site as p
+for n in ['note-1.md','note-12.md','notes_escape.md','note-1-a.md','note.md','footnote-1.md']: print(n, bool(p.NOTE_FILE.fullmatch(n)))"
+```
+
+| ファイル名 | 結果 | 期待 |
+|---|---|---|
+| `note-1.md` | 付く | 付く |
+| `note-12.md` | 付く | 付く |
+| `notes_escape.md` | 付かない | 付かない |
+| `note-1-a.md` | 付かない | 付かない |
+| `note.md` | 付かない | 付かない |
+| `footnote-1.md` | 付かない | 付かない |
+
+- `prepare_site.py` と `zensical build --strict` はどちらも exit 0（No issues found）
+- `_site_src/` で `.bundle-supplement` を持つ見出しの行は 16 行で、どれも `## 補足 {#note-1 .bundle-item .bundle-supplement}` の形（段は `h2` か `h3`。`bundle-item` は残る）
