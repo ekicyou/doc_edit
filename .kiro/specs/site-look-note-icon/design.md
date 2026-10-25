@@ -1,7 +1,7 @@
 # Design Document: site-look-note-icon
 
 ## Overview
-**Purpose**: UKADOC のサイトで仕様を引くゴースト制作者に、注釈で書かれた所（注釈の節 16・補足の項目 16・注の題 2 の計 34 か所）の見出しの頭に、開発者が添付した色付きの絵（筆とリボン）を置き、注釈だとひと目で分かる見え方と、伺からしい小さな遊びを届ける。`site-look-plan` で「採る」と決まった C26 を、本番の書き方で ukadoc-spec に入れる。
+**Purpose**: UKADOC のサイトで仕様を引くゴースト制作者に、注釈で書かれた所（注釈の節 16・補足の項目 16・注の題 2 の計 34 か所）の見出しの頭に、サイトのロゴと同じ色付きの絵（筆とリボン）を置き、注釈だとひと目で分かる見え方と、伺からしい小さな遊びを届ける。`site-look-plan` で「採る」と決まった C26 を、本番の書き方で ukadoc-spec に入れる。
 **Users**: まとめ頁で仕様を引くゴースト制作者と、`dev/shell` などの読み物の頁を読むゴースト制作者（明・暗の表示、幅 375 の狭い画面、印刷を含む）。
 **Impact**: ukadoc-spec の `scripts/prepare_site.py` の `shift_headings()` で、ファイル名が `note-<数>.md` の単位の頭の見出しに目印 `bundle-supplement` を足す（1 行の判断と定数 1 つ、docstring の 1 項目）。`assets/extra.css` の末尾に、注釈の見出しの頭に絵を置く塊と、注の題の Material の鉛筆を絵に替える塊の 2 つを足す。絵は、ukadoc-spec に今ある `assets/logo.png` をそのまま使う（［仮定］A。下の「前提と OPEN QUESTION」の 1）。原稿・設定は変えない。
 
