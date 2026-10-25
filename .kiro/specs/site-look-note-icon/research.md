@@ -55,3 +55,80 @@
 - 推奨: 案 A。注釈の節は既にある `bundle-notes` の包みを使い、補足の項目だけ `prepare_site.py` でファイル名から印を付け、注の題はテーマの印を CSS で差し替える
 - 決めること: 絵の置き場と名前、補足の印の名前、大きさ・並びの値、`!!! note` の題の鉛筆の差し替え方、濃い帯（C01）の中の絵の見え方（要件の決定は requirements.md の「要件のディスカッションの決定」。印刷は背景の絵で出なくてよく、絵の出どころには一切触れない）
 - 確かめ: 34 か所の数、id・¶・目次の不変、明・暗と 375 px、`dev/shell` と `h4` の画面
+
+## 設計の調査（2026-10-25）
+
+### Summary
+- **Feature**: `site-look-note-icon`
+- **Discovery Scope**: Extension（既にある目印・塊・確かめの道具を伸ばす。軽い調べ `design-discovery-light.md` を流した。新しい依存は無く、外の調べは要らない）
+- **Key Findings**:
+  - 注釈の絵（試作の写し `slp-notes-icon.png`）は、ukadoc-spec の `assets/logo.png`（`mkdocs.yml` の `theme.logo`・`theme.favicon`、`8f588b7` で入った）とバイトまで同じ（どちらも 3284 バイト、SHA-256 `32983af300107fafd4c2e902c00cbc579051ac19a831cc25cc7863d017d1335d`）。新しいファイルを足さずに `extra.css` から `url("logo.png")` で読める
+  - 注釈の節は `bundle-notes` の包みの最初の子で選べ、Python は要らない。補足の項目だけ `shift_headings()` の役の class の所に 2 行を足せば、ファイル名 `note-<数>.md` で見分けられる
+  - テーマの注の題の印は `.md-typeset .note>.admonition-title:before`（詳細度 0,3,1）の `background-color:#448aff` と `mask-image`。同じ詳細度の指定を後に読ませ、`background` の一括の指定と `mask-image: none` で絵に替えられる
+
+### 調べたこと
+- **絵の置き場**: `assets/logo.png` と試作の写しの SHA-256 が同じ。`ukadoc-spec/CLAUDE.md` は `assets/image/` を「本文で使う画像」の置き場としている（飾りの絵は本文の図でない）。`main()` は `assets/` を丸ごと `_site_src/assets/` に写すので、`/ukadoc-spec/assets/logo.png` で配られる。`.kiro/` の中に `logo.png` の記述は無かった（要件と brief の作りの時点では知られていなかった）
+- **補足の項目の原稿**: `note-*.md` は 16 個（`descript/ghost/descript-txt`・`descript/install/updates_def-txt`・`descript/shell/descript-txt`・`list/propertysystem/property-system`・`list/sakura-script/{balloon-text,choice-marker,event}`・`list/shiori-event-ex/{app-elin,app-ghost-terminal ×3,ghost-common,ghost-kanaderu-nichijo-no-neiro,plugin-weather-station}`・`list/shiori-event-ex` 直下 2）。どれもまとめ頁の中（depth 2 以上、`index.md` でない）。頭の見出しの次にコードブロックが続く原稿は 0（記述例の濃い帯 `h4:has(+ .highlight)` に入らない）
+- **注釈の節の原稿**: `notes_*.md` 16 個は、どれも見出しが 1 つだけ。単位の中の見出しは無いが、増えると id が `notes_<鍵>-<元の id>` になり `[id^="notes_"]` に当たる。当て先は `.bundle-notes > :first-child` にした
+- **テーマ（Zensical 0.0.67 の classic、`main.cfc7948b.min.css`）**:
+  - `.md-typeset .admonition-title:before,.md-typeset summary:before{position:absolute;top:.625em;width:1rem;height:1rem;content:"";background-color:#448aff;mask-image:var(--md-admonition-icon--note);…}`、`[dir=ltr]` で `left:.6rem`
+  - `.md-typeset .note>.admonition-title:before,.md-typeset .note>summary:before{background-color:#448aff;mask-image:var(--md-admonition-icon--note)}`
+  - 注意書きの字は `.64rem`、題の印の枠 `1rem` は約 1.56 倍
+  - `.md-typeset h2{font-size:1.5625em;line-height:1.4}`、`.md-typeset{font-size:.8rem;…;-webkit-print-color-adjust:exact;color-adjust:exact}`（印刷でも背景の絵が出やすい）
+  - 見出しの `::before` を使う指定は無い
+- **`mkdocs.yml`**: `pymdownx.details` が無いので `??? note` は今は折りたたみにならない（原稿にも 0 個）。`toc_depth: 3`
+- **並行の作業木**: `.worktrees/site-look-sakura-script-highlight/` は `extra.css` の末尾に 1 塊（記述例のタグと環境変数）と `mkdocs.yml` を足しており、見出しの `::before` や `.note` には触れない。ぶつかるのは末尾の追記の位置だけ
+- **目標の画面**: `mock-propertysystem-C26-dark.png` は C01 の帯（暗い表示の薄い白の重ね）の上の絵で、帯の中の絵の扱いを足さなくてよい。`mock-sakura-script-C26-light.png` は C04 の中央寄せの見出しで、絵と字が一緒に中央に寄る
+
+### Architecture Pattern Evaluation
+
+| Option | Description | Strengths | Risks / Limitations | Notes |
+|--------|-------------|-----------|---------------------|-------|
+| 案 A（採る） | 補足だけ `prepare_site.py` で目印、注釈の節は `bundle-notes`、注の題はテーマの印を差し替え | 変更が最小（Python 2 行・CSS 2 塊）、増えた原稿にも付く | `shift_headings()` に判断が 1 つ増える | ギャップ分析の推奨 |
+| 案 B | CSS の属性の指定だけ | Python を変えない | `note-4` が増えると漏れる（2.4 に合わない） | 採らない |
+| 案 C | 見出しの字「補足」で選ぶ | — | CSS で字は選べず、字が変わると漏れる | 採らない |
+
+### Design Decisions
+
+#### Decision: 絵は `assets/logo.png` を使う（［仮定］A）
+- **Context**: 要件 5.1 で置き場と名前を設計に任された。絵はロゴとバイトまで同じ
+- **Alternatives Considered**:
+  1. `assets/logo.png` をそのまま使う
+  2. `assets/note-icon.png` に同じ絵を足す
+  3. `assets/image/note-icon.png` に足す（試作と同じ所。ただし本文の図の置き場）
+- **Selected Approach**: 1（`url("logo.png")`）
+- **Rationale**: 同じ絵を 2 つ持たず、PR が小さい。要件 8.1 の「1 ファイルを足す」と字面が違うので、OPEN QUESTION 1 として開発者に確かめる
+- **Trade-offs**: ロゴを替えると注釈の絵も変わる（Revalidation Triggers に入れた）
+- **Follow-up**: 採るなら要件 5.1・8.1 と Boundary Context の字面を直す
+
+#### Decision: 補足の目印の名前は `bundle-supplement`（［仮定］B）
+- **Context**: 要件 5.3。`bundle-<役>` の決まりで、`bundle-notes` と取り違えない名前
+- **Alternatives Considered**: `bundle-note`（`bundle-notes` と 1 字違い）、`bundle-note-item`、`bundle-aside`
+- **Selected Approach**: `bundle-supplement`（「補足」の英語。`notes` と語が違う）
+- **Trade-offs**: 少し長い
+
+#### Decision: 目印は `shift_headings()` で付ける（［仮定］C）
+- **Context**: 見出しの役の class は `shift_headings()` が `{#id .bundle-item}` の形で付けている
+- **Selected Approach**: `role` を決める所で、`NOTE_FILE.fullmatch(basename)` のとき ` .bundle-supplement` を足す
+- **Rationale**: 見出しの行を 1 回で書き、id・段・字に触れない。`add_markers()` で見出しの行を書き直すより短い
+
+#### Decision: 大きさと並びは試作の値、注の題はテーマの枠（［仮定］D・E）
+- **Context**: 目標の画面は試作の C26 の値（`1.5em`・`.35em`・`-.35em`）で撮った。注の題は目標の画面が無い
+- **Selected Approach**: 見出しは試作の値を字に対する比のまま使う。注の題はテーマの `1rem` の枠と位置のまま中身を替える（試作と同じ）
+- **Follow-up**: 実装の画面で目標の画面と見比べる
+
+### Synthesis
+- **Generalization**: 注釈の節と補足の項目は「見出しの頭の飾りの絵」という同じ見え方なので、1 つの規則（2 つのセレクタ）にまとめた。注の題はテーマの枠を使う別の仕組みなので、別の塊にした
+- **Build vs Adopt**: 絵はサイトに今ある `logo.png` を使う。注の題の印の枠・位置はテーマのものを使う。補足の見分けは既にある役の class の仕組みに乗せる。新しい道具・依存は足さない
+- **Simplification**: 注釈の節に Python の目印を足さない（既にある包みで足りる）。明・暗で絵を替えない（表示の条件の指定が要らない）。印刷用の指定を足さない（テーマの `print-color-adjust: exact` のまま）
+
+### Risks & Mitigations
+- `build --strict` が `extra.css` の中の絵の欠けに気づかない — `serve` で `/ukadoc-spec/assets/logo.png` の 200 と `::before` の `backgroundImage` を確かめる
+- `serve` を動かしたまま `prepare_site.py` を流すと `_site_src/` が壊れる — 止めてから流す
+- ロゴの差し替えで注釈の絵が変わる — Revalidation Triggers に入れた。分けたくなったら案 B（`assets/note-icon.png`）
+- `note-<数>.md` の名前で補足でない単位が置かれると絵が付く — 要件の決定 1（ファイル名を正とする）のとおり
+
+### 使った手引き
+- `kiro-spec-design` の `rules/design-principles.md`・`design-discovery-light.md`・`design-synthesis.md`・`design-review-gate.md`、`.kiro/settings/templates/specs/design.md`・`research.md`
+- 型として、`.kiro/specs/completed/site-look-list-markers/design.md`（塊の書き方・`prepare_site.py` の差分・確かめの部品・画面の一覧）
+- 遊びの条件と飾りの扱い（読み上げに出さない `content: ""` の背景の絵）は、要件 4.5 と brief の「遊びの条件」による
