@@ -64,7 +64,7 @@
 
 - [ ] 4.2 PR の前に `origin/main` に追いつき、PR の説明の下書きを用意する
   - ukadoc-spec を fetch し、`origin/main` が進んでいれば作業木を追いつかせる。`extra.css` でぶつかったら、この塊とほかの spec の塊を両方並べて残し、Build Gate をやり直す
-  - PR の説明の下書きに、見た目の直しの一連の PR（6 本）の 1 本目で続きの PR を順に出すこと、出し済み・この PR・この後に出す PR、この PR だけで完結し続きを待たずにマージしてよいことを書く
+  - PR の説明の下書きに、見た目の直しの一連の PR（3 本）の 1 本目で、続きの PR（`site-look-visibility`、`site-look-sstp-playback`）を順に出すこと、出し済み・この PR・この後に出す PR、この PR だけで完結し続きを待たずにマージしてよいことを書く
   - PR は作らない。PR は開発者の完了の承認の後に `/kiro-complete` で作り、マージしない
   - 作業木が `origin/main` の最新の上にあり、Build Gate が通り、PR の説明の下書きが `verification.md` に置いてある
   - _Requirements: 6.4, 6.5, 6.7_

@@ -9,14 +9,14 @@
 
 ## Current State
 - 今のサイトには、手元のベースウェアへ送る仕掛けも、外部のスクリプトの読み込みも無い
-- `site-look-sakura-script-highlight` の後、さくらスクリプトの記述例は `code.language-sakurascript`（287 個と、C25 で印を付けた頁の外の 6 個）で見分けられる。旧サイトで `noplay` だった `\![vanishbymyself]` の 1 例は言語指定が無いので、自然に対象の外になる。SSTP などの要求の例（1 行目が `NOTIFY SSTP/1.1` など）も外れる
+- `site-look-sakura-script-highlight` の後、さくらスクリプトの記述例は `code.language-sakurascript`（287 個）。頁の外の 6 個（`list/propertysystem` 5 個・`spec/plugin` 1 個）は言語の印が無いまま残る（C25 は原稿を変えるので、まとめた PR から外してバックログに移した。開発者の判断、2026-10-25）で見分けられる。旧サイトで `noplay` だった `\![vanishbymyself]` の 1 例は言語指定が無いので、自然に対象の外になる。SSTP などの要求の例（1 行目が `NOTIFY SSTP/1.1` など）も外れる
 - 旧サイトは jsstp を `https://cdn.jsdelivr.net/gh/ukatech/jsstp-lib@v3.1.1.2/dist/jsstp.mjs` から読み、選んだゴーストへ `OnUkadocScriptExample` を SSTP で送る
 - `site-look-plan` ではこの候補を試作していない（公開サイトから手元のベースウェアへ送り、外部のスクリプトを読む仕掛けなので、Requirement 2.7 と design.md の Security Considerations により試さなかった）。下の論点はこの spec で決める
 
 ## Desired Outcome
 決めた方向（`decisions.md` の判断）:
 - **C13 記述例を手元のゴーストで再生する（プロパティシステム・SHIORI Event にも広げる）**（判断: 採る。開発者の「以下を除き承認」（2026-10-25）により推奨のとおり）: さくらスクリプトの記述例・プロパティシステムの項目・SHIORI Event の項目から、利用者の操作を起点に手元のゴーストへ送れる。送るものの線引きと jsstp の置き方は、この spec で決める
-  - さくらスクリプトの記述例（`list/sakura-script` と、C25 で印の付いた `list/propertysystem`・`spec/plugin` の記述例）: 記述例ごとの「実行」で、選んだゴーストへ `OnUkadocScriptExample` を送る
+  - さくらスクリプトの記述例（`list/sakura-script` の記述例。`list/propertysystem`・`spec/plugin` の 6 個は言語の印が無いので、C25 が入るまで対象の外）: 記述例ごとの「実行」で、選んだゴーストへ `OnUkadocScriptExample` を送る
   - `list/propertysystem`: 項目ごとの「値を見る」で、`%property[プロパティ名]` を埋めたスクリプト（例: `\0%property[system.cpu.name]\e`）を送り、手元のベースウェアの今の値をゴーストに喋らせる。`(キー)`・`(ID)` を含む名前は、`site-look-definition-tables` の表のキーごとに組み立てる。書き込みのできるプロパティ（`\![set,property,…]`）は送らない
   - `list/shiori-event`: 項目ごとの「発生させる」で、SSTP の `NOTIFY` で `Event: OnBoot` などを手元のゴーストに送る
   - どれも、さくらスクリプトの記述例と同じ「読み込み」「実行」の流れと、同じ jsstp の読み込みに乗せる
@@ -27,7 +27,7 @@
 ## Approach
 画像やブラウザで動く仕掛けを要する遊びなので、視認性の改造と別の spec にした（`roadmap.md` の切り分けの規則）。方向（送れるようにすること）は決まっているので、議論し直さずに、下の論点を要件と設計で決める。
 - ゴーストを選ぶ欄と「読み込み」ボタンは、テンプレートの上書き（`頁の組み立て`）か、自作のスクリプトが頁に足す。「読み込み」を押したときに初めて jsstp を読み、ゴーストの一覧を取る。「実行」などのボタンは「読み込み」の後に出す
-- 記述例の見分けは `code.language-sakurascript`（C10 の言語の印と C25）に依る。```` ```ss ```` は `sakurascript` のエイリアスで、その印の付け方は `site-look-sakura-script-highlight` が決める（`language-ss` のまま残るなら、それも見分ける）。プロパティシステム・SHIORI Event の項目は、項目の見出しの id と、`site-look-definition-tables` の表から組み立てる
+- 記述例の見分けは `code.language-sakurascript`（C10 の言語の印）に依る。```` ```ss ```` は `sakurascript` のエイリアスで、その印の付け方は `site-look-sakura-script-highlight` が決める（`language-ss` のまま残るなら、それも見分ける）。プロパティシステム・SHIORI Event の項目は、項目の見出しの id と、`site-look-definition-tables` の表から組み立てる
 - 決める論点（`candidates.md` の C13 の論点と広げる案から）:
   - **利用者の操作を起点にする**: 頁を開いただけでは何も読み込まず、何も送らない。読み込みは「読み込み」ボタン、送信は「実行」「値を見る」「発生させる」ボタンを押したときだけ
   - **外部の読み込みの扱い**: jsstp を ukadoc-spec の `assets/` に版を固定して置くか（jsstp のライセンスと、ukadoc-spec の CC BY 4.0 との並べ方、更新の扱いが要る）、CDN から読むなら利用者の操作の後にだけ読むか
@@ -56,7 +56,7 @@
 - SSTP 以外の送り方・ベースウェアの設定の変更
 
 ## Upstream / Downstream
-- **Upstream**: `site-look-sakura-script-highlight`（C10 の言語の印と C25 で記述例を見分ける）、`site-look-definition-tables`（プロパティシステムのキーの表（C23）から、プロパティの名前を組み立てる）。`site-look-plan`（判断と論点）
+- **Upstream**: `site-look-sakura-script-highlight`（C10 の言語の印で記述例を見分ける）、`site-look-definition-tables`（プロパティシステムのキーの表（C23）から、プロパティの名前を組み立てる）。`site-look-plan`（判断と論点）
 - **Downstream**: なし（roadmap の最後の spec）
 
 ## Existing Spec Touchpoints
@@ -68,7 +68,7 @@
 - **利用者の操作を起点にする**: 公開サイトから手元のベースウェアへ送る仕掛けなので、頁を開いただけでは何も読み込まず、何も送らない。外部のスクリプトの読み込みも、利用者の操作の後に限るか、版を固定して `assets/` に置く
 - **旧サイトの素材**: 旧サイト（https://ssp.shillest.net/ukadoc-legacy/manual/ ）の `sakura_player.js`・画像・見た目の指定（`list.css`・`base.css`）は、再利用の許可が明記されていない。流用せず書き直す。jsstp（`ukatech/jsstp-lib`）を使うなら、そのライセンスを確かめる。ukadoc-spec は CC BY 4.0（`afb2152` の LICENSE）
 - **原稿は変えない**: 変えるのは ukadoc-spec の `assets/`（スクリプト・`extra.css`、置くなら jsstp）・`mkdocs.yml`（`extra_javascript`）・要るなら `overrides/` で、原稿（`.md`）・`.nav.yml`・Zensical の版は変えない。ただし ukadoc-spec を変えるので、`workflow.md` の「原稿を変えない spec」には当たらない。作業木 `.worktrees/site-look-sstp-playback/` で書き、Build Gate（`prepare_site.py` と `zensical build --strict`）と規約 Gate を通し、`/kiro-complete` で PR にする
-- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）の上に、中身で依る `site-look-sakura-script-highlight` と `site-look-definition-tables`（と、その依存先の `site-look-manual-files`・`site-look-list-items`）が入った版（それぞれの PR のマージの後に始める）。ほかの後続 spec（`site-look-note-icon` など）は先に入っていても、まだでもよい
+- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）の上に、中身で依る `site-look-sakura-script-highlight` と `site-look-definition-tables`（と、その依存先の `site-look-manual-files`・`site-look-list-items`）が入った版（どれも PR の単位 `site-look-visibility` に入る。その PR のマージの後に始める）。ほかの後続 spec（`site-look-note-icon` など）は先に入っていても、まだでもよい
 - **Zensical 0.0.67 の制限**: テンプレートは minijinja で描画する。partial を丸ごと写さず、CSS とブロックの上書き（`custom_dir: overrides` の `{% block … %}{{ super() }}…`。通ることは確かめ済み）にとどめる。`extra_javascript` は通る。`build --strict` は、存在しない `extra_css` を指定しても検出しない（足したスクリプトが `serve` で 200 になることを確かめる）
 - **試作で確かめた事実**（この候補は試作していないので、隣の候補で確かめたもの）:
   - `pymdownx.highlight`（`use_pygments: false`）の後、全 449 コードブロックが `pre.highlight > code` の形で、さくらスクリプトの記述例だけに `language-sakurascript` が付く
@@ -87,4 +87,4 @@
 - **遊びの条件**（`candidates.md` の C13）: ボタンが記述例の読み取りとコピーを妨げない。「読み込み」の前はボタンを出さない。SSP の無い環境・狭い画面では、何も出ないか、邪魔にならない。明るい表示とダークモードの両方で、ボタンが読める
 - **参考**: 試作は無い。論点の元は `.kiro/specs/completed/site-look-plan/candidates.md` の C13と design.md の Security Considerations
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない。3 種類のボタンを 1 つの PR にするか分けるかは、設計で決めてよい
-- **続きの PR の説明**（開発者の指示、2026-10-25）: PR の説明に、この PR が UKADOC の見た目を旧サイト並みの見やすさに近づける一連の PR（`site-look-plan` の決定を切った 6 本）の 1 本であり、続きの PR を順に出すことを書く。一連の PR とその並びは `.kiro/steering/roadmap.md` の「PR の単位」と「Specs」による（今の見込み: `site-look-dark-link-color` → `site-look-lists` と `site-look-sakura-script-highlight` → `site-look-manual-and-tables` と `site-look-note-icon` → `site-look-sstp-playback`）。PR を出すときの roadmap に合わせて、出し済みの PR（番号）・この PR・この後に出す PR を短く並べ、メンテナが全体の中のどこにあるかを分かるようにする（最後の PR では、これで一連が終わることを書く）。あわせて、この PR だけで完結していて、続きを待たずにマージしてよいこと（先に出した PR に中身で依るときは、その PR を名指しする）を書く
+- **続きの PR の説明**（開発者の指示、2026-10-25。同じ日に一連の PR を 6 本から 3 本に改めた）: PR の説明に、この PR が UKADOC の見た目を旧サイト並みの見やすさに近づける一連の PR（`site-look-plan` の決定を切った 3 本）の 1 本であり、続きの PR を順に出すことを書く。一連の PR とその並びは `.kiro/steering/roadmap.md` の「PR の単位」と「Specs」による（今の見込み: `site-look-dark-link-color` → `site-look-visibility`（list-items・list-markers・sakura-script-highlight・manual-files・definition-tables・note-icon の 6 本の spec をまとめた 1 本）→ `site-look-sstp-playback`）。PR を出すときの roadmap に合わせて、出し済みの PR（番号）・この PR・この後に出す PR を短く並べ、メンテナが全体の中のどこにあるかを分かるようにする（最後の PR では、これで一連が終わることを書く）。あわせて、この PR だけで完結していて、続きを待たずにマージしてよいこと（先に出した PR に中身で依るときは、その PR を名指しする）を書く

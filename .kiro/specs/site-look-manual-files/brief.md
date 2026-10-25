@@ -52,7 +52,7 @@
 
 ## Upstream / Downstream
 - **Upstream**: `site-look-list-items`（C22 が C01 の項目名の帯を使う）。`site-look-plan`（判断と目標の画面）
-- **Downstream**: `site-look-definition-tables`（`manual/` のファイルの箇条書き（C14・C22 の当て先）を表にしないことを、この spec の後に確かめる。同じ PR の単位 `site-look-manual-and-tables`）
+- **Downstream**: `site-look-definition-tables`（`manual/` のファイルの箇条書き（C14・C22 の当て先）を表にしないことを、この spec の後に確かめる。同じ PR の単位 `site-look-visibility`）
 
 ## Existing Spec Touchpoints
 - **Extends**: なし（新しい spec）
@@ -60,8 +60,8 @@
 
 ## Constraints
 - **方向は議論し直さない**: 候補と判断は `site-look-plan` の `decisions.md` で決まっている。この spec は、決まった見え方を本番の書き方で入れる
-- **原稿は変えない**: 変えるのは ukadoc-spec の `assets/`・`scripts/prepare_site.py`・`mkdocs.yml`・`overrides/` で、原稿（`.md`）・`.nav.yml`・`requirements.txt`・Zensical の版は変えない。ただし ukadoc-spec を変えるので、`workflow.md` の「原稿を変えない spec」には当たらない。作業木 `.worktrees/site-look-manual-files/` で書き、Build Gate（`prepare_site.py` と `zensical build --strict`）と規約 Gate を通し、`/kiro-complete` で PR にする
-- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）の上に、中身で依る `site-look-list-items` が入った版（`site-look-lists` の PR のマージの後に始める）。ほかの後続 spec（`site-look-dark-link-color`・`site-look-sakura-script-highlight` など）は先に入っていても、まだでもよい（`site-look-list-markers` は `site-look-list-items` と同じ PR の単位なので、ふつうは一緒に入っている）。ukadoc-spec のライセンスは `afb2152` で CC BY 4.0 と定まった
+- **原稿は変えない**: 変えるのは ukadoc-spec の `assets/`・`scripts/prepare_site.py`・`mkdocs.yml`・`overrides/` で、原稿（`.md`）・`.nav.yml`・`requirements.txt`・Zensical の版は変えない。ただし ukadoc-spec を変えるので、`workflow.md` の「原稿を変えない spec」には当たらない。作業木 `.worktrees/site-look-visibility/` で書き、Build Gate（`prepare_site.py` と `zensical build --strict`）と規約 Gate を通し、`/kiro-complete` で PR にする
+- **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）の上に、中身で依る `site-look-list-items` が入った版（同じ PR の単位 `site-look-visibility` の作業木を引き継ぐ）。ほかの後続 spec（`site-look-dark-link-color`・`site-look-sakura-script-highlight` など）は先に入っていても、まだでもよい（`site-look-list-markers` も同じ単位なので、ふつうは先に入っている）。ukadoc-spec のライセンスは `afb2152` で CC BY 4.0 と定まった
 - **旧サイトの素材**: 旧サイト（https://ssp.shillest.net/ukadoc-legacy/manual/ ）の `em.filename` の見せ方は手本にするが、画像・見た目の指定（`list.css`・`base.css`）・スクリプト（`sakura_player.js` など）は再利用の許可が明記されていない。写さずに書き直す
 - **Zensical 0.0.67 の制限**: テンプレートは minijinja で描画する。partial を丸ごと写さず、CSS とブロックの上書きにとどめる。`theme.custom_dir: overrides` と `overrides/main.html` の `{% extends "base.html" %}`・`{% block content %}…{{ super() }}…{% endblock %}` は通り、`custom_dir` はリポジトリ直下の `overrides/` で効く（`_site_src/` に写さなくてよい）。`extra_javascript` も通る。`build --strict` は、存在しない `extra_css` を指定しても検出しない（足したファイルが `serve` で 200 になることを確かめる）
 - **試作で確かめた事実**:
@@ -83,4 +83,4 @@
 - **失わないもの**（`survey.md` の「失わないもの」）: D15 検索（検索で引ける字を変えない）・D16 ダークモード（色は明・暗の両方で決め、どちらでも字と地の差が十分にある）・D17 見出しへのリンク（見出しの id・`a.headerlink`（¶）・右の欄の目次を変えない）・D18 狭い画面（幅 375 で `scrollWidth` = `innerWidth`）・D19 コードのコピー（木のコピーのボタンを残し、コピーされる字を変えない）・D20 記述例の字（記述例の `\` を `\` のまま見せる）
 - **参考の試作**: `.kiro/specs/completed/site-look-plan/mockups/extra.css` の C14・C15・C22 と C17 の `.slp-tree-file` の 1 行（`html[data-slp~="Cxx"]` の下の使い捨ての指定）、`mockups/mockup.js` の C15・C22 の分岐、`mockups/overrides/main.html`（C12 のテンプレートの上書き。ブロックの上書きの書き方の参考）、`mockups/README.md` の測り。写さずに書き直してよい
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない
-- **続きの PR の説明**（開発者の指示、2026-10-25）: PR の説明に、この PR が UKADOC の見た目を旧サイト並みの見やすさに近づける一連の PR（`site-look-plan` の決定を切った 6 本）の 1 本であり、続きの PR を順に出すことを書く。一連の PR とその並びは `.kiro/steering/roadmap.md` の「PR の単位」と「Specs」による（今の見込み: `site-look-dark-link-color` → `site-look-lists` と `site-look-sakura-script-highlight` → `site-look-manual-and-tables` と `site-look-note-icon` → `site-look-sstp-playback`）。PR を出すときの roadmap に合わせて、出し済みの PR（番号）・この PR・この後に出す PR を短く並べ、メンテナが全体の中のどこにあるかを分かるようにする（最後の PR では、これで一連が終わることを書く）。あわせて、この PR だけで完結していて、続きを待たずにマージしてよいこと（先に出した PR に中身で依るときは、その PR を名指しする）を書く
+- **続きの PR の説明**（開発者の指示、2026-10-25。同じ日に一連の PR を 6 本から 3 本に改めた）: PR の説明に、この PR が UKADOC の見た目を旧サイト並みの見やすさに近づける一連の PR（`site-look-plan` の決定を切った 3 本）の 1 本であり、続きの PR を順に出すことを書く。一連の PR とその並びは `.kiro/steering/roadmap.md` の「PR の単位」と「Specs」による（今の見込み: `site-look-dark-link-color` → `site-look-visibility`（list-items・list-markers・sakura-script-highlight・manual-files・definition-tables・note-icon の 6 本の spec をまとめた 1 本）→ `site-look-sstp-playback`）。PR を出すときの roadmap に合わせて、出し済みの PR（番号）・この PR・この後に出す PR を短く並べ、メンテナが全体の中のどこにあるかを分かるようにする（最後の PR では、これで一連が終わることを書く）。あわせて、この PR だけで完結していて、続きを待たずにマージしてよいこと（先に出した PR に中身で依るときは、その PR を名指しする）を書く。この spec は PR の単位 `site-look-visibility` の 1 本で、PR は単位の最後の spec（`site-look-note-icon`）の完了のときに 1 回だけ作る。PR の説明は、単位の 6 本の spec をまとめて書く

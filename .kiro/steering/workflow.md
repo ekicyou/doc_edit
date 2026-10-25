@@ -167,7 +167,7 @@ git -C .worktrees/<pr> push
 
 - rebase・force push はしない（レビューの跡を消さない）。取り込みは merge で行う
 - 直し方が 1 通りに決まらない（両方の変更が同じ規則を別の値で書き換えている、など）ときは、merge を `git -C .worktrees/<pr> merge --abort` で取り消して止め、開発者へ報告する
-- ぶつかりを減らすため、`extra.css` には単位ごとに見出しのコメント（`/* site-look-lists: … */`）で区切った塊で書く
+- ぶつかりを減らすため、`extra.css` には単位ごとに見出しのコメント（`/* site-look-visibility: … */`）で区切った塊で書く
 
 #### PR のタイトルと本文の作り方（メンテナが squash マージするときの既定のメッセージになる）
 
