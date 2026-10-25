@@ -85,7 +85,7 @@
   - _Requirements: 1.2, 1.3, 2.2, 3.2, 4.2, 4.4, 4.6, 6.3, 6.4, 6.5, 7.4, 7.5, 7.6, 7.7_
 
 - [ ] 5. 記録と PR に出せる状態
-- [ ] 5.1 `verification.md` の記録を仕上げる
+- [x] 5.1 `verification.md` の記録を仕上げる
   - 頭に、測った版（作業木のコミット、`origin/main` の版）と日付、流した式（Build Gate・調べのスクリプト）をそのまま書く
   - 1.2・2.1・2.2・4.1〜4.4 の節がそろっていることを見て、欠けた所を埋め、Build Gate・規約 Gate・`git diff --stat origin/main` を書く
   - 絵については使った置き場（`assets/logo.png`）と当て先だけを書き、出どころや使ってよい範囲には触れない
@@ -93,7 +93,7 @@
   - `verification.md` と `screenshots/` がそろい、設計の「Testing Strategy」の各項目の結果が書いてある
   - _Requirements: 7.2, 7.7, 8.5, 8.6_
 
-- [ ] 5.2 作業木を `/kiro-complete` で PR に出せる状態にする
+- [x] 5.2 作業木を `/kiro-complete` で PR に出せる状態にする
   - ukadoc-spec を fetch し、4.1 の後に `origin/main` がまた進んでいれば、4.1 と同じく追いつき、変わった所に当たる 2.2・4.2〜4.4 の確かめをやり直して `verification.md` の版と結果を直す
   - この PR だけでサイトが壊れないこと（目印と見た目の指定がそろって入り、Build Gate が通る）を確かめる。壊れると分かったら PR に出さずに溜め、開発者に報告する
   - 作業木の変更をすべてコミットし、push も PR もしない（PR は `/kiro-complete` で作る）

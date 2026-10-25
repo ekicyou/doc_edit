@@ -3,8 +3,25 @@
 ## 測った版と日付
 - 日付: 2026-10-25
 - 作業木: `.worktrees/site-look-note-icon/`（ブランチ `site-look-note-icon`。ukadoc-spec の作業木）
-- `origin/main`: `529d092`。変更の前の控えはこの版で、作業木の HEAD と同じである
+  - `58df49d` まとめ頁の補足の項目（note-<数>.md）の頭の見出しに目印 bundle-supplement を付ける（2.1）
+  - `5938d27` 注釈の節・補足の項目の見出しと注の題の頭に、サイトのロゴの絵を置く（3.1）
+  - 2.2 は `5938d27` の build で数え（HTML は `58df49d` と同じ）、3.2 の Build Gate と 4.2〜4.4 も `5938d27` で測った
+- `origin/main`: `529d092`（#13 `site-look-sakura-script-highlight` のマージの後）。変更の前の控えはこの版で、作業木の先祖である。4.1・5.2 で fetch し直しても進んでいない
 - 頁: 作業木の `zensical serve`（`http://127.0.0.1:8000/ukadoc-spec/…`）。変更の前の控えは 8010
+- 測りのブラウザ: Edge ヘッドレス + CDP（`shot.mjs` と、Claude のスクラッチに置いた使い捨てのスクリプト）
+- 流した式: Build Gate は「Build Gate と規約 Gate」、控えと比べは「変更の前」、名前の見分けは「一語ずつの確かめ」、目印の数えは「目印」、配りは「配り」、効きと切り替えは「効き」、画面は「画面」、幅 375 などは「失わないもの」の各節にそのまま書いた
+- 絵: 今ある `assets/logo.png` を `extra.css` から `url("logo.png")` で読み、注釈の節の見出し（`.bundle-notes` の最初の子）・補足の項目の頭の見出し（`.bundle-supplement`）・注の題（`.note` の題）の `::before` に当てた
+- 開発者に画面や `serve` を見せるときは、古い `extra.css` が残らないよう Ctrl+F5 を頼む（7.7）
+
+### 設計の「Testing Strategy」との対応
+| 項目 | 結果 | 節 |
+|---|---|---|
+| Build Gate | `prepare_site.py`・`build --strict` とも exit 0、変えたのは 2 ファイルだけ | Build Gate と規約 Gate |
+| 配り | `extra.css` に 2 つの塊、`logo.png` が 200 で中身が同じ | 配り |
+| 一語ずつの確かめ | 6 つの名前がどれも期待どおり | 一語ずつの確かめ |
+| 目印と絵 | 16・16・2、絵の当たる見出し 32 だけ、`tip`・`warning` は印のまま、読み物の頁 0、漏れ 0 | 目印・効き |
+| 変わらないこと | 控えと SAME（id・¶・目次・`hr`・本文の字・既にある目印・`_raw/`） | 目印 |
+| 見え方 | 目標の画面と見比べて同じ、切り替えで同じ、幅 375 で 375 | 効き・画面・失わないもの |
 
 ## 変更の前
 
@@ -175,6 +192,8 @@ git diff --stat origin/main
 ```
 - 足したファイルは無い（絵は今ある `assets/logo.png` を使う。8.1）
 - 規約 Gate: 原稿（`.md`）・`index.md` の「## 一覧」・`.nav.yml`・`INDEX.md`・`mkdocs.yml` は変えていない。ファイル名は ASCII。`prepare_site.py` の注と docstring は既にある書き方（日本語・だ/である調）にそろえ、`extra.css` の注は塊ごとに `/* site-look-note-icon: <何> */` の 1 行だけ（8.2・8.5）
+
+- PR に出せる状態（5.2）: 2026-10-25 に fetch し直した `origin/main` は `529d092` のままで、作業木の先祖である。作業木に未コミットの変更は無く、ブランチ `site-look-note-icon` は push していない（追う先も無い）。目印（`prepare_site.py`）と見た目の指定（`extra.css`）がそろって入り Build Gate が通るので、この PR だけでサイトは壊れない。プレビュー（8000）と控えの配り（8010）を止め、スクラッチの控えを消した
 
 ## 測る版
 - 2026-10-25 に `git -C ukadoc-spec fetch origin` した `origin/main` は `529d092` のままで、作業木の先祖である。merge は要らず、控えも作り直さない（8.7）
