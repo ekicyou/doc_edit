@@ -262,6 +262,34 @@ fg は `getComputedStyle` の `color`、bg は重ねた地（表は整数に丸�
 - 明るい表示だけで測った。暗い表示（`[data-md-color-scheme="slate"]`）で変わる指定は `@media screen` の中の地と線の色だけで、余白・線の幅・線の型・当て先は明・暗で同じなので、詰め・箱の有無・点線は明で足りる（レビューで足した）
 
 ## 着色の後の形
+- 4.5（4.3・5.7）。作業木 `902a7f1` の `mkdocs.yml` は変えていない
+- 写しの作り方: `git -C .worktrees/site-look-visibility archive HEAD` をスクラッチの下の新しい空のフォルダ `shape-copy/` に展開し、写しの `mkdocs.yml` の `markdown_extensions` の `pymdownx.superfences` の前に次の 2 行を足した
+
+```yaml
+  - pymdownx.highlight:
+      use_pygments: false
+```
+
+- 写しの中で doc_edit の `.venv` の `python scripts/prepare_site.py`（exit 0）と `zensical build --strict`（exit 0、「No issues found」）を流し、`zensical serve -a 127.0.0.1:8010` で配った。比べた相手は作業木の `serve`（8000）
+- 写しの `_site/list/sakura-script/index.html` は `<pre class="highlight">` が 288（`<code class="language-sakurascript">` 287・`<code>` 1）、`<div class="highlight">` が 0。作業木の `_site/` は `<div class="highlight">` が 288
+- スクリプトは控えの置き場のもの。`layout.mjs` の箱の判定は `.highlight` を見て、`div.highlight` にも `pre.highlight` にも当たる（下の表で両方の形の数が出ている）。`box` の出力に、外側の `.highlight` の要素の名前ごとの数（`tags`）と、箱ごとの上端（頁の上から）と高さ（`rects`、px に丸めた）を足した。`contrast.mjs` の箱の中のコードの字は `[id="bang-lock-repaint-記述例"] + .highlight code`、`overlap.mjs` は `pre > code` なので、どちらも両方の形に当たる
+
+| 測るもの | スクリプト | 作業木（8000、`div.highlight > pre > code`） | 写し（8010、`pre.highlight > code`） | 同じか |
+|---|---|---|---|---|
+| 外側の `.highlight` の要素 | `layout.mjs box`（幅 1000） | `DIV` 288 | `PRE` 288 | 形だけが違う（狙いどおり） |
+| 箱（左の線） | 同上 | 288 | 288 | 同じ |
+| 点線 | 同上 | 33 | 33 | 同じ |
+| 食い違い | 同上 | 0 | 0 | 同じ |
+| 箱の上端と高さ（288 組） | 同上 | — | — | **全組が同じ**（`rects` を書き出した 2 つのファイルが `cmp` で同じ。例: 1 つ目 1226・59、3 つ目 1843・40） |
+| C18 箱の中のコードの字（明） | `contrast.mjs` | `rgb(54, 70, 78)` / `rgb(238, 242, 248)` **8.72** | 同じ **8.72** | 同じ |
+| C18 箱の中のコードの字（暗） | 同上 | `rgb(180, 184, 195)` / `rgb(29, 36, 51)` **7.80** | 同じ **7.80** | 同じ |
+| `contrast.mjs` のほかの行（帯・¶・リンク・箱の線・検索の強調・画面だけ） | 同上 | — | — | 全行が同じ（URL の口の番号を除いて比べた） |
+| ボタンの重なり（幅 1000） | `overlap.mjs` | `pre > code` 288・ボタン 288・重なり **0** | 288・288・**0** | 同じ |
+| ボタンの重なり（幅 375） | 同上 | 288・288・**0** | 288・288・**0** | 同じ |
+
+- 折り返し: 箱の高さが 288 組すべて同じなので、幅 1000 で箱の中の行の折り返しは同じ。幅 375 は重なり 0 で見た
+- 画面: `shot.mjs` で `list/sakura-script/` の `#bang-lock-repaint` を、写しと作業木の明・暗で撮った（スクラッチに置き、spec の `screenshots/` には置いていない）。4 枚のうち 2 枚（写しの明・作業木の暗）に二重に重なった跡が出たので撮り直した。並べて目で見て、帯・箱の線と地・コードの字の色・折り返しの位置・コピーのボタンの位置に違いは無かった
+- 片付け: 8010 の配りを止めた（`curl` が繋がらない・`netstat` に 8010 の LISTEN が無い）。写しのフォルダ `shape-copy/` を消し、無いことを `ls` で確かめた。作業木の `git status` は空のまま。8000 の `serve` は止めていない
 
 ## 画面の見比べ
 
