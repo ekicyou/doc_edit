@@ -23,17 +23,17 @@ kiro 系スキル（`kiro-start` `kiro-design` `kiro-impl` `kiro-complete` `kiro
 
 | 項目 | 値 |
 |---|---|
-| 場所 | `.worktrees/<feature>/`（doc_edit 直下。`.gitignore` 済み） |
-| ブランチ | `<feature>`（spec 名と同じ） |
+| 場所 | `.worktrees/<pr>/`（doc_edit 直下。`.gitignore` 済み） |
+| ブランチ | `<pr>`（PR の単位の名前。単独の spec なら spec 名と同じ） |
 | 起点 | `origin/main`（ukadoc-spec の） |
 
 ```powershell
 git -C ukadoc-spec fetch origin
-git -C ukadoc-spec worktree add ../.worktrees/<feature> -b <feature> origin/main
+git -C ukadoc-spec worktree add ../.worktrees/<pr> -b <pr> origin/main
 ```
 
-- 最初に原稿を書き換える段（ふつうは `/kiro-impl` の最初のタスク）で作る。既にあればそのまま使う
-- 原稿の編集・確認・コミットは、すべてこの作業木の中で行う（`git -C .worktrees/<feature> ...`）
+- 最初に原稿を書き換える段（ふつうは `/kiro-impl` の最初のタスク）で作る。既にあればそのまま使う（単位の後の spec は、前の spec が残した作業木を引き継ぐ）
+- 原稿の編集・確認・コミットは、すべてこの作業木の中で行う（`git -C .worktrees/<pr> ...`）
 - 原稿を読むだけなら `ukadoc-spec/` でよい。ただし spec を書く前に `git -C ukadoc-spec fetch origin` して、`origin/main` との差を意識する
 - **原稿を変えない spec**（`design.md` の Boundary Commitments に「この spec は原稿を変えない spec である」と書いた spec。計画の spec など）の作業木は、試作の置き場である。そこではコミットも push もしない。spec の最後のタスクで `origin/main` と同じ状態（コミット 0・未コミットの変更 0）に戻し、`/kiro-complete` が消す
 
@@ -128,15 +128,25 @@ gh pr view <PR 番号> --repo ukatech/ukadoc-spec --json state,url   # OPEN を�
 ```
 
 - **ukadoc-spec の `main` へ直接 push しない**（ブランチ保護は無いが、push した時点で公開される）
-- 1 spec = 1 ブランチ = 1 PR。完了時に 1 回だけ PR を作る。spec.json に `"ukadoc_spec": { "pr": "<URL>", "state": "OPEN" }` を書く
+- 1 単位 = 1 ブランチ = 1 PR（下の「PR の単位」）。単位の最後の spec の完了時に 1 回だけ PR を作る。単位のすべての spec の spec.json に `"ukadoc_spec": { "pr_unit": "<pr>", "pr": "<URL>", "state": "OPEN" }` を書く
 - 作業木とブランチはマージまで残す。レビューで直しを頼まれたら、作業木でコミットして push する
 - **CI を待たない**。ukadoc-spec に PR の CI は無い。PR を出す前の関門は Build Gate（ローカルの `build --strict`）
 - PR の作成が失敗したら、**ブランチも作業木も消さずに**止めて開発者へ報告する
 - PR の body の末尾には帰属表示の行を付ける
 
+#### PR の単位
+
+メンテナは PR を**完成品の単位**で評価する。だから、続けて入れる spec のうち、1 つの完成品として見てもらうものは 1 つの PR にまとめる。**単独の PR では成り立たない（途中の見た目や壊れた状態が公開されてしまう）spec は、必ず同じ単位に入れる。**
+
+- roadmap の spec の行に `PR: <単位名>` を書く。無ければ spec 名が単位名（1 spec = 1 PR）
+- 単位は依存の鎖の続いた区間にする（単位の中の spec は roadmap の並びで続ける）。単位名は kebab-case の英語
+- 1 単位 = 1 作業木 = 1 ブランチ = 1 PR。単位の中の後の spec は同じ作業木を引き継ぎ、前の spec の PR を待たない
+- `/kiro-complete` は単位の途中の spec では PR を作らない（spec.json に `"state": "PENDING"`）。単位の最後の spec で、単位全体の PR を作る
+- 単位の最後の spec の前に、単位の全体で Build Gate を通す（作業木が 1 つなので、最後の spec の Build Gate がそれに当たる）
+
 #### 依存する spec の PR
 
-PR がマージされるまで、ukadoc-spec の `origin/main` にその原稿は入らない。だから、**依存する spec（roadmap の `Dependencies:`）の PR が `MERGED` になるまで、次の spec を `/kiro-start` しない**（`/kiro-start` が止め、`/kiro-next` は「PR のマージ待ち」と報告する）。依存先のブランチから作業木を切る（積み重ねの PR）ことはしない。
+PR がマージされるまで、ukadoc-spec の `origin/main` にその原稿は入らない。だから、**別の単位の依存先（roadmap の `Dependencies:`）の PR が `MERGED` になるまで、次の spec を `/kiro-start` しない**（`/kiro-start` が止め、`/kiro-next` は「PR のマージ待ち」と報告する）。同じ単位の依存先は完了（アーカイブ）していればよい。別の単位のブランチから作業木を切る（積み重ねの PR）ことはしない。
 
 #### PR のタイトルと本文の作り方（メンテナが squash マージするときの既定のメッセージになる）
 
