@@ -148,6 +148,27 @@ gh pr view <PR 番号> --repo ukatech/ukadoc-spec --json state,url   # OPEN を�
 
 PR がマージされるまで、ukadoc-spec の `origin/main` にその原稿は入らない。だから、**別の単位の依存先（roadmap の `Dependencies:`）の PR が `MERGED` になるまで、次の spec を `/kiro-start` しない**（`/kiro-start` が止め、`/kiro-next` は「PR のマージ待ち」と報告する）。同じ単位の依存先は完了（アーカイブ）していればよい。別の単位のブランチから作業木を切る（積み重ねの PR）ことはしない。
 
+`Dependencies:` には**中身で依るもの**だけを書く（前の spec の目印・帯・言語の印を使う、など）。同じファイル（`extra.css`・`prepare_site.py`・`mkdocs.yml`）を触るだけでは依存にしない。互いに依らない単位は、同時に進めて同時に PR を出してよい。
+
+#### 開いている PR に追いつく（ぶつかったとき）
+
+同じファイルを触る PR が並ぶので、1 本がマージされると、残りの PR が `main` とぶつかることがある。メンテナにぶつかりを直させない。こちらで次のように追いつく（`/kiro-complete <feature>` の再実行が行う）。
+
+```powershell
+gh pr view <PR の URL> --json state,mergeable   # mergeable が CONFLICTING なら追いつく
+git -C .worktrees/<pr> fetch origin
+git -C .worktrees/<pr> merge --no-edit origin/main
+# ぶつかった箇所を直す。両方の変更を残すのが基本（extra.css の末尾への追記どうしなら、両方の塊を並べる）
+git -C .worktrees/<pr> add <直したファイル>
+git -C .worktrees/<pr> commit --no-edit
+# Build Gate をやり直す（prepare_site.py と zensical build --strict）
+git -C .worktrees/<pr> push
+```
+
+- rebase・force push はしない（レビューの跡を消さない）。取り込みは merge で行う
+- 直し方が 1 通りに決まらない（両方の変更が同じ規則を別の値で書き換えている、など）ときは、merge を `git -C .worktrees/<pr> merge --abort` で取り消して止め、開発者へ報告する
+- ぶつかりを減らすため、`extra.css` には単位ごとに見出しのコメント（`/* site-look-lists: … */`）で区切った塊で書く
+
 #### PR のタイトルと本文の作り方（メンテナが squash マージするときの既定のメッセージになる）
 
 1. `git -C .worktrees/<feature> log --no-merges --pretty=format:"%h %s%n%b" origin/main..HEAD` で分岐点以降のコミットを集める

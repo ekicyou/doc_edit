@@ -258,8 +258,9 @@ git push {remote} {default-branch}
 
 `.kiro/specs/completed/{feature}/spec.json` の `ukadoc_spec.state` が `"OPEN"` の spec に `/kiro-complete {feature}` が呼ばれたら、冒頭ステップ〜ステップ8 は行わず、これだけを行う（workflow.md「4. 後始末と記録」）。単位の PR なら、単位のどの spec の名前で呼ばれてもよい（`{pr}` は spec.json の `pr_unit`）。
 
-1. `gh pr view <PR の URL> --json state,mergeCommit` で状態を見る。
-   - `MERGED` でなければ何も消さずに止め、状態を報告する（`OPEN` ならメンテナ待ち、`CLOSED` なら開発者の判断を待つ）。
+1. `gh pr view <PR の URL> --json state,mergeable,mergeCommit` で状態を見る。
+   - `OPEN` で `mergeable` が `CONFLICTING` なら、「開いている PR に追いつく」を行って止める。
+   - `OPEN` でぶつかりが無ければ、何も消さずに止め、メンテナ待ちと報告する。`CLOSED` なら何も消さずに止め、開発者の判断を待つ。
 2. `MERGED` なら片付けて、記録している版を進める。
    ```powershell
    git -C ukadoc-spec worktree remove ../.worktrees/{pr}   # 未追跡がビルドの生成物だけなら --force
@@ -275,6 +276,18 @@ git push {remote} {default-branch}
    git push {remote} {default-branch}
    ```
    コミットの本文に PR の URL を書く。
+4. ほかに開いている PR（`completed/*/spec.json` の `ukadoc_spec.state` が `"OPEN"`）を、単位ごとに 1 回ずつ `gh pr view <URL> --json mergeable` で見る。`CONFLICTING` のものには「開いている PR に追いつく」を行う。今のマージで `main` が進んだので、ぶつかるのはここで起きやすい。
+
+## 開いている PR に追いつく
+
+workflow.md「開いている PR に追いつく（ぶつかったとき）」に従う。メンテナにぶつかりを直させない。
+
+1. `mergeable` が `UNKNOWN` なら、少し待ってからもう一度見る。それでも `UNKNOWN` なら、ぶつかり無しとして扱い、報告に書く。
+2. 作業木 `.worktrees/{pr}` で `fetch origin` → `merge --no-edit origin/main` を行う。
+3. ぶつかった箇所は、両方の変更を残して直す（`extra.css` の末尾への追記どうしなら、両方の塊を並べる）。直し方が 1 通りに決まらなければ、`git -C .worktrees/{pr} merge --abort` で取り消して止め、開発者へ報告する。
+4. 直したファイルを add し、`commit --no-edit` する。Build Gate（ステップ1 の 3）をやり直し、通らなければ push せずに止めて報告する。
+5. `git -C .worktrees/{pr} push` する（rebase・force push はしない）。`gh pr view <URL> --json mergeable` が `MERGEABLE` になったことを確かめて報告する。
+6. doc_edit には記録しない（PR の URL と state は変わらないため）。
 
 ---
 
@@ -293,6 +306,7 @@ git push {remote} {default-branch}
 - [ ] ukadoc-spec へ PR を作成（ステップ7）: origin/main を取り込み → push → gh pr create → gh pr view で OPEN を確認。gh pr merge はしない
 - [ ] 記録（ステップ8）: 作業木とブランチは残し、ukadoc-spec/ と参照コミットは進めず、spec.json に PR の URL と "state": "OPEN" を書き、doc_edit の main に自分のパスだけコミットして push
 - [ ] ※単位の途中の spec: PR も push もせず、spec.json に "pr_unit" と "state": "PENDING" を書き、作業木は単位の次の spec に引き継ぐ
+- [ ] ※開いている PR がぶつかったとき: 作業木で origin/main を merge して両方を残して直し、Build Gate をやり直して push（rebase・force push はしない）
 - [ ] ※PR マージ後の再実行: MERGED を確かめてから作業木とブランチを片付け、ukadoc-spec/ を main の最新に進め、spec.json に merge_commit を書き、参照コミットと一緒にコミットして push
 - [ ] ※原稿を変えない spec: 作業木にコミット・未コミットの変更が無いことを確かめ、Build・規約 Gate は「当てはまらない」と記録し、ステップ2・7 を飛ばし、作業木とブランチを消し、参照コミットは進めない（spec.json に "pr": "none"）
 ```
