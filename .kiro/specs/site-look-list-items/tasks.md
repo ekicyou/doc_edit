@@ -1,7 +1,7 @@
 # Implementation Plan
 
 - [ ] 1. 土台: 作業木と変更の前の控え
-- [ ] 1.1 ukadoc-spec の `origin/main` の最新から PR の単位の作業木を作り、プレビューを起動する
+- [x] 1.1 ukadoc-spec の `origin/main` の最新から PR の単位の作業木を作り、プレビューを起動する
   - ukadoc-spec を fetch し、`origin/main`（PR #10 を含む）から単位 `site-look-visibility` の作業木とブランチを作る。この spec が単位の最初なので新しく作る（既にあれば、先頭が `origin/main` と同じことを確かめて使う）。ukadoc-spec のメインのチェックアウトは使わない
   - 作業木で `prepare_site.py` と `zensical build --strict` を流してから `zensical serve` を起動する（doc_edit の `.venv` を使う）
   - 作業木の先頭が `origin/main` と同じコミットで、`/ukadoc-spec/list/sakura-script/` の頁がプレビューで開ける
