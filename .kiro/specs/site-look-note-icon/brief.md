@@ -1,4 +1,4 @@
-起票元: site-look-plan の決定（.kiro/specs/site-look-plan/decisions.md、2026-10-25）から
+起票元: site-look-plan の決定（.kiro/specs/completed/site-look-plan/decisions.md、2026-10-25）から
 
 # Brief: site-look-note-icon
 
@@ -12,17 +12,17 @@
   - 補足の項目: 原稿の `note-1.md` などの「補足」の見出し 16 個。`id` が `note-1`・`balloon-text-note-1` のように `note-` と数で終わる（節の中の見出し `…-note-1-…` は除く）。CSS の属性の指定では「数で終わる」形を見分けられない
   - `!!! note "注"` の注意書きの題 2 個（`dev/shell`）。Material の鉛筆のアイコン（`mask-image`）が付いている
 - `!!! tip "ヒント"`（9 個）・`!!! warning "非推奨"`（3 個）は別の種類の注意書きで、本文の「※」の行（147 行）は見出しが無い
-- 開発者の添付の絵（88×88 の PNG）の写しが、試作の写し `.kiro/specs/site-look-plan/mockups/image/slp-notes-icon.png` にある
+- 開発者の添付の絵（88×88 の PNG）の写しが、試作の写し `.kiro/specs/completed/site-look-plan/mockups/image/slp-notes-icon.png` にある
 - `site-look-definition-tables` の表の処理には中身で依らない。同じ `prepare_site.py` を触るが、先に入っていても、まだでもよい
 
 ## Desired Outcome
 決めた方向（`decisions.md` の判断）:
 - **C26 注釈の見出しに添付のアイコンを付ける**（判断: 採る。開発者の答え「白黒はデザインが破綻したので、カラーアイコンをそのまま使って。なお、注釈表記がある箇所はほかにもあったかもしれないが、同様な対応よろしくね。」）: 注釈の節・補足の項目・`!!! note "注"` の見出しの頭に、開発者が添付した色付きの絵（筆とリボン）を字の 1.5 倍ほどの大きさで置く。大きく出すと粗くなるので、今の大きさのままにする
-  - 目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C26-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C26-dark.png`（注釈の節「さくらスクリプトのエスケープ」「さくらスクリプトの寿命」）、`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C26-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C26-dark.png`（補足の項目「補足」）の見出しの頭の絵。暗い表示でも絵が地から浮かずに読める
+  - 目標の画面: `.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C26-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C26-dark.png`（注釈の節「さくらスクリプトのエスケープ」「さくらスクリプトの寿命」）、`.kiro/specs/completed/site-look-plan/screenshots/mock-propertysystem-C26-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-propertysystem-C26-dark.png`（補足の項目「補足」）の見出しの頭の絵。暗い表示でも絵が地から浮かずに読める
   - `!!! note "注"` の題の画面は無い（`dev/shell` は試作の画面に撮っていない）。鉛筆を外して同じ絵にする
 - 採らなかった組: C27（白黒の線に起こした SVG）は C26 と両立しない組の採らなかった方で、この spec では作らない
 - 目標の画面は、ほかの候補（C04 の箱など）も `?slp=` に入れて撮ったものである。この spec の目標は見出しの頭の絵である
-- 画面のパスは、`site-look-plan` の完了の後、`.kiro/specs/completed/site-look-plan/screenshots/...` の下に移る
+- 画面は、`site-look-plan` の完了（2026-10-25）で `.kiro/specs/completed/site-look-plan/screenshots/` の下に移った（上のパスは移った後のもの）
 
 ## Approach
 画像を足す遊びなので、視認性の改造と別の spec にした（`roadmap.md` の切り分けの規則）。
@@ -62,7 +62,7 @@
 
 ## Constraints
 - **方向は議論し直さない**: 候補と判断は `site-look-plan` の `decisions.md` で決まっている。この spec は、決まった見え方を本番の書き方で入れる
-- **絵の使ってよい範囲**: 絵は開発者が会話で添付した画像で、試作の写しは `.kiro/specs/site-look-plan/mockups/image/slp-notes-icon.png`（88×88）にある。ukadoc-spec は CC BY 4.0（`afb2152` の LICENSE）なので、本番に入れる前に、絵の出どころと、ukadoc-spec の CC BY 4.0 で出してよいか（または絵だけ別の許可で置くか）を開発者が確かめる。確かめが済むまで PR にしない
+- **絵の使ってよい範囲**: 絵は開発者が会話で添付した画像で、試作の写しは `.kiro/specs/completed/site-look-plan/mockups/image/slp-notes-icon.png`（88×88）にある。ukadoc-spec は CC BY 4.0（`afb2152` の LICENSE）なので、本番に入れる前に、絵の出どころと、ukadoc-spec の CC BY 4.0 で出してよいか（または絵だけ別の許可で置くか）を開発者が確かめる。確かめが済むまで PR にしない
 - **旧サイトの素材**: 旧サイト（https://ssp.shillest.net/ukadoc-legacy/manual/ ）の画像・見た目の指定（`list.css`・`base.css`）・スクリプト（`sakura_player.js` など）は、再利用の許可が明記されていない。使わない
 - **原稿は変えない**: 変えるのは ukadoc-spec の `assets/`（絵と `extra.css`）と `scripts/prepare_site.py` で、原稿（`.md`）・`.nav.yml`・`requirements.txt`・Zensical の版は変えない。ただし ukadoc-spec を変えるので、`workflow.md` の「原稿を変えない spec」には当たらない。作業木 `.worktrees/site-look-note-icon/` で書き、Build Gate（`prepare_site.py` と `zensical build --strict`）と規約 Gate（ファイル名は ASCII）を通し、`/kiro-complete` で PR にする
 - **土台**: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）の上に、中身で依る `site-look-list-markers`（と、同じ PR の単位 `site-look-lists` の `site-look-list-items`）が入った版（`site-look-lists` の PR のマージの後に始める）。ほかの後続 spec（`site-look-definition-tables` など）は先に入っていても、まだでもよい
@@ -78,10 +78,10 @@
 - **表示の確かめ方**:
   - `serve` は `_site_src/` を見る（`docs_dir: _site_src`）ので、リポジトリ直下の `assets/`・`scripts/` を直したら `python scripts/prepare_site.py` を流し直す。`zensical serve` を動かしたまま流すと、書きかけの `_site_src/` を拾って壊れることがある（試作で `extra.css` が 404 になった）。`serve` を止めてから `prepare_site.py` と `zensical build --strict` を流し、起動し直す
   - `zensical serve` の頁の HTML を取ってきて、補足の項目の見出しの印が 16 個、`notes_` の見出しが 16 個、`!!! note` が 2 個あることを数える。頁の道は `/ukadoc-spec/` から始まる（`site_url` が `https://ukatech.shillest.net/ukadoc-spec/`）
-  - 明・暗の画面は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> <out> light|dark [width] [height]`（既定 1000×700）で撮り、目標の画面と同じセレクタ（`list/sakura-script` の `#notes_escape`、`list/propertysystem` の `#note-1`）で見比べる。`dev/shell` の `!!! note` も撮って見る（`site-look-plan` の完了の前は `.kiro/specs/site-look-plan/tools/shot.mjs`）。標準出力に `wrote`・`scrollWidth`・`innerWidth` が出る
+  - 明・暗の画面は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> <out> light|dark [width] [height]`（既定 1000×700）で撮り、目標の画面と同じセレクタ（`list/sakura-script` の `#notes_escape`、`list/propertysystem` の `#note-1`）で見比べる。`dev/shell` の `!!! note` も撮って見る（`site-look-plan` の完了の前は `.kiro/specs/completed/site-look-plan/tools/shot.mjs`）。標準出力に `wrote`・`scrollWidth`・`innerWidth` が出る
   - 狭い画面: `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> body - light 375` で、`scrollWidth` と `innerWidth` が同じ（375）ことを確かめる。狭い画面の画面は残さない
   - `shot.mjs` はまれに（54 枚に 5 枚）撮る途中の描き直しで二重に重なった PNG を書く。左右の端にヘッダの色の行が上の端以外にも出ていたら撮り直す。`#notes_escape` の位置では、ヘッダの題が切り替わりの途中で重なって写ることがある（試作の C26 は 4 枚とも撮り直した）
 - **失わないもの**（`survey.md` の「失わないもの」）: D15 検索（見出しの字を変えない。絵は背景で、検索の字にならない）・D16 ダークモード（絵が明・暗の両方で地から浮かずに読める）・D17 見出しへのリンク（見出しの id・`a.headerlink`（¶）・右の欄の目次を変えない）・D18 狭い画面（幅 375 で `scrollWidth` = `innerWidth`）・D19 コードのコピー（コピーのボタンを残し、コピーされる字を変えない）・D20 記述例の字（記述例の `\` を `\` のまま見せる）
 - **遊びの条件**: 字の大きさ・行間を変えない。絵は飾りで、読み上げに出さない。本文の読み取りを妨げない
-- **参考の試作**: `.kiro/specs/site-look-plan/mockups/extra.css` の C26（`html[data-slp~="C26"]` の下の使い捨ての指定）、`mockups/mockup.js` の `slp-note-head` を付ける分岐、`mockups/README.md` の「判断の答えの付け足しを受けた試作」と「続く答えを受けた試作」。完了の後は `.kiro/specs/completed/site-look-plan/mockups/`。写さずに書き直してよい
+- **参考の試作**: `.kiro/specs/completed/site-look-plan/mockups/extra.css` の C26（`html[data-slp~="C26"]` の下の使い捨ての指定）、`mockups/mockup.js` の `slp-note-head` を付ける分岐、`mockups/README.md` の「判断の答えの付け足しを受けた試作」と「続く答えを受けた試作」。写さずに書き直してよい
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない

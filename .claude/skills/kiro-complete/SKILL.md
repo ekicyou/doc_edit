@@ -10,7 +10,7 @@ argument-hint: <feature-name>
 
 > **⚠️ このスキルは開発者の明示的「承認」がある場合にのみ発動する。**
 > この承認が、ukadoc-spec への PR の作成の承認を兼ねる（原稿を変えない spec では PR も無い。「例外: 原稿を変えない spec」）。
-> **ukadoc-spec の PR はマージしない。** doc_edit の目的は ukadoc-spec への変更の提案を作ることであり、マージ（＝公開サイト https://ukatech.github.io/ukadoc-spec/ の更新）は ukadoc-spec のメンテナが判断する。書き込み権限があっても `gh pr merge` は使わない。
+> **ukadoc-spec の PR はマージしない。** doc_edit の目的は ukadoc-spec への変更の提案を作ることであり、マージ（＝公開サイト https://ukatech.shillest.net/ukadoc-spec/ の更新）は ukadoc-spec のメンテナが判断する。書き込み権限があっても `gh pr merge` は使わない。
 >
 > 例外として、完了済みの spec の PR がマージされた後の再実行（「PR マージ後の後始末」）は、承認の言葉が無くても `/kiro-complete {feature}` の呼び出しで発動してよい。
 

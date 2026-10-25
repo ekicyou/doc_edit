@@ -1,4 +1,4 @@
-起票元: site-look-plan の決定（.kiro/specs/site-look-plan/decisions.md、2026-10-25）から
+起票元: site-look-plan の決定（.kiro/specs/completed/site-look-plan/decisions.md、2026-10-25）から
 
 # Brief: site-look-dark-link-color
 
@@ -14,10 +14,10 @@ ukadoc-spec の `417511c` でテーマの色が緑から紺 `#1f4e8c` に変わ�
 
 ## Desired Outcome
 - **C24 暗い表示のリンクを明るい紺にする**（判断: 採る。開発者の「以下を除き承認」（2026-10-25）により推奨のとおり）
-  - 目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C24-dark.png` のリンクと左の目次の今の頁。明るい表示は変えない（見比べに `.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C24-light.png`）
+  - 目標の画面: `.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C24-dark.png` のリンクと左の目次の今の頁。明るい表示は変えない（見比べに `.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C24-light.png`）
   - この画面は、採ると決まったほかの候補（C01〜C21）も `?slp=` に入れて撮ったものである。この spec の目標は、リンクと左の目次の色だけである
 - 暗い表示のリンクと左の目次の今の頁が、暗い地に 7:1 ほど（試作では 7.56:1）の対比で読める。明るい表示の見え方は今のまま
-- 画面のパスは、`site-look-plan` の完了の後、`.kiro/specs/completed/site-look-plan/screenshots/...` の下に移る
+- 画面は、`site-look-plan` の完了（2026-10-25）で `.kiro/specs/completed/site-look-plan/screenshots/` の下に移った（上のパスは移った後のもの）
 
 ## Approach
 `assets/extra.css` に、暗い表示だけ `--md-typeset-a-color` を明るい紺 `#8fb4e8` にする指定を 1 つ足す（試作の C24 は `[data-md-color-scheme="slate"] { --md-typeset-a-color: #8fb4e8; }`）。
@@ -47,7 +47,7 @@ ukadoc-spec の `417511c` でテーマの色が緑から紺 `#1f4e8c` に変わ�
 
 ## Existing Spec Touchpoints
 - **Extends**: なし（新しい spec）
-- **Adjacent**: `site-look-list-items` ほかの後続 spec（同じ `assets/extra.css` を触る。どちらが先でもよく、ぶつかったら `origin/main` に追いつく）。`site-look-plan`（決定の起票元。完了の後は `completed/` の下）
+- **Adjacent**: `site-look-list-items` ほかの後続 spec（同じ `assets/extra.css` を触る。どちらが先でもよく、ぶつかったら `origin/main` に追いつく）。`site-look-plan`（決定の起票元。`.kiro/specs/completed/site-look-plan/` にある）
 
 ## Constraints
 - **方向は議論し直さない**: 候補と判断は `site-look-plan` の `decisions.md` で決まっている。この spec は、決まった見え方を本番の書き方で入れる
@@ -62,9 +62,9 @@ ukadoc-spec の `417511c` でテーマの色が緑から紺 `#1f4e8c` に変わ�
 - **表示の確かめ方**:
   - `serve` は `_site_src/` を見る（`docs_dir: _site_src`）ので、リポジトリ直下の `assets/` を直したら `python scripts/prepare_site.py` を流し直す。`zensical serve` を動かしたまま流すと、書きかけの `_site_src/` を拾って壊れることがある（試作で `extra.css` が 404 になった）。`serve` を止めてから `prepare_site.py` と `zensical build --strict` を流し、起動し直す
   - `zensical serve` の頁で、配られた `assets/extra.css` に足した指定があることを確かめる。頁の道は `/ukadoc-spec/` から始まる（`site_url` が `https://ukatech.shillest.net/ukadoc-spec/`）
-  - 明・暗の画面は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> <out> light|dark [width] [height]`（既定 1000×700）で撮り、目標の画面と同じセレクタ（`#bang-lock-repaint`）で見比べる（`site-look-plan` の完了の前は `.kiro/specs/site-look-plan/tools/shot.mjs`）。標準出力に `wrote`・`scrollWidth`・`innerWidth` が出る
+  - 明・暗の画面は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> <out> light|dark [width] [height]`（既定 1000×700）で撮り、目標の画面と同じセレクタ（`#bang-lock-repaint`）で見比べる（`site-look-plan` の完了の前は `.kiro/specs/completed/site-look-plan/tools/shot.mjs`）。標準出力に `wrote`・`scrollWidth`・`innerWidth` が出る
   - 狭い画面: `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> body - light 375` で、`scrollWidth` と `innerWidth` が同じ（375）ことを確かめる。狭い画面の画面は残さない
   - `shot.mjs` はまれに（54 枚に 5 枚）撮る途中の描き直しで二重に重なった PNG を書く。左右の端にヘッダの色の行が上の端以外にも出ていたら撮り直す
 - **失わないもの**（`survey.md` の「失わないもの」）: D15 検索（頭の帯の検索の欄と結果の語の強調を隠さない）・D16 ダークモード（色は明・暗の両方で決め、どちらでも字と地の差が十分にある。この spec の主題）・D17 見出しへのリンク（見出しの id・`a.headerlink`（¶）・右の欄の目次を変えない）・D18 狭い画面（幅 375 で `scrollWidth` = `innerWidth`）・D19 コードのコピー（コピーのボタンを残し、コピーされる字を変えない）・D20 記述例の字（記述例の `\` を `\` のまま見せる）
-- **参考の試作**: `.kiro/specs/site-look-plan/mockups/extra.css` の C24（`html[data-slp~="C24"]` の下の使い捨ての指定）と `mockups/README.md` の測り。完了の後は `.kiro/specs/completed/site-look-plan/mockups/`。写さずに書き直してよい
+- **参考の試作**: `.kiro/specs/completed/site-look-plan/mockups/extra.css` の C24（`html[data-slp~="C24"]` の下の使い捨ての指定）と `mockups/README.md` の測り。写さずに書き直してよい
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない。ほかの後続 spec を待たずに入れてよい

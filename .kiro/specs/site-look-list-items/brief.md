@@ -1,4 +1,4 @@
-起票元: site-look-plan の決定（.kiro/specs/site-look-plan/decisions.md、2026-10-25）から
+起票元: site-look-plan の決定（.kiro/specs/completed/site-look-plan/decisions.md、2026-10-25）から
 
 # Brief: site-look-list-items
 
@@ -17,14 +17,14 @@
 
 ## Desired Outcome
 決めた方向（`decisions.md` の判断。どれも開発者の「以下を除き承認」（2026-10-25）により推奨のとおり）:
-- **C01 項目名を帯で囲む**（判断: 採る）: 左の太い線・下の線・薄い地の帯にし、帯の中の `code` の地は消す。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C01-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C01-dark.png` の項目名の帯
-- **C02 項目の間を詰める**（判断: 採る）: `hr`・`h3` の余白に加えて段落の上下の余白まで詰め、高さ 700 に 4 項目以上入れる。詰めるのはまとめ頁の項目の中に絞り、切れ目は C01 の帯と重ねて保つ。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-descript-ghost-C02-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-descript-ghost-C02-dark.png` の項目の並びの密度
-- **C03 分類の見出しを濃い帯にする**（判断: 採る）: テーマの紺の地に白い太い字（明・暗とも 8.31:1）。注意書きの `h2` は除く。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C03-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C03-dark.png` の画面の下の「スコープコマンド」の帯
-- **C09 コピーのボタンの下に字を重ねない**（判断: 採る）: コードの右の内側の余白をボタンの幅の分だけ広げ、ボタンの手前で折り返す。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C09-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C09-dark.png` の記述例の右端の折り返し
-- **C18 記述例を強く目立たせる**（判断: 採る。開発者の付け足し「さくらスクリプトページ以外にも、さくらスクリプトの記述例があるが、これも同様に強調すること」）: 「記述例」を濃い紺の帯の白い字（明 11.39:1・暗 8.31:1）にし、続くコードブロックに左の太い線と薄い紺の地を付ける。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C18-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C18-dark.png` の記述例の箱。さくらスクリプトの頁の外の記述例（`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C25-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C25-dark.png`）も同じ箱に見える
+- **C01 項目名を帯で囲む**（判断: 採る）: 左の太い線・下の線・薄い地の帯にし、帯の中の `code` の地は消す。目標の画面: `.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C01-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C01-dark.png` の項目名の帯
+- **C02 項目の間を詰める**（判断: 採る）: `hr`・`h3` の余白に加えて段落の上下の余白まで詰め、高さ 700 に 4 項目以上入れる。詰めるのはまとめ頁の項目の中に絞り、切れ目は C01 の帯と重ねて保つ。目標の画面: `.kiro/specs/completed/site-look-plan/screenshots/mock-descript-ghost-C02-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-descript-ghost-C02-dark.png` の項目の並びの密度
+- **C03 分類の見出しを濃い帯にする**（判断: 採る）: テーマの紺の地に白い太い字（明・暗とも 8.31:1）。注意書きの `h2` は除く。目標の画面: `.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C03-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C03-dark.png` の画面の下の「スコープコマンド」の帯
+- **C09 コピーのボタンの下に字を重ねない**（判断: 採る）: コードの右の内側の余白をボタンの幅の分だけ広げ、ボタンの手前で折り返す。目標の画面: `.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C09-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C09-dark.png` の記述例の右端の折り返し
+- **C18 記述例を強く目立たせる**（判断: 採る。開発者の付け足し「さくらスクリプトページ以外にも、さくらスクリプトの記述例があるが、これも同様に強調すること」）: 「記述例」を濃い紺の帯の白い字（明 11.39:1・暗 8.31:1）にし、続くコードブロックに左の太い線と薄い紺の地を付ける。目標の画面: `.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C18-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C18-dark.png` の記述例の箱。さくらスクリプトの頁の外の記述例（`.kiro/specs/completed/site-look-plan/screenshots/mock-propertysystem-C25-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-propertysystem-C25-dark.png`）も同じ箱に見える
 - 採らなかった組: C08（控えめな記述例の箱）は C18 と両立しない組の採らなかった方で、この spec では作らない
 - 目標の画面のいくつかは、ほかの候補も `?slp=` に入れて撮ったもの（例: C18 は `?slp=C01,C06,C09,C10,C17,C18`）である。タグの色（C10・C20 など）や対応の札（C06）は後続の spec の受け持ちで、この spec の目標は上に書いた部分の見え方である
-- 画面のパスは、`site-look-plan` の完了の後、`.kiro/specs/completed/site-look-plan/screenshots/...` の下に移る
+- 画面は、`site-look-plan` の完了（2026-10-25）で `.kiro/specs/completed/site-look-plan/screenshots/` の下に移った（上のパスは移った後のもの）
 
 ## Approach
 見た目の指定（`assets/extra.css`）を主にし、効く所をまとめ頁の項目に絞る目印が要るときだけ `scripts/prepare_site.py` に目印を足す（目印を付ける後処理は、それを使う見た目の改造と同じ spec に入れてよい。`roadmap.md` の切り分けの規則）。
@@ -80,9 +80,9 @@
 - **表示の確かめ方**:
   - `serve` は `_site_src/` を見る（`docs_dir: _site_src`）ので、リポジトリ直下の `assets/`・`scripts/` を直したら `python scripts/prepare_site.py` を流し直す。`zensical serve` を動かしたまま流すと、書きかけの `_site_src/` を拾って壊れることがある（試作で `extra.css` が 404 になった）。`serve` を止めてから `prepare_site.py` と `zensical build --strict` を流し、起動し直す
   - `zensical serve` の頁の HTML を取ってきて、足した目印の数を確かめる。頁の道は `/ukadoc-spec/` から始まる（`site_url` が `https://ukatech.shillest.net/ukadoc-spec/`）
-  - 明・暗の画面は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> <out> light|dark [width] [height]`（既定 1000×700）で撮り、目標の画面と同じセレクタ（C01・C09・C18 は `#bang-lock-repaint`、C03 は `#notes_escape`、C02 は `descript/ghost` の `#charset`）で見比べる（`site-look-plan` の完了の前は `.kiro/specs/site-look-plan/tools/shot.mjs`）。標準出力に `wrote`・`scrollWidth`・`innerWidth` が出る
+  - 明・暗の画面は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> <out> light|dark [width] [height]`（既定 1000×700）で撮り、目標の画面と同じセレクタ（C01・C09・C18 は `#bang-lock-repaint`、C03 は `#notes_escape`、C02 は `descript/ghost` の `#charset`）で見比べる（`site-look-plan` の完了の前は `.kiro/specs/completed/site-look-plan/tools/shot.mjs`）。標準出力に `wrote`・`scrollWidth`・`innerWidth` が出る
   - 狭い画面: `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> body - light 375` で、`scrollWidth` と `innerWidth` が同じ（375）ことを確かめる。狭い画面の画面は残さない
   - `shot.mjs` はまれに（54 枚に 5 枚）撮る途中の描き直しで二重に重なった PNG を書く。左右の端にヘッダの色の行が上の端以外にも出ていたら撮り直す。`#notes_escape` の位置では、ヘッダの題が切り替わりの途中で重なって写ることがある（本文には響かない）
 - **失わないもの**（`survey.md` の「失わないもの」）: D15 検索（頭の帯の検索の欄と結果の語の強調を隠さない）・D16 ダークモード（色は明・暗の両方で決め、どちらでも字と地の差が十分にある）・D17 見出しへのリンク（帯にする見出しの id・`a.headerlink`（¶）・右の欄の目次を変えない）・D18 狭い画面（幅 375 で `scrollWidth` = `innerWidth`）・D19 コードのコピー（コピーのボタンを残し、コピーされる字を変えない。C09 の主題）・D20 記述例の字（記述例の `\` を `\` のまま見せる）
-- **参考の試作**: `.kiro/specs/site-look-plan/mockups/extra.css` の C01・C02・C03・C09・C18（`html[data-slp~="Cxx"]` の下の使い捨ての指定）と `mockups/README.md` の測り。完了の後は `.kiro/specs/completed/site-look-plan/mockups/`。写さずに書き直してよい
+- **参考の試作**: `.kiro/specs/completed/site-look-plan/mockups/extra.css` の C01・C02・C03・C09・C18（`html[data-slp~="Cxx"]` の下の使い捨ての指定）と `mockups/README.md` の測り。写さずに書き直してよい
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない

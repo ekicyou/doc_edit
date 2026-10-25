@@ -1,4 +1,4 @@
-起票元: site-look-plan の決定（.kiro/specs/site-look-plan/decisions.md、2026-10-25）から
+起票元: site-look-plan の決定（.kiro/specs/completed/site-look-plan/decisions.md、2026-10-25）から
 
 # Brief: site-look-definition-tables
 
@@ -16,12 +16,12 @@
 ## Desired Outcome
 決めた方向（`decisions.md` の判断）:
 - **C23 「名前: 説明」の箇条書きを表にする**（判断: 採る。開発者の「以下を除き承認」（2026-10-25）により推奨のとおりで、続く答えでやり方を「原稿は変えず、組み立ての処理で表の HTML にする」に改めた）: 「`- **名前**: 説明`」だけが 2 つ以上並ぶ箇条書きが、どの頁でも「名前」「説明」の 2 列の表になり、名前を縦に追える。表は Material の表の見た目のまま行の上下を詰める
-  - 目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C23-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C23-dark.png`（`[id="system.cpu"]` のキーの表）、`.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C23-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C23-dark.png`（`#bang-set-wallpaper` のオプションの表）、`.kiro/specs/site-look-plan/screenshots/mock-shiori-event-C23-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-shiori-event-C23-dark.png`（`#OnBoot` の `Reference0` などの表）
-  - 見比べ（今の見え方）: `.kiro/specs/site-look-plan/screenshots/mock-shiori-event-C23before-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-shiori-event-C23before-dark.png`、`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-base-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-base-dark.png`
+  - 目標の画面: `.kiro/specs/completed/site-look-plan/screenshots/mock-propertysystem-C23-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-propertysystem-C23-dark.png`（`[id="system.cpu"]` のキーの表）、`.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C23-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C23-dark.png`（`#bang-set-wallpaper` のオプションの表）、`.kiro/specs/completed/site-look-plan/screenshots/mock-shiori-event-C23-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-shiori-event-C23-dark.png`（`#OnBoot` の `Reference0` などの表）
+  - 見比べ（今の見え方）: `.kiro/specs/completed/site-look-plan/screenshots/mock-shiori-event-C23before-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-shiori-event-C23before-dark.png`、`.kiro/specs/completed/site-look-plan/screenshots/mock-propertysystem-base-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-propertysystem-base-dark.png`
   - `mock-sakura-script-C23-*.png` は、ヘッダが上に 14 px ほど切れて写っている（撮る途中の組み替えの名残。表の見え方には関わらない）。目標の画面はほかの候補も `?slp=` に入れて撮ったもので、この spec の目標は表の見え方である
 - 項目に入れ子の箇条書き・コードブロック・2 つ以上の段落がある箇条書きと、1 項目だけの箇条書きは、今のまま残る。`manual/` のファイルの箇条書き（C14・C22 の当て先）は表にならない
 - 幅 375 でも、表のある 20 頁のどれも横にはみ出さない
-- 画面のパスは、`site-look-plan` の完了の後、`.kiro/specs/completed/site-look-plan/screenshots/...` の下に移る
+- 画面は、`site-look-plan` の完了（2026-10-25）で `.kiro/specs/completed/site-look-plan/screenshots/` の下に移った（上のパスは移った後のもの）
 
 ## Approach
 原稿の Markdown は変えず（開発者の方針）、組み立ての処理で同じ形を見つけて表の HTML にする。
@@ -76,9 +76,9 @@
 - **表示の確かめ方**:
   - `serve` は `_site_src/` を見る（`docs_dir: _site_src`）ので、リポジトリ直下の `assets/`・`scripts/` を直したら `python scripts/prepare_site.py` を流し直す。`zensical serve` を動かしたまま流すと、書きかけの `_site_src/` を拾って壊れることがある（試作で `extra.css` が 404 になった）。`serve` を止めてから `prepare_site.py` と `zensical build --strict` を流し、起動し直す
   - `zensical serve` の頁（と build の `_site/` の全頁）の HTML を取ってきて、表の印の付いた表の数（20 頁・477 個）を数え、頁ごとの数が上の数と合うかを見る。頁の道は `/ukadoc-spec/` から始まる（`site_url` が `https://ukatech.shillest.net/ukadoc-spec/`）
-  - 明・暗の画面は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> <out> light|dark [width] [height]`（既定 1000×700）で撮り、目標の画面と同じセレクタ（`list/propertysystem` の `[id="system.cpu"]`、`list/sakura-script` の `#bang-set-wallpaper`、`list/shiori-event` の `#OnBoot`）で見比べる（`site-look-plan` の完了の前は `.kiro/specs/site-look-plan/tools/shot.mjs`）。標準出力に `wrote`・`scrollWidth`・`innerWidth` が出る
+  - 明・暗の画面は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> <out> light|dark [width] [height]`（既定 1000×700）で撮り、目標の画面と同じセレクタ（`list/propertysystem` の `[id="system.cpu"]`、`list/sakura-script` の `#bang-set-wallpaper`、`list/shiori-event` の `#OnBoot`）で見比べる（`site-look-plan` の完了の前は `.kiro/specs/completed/site-look-plan/tools/shot.mjs`）。標準出力に `wrote`・`scrollWidth`・`innerWidth` が出る
   - 狭い画面: `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> body - light 375` で、表のある 20 頁と `manual/ghost` の `scrollWidth` と `innerWidth` が同じ（375）ことを確かめる。狭い画面の画面は残さない
   - `shot.mjs` はまれに（54 枚に 5 枚）撮る途中の描き直しで二重に重なった PNG を書く。左右の端にヘッダの色の行が上の端以外にも出ていたら撮り直す
 - **失わないもの**（`survey.md` の「失わないもの」）: D15 検索（表にしても名前と説明の字を変えず、検索で引ける）・D16 ダークモード（表の枠・地・字は明・暗の両方で読める）・D17 見出しへのリンク（見出しの id・`a.headerlink`（¶）・右の欄の目次を変えない）・D18 狭い画面（幅 375 で `scrollWidth` = `innerWidth`。この spec でいちばん崩れやすい）・D19 コードのコピー（コピーのボタンを残し、コピーされる字を変えない）・D20 記述例の字（記述例や説明の中の `\` を `\` のまま見せる）
-- **参考の試作**: `.kiro/specs/site-look-plan/mockups/extra.css` の C23（`html[data-slp~="C23"]` の下の使い捨ての指定）、`mockups/mockup.js` の C23 の組み替え（形の判定の見本）、`mockups/README.md` の「続く答えを受けた試作」の測り。完了の後は `.kiro/specs/completed/site-look-plan/mockups/`。ブラウザで組み替える使い捨ての書き方なので、写さずに組み立ての処理として書き直す
+- **参考の試作**: `.kiro/specs/completed/site-look-plan/mockups/extra.css` の C23（`html[data-slp~="C23"]` の下の使い捨ての指定）、`mockups/mockup.js` の C23 の組み替え（形の判定の見本）、`mockups/README.md` の「続く答えを受けた試作」の測り。ブラウザで組み替える使い捨ての書き方なので、写さずに組み立ての処理として書き直す
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない

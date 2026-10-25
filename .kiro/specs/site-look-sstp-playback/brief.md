@@ -1,4 +1,4 @@
-起票元: site-look-plan の決定（.kiro/specs/site-look-plan/decisions.md、2026-10-25）から
+起票元: site-look-plan の決定（.kiro/specs/completed/site-look-plan/decisions.md、2026-10-25）から
 
 # Brief: site-look-sstp-playback
 
@@ -20,9 +20,9 @@
   - `list/propertysystem`: 項目ごとの「値を見る」で、`%property[プロパティ名]` を埋めたスクリプト（例: `\0%property[system.cpu.name]\e`）を送り、手元のベースウェアの今の値をゴーストに喋らせる。`(キー)`・`(ID)` を含む名前は、`site-look-definition-tables` の表のキーごとに組み立てる。書き込みのできるプロパティ（`\![set,property,…]`）は送らない
   - `list/shiori-event`: 項目ごとの「発生させる」で、SSTP の `NOTIFY` で `Event: OnBoot` などを手元のゴーストに送る
   - どれも、さくらスクリプトの記述例と同じ「読み込み」「実行」の流れと、同じ jsstp の読み込みに乗せる
-- 目標の画面: ボタンそのものの画面は無い（試作していない）。ボタンを足す先の見え方は、`.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C21-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-sakura-script-C21-dark.png`（記述例）、`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C23-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-propertysystem-C23-dark.png`（プロパティシステムの項目）、`.kiro/specs/site-look-plan/screenshots/mock-shiori-event-C23-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-shiori-event-C23-dark.png`（SHIORI Event の項目）である。ボタンはこれらの見え方を崩さない
+- 目標の画面: ボタンそのものの画面は無い（試作していない）。ボタンを足す先の見え方は、`.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C21-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-sakura-script-C21-dark.png`（記述例）、`.kiro/specs/completed/site-look-plan/screenshots/mock-propertysystem-C23-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-propertysystem-C23-dark.png`（プロパティシステムの項目）、`.kiro/specs/completed/site-look-plan/screenshots/mock-shiori-event-C23-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-shiori-event-C23-dark.png`（SHIORI Event の項目）である。ボタンはこれらの見え方を崩さない
 - 頁を開いただけでは何も読み込まず、何も送らない。SSP の無い環境・狭い画面では、何も出ないか、邪魔にならない
-- 画面のパスは、`site-look-plan` の完了の後、`.kiro/specs/completed/site-look-plan/screenshots/...` の下に移る
+- 画面は、`site-look-plan` の完了（2026-10-25）で `.kiro/specs/completed/site-look-plan/screenshots/` の下に移った（上のパスは移った後のもの）
 
 ## Approach
 画像やブラウザで動く仕掛けを要する遊びなので、視認性の改造と別の spec にした（`roadmap.md` の切り分けの規則）。方向（送れるようにすること）は決まっているので、議論し直さずに、下の論点を要件と設計で決める。
@@ -79,11 +79,11 @@
 - **表示の確かめ方**:
   - `serve` は `_site_src/` を見る（`docs_dir: _site_src`）ので、リポジトリ直下の `assets/`・`scripts/` を直したら `python scripts/prepare_site.py` を流し直す。`zensical serve` を動かしたまま流すと、書きかけの `_site_src/` を拾って壊れることがある（試作で `extra.css` が 404 になった）。`serve` を止めてから `prepare_site.py` と `zensical build --strict` を流し、起動し直す
   - `zensical serve` の頁の HTML を取ってきて、スクリプトの読み込みと、頁を開いた時点で外部への読み込みが無いこと（ブラウザの通信の記録）を確かめる。頁の道は `/ukadoc-spec/` から始まる（`site_url` が `https://ukatech.shillest.net/ukadoc-spec/`）
-  - 明・暗の画面は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> <out> light|dark [width] [height]`（既定 1000×700）で撮り、Desired Outcome の画面と同じセレクタ（`list/sakura-script` の `#bang-lock-repaint`、`list/propertysystem` の `[id="system.cpu"]`、`list/shiori-event` の `#OnBoot`）で、ボタンが見え方を崩さないことを見比べる（`site-look-plan` の完了の前は `.kiro/specs/site-look-plan/tools/shot.mjs`）。`shot.mjs` は使い捨てのプロファイルのヘッドレスの Edge で、ボタンを押さないので送信は起きない
+  - 明・暗の画面は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> <out> light|dark [width] [height]`（既定 1000×700）で撮り、Desired Outcome の画面と同じセレクタ（`list/sakura-script` の `#bang-lock-repaint`、`list/propertysystem` の `[id="system.cpu"]`、`list/shiori-event` の `#OnBoot`）で、ボタンが見え方を崩さないことを見比べる（`site-look-plan` の完了の前は `.kiro/specs/completed/site-look-plan/tools/shot.mjs`）。`shot.mjs` は使い捨てのプロファイルのヘッドレスの Edge で、ボタンを押さないので送信は起きない
   - 狭い画面: `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> body - light 375` で、`scrollWidth` と `innerWidth` が同じ（375）ことを確かめる。狭い画面の画面は残さない
   - `shot.mjs` はまれに（54 枚に 5 枚）撮る途中の描き直しで二重に重なった PNG を書く。左右の端にヘッダの色の行が上の端以外にも出ていたら撮り直す
   - 送信の確かめは、SSP の動く手元の環境で、開発者がボタンを押して行う（自動の確かめでは送らない）
 - **失わないもの**（`survey.md` の「失わないもの」）: D15 検索（ボタンの字が検索の結果を汚さない）・D16 ダークモード（ボタンが明・暗の両方で読める）・D17 見出しへのリンク（見出しの id・`a.headerlink`（¶）・右の欄の目次を変えない）・D18 狭い画面（幅 375 で `scrollWidth` = `innerWidth`。邪魔にならない）・D19 コードのコピー（ボタンが記述例の読み取りとコピーを妨げず、コピーされる字を変えない）・D20 記述例の字（記述例の `\` を `\` のまま見せ、送る字も `\` のまま）
 - **遊びの条件**（`candidates.md` の C13）: ボタンが記述例の読み取りとコピーを妨げない。「読み込み」の前はボタンを出さない。SSP の無い環境・狭い画面では、何も出ないか、邪魔にならない。明るい表示とダークモードの両方で、ボタンが読める
-- **参考**: 試作は無い。論点の元は `.kiro/specs/site-look-plan/candidates.md` の C13（完了の後は `.kiro/specs/completed/site-look-plan/candidates.md`）と design.md の Security Considerations
+- **参考**: 試作は無い。論点の元は `.kiro/specs/completed/site-look-plan/candidates.md` の C13と design.md の Security Considerations
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない。3 種類のボタンを 1 つの PR にするか分けるかは、設計で決めてよい

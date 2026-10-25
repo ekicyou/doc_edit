@@ -121,3 +121,4 @@
 - 試作: `serve` を動かしたまま `prepare_site.py` を流し直すと、`serve` が書きかけの `_site_src/` を拾って壊れることがある（`extra.css` が 404 になった）。流し直す前に `serve` を止め、`build --strict` の後に起動し直す。C02 は `hr`・`h3` に加えて段落の余白も詰めた案である（`hr`・`h3` だけでは画面に 3 項目半しか入らなかった）。推奨にはそこまで含めて書く
 - 試作: C12 の `.md-content__inner { position: relative; }` で h1 の `offsetParent` が変わり、ヘッダの題が早く切り替わるらしい（見立て。試していない）。推奨の理由に、頭の帯の動きへの副作用として書く
 - `decisions.md` の「切り分けの見込み（参考）」は推奨どおりに決まったときの見込みである。5.1 で判断に合わせて書き直すか消す
+- 完了時にその場で解決: `.claude/skills/kiro-complete/SKILL.md` の 13 行目が公開サイトを旧 URL `https://ukatech.github.io/ukadoc-spec/` と書いていたので、今の `https://ukatech.shillest.net/ukadoc-spec/` に直した（doc_edit の手順のファイル。この spec の範囲の外）

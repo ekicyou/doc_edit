@@ -1,4 +1,4 @@
-起票元: site-look-plan の決定（.kiro/specs/site-look-plan/decisions.md、2026-10-25）から
+起票元: site-look-plan の決定（.kiro/specs/completed/site-look-plan/decisions.md、2026-10-25）から
 
 # Brief: site-look-manual-files
 
@@ -16,12 +16,12 @@
 
 ## Desired Outcome
 決めた方向（`decisions.md` の判断。どれも開発者の「以下を除き承認」（2026-10-25）により推奨のとおり）:
-- **C14 ファイルごとの説明の切れ目を見せる**（判断: 採る）: ファイル名を 1 行に置き、説明を字下げし、ファイルの間を分ける。名前の後ろの「`: `」は見せない。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-manual-ghost-C14-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-manual-ghost-C14-dark.png` のファイル名の行・字下げした説明・ファイルの間の線（線は C22 の帯に置き換わる）
-- **C15 ファイル構成の木でファイル名に色を付ける**（判断: 採る）: 木のファイル名（`manual/ghost` で 11 個）に色を付け、フォルダ（3 個）と見分ける。字・コピーされる字・コピーのボタンは変えず、仕掛けが動かなければ今のまま。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-manual-ghost-C15-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-manual-ghost-C15-dark.png` の木のファイル名の色（画面の明るい表示はテーマの色の変数 `--md-primary-fg-color` で今は紺、暗い表示は緑のテーマの時に決めた直書きの `#81c784` の緑。暗い表示の色は紺のテーマに合わせて決め直し、明るい表示は C17 と同じ物差し（白地とコードブロックの地に 7:1 以上）で、この spec が決め直す。試作で C17 の行にあった木のファイル名の濃さ（`.slp-tree-file`）は、`site-look-list-markers` から移してこの spec で入れる）
-- **C22 ゴーストの作り方のファイル名を項目名と同じ帯にする**（判断: 採る）: `descript.txt` などのファイル名を、C01 の項目名（SHIORI Event の `OnBoot` など）と同じ帯にする。帯の中のリンクは項目名と同じ字の色にする。目標の画面: `.kiro/specs/site-look-plan/screenshots/mock-manual-ghost-C22-light.png`・`.kiro/specs/site-look-plan/screenshots/mock-manual-ghost-C22-dark.png` のファイル名の帯（セレクタ `.md-typeset > ul`、高さ 900 で撮った）
+- **C14 ファイルごとの説明の切れ目を見せる**（判断: 採る）: ファイル名を 1 行に置き、説明を字下げし、ファイルの間を分ける。名前の後ろの「`: `」は見せない。目標の画面: `.kiro/specs/completed/site-look-plan/screenshots/mock-manual-ghost-C14-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-manual-ghost-C14-dark.png` のファイル名の行・字下げした説明・ファイルの間の線（線は C22 の帯に置き換わる）
+- **C15 ファイル構成の木でファイル名に色を付ける**（判断: 採る）: 木のファイル名（`manual/ghost` で 11 個）に色を付け、フォルダ（3 個）と見分ける。字・コピーされる字・コピーのボタンは変えず、仕掛けが動かなければ今のまま。目標の画面: `.kiro/specs/completed/site-look-plan/screenshots/mock-manual-ghost-C15-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-manual-ghost-C15-dark.png` の木のファイル名の色（画面の明るい表示はテーマの色の変数 `--md-primary-fg-color` で今は紺、暗い表示は緑のテーマの時に決めた直書きの `#81c784` の緑。暗い表示の色は紺のテーマに合わせて決め直し、明るい表示は C17 と同じ物差し（白地とコードブロックの地に 7:1 以上）で、この spec が決め直す。試作で C17 の行にあった木のファイル名の濃さ（`.slp-tree-file`）は、`site-look-list-markers` から移してこの spec で入れる）
+- **C22 ゴーストの作り方のファイル名を項目名と同じ帯にする**（判断: 採る）: `descript.txt` などのファイル名を、C01 の項目名（SHIORI Event の `OnBoot` など）と同じ帯にする。帯の中のリンクは項目名と同じ字の色にする。目標の画面: `.kiro/specs/completed/site-look-plan/screenshots/mock-manual-ghost-C22-light.png`・`.kiro/specs/completed/site-look-plan/screenshots/mock-manual-ghost-C22-dark.png` のファイル名の帯（セレクタ `.md-typeset > ul`、高さ 900 で撮った）
 - `manual/` の頁（8 頁）だけに効き、ほかの頁の頭が太字の箇条書きは今のまま
 - 目標の画面は、ほかの候補も `?slp=` に入れて撮ったものがある（C22 は採るものをほぼ全部入れた）。この spec の目標は上の部分の見え方である
-- 画面のパスは、`site-look-plan` の完了の後、`.kiro/specs/completed/site-look-plan/screenshots/...` の下に移る
+- 画面は、`site-look-plan` の完了（2026-10-25）で `.kiro/specs/completed/site-look-plan/screenshots/` の下に移った（上のパスは移った後のもの）
 
 ## Approach
 頁の種類の印（テンプレートの上書きか `prepare_site.py`）と、ファイル名の「`: `」を外す目印を、それを使う見た目の改造と同じ spec に入れる（`roadmap.md` の切り分けの規則）。
@@ -77,9 +77,9 @@
 - **表示の確かめ方**:
   - `serve` は `_site_src/` を見る（`docs_dir: _site_src`）ので、リポジトリ直下の `assets/`・`scripts/` を直したら `python scripts/prepare_site.py` を流し直す。`zensical serve` を動かしたまま流すと、書きかけの `_site_src/` を拾って壊れることがある（試作で `extra.css` が 404 になった）。`serve` を止めてから `prepare_site.py` と `zensical build --strict` を流し、起動し直す
   - `zensical serve` の頁の HTML を取ってきて、頁の種類の印が `manual/` の 8 頁にだけあること、「`: `」の目印、スクリプトの読み込みを数える。頁の道は `/ukadoc-spec/` から始まる（`site_url` が `https://ukatech.shillest.net/ukadoc-spec/`）
-  - 明・暗の画面は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> <out> light|dark [width] [height]`（既定 1000×700）で撮り、目標の画面と同じセレクタ（C14・C15 は `h1#ゴースト`、C22 は `.md-typeset > ul` で高さ 900）で見比べる（`site-look-plan` の完了の前は `.kiro/specs/site-look-plan/tools/shot.mjs`）。標準出力に `wrote`・`scrollWidth`・`innerWidth` が出る
+  - 明・暗の画面は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> <out> light|dark [width] [height]`（既定 1000×700）で撮り、目標の画面と同じセレクタ（C14・C15 は `h1#ゴースト`、C22 は `.md-typeset > ul` で高さ 900）で見比べる（`site-look-plan` の完了の前は `.kiro/specs/completed/site-look-plan/tools/shot.mjs`）。標準出力に `wrote`・`scrollWidth`・`innerWidth` が出る
   - 狭い画面: `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> body - light 375` で、`scrollWidth` と `innerWidth` が同じ（375）ことを確かめる。`manual/` の 8 頁を測る。狭い画面の画面は残さない
   - `shot.mjs` はまれに（54 枚に 5 枚）撮る途中の描き直しで二重に重なった PNG を書く。左右の端にヘッダの色の行が上の端以外にも出ていたら撮り直す
 - **失わないもの**（`survey.md` の「失わないもの」）: D15 検索（検索で引ける字を変えない）・D16 ダークモード（色は明・暗の両方で決め、どちらでも字と地の差が十分にある）・D17 見出しへのリンク（見出しの id・`a.headerlink`（¶）・右の欄の目次を変えない）・D18 狭い画面（幅 375 で `scrollWidth` = `innerWidth`）・D19 コードのコピー（木のコピーのボタンを残し、コピーされる字を変えない）・D20 記述例の字（記述例の `\` を `\` のまま見せる）
-- **参考の試作**: `.kiro/specs/site-look-plan/mockups/extra.css` の C14・C15・C22 と C17 の `.slp-tree-file` の 1 行（`html[data-slp~="Cxx"]` の下の使い捨ての指定）、`mockups/mockup.js` の C15・C22 の分岐、`mockups/overrides/main.html`（C12 のテンプレートの上書き。ブロックの上書きの書き方の参考）、`mockups/README.md` の測り。完了の後は `.kiro/specs/completed/site-look-plan/mockups/`。写さずに書き直してよい
+- **参考の試作**: `.kiro/specs/completed/site-look-plan/mockups/extra.css` の C14・C15・C22 と C17 の `.slp-tree-file` の 1 行（`html[data-slp~="Cxx"]` の下の使い捨ての指定）、`mockups/mockup.js` の C15・C22 の分岐、`mockups/overrides/main.html`（C12 のテンプレートの上書き。ブロックの上書きの書き方の参考）、`mockups/README.md` の測り。写さずに書き直してよい
 - **小さな PR**: 他者も使う公開リポジトリへの PR なので、この brief の候補の外に広げない
