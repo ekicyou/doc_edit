@@ -89,6 +89,7 @@ ukadoc-spec（作業木 .worktrees/site-look-dark-link-color/）
 ├── verification.md              # 新規。測った対比の数・画面の見比べ・失わないものの確かめの記録
 └── screenshots/                 # 新規。list/sakura-script の #bang-lock-repaint の画面
     ├── before-sakura-script-light.png   # 変更の前の明るい表示（2.3 の見比べ）
+    ├── before-sakura-script-dark.png    # 変更の前の暗い表示（PR で直す前の読めなさを見せる）
     ├── after-sakura-script-light.png    # 変更の後の明るい表示
     └── after-sakura-script-dark.png     # 変更の後の暗い表示
 ```
@@ -124,7 +125,7 @@ ukadoc-spec（作業木 .worktrees/site-look-dark-link-color/）
 
 ```mermaid
 flowchart TD
-    A[作業木を origin/main から作る] --> B[変更の前の明るい表示を撮る before]
+    A[作業木を origin/main から作る] --> B[変更の前の明暗の画面を撮る before]
     B --> C[serve を止めて extra.css に塊を足す]
     C --> D[prepare_site.py と zensical build --strict]
     D --> E[serve を起動し直す]
@@ -177,6 +178,7 @@ flowchart TD
 | 6.4 | `/kiro-complete` で PR、マージしない | （`workflow.md` の手順） | — | — |
 | 6.5 | `origin/main` とぶつかったら追いつき、両方の塊を残す | DarkLinkOverride（独立した塊） | 見出しのコメントの区切り | — |
 | 6.6 | 試作を写さず書き直す | DarkLinkOverride | 塊の書き方（`html[data-slp~=…]` を使わない） | — |
+| 6.7 | PR の説明に一連の PR と続きを書く | （`/kiro-complete` の PR の説明） | `roadmap.md` の PR の単位 | — |
 
 ## Components and Interfaces
 
@@ -306,11 +308,11 @@ interface ContrastProbe {
 - **失わないもの**: 検索の強調、画面の中のコピーのボタンと `\`、幅 375 で `scrollWidth` = `innerWidth`（明・暗とも 375）（4.1〜4.5）
 - **目標の画面との見比べ**: `after-sakura-script-dark.png` のリンクと左の目次の今の頁が、`mock-sakura-script-C24-dark.png` と同じ明るい紺（5.2）
 
-## 前提と OPEN QUESTION（設計の話し合いで決める）
-入力だけでは決めきれないものは、次の前提で書いた。話し合いで変えたら、この設計を直す。
+## 設計の話し合いで決めたこと（2026-10-25）
+開発者の「承認」により、5 件とも推奨案で確定した。ただし 2 は、変更の前の暗い表示の画面も撮る（PR で直す前の読めなさを見せるため。画面は 4 枚）。
 
-1. **`[data-md-color-primary="custom"]` を条件に足すか（案 C）**: 前提は「足す」。字数は案 B と同じで、テーマ自身の替え（`[slate][primary=indigo]`）と同じ形になり、テーマの色を名前の色に戻したときに自動で外れる。足さない案 B でも、今の要件の効き目は同じ
-2. **測りの記録の置き場**: 前提は、spec の中の新しい `verification.md` と `screenshots/`（3 枚）。`research.md` は設計の調査の記録なので分けた。`research.md` の末尾に節を足す形でもよい。`before-` の暗い表示の画面は要件に無いので撮らない（PR で見せたいなら足す）
-3. **印刷の確かめ方**: 前提は、塊が `@media screen` の中にあることを見た目の指定の木（CSSOM）で確かめるだけにする（テーマの暗い表示も同じ作りなので、印刷は明るい表示の紺になる）。印刷のプレビュー（Ctrl+P）を開発者に見てもらうかは、話し合いで決める
-4. **塊の置き場**: 前提は `extra.css` の末尾（`workflow.md` の見出しのコメントの塊）。紺のテーマの塊の直後に置くと対が近くに見えるが、後続 spec の塊とぶつかる所が増える
-5. **測りの道具**: 前提は、`/kiro-impl` のセッションで Claude の内蔵ブラウザの枠（JavaScript とポインタの載せ）が使えること。使えないときは Claude in Chrome で同じ手順を流す。`shot.mjs` には手を入れない
+1. **`[data-md-color-primary="custom"]` を条件に足すか（案 C）**: 足す。字数は案 B と同じで、テーマ自身の替え（`[slate][primary=indigo]`）と同じ形になり、テーマの色を名前の色に戻したときに自動で外れる。足さない案 B でも、今の要件の効き目は同じ
+2. **測りの記録の置き場**: spec の中の新しい `verification.md` と `screenshots/`（4 枚。変更の前と後の明・暗）。`research.md` は設計の調査の記録なので分けた
+3. **印刷の確かめ方**: 塊が `@media screen` の中にあることを見た目の指定の木（CSSOM）で確かめるだけにする（テーマの暗い表示も同じ作りなので、印刷は明るい表示の紺になる）。印刷のプレビュー（Ctrl+P）を開発者に見てもらう段は置かない
+4. **塊の置き場**: `extra.css` の末尾（`workflow.md` の見出しのコメントの塊）。紺のテーマの塊の直後に置くと対が近くに見えるが、後続 spec の塊とぶつかる所が増える
+5. **測りの道具**: `/kiro-impl` のセッションで Claude の内蔵ブラウザの枠（JavaScript とポインタの載せ）が使えること。使えないときは Claude in Chrome で同じ手順を流す。`shot.mjs` には手を入れない

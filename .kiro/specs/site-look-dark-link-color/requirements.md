@@ -92,3 +92,4 @@
 4. The site-look-dark-link-color shall 変更を `/kiro-complete`（開発者の完了の承認）で ukadoc-spec への PR にし、PR をマージしない（マージはメンテナが行う）
 5. If PR を出す前か出した後に、ukadoc-spec の `origin/main` が同じ `assets/extra.css` を変えて進み、変更とぶつかったとき, the site-look-dark-link-color shall `origin/main` に追いつき、暗い表示のリンクの色の指定と、ほかの spec が入れた指定の両方が残るようにする
 6. The site-look-dark-link-color shall 旧サイトの見た目の指定や試作の指定を写さず、本番の書き方で書き直す（試作の C24 は使い捨ての書き方である）
+7. When PR の説明を書くとき, the site-look-dark-link-color shall この PR が見た目の直しの一連の PR の 1 本目であり、続きの PR を順に出すことと、この PR だけで完結していて続きを待たずにマージしてよいことを書く（開発者の指示、2026-10-25。brief の「続きの PR の説明」）

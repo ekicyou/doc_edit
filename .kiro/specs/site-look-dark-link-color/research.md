@@ -201,3 +201,8 @@
 ## 参照したスキル・規則
 - `kiro-spec-design` の `rules/design-principles.md`・`design-discovery-light.md`・`design-synthesis.md`・`design-review-gate.md`
 - 対比の式は WCAG 2.x の相対輝度（ギャップ分析と同じ）。新しい外の資料は引いていない
+
+## 設計の話し合いの決定（2026-10-25）
+- 開発者の「承認」により、設計の議題 5 件を推奨案で確定した（案 C の条件を足す・記録は `verification.md` と `screenshots/` 4 枚・印刷は `@media screen` の中にあることの確かめだけ・塊は `extra.css` の末尾・測りは内蔵ブラウザの枠、使えなければ Claude in Chrome）
+- 変更の前の暗い表示の画面も撮る。PR で直す前の読めなさ（1.94:1）を見せるため
+- 開発者の指示で、PR の説明に一連の PR と続きを順に出すことを書く（Requirement 6.7。後続の spec の brief にも同じ「続きの PR の説明」を足した）
