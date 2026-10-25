@@ -128,7 +128,7 @@ ukadoc-spec（作業木 .worktrees/site-look-visibility/、ブランチ site-loo
 - 写しで確かめた結果: 20 頁の HTML の見出しの id の並び・`class="headerlink"` の数・`class="md-nav__link"` の数・`<hr />` の数が、変える前とすべて同じ。本文への `{: `・`{#` の漏れ 0。`_raw/` は変える前と同じ。`prepare_site.py` と `zensical build --strict` は exit 0
 
 #### `assets/extra.css`（ukadoc-spec の作業木）
-今の 20 行（と、PR #10 が先にマージされていればその塊）の後ろ、ファイルの末尾に次の 6 つの塊を足す。ほかの塊は変えない。塊の順は、帯（C01）→ 詰め（C02。C01 の余白を上書きする）→ 分類の帯（C03）→ 記述例の箱（C18）→ 濃い帯の中の ¶ と強調（C03・C18 の共通）→ コピーのボタン（C09）。
+今の 27 行（PR #10 の `site-look-dark-link-color:` の塊を含む）の後ろ、ファイルの末尾に次の 6 つの塊を足す。ほかの塊は変えない。塊の順は、帯（C01）→ 詰め（C02。C01 の余白を上書きする）→ 分類の帯（C03）→ 記述例の箱（C18）→ 濃い帯の中の ¶ と強調（C03・C18 の共通）→ コピーのボタン（C09）。
 
 ```css
 /* site-look-list-items: 項目名の帯 */
@@ -326,7 +326,7 @@ flowchart TD
 | 8.7 | 見せる前に Ctrl+F5 を頼む | VerificationRecord | — | — |
 | 9.1 | 変えるのは `extra.css` と `prepare_site.py` だけ | RoleMarker, 6 つの塊 | `git diff --stat origin/main` | — |
 | 9.2 | 末尾に塊、注は 1 行 | 6 つの塊 | `/* site-look-list-items: <何> */` | — |
-| 9.3 | 作業木で書き、PR #10 を入れない | RoleMarker, 6 つの塊 | `.worktrees/site-look-visibility/` | A |
+| 9.3 | `origin/main`（PR #10 を含む）から作った作業木で書く | RoleMarker, 6 つの塊 | `.worktrees/site-look-visibility/` | A |
 | 9.4 | id・数の検査・リンクの書き換え・生の原稿を保つ | RoleMarker, MarkerCheck | `old_ids()` に触れない、`_raw/` | D, F |
 | 9.5 | Build Gate と規約 Gate | RoleMarker, 6 つの塊 | `prepare_site.py`・`build --strict` | D |
 | 9.6 | この spec の完了では PR を作らない | （`workflow.md` の PR の単位） | — | — |
@@ -562,7 +562,7 @@ interface ContrastProbe {
 ## 前提と OPEN QUESTION
 設計で、確かめた事実か要件の決定に基づいて決めた。開発者の判断で変わりうるものを挙げる（詳しいわけは `research.md` の「設計の調査」）。
 
-**決定（2026-10-25、開発者の「承認」）**: 7 件とも下のとおり確定した。6 は、まず本当にポインタを載せて測り、測れないときだけフォーカスで代える（ContrastProbe）。
+**決定（2026-10-25、開発者の「承認」）**: 7 件とも下のとおり確定した。同じ日に PR #10 がスクワッシュマージされ（`a341420`）、作業木は暗い表示のリンク `#8fb4e8` を含む `origin/main` から作る。写しの数は `afb2152`（PR #10 の前）で測ったので、実装で作業木で測り直す。6 は、まず本当にポインタを載せて測り、測れないときだけフォーカスで代える（ContrastProbe）。
 
 1. **目印の名前**: `bundle-item`・`bundle-category`（決まり `bundle-<役>`）とした。`prepare_site.py` の「まとめる」（`BUNDLE_DIRS`）に合わせ、テーマの `md-` とぶつからない。`site-look-list-markers` も同じ決まりにそろえることを申し送る
 2. **暗い表示の帯の中のリンクの色**: 白 `#ffffff` と下線にした（11.66:1）。帯の中の項目名の字（6.76:1）では 7:1 に届かず、PR #10 の `#8fb4e8` では約 5.5:1 のため。明るい表示は紺のまま（7.11:1）。ふだん・ホバー・フォーカスで色は変わらない
