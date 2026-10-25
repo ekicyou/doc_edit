@@ -292,5 +292,58 @@ fg は `getComputedStyle` の `color`、bg は重ねた地（表は整数に丸�
 - 片付け: 8010 の配りを止めた（`curl` が繋がらない・`netstat` に 8010 の LISTEN が無い）。写しのフォルダ `shape-copy/` を消し、無いことを `ls` で確かめた。作業木の `git status` は空のまま。8000 の `serve` は止めていない
 
 ## 画面の見比べ
+- 4.6。日付 2026-10-25。作業木 `902a7f1` の `zensical serve`（`http://127.0.0.1:8000/ukadoc-spec/…`）。`shot.mjs` の既定の 1000×700（`node shot.mjs <url> <selector> <out> <light|dark>`）
+- 撮り直し: **0 枚**。10 枚とも Read で見て、上の端のほかの左右の端にヘッダの紺の行（二重に重なった跡）は無かった。明るい表示の画面の右の端（x 985〜1000）の白い縦の帯はスクロールバーの所で、目標の画面にも同じ帯がある。`after-sakura-script-notes-*` はヘッダの題（「UKADOC project」と「SAKURA Script」）が重なっているが、本文に響かないので撮り直していない（設計の Error Handling のとおり）
+
+### 画面の一覧（`screenshots/`）
+| 画面 | 頁 | 位置 | 見比べた目標の画面 |
+|---|---|---|---|
+| `after-sakura-script-{light,dark}.png` | `list/sakura-script/` | `#bang-lock-repaint` | `mock-sakura-script-C01-*`・`C09-*`・`C18-*` |
+| `after-sakura-script-notes-{light,dark}.png` | `list/sakura-script/` | `#notes_escape` | `mock-sakura-script-C03-*` |
+| `after-descript-ghost-{light,dark}.png` | `descript/ghost/` | `#charset` | `mock-descript-ghost-C02-*` |
+| `after-propertysystem-{light,dark}.png` | `list/propertysystem/` | `[id="currentghost.seriko.cursor.scope-ID-.mouse-q-q-q-q-list-.path"]` | `mock-propertysystem-C25-*`（箱の部分） |
+| `after-manual-ghost-{light,dark}.png` | `manual/ghost/` | `h1#ゴースト` | `before-manual-ghost-{light,dark}.png`（1.2、`a341420`） |
+
+目標の画面は `.kiro/specs/completed/site-look-plan/screenshots/`。目標の画面に入っているほかの候補（C18・C25 の着色、C18 の「対応:」の札など）は比べていない。
+
+### 5 つの候補（明・暗）
+| 候補 | 同じ所 | 違う所 |
+|---|---|---|
+| C01 項目名の帯 | 左の太い線（紺）・下の細い線・薄い灰の地・帯の中のコードの地が無いこと・字の大きさと書体・帯の幅（本文の幅いっぱい）。暗い表示の帯の地と線も同じ | 帯の上下の余白と、帯から本文・「対応:」・記述例までの間が目標の画面より狭い（C02 の詰めが同じ頁に効いているため。目標の C01 の画面は C02 を入れていない） |
+| C02 項目の間の詰め | `#charset` から `charset`・`name`・`type`・`craftman` の 4 項目が高さ 700 に入る。区切りの線・段落の間の詰め方の向き | 5 つ目の項目名（`craftmanw`）は入らない（目標の画面は下の端に見える）。設計の決定 4 のとおり。帯（C01）が入っている分、項目ごとの高さが目標の画面より高い |
+| C03 分類の帯 | `#scope`「スコープコマンド」の紺の地・白い太字・帯の幅と高さ・左の余白。明・暗とも同じ紺 | 帯の位置が目標の画面より約 15px 上（前の `hr` の詰め。C02）。帯の下の項目名に C01 の帯がある（目標の C03 の画面は C01 を入れていない） |
+| C09 コピーのボタンの手前の折り返し | コピーのボタンが字の右に離れて置かれ、字がボタンに重ならない（明・暗）。1 つ目の記述例は 2 行 | 折り返しの位置が「アニメー｜ション」から「アニメ｜ーション」に 1 字ずれた（C18 の箱の左の線と内側の余白の分、字の幅が狭い）。目標の C09 の画面には箱が無い |
+| C18 記述例の箱 | 紺の見出しの帯（白い太字「記述例」、上の角の丸み）・左の線・淡い青の地（明）/ 濃い紺の地と明るい青の線（暗）・コピーのボタンの位置・折り返しの位置（1 つ目「アニメ｜ーション」、2 つ目「再生自｜体は」）。`list/propertysystem` の箱も帯・線・地・折り返し（「頭.c｜ur」「curs｜or」「と｜なる」）が C25 の画面の箱と同じ | 箱の中の字が着色されていない（着色は C25 で、この spec の外）。「対応:」の札が無い（ほかの候補）。帯・箱の縦の位置が目標の画面より上（C02 の詰め） |
+
+### `manual/ghost` の前と後（8.4・1.6）
+- 撮り方は同じ（`h1#ゴースト`、1000×700）。並べて目で見て、見出し・段落・コードブロック（地・字・コピーのボタンの位置）・リストに違いは見えなかった
+- 画素の差分（スクラッチの `pngdiff.py`。標準ライブラリで PNG を解き、画素の RGB を比べる。`python -I pngdiff.py before.png after.png`）:
+
+| 表示 | 違う画素 | 所 |
+|---|---|---|
+| 明 | 732 | すべてヘッダの右のリポジトリの札（「ukatech/ukadoc-spec」、x 790〜914・y 17〜30） |
+| 暗 | 734 | 732 がヘッダの右のリポジトリの札（x 790〜914・y 17〜30）、2 がリスト「updates2.dau」の字の端（x 106〜107・y 620、RGB の差は 1〜5 の縁の滑らかさ） |
+
+- ヘッダの札は `extra.css` の 6 つの塊が当たらない所で、本文の外。本文の違いは暗の 2 画素の縁だけで、見て分かる違いは無い
+- コードブロックの右の余白（C09）の違いは、この頁のコードブロックの行が短くボタンまで届かないので、画面には出ていない
 
 ## 失わないもの
+- 4.6。日付 2026-10-25。作業木 `902a7f1` の `serve`
+
+### 検索の欄と強調（7.1）
+- `list/sakura-script/?h=スコープ`（`#scope` の位置）と `?h=記述例`（`#bang-lock-repaint` の位置）を、`shot.mjs` で明・暗に撮って Read で見た（1000×700。画面はスクラッチに置き、spec には残していない）
+- 4 枚とも、頭の帯の検索の欄（「検索」と `Ctrl+K`）が見える。`?h=スコープ` は分類の帯の中の「スコープ」が白の地に紺の字で、本文と記述例の箱の中の「スコープ」がテーマの強調（明は黄、暗は青）で見える。`?h=記述例` は記述例の見出しの帯の中の「記述例」が白の地に紺の字で見える
+- 強調の数は 4.3（同じ版 `902a7f1`）の数を引く。`?h=スコープ` は `article` の中に `mark` が 72 個（分類の帯の中 1・項目名の帯の中 7・記述例の見出しの帯の中 0・箱の中 9）、`?h=記述例` は 256 個（分類の帯の中 0・項目名の帯の中 1・記述例の見出しの帯の中 255・箱の中 0）。帯・箱の中の強調の対比は「対比」の節の表のとおり、どれも見える
+
+### コピーのボタンと `\`（4.4・7.4）
+- `after-sakura-script-{light,dark}.png`・`after-propertysystem-{light,dark}.png` の記述例の箱の右上にコピーのボタンが見え、字に重なっていない。箱の中の `\s[0]\i[500]`・`\![lock,repaint]`・`\![set,property,…]` の `\` が `\` のまま見える。`?h=` の 4 枚でも同じ
+
+### 幅 375（4.2・7.3）
+`shot.mjs` を幅 375・高さ 812 で、画面を書かずに流した（`node shot.mjs <url> body - <light|dark> 375 812`）。`scrollWidth` は `shot.mjs` の物差し（`document.documentElement.scrollWidth` に縦のスクロールバーの幅を足したもの。375 なら `scrollWidth` と `clientWidth` が同じで、横にはみ出していない）。幅 375 の画面は残していない
+
+| 頁 | 明 `scrollWidth` / `innerWidth` | 暗 `scrollWidth` / `innerWidth` |
+|---|---|---|
+| `list/sakura-script` | 375 / 375 | 375 / 375 |
+| `spec/sstp` | 375 / 375 | 375 / 375 |
+| `descript/shell-surfaces` | 375 / 375 | 375 / 375 |
+| `manual/ghost` | 375 / 375 | 375 / 375 |

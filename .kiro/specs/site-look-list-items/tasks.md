@@ -57,7 +57,7 @@
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`git diff --stat origin/main` が `assets/extra.css` と `scripts/prepare_site.py` だけである
   - _Requirements: 9.1, 9.5_
 
-- [ ] 4. 配られた頁での確かめ
+- [x] 4. 配られた頁での確かめ
 - [x] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `extra.css` は両方の塊を並べ、`prepare_site.py` は両方の変更を残して直す
   - merge したときは、Build Gate（3.3）をやり直し、`prepare_site.py` か原稿が変わっていれば 2.2 の数え方もやり直して `verification.md` の「目印」の節を直す
@@ -98,7 +98,7 @@
   - `verification.md` の「着色の後の形」の節に、両方の形の数の比べと目で見た結果が書いてあり、写しが残っていない
   - _Requirements: 4.3, 5.7_
 
-- [ ] 4.6 変更の後の画面を撮り、目標の画面との見比べと、失わないものを確かめる
+- [x] 4.6 変更の後の画面を撮り、目標の画面との見比べと、失わないものを確かめる
   - プレビューが動いていなければ、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
   - 設計の「VerificationRecord」の画面の一覧のとおり、`after-` の画面を明・暗で撮って spec の `screenshots/` に置く。二重に重なった跡があれば撮り直し、枚数とわけを控える
   - この spec の 5 つの候補の部分だけを、目標の画面（`mock-sakura-script-C01-*`・`C03-*`・`C09-*`・`C18-*`、`mock-descript-ghost-C02-*`、`mock-propertysystem-C25-*`）と見比べる
