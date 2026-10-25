@@ -43,7 +43,7 @@ zensical serve                   # http://127.0.0.1:8000/ukadoc-spec/ でプレ�
 手順の正本は [workflow.md](workflow.md)。要点だけを挙げる。
 
 - **doc_edit**: 作業記録用。`main` に区切りごとにコミットしてすぐ push する。PR は作らない
-- **ukadoc-spec**: PR 運用。spec ごとの作業木 `.worktrees/<feature>/`（ブランチ `<feature>`）で書き、`/kiro-complete`（開発者の完了の承認）で `origin`（`ukatech/ukadoc-spec`、書き込み権限あり）へ push して PR → squash マージする。fork は不要
+- **ukadoc-spec**: PR 運用。spec ごとの作業木 `.worktrees/<feature>/`（ブランチ `<feature>`）で書き、`/kiro-complete`（開発者の完了の承認）で `origin`（`ukatech/ukadoc-spec`、書き込み権限あり）へ push して PR を作る（マージはメンテナが行い、こちらからはしない）。fork は不要
 - **ukadoc-spec の `main` には直接 push しない**。push した時点で公開サイトが更新されるため（技術的にはブランチ保護が無く、できてしまう）
 - サブモジュールの参照コミットが動いたら、doc_edit 側で記録としてコミットする
 

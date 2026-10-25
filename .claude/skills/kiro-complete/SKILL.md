@@ -1,6 +1,6 @@
 ---
 name: kiro-complete
-description: 'Kiro仕様駆動開発のSpec完了ワークフローを実行する（doc_edit 版）。未解決問題の棚卸（原則その場で解決・他specと重なるものはbriefへ申し送り・裁定や spec 1 本規模の例外だけ/kiro-discoveryで起票）→DoDゲート検証（Build Gate＝prepare_site.py と zensical build --strict）→原稿のコミット（ukadoc-spec の作業木）→completedフォルダ移動→spec.json更新→参照パス修正→ロードマップ更新→ukadoc-spec へ PR 作成→squashマージ→作業木の後始末→サブモジュールの参照コミット更新→doc_edit の main へコミット・push までを中断なく完遂する。doc_edit 自体には PR を作らない。Use when: 実装完了を承認する, 承認してください, 完了を承認, spec承認, approve implementation, kiro承認完了。DO NOT USE when: 実装が完了したのみ（承認の明示がない場合）、タスクが終わっただけ'
+description: 'Kiro仕様駆動開発のSpec完了ワークフローを実行する（doc_edit 版）。未解決問題の棚卸（原則その場で解決・他specと重なるものはbriefへ申し送り・裁定や spec 1 本規模の例外だけ/kiro-discoveryで起票）→DoDゲート検証（Build Gate＝prepare_site.py と zensical build --strict）→原稿のコミット（ukadoc-spec の作業木）→completedフォルダ移動→spec.json更新→参照パス修正→ロードマップ更新→ukadoc-spec へ PR 作成（マージはしない。マージは ukadoc-spec のメンテナに任せる）→doc_edit の main へコミット・push までを中断なく完遂する。PR のマージ後に同じコマンドを再実行すると、作業木の後始末とサブモジュールの参照コミット更新だけを行う。doc_edit 自体には PR を作らない。Use when: 実装完了を承認する, 承認してください, 完了を承認, spec承認, approve implementation, kiro承認完了。DO NOT USE when: 実装が完了したのみ（承認の明示がない場合）、タスクが終わっただけ'
 argument-hint: <feature-name>
 ---
 
@@ -9,7 +9,10 @@ argument-hint: <feature-name>
 ## 発動条件（必須）
 
 > **⚠️ このスキルは開発者の明示的「承認」がある場合にのみ発動する。**
-> ukadoc-spec の `main` に入った時点で公開サイト（https://ukatech.github.io/ukadoc-spec/ ）が更新される。この承認が、PR の作成と squash マージの承認を兼ねる（原稿を変えない spec では PR もマージも無い。「例外: 原稿を変えない spec」）。
+> この承認が、ukadoc-spec への PR の作成の承認を兼ねる（原稿を変えない spec では PR も無い。「例外: 原稿を変えない spec」）。
+> **ukadoc-spec の PR はマージしない。** doc_edit の目的は ukadoc-spec への変更の提案を作ることであり、マージ（＝公開サイト https://ukatech.github.io/ukadoc-spec/ の更新）は ukadoc-spec のメンテナが判断する。書き込み権限があっても `gh pr merge` は使わない。
+>
+> 例外として、完了済みの spec の PR がマージされた後の再実行（「PR マージ後の後始末」）は、承認の言葉が無くても `/kiro-complete {feature}` の呼び出しで発動してよい。
 
 ### ✅ 発動する（承認の明示がある）
 - 「実装完了を**承認**します」「**承認**してください」
@@ -22,7 +25,7 @@ argument-hint: <feature-name>
 
 ### 承認が不明瞭なとき
 発動を迷う場合は **発動しない**。必要なら開発者に確認する:
-> 「実装完了の承認をいただけますか？承認いただいた場合、完了ワークフロー（ukadoc-spec への PR と squash マージを含む）を実行します。」
+> 「実装完了の承認をいただけますか？承認いただいた場合、完了ワークフロー（ukadoc-spec への PR の作成を含む。マージはしません）を実行します。」
 
 ---
 
@@ -33,7 +36,7 @@ argument-hint: <feature-name>
 ## 権威的ソース
 
 > **このスキルは `.kiro/steering/workflow.md` に従う。**
-> 2 つのリポジトリの運用、ukadoc-spec の作業木、完了基準（DoD）、コミット規約、PR と squash マージ、後始末はすべて workflow.md を参照すること。
+> 2 つのリポジトリの運用、ukadoc-spec の作業木、完了基準（DoD）、コミット規約、PR の作成、後始末はすべて workflow.md を参照すること。
 > このスキルは workflow.md の「実装完了時アクション」を**自動オーケストレーション**するものであり、ルールの複製は行わない。
 > 原稿の書き方の正本は `ukadoc-spec/CLAUDE.md` である。
 
@@ -43,7 +46,8 @@ argument-hint: <feature-name>
 - **ステアリングが正** — DoD・コミット規約・禁止事項はすべて workflow.md に従う
 - **繰り返し仕様は移動しない** — 繰り返し実行型の spec は常に `.kiro/specs/` 直下に留まる
 - **未解決問題を取りこぼさない** — アーカイブした後では拾い漏れに気付けない。DoD ゲートより前に棚卸しし、原則その場で直し、例外に当たるものだけ申し送り・起票する（冒頭ステップ）
-- **doc_edit は main に記録するだけ** — doc_edit には PR を作らない。PR と squash マージは ukadoc-spec に対してだけ行う
+- **doc_edit は main に記録するだけ** — doc_edit には PR を作らない。PR は ukadoc-spec に対してだけ作る
+- **ukadoc-spec は提案まで** — PR を作って止める。マージはメンテナに任せ、こちらからは決してマージしない
 
 ## 前提条件
 - `.kiro/specs/{feature}/tasks.md` の全タスクが完了
@@ -57,7 +61,7 @@ argument-hint: <feature-name>
 繰り返し仕様の場合:
 1. 冒頭ステップ（棚卸）・ステップ1（DoD検証）・ステップ2（原稿のコミット）を実行
 2. ステップ3〜5（移動・パス更新・ロードマップ）をスキップ
-3. ステップ7（ukadoc-spec への PR → squash マージ）とステップ8（後始末と記録）を実行。作業木は次の回のために消してよい（次の `/kiro-impl` が作り直す）
+3. ステップ7（ukadoc-spec への PR の作成）とステップ8（記録）を実行。作業木とブランチは PR のマージ後の後始末で消す（次の `/kiro-impl` が作り直す）。前の回の PR がまだ開いていれば、次の回を始める前に開発者に報告する
 4. tasks.md のチェックボックスをリセット（全 `[x]` → `[ ]`）して、ステップ8 の記録に含める
 
 ## 例外: 原稿を変えない spec
@@ -67,7 +71,7 @@ argument-hint: <feature-name>
 1. **冒頭ステップ**: ふつうどおり行う。その場の解決は doc_edit 側の記録（spec のフォルダ・brief・roadmap）で行い、作業木では直さない。
 2. **ステップ0 の 4**: 作業木 `.worktrees/{feature}` が無くても止めない。あれば、`git -C .worktrees/{feature} log --oneline origin/main..HEAD` と `git -C .worktrees/{feature} status --porcelain` がどちらも空であることを確かめる。どちらかが空でなければ、**作業木を消さずに止めて**開発者に報告する。
 3. **ステップ1**: Spec・Doc・Steering の各 Gate は確かめる。Build Gate と規約 Gate は「当てはまらない（原稿を変えない spec）」として、完了の記録（ステップ8 のコミットの本文と spec.json）に書く。
-4. **ステップ2 とステップ7 は飛ばす**（原稿のコミット・push・PR・squash マージ）。
+4. **ステップ2 とステップ7 は飛ばす**（原稿のコミット・push・PR の作成）。
 5. **ステップ3〜6** はふつうどおり行う。ステップ4 で spec.json に `"ukadoc_spec": { "pr": "none", "reason": "原稿を変えない spec。Build Gate・規約 Gate は当てはまらない" }` を足す。
 6. **ステップ8**: `MERGED` の確かめは要らない。作業木があれば `git -C ukadoc-spec worktree remove ../.worktrees/{feature}`（未追跡がビルドの生成物だけなら `--force`）と `git -C ukadoc-spec branch -D {feature}` で消す。`ukadoc-spec/` の checkout・pull はせず、サブモジュールの参照コミットは進めない（`git add` に `ukadoc-spec` を含めない）。コミットのメッセージは `chore({feature-name}): spec を完了してアーカイブする（原稿の変更なし・ukadoc-spec の PR なし）`。
 
@@ -162,7 +166,7 @@ Move-Item ".kiro/specs/{feature-name}" ".kiro/specs/completed/"
 }
 ```
 
-> **注意**: `"status"` フィールドは使用しない。`"phase": "completed"` のみで完了を表す。PR の URL とマージ後のコミットは、ステップ8 で `"ukadoc_spec": { "pr": "<URL>", "merge_commit": "<SHA>" }` として足す。
+> **注意**: `"status"` フィールドは使用しない。`"phase": "completed"` のみで完了を表す。PR の URL は、ステップ8 で `"ukadoc_spec": { "pr": "<URL>", "state": "OPEN" }` として足す。マージ後のコミットは「PR マージ後の後始末」で `"state": "MERGED", "merge_commit": "<SHA>"` として足す。
 
 ### ステップ5: 参照パスの更新
 
@@ -187,62 +191,51 @@ Get-ChildItem ".kiro/specs" -Filter "*.md" -Recurse |
 
 workflow.md の Steering Gate に従い、この spec で初めて決めたこと（自作アプリの情報の載せ方、ukadoc-spec の新しいページの置き方など）を steering（`product.md` `structure.md` など）に書き足す。
 
-### ステップ7: ukadoc-spec への反映（PR → squash マージ）
+### ステップ7: ukadoc-spec への反映（PR の作成まで。マージはしない）
 
-> **権威的ソース**: workflow.md「実装完了時アクション > 3. ukadoc-spec への反映」。1 spec = 1 ブランチ = 1 PR。**ukadoc-spec の `main` へ直接 push しない。** 確認不要（発動時の承認が兼ねる）で、以下を中断なく実行する。
+> **権威的ソース**: workflow.md「実装完了時アクション > 3. ukadoc-spec への反映」。1 spec = 1 ブランチ = 1 PR。**ukadoc-spec の `main` へ直接 push しない。`gh pr merge` を使わない**（マージはメンテナが行う）。確認不要（発動時の承認が兼ねる）で、以下を中断なく実行する。
 
 #### PR 可否判定
 
-次を**すべて満たす**ときだけ PR を作り、マージする。
+次を**すべて満たす**ときだけ PR を作る。
 
 1. 作業木のブランチが `{feature}`（`main` ではない）
 2. `git -C .worktrees/{feature} log --oneline origin/main..HEAD` が 1 件以上ある
 3. `gh auth status` が成功する
 
-欠けたら PR もマージもせずに中断し、開発者に報告する（ステップ3〜6 の doc_edit 側の変更は、ステップ8 の記録だけ行ってよい）。
+欠けたら PR を作らずに中断し、開発者に報告する（ステップ3〜6 の doc_edit 側の変更は、ステップ8 の記録だけ行ってよい）。
 
-#### PR 作成 → squash マージ
+#### PR 作成
 
 ```powershell
 git -C .worktrees/{feature} fetch origin
 git -C .worktrees/{feature} merge --no-edit origin/main   # main が進んでいたら取り込む。ぶつかったら直してから Build Gate をやり直す
 git -C .worktrees/{feature} push -u origin {feature}
 gh pr create --repo ukatech/ukadoc-spec --base main --head {feature} --title "<subject>" --body "<body>"
-gh pr merge <PR 番号> --repo ukatech/ukadoc-spec --squash --delete-branch --subject "<subject>" --body "<body>"
-gh pr view <PR 番号> --repo ukatech/ukadoc-spec --json state,mergeCommit,url
+gh pr view <PR 番号> --repo ukatech/ukadoc-spec --json state,url   # OPEN を確かめる
 ```
 
 - 既に開いた PR があれば（`gh pr list --repo ukatech/ukadoc-spec --head {feature} --state open`）、それを使う。
-- **CI を待たない。** ukadoc-spec に PR の CI は無い。マージ前の関門はステップ1 の Build Gate である。
-- **マージの成否は `gh pr merge` の結果と `gh pr view` の `state` が `MERGED` であることだけで判断する。** `--delete-branch` がローカルブランチを消せずに出す警告（作業木でチェックアウト中）は失敗ではない。リモートのブランチは API で消える。
+- **CI を待たない。** ukadoc-spec に PR の CI は無い。PR を出す前の関門はステップ1 の Build Gate である。
 - `gh` の引数でバックスラッシュを二重にしない。
 
-**squash メッセージ**:
+**PR のタイトルと本文**（メンテナが squash マージするときの既定のメッセージになる）:
 1. `git -C .worktrees/{feature} log --no-merges --pretty=format:"%h %s%n%b" origin/main..HEAD` で分岐点以降のコミットを集める
 2. spec の `requirements.md` / `design.md` の概要で目的を補う
-3. **subject**: 変更全体を表す日本語の 1 文（型の接頭辞なし。ukadoc-spec の履歴にそろえる）
+3. **title**: 変更全体を表す日本語の 1 文（型の接頭辞なし。ukadoc-spec の履歴にそろえる）
 4. **body**: 何を・なぜ変えたかを 3〜7 項目の箇条書き。その場で解決した件・起票した件（冒頭ステップ）も載せる。末尾に帰属表示の行を付ける
 
 #### 中断条件
 
-PR の**作成またはマージが失敗**した場合（衝突・mergeable でない・権限不足など）は、**作業木もブランチも消さずに**中断し、開発者へ報告する。別の道具で回り込まない。
+PR の**作成が失敗**した場合（衝突・権限不足など）は、**作業木もブランチも消さずに**中断し、開発者へ報告する。別の道具で回り込まない。
 
-### ステップ8: 後始末と記録（doc_edit）
+### ステップ8: 記録（doc_edit）
 
-`MERGED` を確かめた後に限り、workflow.md「4. 後始末と記録」に従う。
-
-```powershell
-git -C ukadoc-spec worktree remove ../.worktrees/{feature}
-git -C ukadoc-spec branch -D {feature}            # squash マージなので -D
-git -C ukadoc-spec checkout main
-git -C ukadoc-spec pull --ff-only origin main      # 記録する版をマージ後の main に進める
-```
-
-spec.json に PR の URL とマージ後のコミットを足し（ステップ4 の注）、doc_edit に記録する。**自分のパスだけ**を add・commit し、push する（`git add -A` は使わない）。
+PR が `OPEN` であることを確かめたら、spec.json に PR の URL を足し（ステップ4 の注）、doc_edit に記録する。**作業木・ブランチは消さない**（レビューで直しを頼まれたら、作業木でコミットして `git -C .worktrees/{feature} push` する）。**`ukadoc-spec/` は進めず、参照コミットも更新しない**（`git add` に `ukadoc-spec` を含めない）。**自分のパスだけ**を add・commit し、push する（`git add -A` は使わない）。
 
 ```powershell
-git add -- ukadoc-spec .kiro/specs/completed/{feature-name} .kiro/specs/{feature-name} <ステップ5・6 と冒頭ステップで触ったパス>
-git commit -m "chore({feature-name}): spec を完了してアーカイブし、ukadoc-spec を PR #<番号> のマージ後に進める" -- <同じパス>
+git add -- .kiro/specs/completed/{feature-name} .kiro/specs/{feature-name} <ステップ5・6 と冒頭ステップで触ったパス>
+git commit -m "chore({feature-name}): spec を完了してアーカイブし、ukadoc-spec に PR #<番号> を出す" -- <同じパス>
 git pull --no-rebase --no-edit {remote} {default-branch}
 git push {remote} {default-branch}
 ```
@@ -250,6 +243,31 @@ git push {remote} {default-branch}
 - `.kiro/specs/{feature-name}` は移動元の削除をコミットに含めるために書く（`git add -- <消えたパス>` で削除が載る）。
 - doc_edit には PR を作らない。
 - pull がぶつかったら止めて報告する（コミットは手元に残る）。
+- 開発者への報告に、PR の URL と「マージはメンテナ待ち。マージ後に `/kiro-complete {feature}` を再実行すると後始末する」を書く。
+
+---
+
+## PR マージ後の後始末（再実行）
+
+`.kiro/specs/completed/{feature}/spec.json` の `ukadoc_spec.state` が `"OPEN"` の spec に `/kiro-complete {feature}` が呼ばれたら、冒頭ステップ〜ステップ8 は行わず、これだけを行う（workflow.md「4. 後始末と記録」）。
+
+1. `gh pr view <PR の URL> --json state,mergeCommit` で状態を見る。
+   - `MERGED` でなければ何も消さずに止め、状態を報告する（`OPEN` ならメンテナ待ち、`CLOSED` なら開発者の判断を待つ）。
+2. `MERGED` なら片付けて、記録している版を進める。
+   ```powershell
+   git -C ukadoc-spec worktree remove ../.worktrees/{feature}   # 未追跡がビルドの生成物だけなら --force
+   git -C ukadoc-spec branch -D {feature}                       # squash マージなので -D
+   git -C ukadoc-spec checkout main
+   git -C ukadoc-spec pull --ff-only origin main
+   ```
+3. spec.json の `ukadoc_spec` を `"state": "MERGED", "merge_commit": "<SHA>"` にし、記録する。
+   ```powershell
+   git add -- ukadoc-spec .kiro/specs/completed/{feature-name}/spec.json
+   git commit -m "chore(ukadoc-spec): {feature-name} のマージ後の版に進める" -- ukadoc-spec .kiro/specs/completed/{feature-name}/spec.json
+   git pull --no-rebase --no-edit {remote} {default-branch}
+   git push {remote} {default-branch}
+   ```
+   コミットの本文に PR の URL を書く。
 
 ---
 
@@ -265,8 +283,9 @@ git push {remote} {default-branch}
 - [ ] spec.json の phase を "completed" に更新済み（ステップ4、移動の後）※繰り返し仕様はスキップ
 - [ ] 参照パス更新済み（ステップ5）※繰り返し仕様はスキップ
 - [ ] ロードマップ・ステアリング更新済み（該当する場合）
-- [ ] ukadoc-spec へ PR → squash マージ（ステップ7）: origin/main を取り込み → push → gh pr create → gh pr merge --squash --delete-branch → gh pr view で MERGED を確認
-- [ ] 後始末と記録（ステップ8）: 作業木とブランチを片付け、ukadoc-spec/ を main の最新に進め、spec.json に PR とマージ後のコミットを書き、doc_edit の main に自分のパスだけコミットして push
+- [ ] ukadoc-spec へ PR を作成（ステップ7）: origin/main を取り込み → push → gh pr create → gh pr view で OPEN を確認。gh pr merge はしない
+- [ ] 記録（ステップ8）: 作業木とブランチは残し、ukadoc-spec/ と参照コミットは進めず、spec.json に PR の URL と "state": "OPEN" を書き、doc_edit の main に自分のパスだけコミットして push
+- [ ] ※PR マージ後の再実行: MERGED を確かめてから作業木とブランチを片付け、ukadoc-spec/ を main の最新に進め、spec.json に merge_commit を書き、参照コミットと一緒にコミットして push
 - [ ] ※原稿を変えない spec: 作業木にコミット・未コミットの変更が無いことを確かめ、Build・規約 Gate は「当てはまらない」と記録し、ステップ2・7 を飛ばし、作業木とブランチを消し、参照コミットは進めない（spec.json に "pr": "none"）
 ```
 
@@ -290,9 +309,9 @@ git push {remote} {default-branch}
 - **症状**: `prepare_site.py` が一覧の食い違いで止まる、`zensical build --strict` がリンク切れ・アンカー切れで失敗する
 - **対策**: ワークフローを中断し開発者に報告。直してから再実行する（`ukadoc-spec/CLAUDE.md` の「項目を追加・改名したとき」を見直す）
 
-### PR の作成・マージの失敗
-- **症状**: `gh pr create` / `gh pr merge --squash` が失敗する（既存 PR・権限不足・mergeable でない・ネットワーク）
-- **対策**: **作業木もブランチも消さずに**中断して開発者へ報告。既存 PR があればそれを確かめて使う。中断の判定はマージ API の結果だけで行い、`--delete-branch` のローカル削除の警告とは混同しない
+### PR の作成の失敗
+- **症状**: `gh pr create` が失敗する（既存 PR・権限不足・ネットワーク）
+- **対策**: **作業木もブランチも消さずに**中断して開発者へ報告。既存 PR があればそれを確かめて使う。失敗してもマージで回り込まない
 
 ### 作業木を消せない
 - **症状**: `git worktree remove` が未追跡ファイル（`_site/` `_site_src/` など）で止まる
