@@ -84,7 +84,7 @@
   - 完了の状態: 全候補の「判断」が埋まり、「採る」に目標の画面、「保留」に理由と要るものがあり、「判断の記録」に日付がある（記録の確かめ 4 の「行き先」以外）
   - _Requirements: 3.3, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
 
-- [ ] 5. 後続の改造 spec に切り分ける
+- [x] 5. 後続の改造 spec に切り分ける
 - [x] 5.1 候補の行き先を決めて roadmap を書く
   - 「採る」の候補を後続 spec に割り当て、`decisions.md` の「行き先」に spec 名を書く。「採らない」「保留」の候補には「外した」と理由を書く
   - 切り分けの規則に従う: PR として小さくレビューしやすい単位にする。新しい依存や Markdown 拡張を足す改造（さくらスクリプトの着色など）は見た目の改造と別の spec にする。目印を付ける後処理やテンプレートの上書きは、その目印を使う見た目の改造と同じ spec に入れてよい。画像・キャラクター・ブラウザで動く仕掛けを要する遊びは、視認性の改造と別の spec にする
@@ -94,7 +94,7 @@
   - 完了の状態: `decisions.md` の全行に「行き先」があり、記録の確かめ 4 が通る。roadmap に 4 つの節があり、先頭の行が `site-look-plan` で、棚卸の節に次の spec が 1 つある
   - _Requirements: 5.1, 5.2, 5.5, 5.6, 5.8, 5.9_
 
-- [ ] 5.2 後続 spec ごとに brief を書く
+- [x] 5.2 後続 spec ごとに brief を書く
   - roadmap の後続 spec ごとに `.kiro/specs/<spec 名>/brief.md` を、discovery の形（Problem / Current State / Desired Outcome / Approach / Scope / Boundary Candidates / Out of Boundary / Upstream / Downstream / Existing Spec Touchpoints / Constraints）で書く。最初の行に起票元（`site-look-plan` の決定から）を書く
   - Desired Outcome に、`decisions.md` の候補の ID と判断と、目標の画面のパス（`.kiro/specs/site-look-plan/screenshots/...`。完了後は `completed/` の下に移ることを添える）を書く
   - Constraints に、当てはまるものを書き写す: 旧サイトの素材の許可、Zensical 0.0.67 の制限と試作で確かめた事実、表示の確かめ方（`prepare_site.py` の再実行、`serve` の頁で目印を確かめる、完了後のパス `.kiro/specs/completed/site-look-plan/tools/shot.mjs` で明・暗を撮る、375 px のはみ出し）、`survey.md` の「失わないもの」
