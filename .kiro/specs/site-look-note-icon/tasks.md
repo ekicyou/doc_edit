@@ -26,7 +26,7 @@
   - `prepare_site.py` と `zensical build --strict` が exit 0 で、一語ずつの確かめが設計の期待どおりで、`_site_src/` の補足の見出しの行が `{#note-1 .bundle-item .bundle-supplement}` の形になっている
   - _Requirements: 2.3, 2.4, 5.2, 5.3, 5.4, 5.5, 8.8_
 
-- [ ] 2.2 目印の数・漏れ・変わらないことを、プレビューの頁の HTML で数える
+- [x] 2.2 目印の数・漏れ・変わらないことを、プレビューの頁の HTML で数える
   - プレビューが動いていなければ、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
   - プレビューから 40 頁の HTML を取り、頁ごとに `div.bundle-notes` の最初の子（段と id）・`.bundle-supplement`（段と id）・`.admonition.note` を数え、設計の IconCheck の表（16・16・2、頁ごとの内訳）と合わせる
   - 読み物の頁の `bundle-supplement` 0、補足の項目の中の節の見出し（「サーフェスの位置情報」「※SHIORI Statusヘッダ」など）の `bundle-supplement` 0、`pre`・`code` の外の本文の `{: `・`{#` 0 を見る
@@ -45,21 +45,21 @@
   - 作業木の `assets/extra.css` の末尾に、設計どおりの 2 つの塊があり、`site-look-note-icon:` の見出しのコメントが 2 つある
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 2.1, 2.2, 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.3, 4.4, 4.5, 4.6, 4.7, 5.1, 8.2, 8.3, 8.8_
 
-- [ ] 3.2 Build Gate と規約 Gate を通し、変更の範囲を確かめる
+- [x] 3.2 Build Gate と規約 Gate を通し、変更の範囲を確かめる
   - プレビューを止めてから、作業木で `prepare_site.py` と `zensical build --strict` を流す
   - 規約 Gate（ukadoc-spec の `CLAUDE.md` の決まり。ファイル名は ASCII）に照らす
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`git diff --stat origin/main` が `assets/extra.css` と `scripts/prepare_site.py` だけである（足したファイルが無い）
   - _Requirements: 8.1, 8.5_
 
 - [ ] 4. 配られた頁での確かめ
-- [ ] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
+- [x] 4.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `extra.css` は両方の塊を並べ、`prepare_site.py` は両方の変更を残して直す
   - merge したときは、Build Gate（3.2）をやり直す。原稿か `prepare_site.py` が変わっていれば、控えを新しい `origin/main` から 1.2 と同じ手順で作り直し、2.2 の数え方もやり直して `verification.md` の「変更の前」「目印」の節を直す
   - 4.2〜4.4 はこの版で測る（測る版を `verification.md` に書く）
   - `origin/main` が作業木の先祖で、Build Gate が exit 0 で、測る版が `verification.md` に書いてある
   - _Requirements: 8.7_
 
-- [ ] 4.2 プレビューを起動し直し、配られた見た目の指定と絵を確かめる
+- [x] 4.2 プレビューを起動し直し、配られた見た目の指定と絵を確かめる
   - プレビューを起動し直し、内蔵ブラウザの枠（使えないときは Claude in Chrome）で頁を開く
   - 配られた `/ukadoc-spec/assets/extra.css` が 200 で `site-look-note-icon:` の見出しのコメントが 2 つあり、`/ukadoc-spec/assets/logo.png` が 200 で中身が作業木の `assets/logo.png` と同じことを見る。無ければプレビューを止め、`prepare_site.py` → `build --strict` → 起動し直す
   - `verification.md` の「配り」の節に、2 つの塊と絵が配られていることを確かめた結果が書いてある

@@ -110,3 +110,86 @@ for n in ['note-1.md','note-12.md','notes_escape.md','note-1-a.md','note.md','fo
 
 - `prepare_site.py` と `zensical build --strict` はどちらも exit 0（No issues found）
 - `_site_src/` で `.bundle-supplement` を持つ見出しの行は 16 行で、どれも `## 補足 {#note-1 .bundle-item .bundle-supplement}` の形（段は `h2` か `h3`。`bundle-item` は残る）
+
+## 目印
+
+作業木の `serve`（8000、`5938d27` を build したもの）の 40 頁の HTML を、使い捨ての `B/count.py`（標準の `html.parser`）で数えた。数え方は、合成した小さな HTML で、`div.bundle-notes` の最初の子（間に `hr` があればそれを数える）・`.bundle-supplement`・`.admonition.note`（`.tip` は数えない）・`pre`・`code` の外の `{: `・`{#`・補足の項目の中の節の見出し（id が `note-<数>-` で始まるか `-note-<数>-` を含む）が 1 つずつ数えられることを assert で確かめてから流した（`selftest`）。
+
+```sh
+# B の中で
+$PY -X utf8 count.py selftest                                       # selftest ok
+$PY -X utf8 count.py C:/home/maz/git/doc_edit/.worktrees/site-look-note-icon http://127.0.0.1:8000/ukadoc-spec   # 頁ごとの数を出し count.json に書く
+$PY -X utf8 snapshot.py C:/home/maz/git/doc_edit/.worktrees/site-look-note-icon http://127.0.0.1:8000/ukadoc-spec after.json
+$PY -X utf8 snapshot.py compare before.json after.json             # SAME、exit 0
+```
+
+- `article` の中だけを数える。頁全体（右の欄の目次を含む）の `bundle-supplement` の語も `snapshot.py` で 16 で、目次には付いていない
+- 控え（8010）を同じ式で数えると 16 / 0 / 2 / 漏れ 0 で、補足の項目の頭の見出しの目印だけが 0 だった
+
+### 頁ごとの数
+| 頁 | 注釈の節の見出し | 補足の項目の頭の見出し | `note` の注意書き |
+|---|---|---|---|
+| `list/sakura-script` | 14（`h2` 2・`h3` 12） | 3（`h3` 3） | 0 |
+| `list/propertysystem` | 2（`h4` 2） | 1（`h3` 1） | 0 |
+| `list/shiori-event-ex` | 0 | 9（`h2` 2・`h3` 7） | 0 |
+| `descript/ghost` | 0 | 1（`h3` 1） | 0 |
+| `descript/install` | 0 | 1（`h3` 1） | 0 |
+| `descript/shell` | 0 | 1（`h3` 1） | 0 |
+| `dev/shell` | 0 | 0 | 2 |
+| 計 | **16** | **16** | **2** |
+
+- 設計の IconCheck の表と全部の頁・全部の欄で合った。ほかの 33 頁は 3 つとも 0
+- 注釈の節の見出し（`div.bundle-notes` の最初の子）:
+  - `list/sakura-script`: `h2` `notes_escape`・`notes_lifespan`、`h3` `notes_move`・`notes_sound`・`notes_sound_spectrum`・`notes_inputbox-option`・`notes_inputbox-id`・`notes_selectfile`・`notes_passivemode`・`notes_inductionmode`・`notes_executehttp`・`notes_executeical`・`notes_executerss`・`notes_environmentvariable`
+  - `list/propertysystem`: `h4` `notes_sound_meta`・`notes_sound_propertyset`
+- 補足の項目の頭の見出し（`.bundle-supplement`。どれも見出しの要素で、`bundle-item` も持つ）:
+  - `list/sakura-script`: `h3` `balloon-text-note-1`・`choice-marker-note-1`・`event-note-1`
+  - `list/propertysystem`: `h3` `note-1`
+  - `list/shiori-event-ex`: `h2` `note-1`・`note-2`、`h3` `ghost-common-note-1`・`ghost-kanaderu-nichijo-no-neiro-note-1`・`plugin-weather-station-note-1`・`app-ghost-terminal-note-1`・`app-ghost-terminal-note-2`・`note-3`・`app-elin-note-1`
+  - `descript/ghost`・`descript/install`・`descript/shell`: `h3` `note-1`
+
+### 付けないもの・漏れ
+| 見たもの | 数 |
+|---|---|
+| 読み物の頁（`/`・`manual/`・`dev/`・`memo/`・`spec/` の 25 頁）の `bundle-supplement` | 0 |
+| 補足の項目の中の節の見出し 21 個（どれも `h4`。`descript/shell` の「サーフェスの位置情報」ほか 3、`descript/ghost` の「サーフェスの位置情報」、`list/propertysystem` の「※SHIORI Statusヘッダ」、`list/sakura-script` の 5、`list/shiori-event-ex` の 10）の `bundle-supplement` | 0 |
+| `article` の中で `pre`・`code` の外の字に `{: `・`{#` | 0 |
+
+### 変わらないこと
+- `snapshot.py compare before.json after.json` は **SAME**（exit 0）。全 40 頁の `article` の中の見出しの id の並び（2579）・`headerlink` の数・`md-nav__link` の数・`hr` の数（1921）・本文の字（空白を 1 つに詰めたもの）と、`_raw/` の 2049 ファイルの SHA-256 が控えと同じ
+- 既にある目印（40 頁の計）は控えと同じで、`bundle-supplement` だけが 0 から 16 に増えた。`bundle-item` は補足の項目の頭の見出し 16 個を含めて 1875 のまま
+
+| `bundle-item` | `bundle-category` | `bundle-notes` | `bundle-support` | `bundle-default` | `bundle-supplement` |
+|---|---|---|---|---|---|
+| 1875 | 116 | 16 | 1640 | 423 | 16（控えは 0） |
+
+## Build Gate と規約 Gate
+```sh
+# 作業木 .worktrees/site-look-note-icon/ の中で（プレビューを止めてから。3.1 のコミット 5938d27 の後）
+../../.venv/Scripts/python scripts/prepare_site.py    # exit 0
+../../.venv/Scripts/zensical build --strict           # exit 0（No issues found）
+git diff --stat origin/main
+#  assets/extra.css        | 19 +++++++++++++++++++
+#  scripts/prepare_site.py |  6 +++++-
+#  2 files changed, 24 insertions(+), 1 deletion(-)
+```
+- 足したファイルは無い（絵は今ある `assets/logo.png` を使う。8.1）
+- 規約 Gate: 原稿（`.md`）・`index.md` の「## 一覧」・`.nav.yml`・`INDEX.md`・`mkdocs.yml` は変えていない。ファイル名は ASCII。`prepare_site.py` の注と docstring は既にある書き方（日本語・だ/である調）にそろえ、`extra.css` の注は塊ごとに `/* site-look-note-icon: <何> */` の 1 行だけ（8.2・8.5）
+
+## 測る版
+- 2026-10-25 に `git -C ukadoc-spec fetch origin` した `origin/main` は `529d092` のままで、作業木の先祖である。merge は要らず、控えも作り直さない（8.7）
+- 4.2〜4.4 は作業木の `5938d27`（`58df49d` 2.1・`5938d27` 3.1）で測る
+
+## 配り
+作業木の `serve`（プレビューを止めて `prepare_site.py` → `build --strict` の後に起動し直したもの）で（5.1・7.1）:
+
+```sh
+curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/ukadoc-spec/assets/extra.css   # 200
+curl -s http://127.0.0.1:8000/ukadoc-spec/assets/extra.css | grep -c "site-look-note-icon:"   # 2
+curl -s http://127.0.0.1:8000/ukadoc-spec/assets/extra.css | cmp - assets/extra.css          # 同じ
+curl -s -o logo.tmp -w "%{http_code}" http://127.0.0.1:8000/ukadoc-spec/assets/logo.png      # 200
+sha256sum logo.tmp assets/logo.png                                                            # どちらも 32983af3…
+```
+- 配られた `extra.css` は作業木のファイルと同じで、`site-look-note-icon:` の見出しのコメントが 2 つある
+- 配られた `assets/logo.png` は 200 で返り、中身が作業木の `assets/logo.png` と同じ
+- 起動の直後の 1 回だけ `logo.png` が 404 だった（`serve` が `_site_src/` を写し終える前）。数秒後に取り直して 200 だった
