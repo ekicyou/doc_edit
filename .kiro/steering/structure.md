@@ -25,7 +25,7 @@
 
 ### 原稿の作業木（PR の単位ごと）
 **Location**: `.worktrees/<pr>/`（`.gitignore` 済み）
-**Purpose**: ukadoc-spec の git worktree。PR の単位（`workflow.md`「PR の単位」。単独の spec なら spec 名）ごとに、原稿をブランチ `<pr>` で書く場所。`/kiro-impl` が作り、単位の後の spec が引き継ぎ、PR のマージ後の `/kiro-complete` の再実行が消す
+**Purpose**: ukadoc-spec の git worktree。PR の単位（`workflow.md`「PR の単位」。単独の spec なら spec 名）ごとに、原稿をブランチ `<pr>` で書く場所。`/kiro-impl` が作り、単位の後の spec が引き継ぎ、PR のマージを確かめた `/kiro-complete` が消す
 **Example**: `git -C ukadoc-spec worktree add ../.worktrees/<pr> -b <pr> origin/main`（詳しくは `workflow.md`）
 
 ### 情報の参照元

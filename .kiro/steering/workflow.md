@@ -10,7 +10,7 @@ kiro 系スキル（`kiro-start` `kiro-design` `kiro-impl` `kiro-complete` `kiro
 | リポジトリ | 何を置くか | 運用 |
 |---|---|---|
 | **doc_edit**（ルート） | steering・spec（`.kiro/`）、サブモジュールの参照コミット | `main` に直接コミットして push する。PR は作らない |
-| **ukadoc-spec**（サブモジュール） | UKADOC の原稿 | spec ごとの作業ブランチ → PR（マージはメンテナが行う。こちらからはマージしない） |
+| **ukadoc-spec**（サブモジュール） | UKADOC の原稿 | spec ごとの作業ブランチ → PR → スクワッシュマージ（メンテナの許可により、当面はこちらでマージまで行う。下の「3. ukadoc-spec への反映」） |
 
 `pasta/` `areka/` `shiori4/` は読むだけの参照元で、コミットも push もしない。
 
@@ -52,7 +52,7 @@ discovery → requirements → design → tasks → implementation → complete
 | `/kiro-design {feature}` | 設計の生成・設計の検証・設計の話し合い |
 | `/kiro-spec-tasks {feature}` | タスク分解 |
 | `/kiro-impl {feature} [tasks]` | 実装（原稿の編集） |
-| `/kiro-complete {feature}` | 完了（DoD → アーカイブ → PR の作成 → 記録）。PR のマージ後に再実行すると後始末 |
+| `/kiro-complete {feature}` | 完了（DoD → アーカイブ → PR の作成 → スクワッシュマージ → 後始末 → 記録）。開いたまま残った PR は、マージの後に再実行すると後始末 |
 | `/kiro-next` | 棚卸と次に始める spec の名指し |
 | `/kiro-spec-status {feature}` | 進捗確認 |
 
@@ -103,10 +103,10 @@ git push origin main
 
 ```powershell
 git -C .worktrees/<feature> add -A
-git -C .worktrees/<feature> commit -m "<変更を 1 文で表す日本語>"
+git -C .worktrees/<feature> commit -m "<変更を 1 文で表す日本語>" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ```
 
-ukadoc-spec のコミットメッセージは、既存の履歴にそろえて **型の接頭辞を付けない日本語の 1 文** にする（例: 「ヘッダの緑を濃くし（#2e8233）、文字を白にして見やすくする」）。作業木は spec 専用なので `-A` でよい。
+ukadoc-spec のコミットメッセージは、既存の履歴にそろえて **型の接頭辞を付けない日本語の 1 文** にする（例: 「ヘッダの緑を濃くし（#2e8233）、文字を白にして見やすくする」）。作業木は spec 専用なので `-A` でよい。本文の末尾に Claude の共同作者の行（`Co-Authored-By: <その時のモデル名> <noreply@anthropic.com>`）を付ける。GitHub のコミットの表示で、開発者と Claude が作者として並ぶ（PR そのものの作者は `gh` で認証した開発者のままで、変えられない）。
 
 ### 2. spec のアーカイブ（doc_edit）
 
@@ -117,22 +117,24 @@ Move-Item .kiro/specs/<feature> .kiro/specs/completed/
 
 spec.json の更新は移動の**直後**に行う（移動前に更新すると、エディタがファイルを復活させることがある）。コミットと push は「doc_edit への記録」に従う。
 
-### 3. ukadoc-spec への反映（PR の作成まで）
+### 3. ukadoc-spec への反映（PR の作成とスクワッシュマージ）
 
-doc_edit の目的は、ukadoc-spec への変更の**提案**を作ることである。ukadoc-spec の `main` に入った時点で GitHub Pages の公開サイトが更新されるので、マージは ukadoc-spec のメンテナが判断する。**書き込み権限はあるが、こちらからはマージしない**（`gh pr merge` を使わない）。PR は、開発者が完了を承認した `/kiro-complete` の中でだけ作る。
+ukadoc-spec の `main` に入った時点で GitHub Pages の公開サイトが更新される。マージの判断はもともと ukadoc-spec のメンテナのものだが、**メンテナの許可（2026-10-25）により、当面は開発者の完了の承認（「実装完了を承認」）を受けた `/kiro-complete` が、PR を作ってそのままスクワッシュマージする**。PR は変更の記録として必ず作り、`main` へ直接 push しない。許可が取り下げられたら、PR を作って止める流れに戻す（`/kiro-complete` の「マージの許可が無いとき」）。
 
 ```powershell
 git -C .worktrees/<feature> push -u origin <feature>
 gh pr create --repo ukatech/ukadoc-spec --base main --head <feature> --title "<subject>" --body "<body>"
-gh pr view <PR 番号> --repo ukatech/ukadoc-spec --json state,url   # OPEN を確かめる
+gh pr view <PR 番号> --repo ukatech/ukadoc-spec --json state,url,mergeable,headRefOid   # OPEN・MERGEABLE を確かめる
+gh pr merge <PR 番号> --repo ukatech/ukadoc-spec --squash --match-head-commit <headRefOid> --subject "<subject> (#<PR 番号>)" --body "<squash の本文>"
+gh pr view <PR 番号> --repo ukatech/ukadoc-spec --json state,mergeCommit   # MERGED を確かめる
 ```
 
 - **ukadoc-spec の `main` へ直接 push しない**（ブランチ保護は無いが、push した時点で公開される）
-- 1 単位 = 1 ブランチ = 1 PR（下の「PR の単位」）。単位の最後の spec の完了時に 1 回だけ PR を作る。単位のすべての spec の spec.json に `"ukadoc_spec": { "pr_unit": "<pr>", "pr": "<URL>", "state": "OPEN" }` を書く
-- 作業木とブランチはマージまで残す。レビューで直しを頼まれたら、作業木でコミットして push する
+- 1 単位 = 1 ブランチ = 1 PR（下の「PR の単位」）。単位の最後の spec の完了時に 1 回だけ PR を作ってマージする。単位のすべての spec の spec.json に `"ukadoc_spec": { "pr_unit": "<pr>", "pr": "<URL>", "state": "MERGED", "merge_commit": "<SHA>" }` を書く
+- マージは `--squash` だけを使い、Build Gate を通した head（`--match-head-commit`）でだけ行う。PR を作ってからマージまでの間に `main` が進んでぶつかったら（`mergeable` が `CONFLICTING`）、先に「開いている PR に追いつく」を行い、Build Gate をやり直してからマージする
 - **CI を待たない**。ukadoc-spec に PR の CI は無い。PR を出す前の関門は Build Gate（ローカルの `build --strict`）
-- PR の作成が失敗したら、**ブランチも作業木も消さずに**止めて開発者へ報告する
-- PR の body の末尾には帰属表示の行を付ける
+- PR の作成かマージが失敗したら、**ブランチも作業木も消さずに**止めて開発者へ報告する
+- PR の body と squash の本文の末尾には帰属表示を付ける。squash の本文の最後の行は `Co-Authored-By: <その時のモデル名> <noreply@anthropic.com>` にする（マージのコミットにも Claude が共同作者として載る）
 
 #### PR の単位
 
@@ -169,18 +171,17 @@ git -C .worktrees/<pr> push
 - 直し方が 1 通りに決まらない（両方の変更が同じ規則を別の値で書き換えている、など）ときは、merge を `git -C .worktrees/<pr> merge --abort` で取り消して止め、開発者へ報告する
 - ぶつかりを減らすため、`extra.css` には spec ごとに見出しのコメント（`/* site-look-list-items: … */` の 1 行）で区切った塊で書く
 
-#### PR のタイトルと本文の作り方（メンテナが squash マージするときの既定のメッセージになる）
+#### PR のタイトルと本文の作り方（squash マージのコミットのメッセージにもなる）
 
 1. `git -C .worktrees/<feature> log --no-merges --pretty=format:"%h %s%n%b" origin/main..HEAD` で分岐点以降のコミットを集める
 2. spec の `requirements.md` / `design.md` の概要で目的を補う
 3. **subject**: 変更全体を表す日本語の 1 文（型の接頭辞なし。ukadoc-spec の履歴にそろえる）
 4. **body**: 何を・なぜ変えたかを 3〜7 項目の箇条書きに。些末なコミットはまとめる
+5. **squash の本文**: body の箇条書き（帰属表示の行は除く）の後に空行を置き、`Co-Authored-By:` の行で終える
 
 ### 4. 後始末と記録（doc_edit）
 
-PR を作った時点では、spec のアーカイブと spec.json の記録だけを「doc_edit への記録」でコミットして push する（作業木・ブランチ・`ukadoc-spec/`・参照コミットはそのまま）。
-
-メンテナが PR をマージしたら、`/kiro-complete <feature>` を再実行する。`gh pr view` で `MERGED` を確かめてから、次の順に行う。
+`MERGED` を確かめたら、同じ `/kiro-complete` の中で次の順に後始末する。PR が開いたまま残ったとき（マージの許可が無い・マージに失敗した）は、spec のアーカイブと spec.json の記録（`"state": "OPEN"`）だけをコミットして push し、マージの後に `/kiro-complete <feature>` を再実行して、`gh pr view` で `MERGED` を確かめてから同じ後始末をする。
 
 ```powershell
 # 作業木とローカルブランチを片付ける（squash マージなので -D。MERGED を確かめた後に限る）
@@ -237,8 +238,8 @@ git -C ukadoc-spec pull --ff-only origin main
 | `git clean -fd` | 未追跡ファイルが消える | `git clean -fdn` で確かめて個別に消す |
 | `git revert <commit>` | 他のセッションの作業を巻き込む | `git show` で差分を見て、手で逆の変更を作る |
 | `git rebase` / `git pull --rebase`（doc_edit で） | 作業ツリーが汚れていると止まる・退避させる | `git pull --no-rebase --no-edit` |
-| ukadoc-spec の `main` への push | 即公開される | PR を作り、マージはメンテナに任せる |
-| ukadoc-spec の PR のマージ（`gh pr merge` など） | 公開の判断はメンテナのもの | PR を作って止める |
+| ukadoc-spec の `main` への push | 即公開され、PR の記録が残らない | PR を作り、`/kiro-complete` の中でスクワッシュマージする |
+| `/kiro-complete` の外での ukadoc-spec の PR のマージ、`--squash` 以外のマージ | 公開は開発者の完了の承認とメンテナの許可に依る | 完了の承認を受けた `/kiro-complete` の中で `gh pr merge --squash` だけを使う |
 
 コミットの前に必ず `git status` を見る。迷ったら開発者に確かめる。
 
