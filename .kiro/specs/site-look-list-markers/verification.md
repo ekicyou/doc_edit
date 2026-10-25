@@ -71,3 +71,29 @@ $PY snapshot.py compare before.json after.json   # SAME で exit 0、違えば�
 | `list/shiori-event` | 360 / 360 / 774 / 328 | `spec/sstp` | 43 / 43 / 128 / 10 |
 | | | `spec/update-file` | 9 / 9 / 72 / 5 |
 | | | `spec/web` | 4 / 4 / 62 / 2 |
+
+## 一語ずつの確かめ
+
+`prepare_site.py` の `baseware()`・`add_markers()` に字を直に渡し、結果を設計の期待と比べた。式は使い捨ての `scratchpad\check_markers.py`（`prepare_site` を import して assert する）。変更の前の `prepare_site.py` では `AttributeError: module 'prepare_site' has no attribute 'baseware'` で落ち、変更の後で全部通った。札の字 `<span class="bundle-baseware bundle-baseware-ssp">SSP</span>` を下では `[SSP]` と書く（`Materia` も同じ）。
+
+| `baseware()` に渡した字 | 結果 | 期待 |
+|---|---|---|
+| `SSP` | `[SSP]` | 名前だけ札 ○ |
+| `SSP 2.8.40` | `[SSP] 2.8.40` | 名前だけ札 ○ |
+| `SSP (2.3.83)` | `[SSP] (2.3.83)` | 名前だけ札 ○ |
+| `SSP 2.7 RC1` | `[SSP] 2.7 RC1` | 名前だけ札 ○ |
+| `Materia廃止仕様` | `Materia廃止仕様` | 札にしない ○（名前の直後が空白でない） |
+| `SSP 非対応` | `SSP 非対応` | 札にしない ○（打ち消しの語） |
+| `*※推奨　SSP2.5.05以上*` | `*※推奨　SSP2.5.05以上*` | 札にしない ○（名前で始まらない） |
+| `SSPX` | `SSPX` | 札にしない ○ |
+
+`add_markers()`（改行は `\n`）:
+
+| 渡した単位 | 結果 | 期待 |
+|---|---|---|
+| `list/x/a.md`: コードブロックの中の `**対応:** SSP` | 変わらない | 飛ばす ○ |
+| `list/x/a.md`: `**既定値:** a<br />\nb<br />\nc` の段落 | `c` の行の後ろに `{: .bundle-default }` | 段落の最後の行の後ろ ○ |
+| `list/x/a.md`: `**対応:** SSP 2.7 / Materia` | `**対応:** [SSP] 2.7 / [Materia]\n{: .bundle-support }` | 両方の名前を札、` / ` と頭はそのまま ○ |
+| `spec/x/notes_a.md`: `# t\n\nbody` | `<div class="bundle-notes" markdown="1">\n\n# t\n\nbody\n\n</div>` | 空行を置いて包む ○ |
+
+作業木の Build Gate は `prepare_site.py` exit 0・`zensical build --strict` exit 0（No issues found）。`_site_src/` の `.md` で数えた目印は `{: .bundle-support }` 1640 行・`{: .bundle-default }` 423 行・`<div class="bundle-notes" markdown="1">` 16 個・札 2719 個で、設計の MarkerCheck の計と同じ。`{: .bundle-support }` の直前の行はどれも `**対応:**` の行。
