@@ -62,7 +62,7 @@
   - `origin/main` が作業木の先祖で、Build Gate が exit 0 で、測る版が `verification.md` に書いてある
   - _Requirements: 9.6_
 
-- [ ] 4.2 プレビューを起動し直し、配られた見た目の指定に 3 つの塊があることを確かめる
+- [x] 4.2 プレビューを起動し直し、配られた見た目の指定に 3 つの塊があることを確かめる
   - プレビューを起動し直し、内蔵ブラウザの枠（使えないときは Claude in Chrome）で頁を開く
   - 配られた `/ukadoc-spec/assets/extra.css` が 200 で、`site-look-list-markers:` の見出しのコメントが 3 つあることを見る。無ければプレビューを止め、`prepare_site.py` → `build --strict` → 起動し直す
   - `verification.md` の「配り」の節に、配られた `extra.css` に 3 つの塊が入っていることを確かめた結果が書いてある

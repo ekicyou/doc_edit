@@ -163,3 +163,7 @@ $PY snapshot.py compare before.json after.json   # SAME、exit 0
 ## 測る版
 - 2026-10-25 に ukadoc-spec を fetch した。`origin/main` は `d3154d8` のまま進んでおらず、作業木の先祖である。merge はしていない
 - 4.2〜4.4 は作業木の `f8a747c`（`prepare_site.py` の `02e71e2` と `extra.css` の `f8a747c`）で測る。Build Gate（3.2）: `prepare_site.py` exit 0、`zensical build --strict` exit 0（No issues found）。`git diff --stat origin/main` は `assets/extra.css`（+56）と `scripts/prepare_site.py`（+46 −1）だけ
+
+## 配り
+- 3.2 の Build Gate の後に作業木の `zensical serve` を起動し直した。配られた `http://127.0.0.1:8000/ukadoc-spec/assets/extra.css` は 200 で、見出しのコメント `site-look-list-markers:` が 3 つ（注意書きの節の箱・対応のベースウェアの札・既定値の札と字下げ）ある（8.1）
+- 内蔵ブラウザの枠で `list/sakura-script/#notes_escape` を開き、点線の箱と中央寄せの見出しが出ることを見た
