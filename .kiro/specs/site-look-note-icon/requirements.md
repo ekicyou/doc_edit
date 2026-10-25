@@ -8,7 +8,7 @@
 ## Introduction
 この spec は、UKADOC のサイトで、注釈で書かれた所の見出しの頭に、開発者が添付した色付きの絵（筆とリボン）を置き、注釈だとひと目で分かるようにし、伺からしい小さな遊びを加える。`site-look-plan` の `decisions.md` で「採る」と決まった C26 を本番の書き方で入れる。方向は決まっているので、ここでは議論し直さない（C27 の白黒の線の絵は採らなかった）。
 
-変えるのは、ukadoc-spec の `assets/`（絵を足すことと、サイトの見た目の指定 `assets/extra.css`）と、補足の項目の見出しに印を付ける組み立ての処理（`scripts/prepare_site.py`）で、原稿は変えない。ukadoc-spec を変えるので、この spec の作業木 `.worktrees/site-look-note-icon/` で、依存先 `site-look-list-markers` の PR（ukadoc-spec #12、`0eb3fb9`）がマージされた後の `origin/main` の上に書き、Build Gate と規約 Gate を通す。PR は原則 1 spec = 1 PR なので（開発者の指示、2026-10-25）、この spec の完了で自分の PR を作ってスクワッシュマージする。
+変えるのは、ukadoc-spec のサイトの見た目の指定 `assets/extra.css`（絵は、中身が同じサイトのロゴ `assets/logo.png` を使い、ファイルは足さない）と、補足の項目の見出しに印を付ける組み立ての処理（`scripts/prepare_site.py`）で、原稿は変えない。ukadoc-spec を変えるので、この spec の作業木 `.worktrees/site-look-note-icon/` で、依存先 `site-look-list-markers` の PR（ukadoc-spec #12、`0eb3fb9`）がマージされた後の `origin/main` の上に書き、Build Gate と規約 Gate を通す。PR は原則 1 spec = 1 PR なので（開発者の指示、2026-10-25）、この spec の完了で自分の PR を作ってスクワッシュマージする。
 
 本文の主語は 2 つある。「UKADOC のサイト」は、この spec の変更を入れた後の公開サイト（とそのプレビュー）の見え方を指す。「site-look-note-icon」は、この spec の作業（ukadoc-spec への変更・確かめ・記録）を指す。
 
@@ -24,7 +24,7 @@
 
 ## Boundary Context
 - **In scope**:
-  - 注釈の絵を ukadoc-spec の `assets/` に置くこと（画像を足す）
+  - 注釈の絵として ukadoc-spec の `assets/logo.png`（中身が同じサイトのロゴ）を使うこと（画像は足さない）
   - 注釈の見出し 34 か所の頭に注釈の絵を置く見え方（Requirement 1〜3）
   - 補足の項目の頭の見出しの印（組み立ての処理で付ける）
   - 注の題の Material の鉛筆の印を外して、注釈の絵に替えること
@@ -89,7 +89,7 @@
 **Objective:** As a doc_edit の開発者と ukadoc-spec のメンテナ, I want 絵がサイトに確かに配られ、目印が当てるべき見出しにだけ付くこと, so that 絵の欠けや、当てる所の間違いを見落とさず、ほかの組み立ての処理と原稿を傷めない
 
 #### Acceptance Criteria
-1. The site-look-note-icon shall 注釈の絵を、ukadoc-spec の `assets/` の下に ASCII の名前のファイルとして置き、サイトの組み立てで公開の頁から読めるようにする（置き場とファイル名は設計で決め、試作の `slp-` の接頭辞は使わない）
+1. The site-look-note-icon shall 注釈の絵として、ukadoc-spec に今ある `assets/logo.png`（中身が同じサイトのロゴ）を使い、サイトの組み立てで公開の頁から読めるようにする（ファイルは足さず、試作の `slp-` の名前は使わない。設計の決定 1）
 2. The site-look-note-icon shall 補足の項目の頭の見出しにだけ目印を付け、目印の数が補足の項目の数（今は 16。実装のときに数え直す）と合うようにする
 3. The site-look-note-icon shall 目印の名前を、試作の `slp-` の接頭辞でなく、`site-look-list-items` の目印の名前の決まり（`bundle-<役>`）にそろえて決め、既にある `bundle-notes`（注釈の節の包み）と取り違えない名前にする
 4. Where 頁が読み物の頁であるとき, the site-look-note-icon shall 補足の項目の目印を付けない（読み物の頁に `note-<数>.md` の単位は無い）
@@ -122,7 +122,7 @@
 **Objective:** As a ukadoc-spec のメンテナ, I want 小さく、絵と目印と見た目の指定に限った変更を、この spec だけの PR で受け取ること, so that 他者も使う公開リポジトリでもレビューしやすい
 
 #### Acceptance Criteria
-1. The site-look-note-icon shall ukadoc-spec の中で、注釈の絵の 1 ファイルを `assets/` に足し、`assets/extra.css` と `scripts/prepare_site.py` だけを変え、原稿（`.md`）・`.nav.yml`・`mkdocs.yml`・`requirements.txt`・Zensical の版を変えない
+1. The site-look-note-icon shall ukadoc-spec の中で、`assets/extra.css` と `scripts/prepare_site.py` だけを変え（`assets/logo.png` は読むだけで、足すファイルは無い）、原稿（`.md`）・`.nav.yml`・`mkdocs.yml`・`requirements.txt`・Zensical の版を変えない
 2. The site-look-note-icon shall `assets/extra.css` のこの spec の指定を塊として足し、塊ごとの注を `/* site-look-note-icon: <何の指定か> */` の短い 1 行にとどめる（説明・わけは spec の記録に書く）
 3. The site-look-note-icon shall 色や大きさを、テーマの色の変数や字の大きさに対する比で決め、テーマの色に依る値を直書きしない
 4. The site-look-note-icon shall 変更を、この spec の作業木 `.worktrees/site-look-note-icon/`（ブランチ `site-look-note-icon`）で、`site-look-list-markers` の PR がマージされた後の ukadoc-spec の `origin/main` の上に書く
@@ -138,4 +138,4 @@
 4. **暗い表示の物差し**（Requirement 4.2）: 数での対比の線は置かず、目標の画面との見比べで確かめる（推奨案）
 5. **印刷**（Requirement 4.7）: 絵は印刷に出なくてもよい（背景の絵として扱う）（推奨案）
 6. **絵の出どころ**（Requirement 8.6）: 絵はこのサイトにもともとあったもので、こちらが感知する必要はない。出どころ・使ってよい範囲には PR の説明でも README・LICENSE でも一切触れない（開発者の指示）
-- 絵の置き場とファイル名（Requirement 5.1）は設計で決める
+- 絵の置き場とファイル名（Requirement 5.1）は、設計で `assets/logo.png` を使うと決めた（設計のディスカッション、2026-10-25）

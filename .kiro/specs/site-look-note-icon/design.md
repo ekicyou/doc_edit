@@ -3,7 +3,7 @@
 ## Overview
 **Purpose**: UKADOC のサイトで仕様を引くゴースト制作者に、注釈で書かれた所（注釈の節 16・補足の項目 16・注の題 2 の計 34 か所）の見出しの頭に、サイトのロゴと同じ色付きの絵（筆とリボン）を置き、注釈だとひと目で分かる見え方と、伺からしい小さな遊びを届ける。`site-look-plan` で「採る」と決まった C26 を、本番の書き方で ukadoc-spec に入れる。
 **Users**: まとめ頁で仕様を引くゴースト制作者と、`dev/shell` などの読み物の頁を読むゴースト制作者（明・暗の表示、幅 375 の狭い画面、印刷を含む）。
-**Impact**: ukadoc-spec の `scripts/prepare_site.py` の `shift_headings()` で、ファイル名が `note-<数>.md` の単位の頭の見出しに目印 `bundle-supplement` を足す（1 行の判断と定数 1 つ、docstring の 1 項目）。`assets/extra.css` の末尾に、注釈の見出しの頭に絵を置く塊と、注の題の Material の鉛筆を絵に替える塊の 2 つを足す。絵は、ukadoc-spec に今ある `assets/logo.png` をそのまま使う（［仮定］A。下の「前提と OPEN QUESTION」の 1）。原稿・設定は変えない。
+**Impact**: ukadoc-spec の `scripts/prepare_site.py` の `shift_headings()` で、ファイル名が `note-<数>.md` の単位の頭の見出しに目印 `bundle-supplement` を足す（1 行の判断と定数 1 つ、docstring の 1 項目）。`assets/extra.css` の末尾に、注釈の見出しの頭に絵を置く塊と、注の題の Material の鉛筆を絵に替える塊の 2 つを足す。絵は、ukadoc-spec に今ある `assets/logo.png` をそのまま使う（決定 1。下の「設計のディスカッションの決定」の 1）。原稿・設定は変えない。
 
 設計の調べで、注釈の絵（試作の写し `slp-notes-icon.png`、88×88、3284 バイト）が、ukadoc-spec の `assets/logo.png`（`mkdocs.yml` の `theme.logo`・`theme.favicon`）とバイトまで同じ（SHA-256 `32983af3…1335d`）と分かった。同じ絵をもう 1 つ置かず、`extra.css` から `url("logo.png")` で読む。要件 5.1・8.1 の「1 ファイルを `assets/` に足す」は、置き場とファイル名を設計に任せた所なので、「`assets/` の下の ASCII の名前のファイル `logo.png` を使い、足すファイルは 0」と読む。足す案（`assets/note-icon.png`）も下に残す。
 
@@ -25,7 +25,7 @@
 - `scripts/prepare_site.py` の、補足の項目の頭の見出しに目印を足す判断: 定数 `NOTE_FILE`、`shift_headings()` の役の class を決める所の 2 行、モジュールの docstring の 1 項目の書き足し
 - 目印の名前 `bundle-supplement`（補足の項目の頭の見出し）と、その付け方の決まり（ファイル名が `note-<数>.md` の単位の頭の見出しに、`bundle-item` に加えて付ける）
 - `assets/extra.css` の、見出しのコメント `/* site-look-note-icon: … */` で始まる 2 つの塊（注釈の見出しの絵・注の題の絵）
-- 絵の置き場の決め（`assets/logo.png` を使う。［仮定］A）
+- 絵の置き場の決め（`assets/logo.png` を使う。決定 1）
 - この spec の記録（`.kiro/specs/site-look-note-icon/verification.md` と `screenshots/`。完了で `completed/` へ移る）: 目印と絵の数・当たらないこと・変わらないこと・画面の見比べ
 
 ### Out of Boundary
@@ -44,7 +44,7 @@
 - 確かめの道具: `zensical serve`、`python -m http.server`（変更の前の控えを配る）、Edge ヘッドレス + CDP の使い捨てのスクリプト、`.kiro/specs/completed/site-look-plan/tools/shot.mjs`（読むだけ）
 
 ### Revalidation Triggers
-- `assets/logo.png` を替えたとき（ロゴを変えると注釈の絵も変わる）: 注釈の絵として使えるかを見直す。分けるなら［仮定］A の代わりの案（`assets/note-icon.png` を足す）に移る
+- `assets/logo.png` を替えたとき（ロゴを変えると注釈の絵も変わる）: 注釈の絵として使えるかを見直す。分けるなら決定 1 の代わりの案（`assets/note-icon.png` を足す）に移る
 - `bundle-supplement` の名前か、付ける単位（ファイル名 `note-<数>.md`）を変えたとき、または原稿の補足の書き方（`note-<数>.md` の置き方）が変わったとき: 目印の数を数え直す
 - `site-look-list-markers` の包み（`div.bundle-notes` と、最初の子が見出しであること）か C04 の見出しの指定を変えたとき: 絵が 16 個に当たり、中央寄せと点線が崩れないことを確かめ直す
 - `site-look-list-items` の役の class の付け方か C01 の帯の値を変えたとき、補足の項目の頭の見出しが `h4` でコードブロックが続く形（記述例の濃い帯 `h4:has(+ .highlight)`）になったとき: 帯の中の絵の見え方を見直す（今は 0 個）
@@ -89,7 +89,7 @@ graph LR
 | 組み立ての処理 | Python 3.12・`scripts/prepare_site.py` | 補足の項目の頭の見出しに `bundle-supplement` を足す | 依存は足さない（`re`・`posixpath`） |
 | Markdown | Python-Markdown の `attr_list`（`mkdocs.yml` のまま） | `{#note-1 .bundle-item .bundle-supplement}` を見出しの class にする | 設定は変えない |
 | 見た目の指定 | CSS（`assets/extra.css`） | 見出しの `::before` と注の題の `::before` の背景の絵 | 新しい道具は足さない |
-| 絵 | `assets/logo.png`（88×88 の PNG、今あるもの） | 注釈の絵 | ［仮定］A。足すファイルは 0 |
+| 絵 | `assets/logo.png`（88×88 の PNG、今あるもの） | 注釈の絵 | 決定 1。足すファイルは 0 |
 | サイト生成 | Zensical 0.0.67（`requirements.txt` のまま） | 頁・`extra.css`・絵の配り | 版は変えない |
 | 確かめ | `zensical serve`、`python -m http.server`、Edge ヘッドレス + CDP、`shot.mjs` | 数・効き・画面 | `shot.mjs` は読むだけ |
 
@@ -101,7 +101,7 @@ ukadoc-spec（作業木 .worktrees/site-look-note-icon/、ブランチ site-look
 ├── scripts/
 │   └── prepare_site.py          # NOTE_FILE を足し、shift_headings() で note-<数>.md の頭の見出しに bundle-supplement を足す
 └── assets/
-    ├── logo.png                 # 読むだけ（注釈の絵として使う。［仮定］A）
+    ├── logo.png                 # 読むだけ（注釈の絵として使う。決定 1）
     └── extra.css                # 末尾に site-look-note-icon の塊を 2 つ足す
 
 .kiro/specs/site-look-note-icon/（doc_edit）
@@ -109,7 +109,7 @@ ukadoc-spec（作業木 .worktrees/site-look-note-icon/、ブランチ site-look
 └── screenshots/                 # 新規。下の VerificationRecord の画面
 ```
 
-ukadoc-spec で変えるのは上の 2 ファイルだけで、足すファイルは無い（8.1。［仮定］A。代わりの案 B では `assets/note-icon.png` を 1 つ足し、2 つの塊の `url()` を `url("note-icon.png")` にする）。原稿・`index.md` の「## 一覧」・`.nav.yml`・`INDEX.md`・`mkdocs.yml` には触れない。
+ukadoc-spec で変えるのは上の 2 ファイルだけで、足すファイルは無い（8.1。決定 1。代わりの案 B では `assets/note-icon.png` を 1 つ足し、2 つの塊の `url()` を `url("note-icon.png")` にする）。原稿・`index.md` の「## 一覧」・`.nav.yml`・`INDEX.md`・`mkdocs.yml` には触れない。
 
 ### Modified Files
 
@@ -171,7 +171,7 @@ ukadoc-spec で変えるのは上の 2 ファイルだけで、足すファイ�
 - **暗い表示**: 絵は色を変えず、明・暗で同じ指定にする（4.1・4.2・4.3）。C01 の帯の地は暗い表示で薄い白の重ね（`--md-default-fg-color--lightest`）で、目標の画面 `mock-propertysystem-C26-dark.png` と同じ帯の上の絵になる。補足の項目の見出しは濃い帯（`bundle-category`・`h4:has(+ .highlight)`）には入らない（`note-<数>.md` は `index.md` でなく、頭の見出しの次にコードブロックが続く原稿は 0）
 - **注の題**: テーマの `.md-typeset .note>.admonition-title:before`（詳細度 0,3,1）と同じ詳細度（`:is()` は中の最も高い `.admonition-title` を持つ）で、テーマより後に読まれて勝つ。`background` の一括の指定で地の色 `#448aff` を透明に戻し（一括の指定は書かない値を初めの値に戻す）、`mask-image` を `none` にして鉛筆の型抜きを外す。位置と `1rem` の枠（題の字 `.64rem` の約 1.56 倍）はテーマのまま（3.1・3.2）。`.note` の題だけに当て、`.tip`・`.warning` は触れない（3.4）。本文の中の見出し（「※1」など）は `.admonition-title` でないので当たらない（3.3）。題の字に依らない（3.5）。`summary` は `??? note`（今は `pymdownx.details` が無く 0 個）のため、テーマと同じ形にそろえた
 - **飾り**: `content: ""` の背景の絵なので、読み上げ・見出しの字・検索の字・目次の字にならない（4.5・6.1・6.2）
-- **印刷**: テーマは `.md-typeset` に `print-color-adjust: exact` を当てているので、多くのブラウザで絵も印刷される。背景の絵が出ないときも `1.5em` の空きが残るだけで、見出しの字は今と同じに印刷される（4.7。［仮定］F）
+- **印刷**: テーマは `.md-typeset` に `print-color-adjust: exact` を当てているので、多くのブラウザで絵も印刷される。背景の絵が出ないときも `1.5em` の空きが残るだけで、見出しの字は今と同じに印刷される（4.7。決定 6）
 - **色**: 色の指定は無い。地は透明（8.3）
 
 ### 部品とファイルの対応
@@ -180,7 +180,7 @@ ukadoc-spec で変えるのは上の 2 ファイルだけで、足すファイ�
 | SupplementMarker | `scripts/prepare_site.py`（作業木） | 変える |
 | NoteHeadIcon | `assets/extra.css`「注釈の見出しの絵」 | 足す |
 | NoteTitleIcon | `assets/extra.css`「注の題の絵」 | 足す |
-| NoteIconAsset | `assets/logo.png` | 読むだけ（［仮定］A） |
+| NoteIconAsset | `assets/logo.png` | 読むだけ（決定 1） |
 | IconCheck | なし（配られた HTML と見た目を調べる使い捨てのスクリプト。置き場は Claude のスクラッチ。手順と結果は `verification.md`） | 作らない |
 | ShotTool | `.kiro/specs/completed/site-look-plan/tools/shot.mjs` | 読むだけで使う |
 | VerificationRecord | `.kiro/specs/site-look-note-icon/verification.md`・`screenshots/` | 新規 |
@@ -233,7 +233,7 @@ flowchart TD
 | 4.4 | 試作の大きさより大きくしない | NoteHeadIcon（`1.5em`）, NoteTitleIcon（テーマの `1rem`） | 大きさの値 | I |
 | 4.5 | 飾り。読み上げ・見出し・検索・目次の字にしない | NoteHeadIcon, NoteTitleIcon（`content: ""` の背景） | 本文の字が前と同じ | H |
 | 4.6 | 本文の字の大きさと行間を変えない | NoteHeadIcon（見出しの `::before` だけ） | 本文に当たる指定なし | I |
-| 4.7 | 印刷で見出しの字が今と同じ | NoteHeadIcon（背景の絵） | ［仮定］F | — |
+| 4.7 | 印刷で見出しの字が今と同じ | NoteHeadIcon（背景の絵） | 決定 6 | — |
 | 5.1 | 絵を `assets/` の下の ASCII の名前で置き、公開の頁から読める | NoteIconAsset（`assets/logo.png`）, IconCheck | `/ukadoc-spec/assets/logo.png` が 200 | H |
 | 5.2 | 補足の項目の頭の見出しにだけ目印、数が 16 | SupplementMarker, IconCheck | `bundle-supplement` の数 | H |
 | 5.3 | 目印の名前を `bundle-<役>` に、`bundle-notes` と紛れない | SupplementMarker | `bundle-supplement` | — |
@@ -252,7 +252,7 @@ flowchart TD
 | 7.5 | `dev/shell` の注の題と `h4` の注釈の節を撮る | ShotTool, VerificationRecord | 画面の一覧 | I |
 | 7.6 | 二重に重なった画面の撮り直し | ShotTool | 画面の目視 | J |
 | 7.7 | 見せる前に Ctrl+F5 を頼む | VerificationRecord | — | — |
-| 8.1 | 変えるのは `extra.css` と `prepare_site.py`、絵は `assets/` に | SupplementMarker, NoteHeadIcon, NoteTitleIcon, NoteIconAsset | `git diff --stat origin/main`（［仮定］A で 2 ファイル） | — |
+| 8.1 | 変えるのは `extra.css` と `prepare_site.py`、絵は `assets/` に | SupplementMarker, NoteHeadIcon, NoteTitleIcon, NoteIconAsset | `git diff --stat origin/main`（決定 1 で 2 ファイル） | — |
 | 8.2 | 塊として足し、注は 1 行 | NoteHeadIcon, NoteTitleIcon | `/* site-look-note-icon: <何> */` | — |
 | 8.3 | 大きさは字に対する比、色を直書きしない | NoteHeadIcon（`em`）, NoteTitleIcon（テーマの枠） | 色の指定なし | — |
 | 8.4 | 自分の作業木で `origin/main` の上に書く | （作業木） | `.worktrees/site-look-note-icon/` | A, B |
@@ -409,7 +409,7 @@ interface IconCheck {
 | `after-propertysystem-notes-{light,dark}.png` | `list/propertysystem/` | `#notes_sound_meta` | 目標の画面なし（段が `h4` の注釈の節。7.5） |
 | `after-dev-shell-note-{light,dark}.png` | `dev/shell/` | `.admonition.note` | 目標の画面なし（注の題。7.5） |
 
-- 幅 375 は `list/sakura-script`・`list/propertysystem`・`list/shiori-event-ex`・`dev/shell` で明・暗の `scrollWidth` = `innerWidth` = 375 を記録し、画面は残さない（6.3）
+- 幅 375 は `list/sakura-script`・`list/propertysystem`・`list/shiori-event-ex`・`dev/shell` で明・暗の `scrollWidth` = `innerWidth` = 375 を記録し、画面は残さない（6.3）。あわせて、いちばん長い `notes_` の見出しを幅 375 で目で見て、絵だけが 1 行目に残らないことを 1 行記録する（決定 7）
 - 目標の画面にはほかの候補（C04 の箱など）も入っているので、比べるのは見出しの頭の絵（大きさ・縦の位置・字との間・暗い表示での見え方）だけ
 - 開発者に画面や `serve` を見せるときは、Ctrl+F5 を頼む（7.7）
 
@@ -442,12 +442,13 @@ interface IconCheck {
 - PR（8.6）: `/kiro-complete` で、この spec だけの PR を作ってスクワッシュマージする。説明には、PR を出すときの roadmap の並び（出し済みの PR の番号・この PR・この後の PR）を短く並べ、この PR だけで完結してマージしてよいこと、中身で依る先が `site-look-list-markers` の PR #12（`bundle-notes` の包み）と `site-look-list-items` の PR #11（`bundle-item` と `bundle-<役>` の決まり）であることを書く。絵については「サイトのロゴの絵 `assets/logo.png` を注釈の見出しにも使う」ことだけを書き、README などほかのファイルにも何も書き足さない（8.6）。この PR だけでサイトは壊れない（目印と見た目の指定がそろって入る）
 - 並行: `site-look-sakura-script-highlight` の作業木も `extra.css` の末尾に塊を足す。どちらが先に入っても、後の方が `origin/main` に追いついて両方の塊を並べる
 
-## 前提と OPEN QUESTION
-設計で、確かめた事実か要件の決定に基づいて決めた。開発者の判断で変わりうるものを挙げる（詳しいわけは `research.md` の「設計の調査」）。
+## 設計のディスカッションの決定（2026-10-25）
+開発者が全議題を推奨案で承認した（2026-10-25）。詳しいわけは `research.md` の「設計の調査」。
 
-1. **絵の置き場と名前**（［仮定］A。5.1・8.1）: 注釈の絵が `assets/logo.png`（サイトのロゴとファビコン）とバイトまで同じなので、新しいファイルを足さず `url("logo.png")` で読む。足すファイルが 0 になり、要件 8.1・Boundary Context の「画像を足す」「1 ファイルを `assets/` に足す」と字面が違う（要件の決定で置き場と名前は設計に任された）。良い点: 同じ絵が 2 つにならず、PR が小さく、ファビコンで既に読まれた絵を使い回せる。気を付ける点: ロゴを替えると注釈の絵も変わる（Revalidation Triggers）。代わりの案 B: `assets/note-icon.png`（`assets/image/` は原稿の図の置き場なので、`extra.css` と同じ `assets/` の直下）に同じ絵を足し、`url("note-icon.png")` で読む。A を採るなら、要件 5.1・8.1 と Boundary Context の字面を「`assets/logo.png` を使う（足すファイルは無い）」に直す
-2. **補足の目印の名前**（［仮定］B。5.3）: `bundle-supplement`（「補足」の役の名前。`bundle-notes` と語が違い、取り違えない）。代わりの案: `bundle-aside`、`bundle-note-item`（`bundle-notes` と 1 語目が同じで紛れやすい）
-3. **目印を付ける所**（［仮定］C）: 役の class を決める `shift_headings()` に 2 行を足す（`bundle-item`・`bundle-category` と同じ所。見出しの行を 1 回で書く）。代わりの案: `add_markers()` で見出しの行の `}` の前に足す（目印の処理は 1 か所に集まるが、見出しの行を書き直す 2 回目の処理になる）
-4. **大きさと並び**（［仮定］D。1.1・2.1・4.4）: 試作の C26 の値（`1.5em`・`.35em`・`-.35em`）を、中央寄せの注釈の節の見出しと左寄せの帯の見出しの両方に同じに使う。目標の画面と合うかは実装の画面で見比べる
-5. **注の題の絵の大きさ**（［仮定］E。3.1・4.4）: テーマの `1rem` の枠（題の字の約 1.56 倍）と位置をそのまま使い、中身だけを替える。代わりの案: 枠を `1.5em`（題の字の 1.5 倍）に替える（テーマの位置の指定 `top:.625em` との合わせ直しが要る）
-6. **印刷**（［仮定］F。4.7）: 見出しの絵の指定を `@media screen` で包まず、印刷でも同じ指定にする。テーマが `.md-typeset` に `print-color-adjust: exact` を当てているので、多くのブラウザで絵も印刷される。背景の絵が出ない環境では見出しの字の前に `1.5em` の空きが残る（字は今と同じ）。印刷の画面は撮らない。代わりの案: 見出しの絵の塊を `@media screen` の中に書き、印刷は今とまったく同じにする（注の題は、印刷でもテーマの鉛筆より絵の方がそろうので包まない）
+1. **絵の置き場と名前**（決定 1。5.1・8.1）: 注釈の絵が `assets/logo.png`（サイトのロゴとファビコン）とバイトまで同じなので、新しいファイルを足さず `url("logo.png")` で読む。足すファイルは 0。良い点: 同じ絵が 2 つにならず、PR が小さく、ファビコンで既に読まれた絵を使い回せる。気を付ける点: ロゴを替えると注釈の絵も変わる（Revalidation Triggers）。代わりの案 B: `assets/note-icon.png`（`assets/image/` は原稿の図の置き場なので、`extra.css` と同じ `assets/` の直下）に同じ絵を足し、`url("note-icon.png")` で読む。要件 5.1・8.1 と Boundary Context の字面も「`assets/logo.png` を使う（足すファイルは無い）」に直した
+2. **補足の目印の名前**（決定 2。5.3）: `bundle-supplement`（「補足」の役の名前。`bundle-notes` と語が違い、取り違えない）。代わりの案: `bundle-aside`、`bundle-note-item`（`bundle-notes` と 1 語目が同じで紛れやすい）
+3. **目印を付ける所**（決定 3）: 役の class を決める `shift_headings()` に 2 行を足す（`bundle-item`・`bundle-category` と同じ所。見出しの行を 1 回で書く）。代わりの案: `add_markers()` で見出しの行の `}` の前に足す（目印の処理は 1 か所に集まるが、見出しの行を書き直す 2 回目の処理になる）
+4. **大きさと並び**（決定 4。1.1・2.1・4.4）: 試作の C26 の値（`1.5em`・`.35em`・`-.35em`）を、中央寄せの注釈の節の見出しと左寄せの帯の見出しの両方に同じに使う。目標の画面と合うかは実装の画面で見比べる
+5. **注の題の絵の大きさ**（決定 5。3.1・4.4）: テーマの `1rem` の枠（題の字の約 1.56 倍）と位置をそのまま使い、中身だけを替える。代わりの案: 枠を `1.5em`（題の字の 1.5 倍）に替える（テーマの位置の指定 `top:.625em` との合わせ直しが要る）
+6. **印刷**（決定 6。4.7）: 見出しの絵の指定を `@media screen` で包まず、印刷でも同じ指定にする。テーマが `.md-typeset` に `print-color-adjust: exact` を当てているので、多くのブラウザで絵も印刷される。背景の絵が出ない環境では見出しの字の前に `1.5em` の空きが残る（字は今と同じ）。印刷の画面は撮らない。代わりの案: 見出しの絵の塊を `@media screen` の中に書き、印刷は今とまったく同じにする（注の題は、印刷でもテーマの鉛筆より絵の方がそろうので包まない）
+7. **幅 375 での折り返し**（6.3・1.3。設計の検証の重大な課題 2）: `scrollWidth` だけでは、中央寄せの長い注釈の節の見出しで絵だけが 1 行目に残る折り返しを見落とす。実装で、いちばん長い `notes_` の見出しを幅 375 の明るい表示で目で見て、`verification.md` に 1 行残す。絵だけが 1 行目に残るときは、値を勝手に変えず、画面を添えて開発者に提示する

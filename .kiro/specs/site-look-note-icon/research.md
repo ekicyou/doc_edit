@@ -132,3 +132,9 @@
 - `kiro-spec-design` の `rules/design-principles.md`・`design-discovery-light.md`・`design-synthesis.md`・`design-review-gate.md`、`.kiro/settings/templates/specs/design.md`・`research.md`
 - 型として、`.kiro/specs/completed/site-look-list-markers/design.md`（塊の書き方・`prepare_site.py` の差分・確かめの部品・画面の一覧）
 - 遊びの条件と飾りの扱い（読み上げに出さない `content: ""` の背景の絵）は、要件 4.5 と brief の「遊びの条件」による
+
+## 設計のディスカッションの決定（2026-10-25）
+開発者が全 7 議題を推奨案で承認した（design.md の「設計のディスカッションの決定」1〜7）。
+- 決定 1: 絵は中身が同じ `assets/logo.png` を使い、ファイルを足さない。同じ絵を 2 つ置かず PR を小さくするため。要件 5.1・8.1・Boundary Context の字面もこれに合わせて直した
+- 決定 2〜6: `bundle-supplement`、`shift_headings()` の 2 行、試作 C26 の値、注の題はテーマの `1rem` の枠のまま、印刷は `@media screen` で包まない（どれも設計の下書きのまま）
+- 決定 7: 設計の検証の重大な課題 2（幅 375 の中央寄せの折り返し）は、実装でいちばん長い `notes_` の見出しを目で見て `verification.md` に 1 行残す
