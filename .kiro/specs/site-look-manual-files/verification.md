@@ -1,5 +1,63 @@
 # 確かめの記録: site-look-manual-files
 
+## 測った版と日付
+
+- 日付: 2026-10-25〜26
+- 作業木: `.worktrees/site-look-manual-files/`（ブランチ `site-look-manual-files`。ukadoc-spec の作業木）の `75c7433`（3.3 のコミット。`origin/main` の上に 1 つ）。4.2〜4.5 と 5.1 の Build Gate はこの版で測った
+- `origin/main`: `b1f8ab1`（PR #14 のマージの後）。変更の前の控え（1.2）はこの版。4.1 で fetch し直しても進んでいない
+- 頁: 作業木の `zensical serve`（`http://127.0.0.1:8000/ukadoc-spec/…`）。控えは 8010、4.3 の今の形の写しは 8020
+- 測りのブラウザ: Edge ヘッドレス + CDP（`shot.mjs` と、スクラッチに置いた使い捨てのスクリプト）
+- 開発者に画面や `serve` を見せるときは、古い `extra.css`・`filetree.js` が残らないよう Ctrl+F5（強制の再読み込み）を頼む（7.10）
+
+## 流した式
+
+```sh
+# Build Gate（作業木 .worktrees/site-look-manual-files/ の中で）
+../../.venv/Scripts/python scripts/prepare_site.py
+../../.venv/Scripts/zensical build --strict
+git diff --stat origin/main
+```
+
+測りのスクリプト（`tools` = `C:/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/95cb4bf7-32a6-4bf5-b971-42e18f7e2f04/scratchpad/tools/`。どれも使い捨てで、spec の完了で消す。`shot.mjs` だけは spec の記録に残る）。流し方の細かい所は各節の「流した式」に書いた。
+
+| スクリプト | 流し方 | 何を見たか | 節 |
+|---|---|---|---|
+| `tools/snapshot.py` | `PY/python -I snapshot.py <木> before.json｜after.json` | 40 頁の題・id・¶・目次・本文の字、`_raw/`・`llms.txt` の sha256 | 1.2・4.2 |
+| `tools/mark_manual_examples.py` | 作業木の `scripts` を読み込み `python -I` | `mark_manual()` の 11 例 | 2 |
+| `tools/treecheck.js` | `node treecheck.js <作業木>/assets/filetree.js`（Node の `vm` の偽の `document`） | 木の例の表 | 3.1・4.3 |
+| `tools/markercheck.py` | `PY/python -I markercheck.py after.json`（8000 と 8010 を取る） | 配り・目印の数・漏れ・変わらないこと | 4.2 |
+| `tools/treecount.mjs` | `node treecount.mjs <口> <頁…>` | 頁ごとの木・ファイル名の数と字の違い（両方の形） | 4.3 |
+| `tools/probe44*.mjs` | `node probe44{,c,d,e,g,h}.mjs http://127.0.0.1:8000/ukadoc-spec/` | 位置・対比・ホバーとフォーカス・切り替え・CSSOM・印刷の media | 4.4 |
+| `.kiro/specs/completed/site-look-plan/tools/shot.mjs` | `node shot.mjs <url> <セレクタ> <出力> <light｜dark> <幅> <高さ>`（読むだけで使い、直していない） | `after-` の画面 14 枚 | 4.5 |
+| `tools/ghostrows.py` | `python ghostrows.py "<spec>/screenshots/after-*.png"`（PIL） | 二重の跡（左右の端のヘッダの色の行） | 4.5 |
+| `tools/keep45.mjs` | `node keep45.mjs http://127.0.0.1:8000/ukadoc-spec/ http://127.0.0.1:8010/ keep45.json` | 検索の強調・コピーの字・`\`・幅 375 | 4.5 |
+
+重ねの計算と対比の式（`site-look-list-items` の `verification.md` の「流した式」のまま。頁の中で流した）:
+
+```js
+// 地: 要素から html までの backgroundColor を、白の上に外（html）から順に重ねる。字が半透明なら、その地に重ねてから測る
+const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return { r: m[0], g: m[1], b: m[2], a: m.length > 3 ? m[3] : 1 }; };
+const over = (f, b) => ({ r: f.r*f.a + b.r*(1-f.a), g: f.g*f.a + b.g*(1-f.a), b: f.b*f.a + b.b*(1-f.a), a: 1 });
+const bgOf = (el) => { const chain = []; for (let e = el; e; e = e.parentElement) chain.push(getComputedStyle(e).backgroundColor); let c = { r: 255, g: 255, b: 255, a: 1 }; for (const s of chain.reverse()) c = over(parse(s), c); return c; };
+// WCAG 2.x の相対輝度と対比（小数 2 桁）
+const lum = (c) => { const [r,g,b] = [c.r,c.g,c.b].map(v => { v/=255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); }); return 0.2126*r + 0.7152*g + 0.0722*b; };
+const ratio = (a, b) => { const [x,y] = [lum(a), lum(b)].sort((p,q)=>q-p); return Math.round((x+0.05)/(y+0.05)*100)/100; };
+// 字: fg = over(parse(getComputedStyle(el).color), bgOf(el))。「頁の地」は bgOf(.md-content__inner)
+```
+
+## 設計の「Testing Strategy」との対応
+
+| 項目 | 結果 | 節 |
+|---|---|---|
+| Build Gate | `prepare_site.py`・`build --strict` とも exit 0、変えたのは 4 ファイルだけ | Build Gate と規約 Gate |
+| 名前の目印の例 | 11 例すべて期待どおり | 目印の例（2） |
+| 目印の数 | 73・72・場合分け 8・名前だけ 1・段落に分かれない形 12、ほかの頁 0、漏れ 0、`filetree.js` の読み込みが 40 頁に 1 | 目印（4.2） |
+| 変わらないこと | 40 頁の題・id・¶・目次が同じ、manual の外の本文の字が同じ、manual の違いは外した「`:`」72 だけ、`_raw/`・`llms.txt` が同じ（`markercheck.py` の ALL OK） | 目印（4.2） |
+| 木 | 例の表 ALL OK、頁ごとの数が表と同じ、字の違い 0、木でないブロックの `span` 0、両方の形で同じ数 | 木の例（3.1）・木（4.3） |
+| 位置と対比 | 帯の左の端 16・幅 711・説明 40 の 1 通り、点は `none`・入れ子は `disc`。すべての行が線を満たす。切り替えで読み込み直さずに変わる。暗い表示の指定はすべて `@media screen` の中（暗い表示のまま印刷した色は記録だけ） | 位置（4.4）・対比（4.4） |
+| 失わないもの | 検索の強調の数と見え方が控えと同じ、幅 375 で 10 頁とも 375、コピーのボタンと字が控えと同じ、`directory` の帯の `\` | 失わないもの（4.5） |
+| 目標の画面との見比べ | 14 枚、撮り直し 0。決めたとおりの違い 3 つのほかは目標の画面と同じ。目標の画面の無い 5 組も見た | 画面（4.5） |
+
 ## 変更の前（1.2）
 
 - 日付: 2026-10-25
@@ -36,7 +94,7 @@ manual の頁の数（控え）:
 
 - 設計の MarkerCheck の見込み（¶ は `directory` 3・ほか 1、`md-nav__link` は `directory` 62・ほか 56）と同じ
 
-## 目印の例（タスク 2）
+## 目印の例（2）
 
 `mark_manual()` に字を直に渡した（`scratchpad/tools/mark_manual_examples.py`、作業木の `scripts` を読み込み `python -I` で流す）。11 例すべて期待どおり。
 
@@ -56,7 +114,7 @@ manual の頁の数（控え）:
 
 `_site_src/manual/*.md` の `{: .manual-item }` の数: `balloon` 22・`directory` 12・`ghost` 10・`install` 7・`owner-draw-menu` 3・`shell` 12・`translator` 0・`update` 7、計 73（設計の表と同じ）。manual の外の `_site_src/` は 0。外す「`:`」は原稿の数えで計 72（`ghost` 9、ほかは目印と同じ）。manual の原稿で `- **` で始まり形に合わない行は 0。`prepare_site.py` と `zensical build --strict` は exit 0。
 
-## 木の例（タスク 3.1）
+## 木の例（3.1）
 
 作業木の `assets/filetree.js`（設計の「Modified Files」の中身と 1 字も違わない）を、Node の `vm` で偽の `document` の上に流した（試しのスクリプトは spec の外のスクラッチの `tools/treecheck.js`）。各行は `(myghost)`・`:` の行と同じ木に入れて流し、包んだ字と、包んだ後の `textContent` が元の字と同じことを見た。
 
@@ -192,11 +250,9 @@ node treecount.mjs http://127.0.0.1:8020/ $(cat pages.txt) > old-all.json
 
 `treecount.mjs` と `treecheck.js` は spec の外のスクラッチの `tools/` に置いた使い捨てのスクリプトである。
 
-<!-- 4.4 の結果。測った日 2026-10-25、作業木 75c7433 の zensical serve（http://127.0.0.1:8000/ukadoc-spec/）、幅 1000・高さ 700、Edge ヘッドレス + CDP -->
-
 ## 位置（4.4）
 
-測った頁: manual の 8 頁（`translator` は帯 0）。明（`default`）で測った。
+測った日 2026-10-25、作業木 `75c7433` の `zensical serve`（`http://127.0.0.1:8000/ukadoc-spec/`）、幅 1000・高さ 700、Edge ヘッドレス + CDP。測った頁: manual の 8 頁（`translator` は帯 0）。明（`default`）で測った。
 
 | 頁 | 帯 | 帯の左の端 | 帯の幅 | 説明の左の端（行の頭） | 一番外の項目の点 | 入れ子の箇条書きの点 | 帯の中のリンク |
 |---|---|---|---|---|---|---|---|
@@ -296,16 +352,7 @@ node probe44h.mjs http://127.0.0.1:8000/ukadoc-spec/                # balloon �
 - 明・暗: 頁を明で開き、`body` の `data-md-color-scheme` が `default` であることを確かめてから測り、ヘッダの切り替えのラベルを `click()` して `slate` に移して測った（読み込み直さない）
 - ホバー: `Input.dispatchMouseEvent`（`mouseMoved`）で要素の最初の行の箱の左から 8px・縦の中央にポインタを載せ、`:hover` が真であることを確かめた。測る前後でポインタは左下の隅（1, 699）へ外した
 - フォーカス: `Emulation.setFocusEmulationEnabled({ enabled: true })` を入れ、`focus()` の後に `Input.dispatchKeyEvent` の Shift+Tab → Tab で同じ要素に戻した（`:focus`・`:focus-visible` が真）
-- 対比の式は `site-look-list-items` の `verification.md` の「流した式」のまま（頁の中で流した）:
-
-```js
-const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return { r: m[0], g: m[1], b: m[2], a: m.length > 3 ? m[3] : 1 }; };
-const over = (f, b) => ({ r: f.r*f.a + b.r*(1-f.a), g: f.g*f.a + b.g*(1-f.a), b: f.b*f.a + b.b*(1-f.a), a: 1 });
-const bgOf = (el) => { const chain = []; for (let e = el; e; e = e.parentElement) chain.push(getComputedStyle(e).backgroundColor); let c = { r: 255, g: 255, b: 255, a: 1 }; for (const s of chain.reverse()) c = over(parse(s), c); return c; };
-const lum = (c) => { const [r,g,b] = [c.r,c.g,c.b].map(v => { v/=255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); }); return 0.2126*r + 0.7152*g + 0.0722*b; };
-const ratio = (a, b) => { const [x,y] = [lum(a), lum(b)].sort((p,q)=>q-p); return Math.round((x+0.05)/(y+0.05)*100)/100; };
-// 字: fg = over(parse(getComputedStyle(el).color), bgOf(el))。「頁の地」は bgOf(.md-content__inner)
-```
+- 対比の式は頭の「流した式」の重ねの計算と対比の式（頁の中で流した）
 
 ## 画面（4.5）
 
@@ -408,3 +455,21 @@ node keep45.mjs http://127.0.0.1:8000/ukadoc-spec/ http://127.0.0.1:8010/ keep45
 ```
 
 `ghostrows.py`・`keep45.mjs`・`keep45.json` と見るための画面（`shots45/`）は、spec の外のスクラッチ `C:/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/95cb4bf7-32a6-4bf5-b971-42e18f7e2f04/scratchpad/` の下に置いた使い捨てのもの。
+
+## Build Gate と規約 Gate（5.1）
+
+```sh
+# 作業木 .worktrees/site-look-manual-files/ の中で（2026-10-26、75c7433。8000 の serve は動かしたまま、その場で build した）
+../../.venv/Scripts/python scripts/prepare_site.py    # exit 0
+../../.venv/Scripts/zensical build --strict           # exit 0（No issues found）
+git diff --stat origin/main
+#  assets/extra.css        | 28 ++++++++++++++++++++++++++--
+#  assets/filetree.js      | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
+#  mkdocs.yml              |  1 +
+#  scripts/prepare_site.py | 19 ++++++++++++++++++-
+#  4 files changed, 94 insertions(+), 3 deletions(-)
+```
+
+- 作業木の `git status` は空（未コミットの変更なし）。変えたのは 8.1 の 4 ファイルだけ
+- 直書きの色（5.3）: `git diff origin/main -- assets/extra.css assets/filetree.js` の足した行に `#…`・`rgb(…)`・`rgba(…)`・`hsl(…)` が 0。木のファイル名の色は `var(--md-typeset-a-color)` だけで、帯は C01 の塊のセレクタに `.manual-item` を足して宣言を分け合った（帯の字下げの塊は色を持たない）。暗い表示の `#8fb4e8` は前からある `extra.css` の値で、この spec は触っていない
+- 規約 Gate（ukadoc-spec の `CLAUDE.md`。8.4）: 原稿（`.md`）・`index.md` の「## 一覧」・`.nav.yml`・`INDEX.md`・`requirements.txt` は変えていない（原稿の書式・リンクの決まりは当たらない）。ファイル名は ASCII。`prepare_site.py` の注と docstring は既にある書き方（日本語・だ/である調）にそろえ、`extra.css` の注は塊ごとに `/* site-look-manual-files: <何> */` の 1 行、`filetree.js` の頭の注も 1 行（8.2）。コミットの文は ukadoc-spec の履歴の型の日本語の 1 文
