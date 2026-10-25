@@ -275,6 +275,7 @@ interface ContrastProbe {
 ##### State Management
 - `verification.md` の中身（日本語、`requirements.md` の文体）:
   - 測った版（作業木のコミット、`origin/main` の版）と日付
+  - 測りに流した式（`getComputedStyle` の取り方と WCAG の対比の式）をそのまま。テーマの色が変わったときに同じ手順で測り直せるようにする
   - 上の「測る所と線」の表に、測った `fg`・`bg`・対比を埋めたもの
   - 配られた `extra.css` の確かめ（5.1）、`screenOnly()` の結果（2.4）、切り替えの確かめ（1.6）
   - 画面の見比べ: `after-sakura-script-dark.png` と `mock-sakura-script-C24-dark.png` のリンクと目次の今の頁の色、`before-` と `after-sakura-script-light.png` の違いの無さ（2.3・5.2）。目標の画面にはほかの候補（C01〜C21）が入っているので、比べるのは色だけ
@@ -290,7 +291,7 @@ interface ContrastProbe {
 | `serve` が書きかけの `_site_src/` を拾い、`extra.css` が 404 か古い | 5.1 の `served()` が偽 | `serve` を止め、`prepare_site.py` → `build --strict` → 起動し直す |
 | 撮る途中の描き直しで画面が二重に重なる | 上の端以外の左右の端にヘッダの紺の行がある | 撮り直す（5.5） |
 | 開発者のブラウザに古い `extra.css` が残る | 開発者の画面だけ紺のまま | Ctrl+F5 を頼む（5.6） |
-| 対比が線に届かない | ContrastProbe の表 | 色を勝手に選ばず、測った数を添えて開発者に提示する |
+| 対比が線に届かない | ContrastProbe の表 | 色を勝手に選ばず、そこで作業を止め、測った数を添えて開発者に提示して判断を待つ（タスクにも、止めて判断を待つ所として書く） |
 | `origin/main` が `extra.css` を変えて進み、ぶつかる | merge のぶつかり | 両方の塊を並べて残し、Build Gate をやり直す（`workflow.md` の「開いている PR に追いつく」） |
 
 ## Testing Strategy
