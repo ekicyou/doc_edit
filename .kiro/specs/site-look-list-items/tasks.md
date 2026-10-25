@@ -108,7 +108,7 @@
   - _Requirements: 1.1, 1.2, 1.6, 2.4, 3.1, 3.7, 4.2, 4.4, 5.5, 7.1, 7.3, 7.4, 8.3, 8.4, 8.6_
 
 - [ ] 5. 記録と単位の引き継ぎ
-- [ ] 5.1 `verification.md` の記録を仕上げる
+- [x] 5.1 `verification.md` の記録を仕上げる
   - 頭に、測った版（作業木のコミット、`origin/main` の版）と日付、流した式（重ねの計算を含む）をそのまま書く
   - 2.2・4.2〜4.6 の節がそろっていることを見て、欠けた所を埋め、変数で出せない 4 つの色とその対比、Build Gate・規約 Gate・`git diff --stat origin/main` を書く
   - 開発者に画面やプレビューを見せるときは Ctrl+F5 を頼むことを書き、見せるときに実際に頼む
@@ -125,3 +125,4 @@
 ## Implementation Notes
 - 変更の前の控え `.worktrees/_baseline-site-look-list-items/` は git に載らない。`/kiro-complete site-look-list-items` の後始末で消す
 - 控えの置き場の `snapshot.py`（20 頁の id・headerlink・md-nav__link・hr と `_raw/` のハッシュ）と `overlap.mjs`（ボタンの重なり、Edge ヘッドレス）を 2.2・4.4・4.6 でもそのまま使い、物差しをそろえる。変更の前の重なりは幅 1000 で 172/288（設計の 165 は幅 1024 の数）
+- doc_edit の `.venv` の土台の Python（uv の 3.12.13）が 2026-10-25 にセッションの外で消え、`.venv` が動かない。5.1 以降はスクラッチの使い捨ての venv（3.13.15）で流した。`.venv` の作り直しは開発者の判断
