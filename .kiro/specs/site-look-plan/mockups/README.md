@@ -194,6 +194,24 @@
 | `mock-sakura-script-C26-light.png`・`mock-sakura-script-C26-dark.png` | C26（同じく C26） | `mock-sakura-script-C04-*.png` | `#notes_escape` | 「さくらスクリプトのエスケープ」「さくらスクリプトの寿命」の見出しの頭に、添付の色付きの絵 |
 | `mock-sakura-script-C27-light.png`・`mock-sakura-script-C27-dark.png` | C27（同じく C27） | `mock-sakura-script-C04-*.png` | `#notes_escape` | 同じ所に、白黒の線の絵（暗い表示では白い線） |
 
+## 続く答えを受けた試作（2026-10-25、`afb2152`）
+
+開発者が「白黒はデザインが破綻したので、カラーアイコンをそのまま使って。なお、注釈表記がある箇所はほかにもあったかもしれないが、同様な対応よろしくね」「表デザインに変えた方がよさそうなパターンが他にも存在する。Markdownはいじらず、対応するパターンが出てきたら表htmlにする方針の方がよいかもしれない」と答えたので、C26 を広げ、C23 を作り直した。
+
+- C26 の広げ: 注釈の書き方を組み立てたサイトの 40 頁で数えた。注釈の節（`id` が `notes_` で始まる見出し）16 個、補足の項目（`note-*.md` の「補足」の見出し。`id` が `note-1`・`balloon-text-note-1` のように `note-` と数で終わる）16 個、`!!! note "注"` 2 個（`dev/shell`）。補足の項目は CSS の属性の指定では数で終わる形を見分けられないので、`assets/mockup.js` が見出しに `slp-note-head` を付け、`extra.css` はそれと `notes_` の見出しと `.admonition.note` の題に絵を置く。`!!! note` の題は、Material の鉛筆（`mask-image`）を外して添付の絵にした。`!!! tip`・`!!! warning` と本文の「※」の行には当てていない
+- C23 の作り直し: `list/propertysystem` に限っていた組み替えを、どの頁でも「`- **名前**: 説明`」だけが 2 つ以上並ぶ箇条書きに当てた（入れ子の箇条書き・コードブロック・2 つ以上の段落のある項目を含む箇条書きは外す）。見出しの行を「キー」「内容」から「名前」「説明」にした。40 頁で数えると、20 頁の 477 個（2105 行）が表になる（1 項目だけの箇条書きも数えた最初の数は 704 個で、1 行だけの表は作らないことにした）
+- 表の見た目: 初めは表に `class` を付けたので、Material の表の見た目（`table:not([class])` に効く）が効かず、枠も地も無かった。印を `data-slp-keytable` の属性に替えて Material の見た目を効かせ、行の上下の余白を `.45em .9em` に詰めた
+- 375 px: 名前の列を折り返さない指定のままだと、`list/shiori-event` 397・`spec/saori-ex` 452・`list/shiori-event-ex` 476・`list/sakura-script` 710 px にはみ出した。折り返さない指定を広い画面（45em 以上）だけにし、説明と名前の両方に `overflow-wrap: anywhere` を付けて、表のある 20 頁と `manual/ghost` のどれも `scrollWidth` 375・`innerWidth` 375 になった
+- 撮った画面の残り: `mock-sakura-script-C23-*.png` は、ヘッダが上に 14 px ほど切れて写っている（撮る途中の組み替えで頁の高さが変わった名残と見る。表の見え方には関わらない）
+- 失敗: なし
+
+| 試作の画面（明・暗） | 候補 | 見比べる `base` | 位置（セレクタ） | 写っている試作の見え方 |
+|---|---|---|---|---|
+| `mock-sakura-script-C23-light.png`・`mock-sakura-script-C23-dark.png` | C23（推奨の採るもの＋C25・C26 の上に C23） | `mock-sakura-script-C21-*.png` | `#bang-set-wallpaper` | `center`・`tile` などのオプションの箇条書きが、名前と説明の表になる |
+| `mock-shiori-event-C23-light.png`・`mock-shiori-event-C23-dark.png` | 同じ | `mock-shiori-event-C23before-*.png`（C23 だけ外したもの） | `#OnBoot` | `Reference0` などの一覧が表になる |
+| `mock-propertysystem-C23-light.png`・`mock-propertysystem-C23-dark.png` | 同じ（撮り直し） | `mock-propertysystem-base-*.png` | `[id="system.cpu"]` | キーの箇条書きが表になる（見出しの行は「名前」「説明」） |
+| `mock-propertysystem-C26-light.png`・`mock-propertysystem-C26-dark.png` | 同じ | 無い（同じ頁の `#note-1` の今の見え方は撮っていない） | `#note-1` | 補足の項目の見出し「補足」の頭に、添付の絵 |
+
 ## 試作しない候補
 
 - C13（記述例を手元のゴーストで再生する）・C16（ヘッダの値の名前を列にそろえる）は、`candidates.md` の「試作の当て先」の理由により試作しない

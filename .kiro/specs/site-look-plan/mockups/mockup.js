@@ -45,20 +45,20 @@ if (document.documentElement.dataset.slp?.split(' ').includes('C15')) {
   }
 }
 
-// C23: list/propertysystem の「- **キー**: 説明」だけが並ぶ箇条書きを、2 列の表に見せる（本番は原稿を Markdown の表に書き換える想定の見本）。
-// 項目に入れ子の箇条書きやコードブロックがある箇条書きは、そのまま残す
-if (document.documentElement.dataset.slp?.split(' ').includes('C23') && location.pathname.includes('/list/propertysystem/')) {
+// C23: 「- **名前**: 説明」だけが並ぶ箇条書きを、どの頁でも 2 列の表に見せる（開発者の方針 2026-10-25: 原稿の Markdown は変えず、この形が出てきたらサイトを作る処理で表の HTML にする。その見本）。
+// 項目に入れ子の箇条書き・コードブロック・2 つ以上の段落がある箇条書きは、そのまま残す
+if (document.documentElement.dataset.slp?.split(' ').includes('C23')) {
   for (const ul of document.querySelectorAll('.md-typeset ul')) {
     const items = [...ul.children];
     const simple = items.every((li) => {
       const first = li.firstElementChild?.tagName === 'P' ? li.firstElementChild : li;
       return first.firstElementChild?.tagName === 'STRONG' && first.firstChild === first.firstElementChild
-        && /^:\s/.test(first.firstElementChild.nextSibling?.textContent ?? '') && !li.querySelector('ul, ol, pre');
+        && /^:\s/.test(first.firstElementChild.nextSibling?.textContent ?? '') && !li.querySelector('ul, ol, pre') && li.querySelectorAll(':scope > p').length <= 1;
     });
-    if (!items.length || !simple) continue;
+    if (items.length < 2 || !simple) continue; // 1 行だけの表は作らない
     const table = document.createElement('table');
-    table.className = 'slp-keytable';
-    table.innerHTML = '<thead><tr><th>キー</th><th>内容</th></tr></thead><tbody></tbody>';
+    table.dataset.slpKeytable = ''; // class を付けると Material の表の見た目（table:not([class])）が効かないので、属性で印を付ける
+    table.innerHTML = '<thead><tr><th>名前</th><th>説明</th></tr></thead><tbody></tbody>';
     for (const li of items) {
       const first = li.firstElementChild?.tagName === 'P' ? li.firstElementChild : li;
       const key = first.firstElementChild;
@@ -77,5 +77,12 @@ if (['C14', 'C22'].every((c) => document.documentElement.dataset.slp?.split(' ')
   for (const strong of document.querySelectorAll('.md-typeset > ul > li > p:first-child > strong:first-child')) {
     const t = strong.nextSibling;
     if (t?.nodeType === Node.TEXT_NODE) t.textContent = t.textContent.replace(/^:\s*/, '');
+  }
+}
+
+// C26: 補足の項目（原稿の note-1.md など）の見出しは、id が note-1・balloon-text-note-1 のようになる。その見出しに印を付ける（節の中の見出し note-1-… は除く）
+if (['C26', 'C27'].some((c) => document.documentElement.dataset.slp?.split(' ').includes(c))) {
+  for (const h of document.querySelectorAll('.md-typeset :is(h2, h3, h4)[id]')) {
+    if (/(^|-)note-[0-9]+$/.test(h.id)) h.classList.add('slp-note-head');
   }
 }

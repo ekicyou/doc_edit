@@ -304,17 +304,23 @@ html[data-slp~="C14"][data-slp~="C22"] .md-typeset:has(h1#ゴースト) > ul > l
 html[data-slp~="C14"][data-slp~="C22"] .md-typeset:has(h1#ゴースト) > ul > li > p:first-child { text-indent: 0; }
 html[data-slp~="C14"][data-slp~="C22"] .md-typeset:has(h1#ゴースト) > ul > li > p:first-child > strong:first-child::after { content: none; }
 
-/* C23: キーの表（assets/mockup.js が作る）。キーの列は折り返さない */
-html[data-slp~="C23"] .md-typeset table.slp-keytable { display: table; width: 100%; font-size: .75rem; }
-html[data-slp~="C23"] .md-typeset table.slp-keytable td:last-child { overflow-wrap: anywhere; }
-html[data-slp~="C23"] .md-typeset table.slp-keytable td:first-child { white-space: nowrap; font-weight: 700; }
+/* C23: 名前と説明の表（assets/mockup.js が作る）。表の見た目は Material の表の指定のまま */
+html[data-slp~="C23"] .md-typeset table[data-slp-keytable] { display: table; width: 100%; font-size: .75rem; }
+html[data-slp~="C23"] .md-typeset table[data-slp-keytable] td { overflow-wrap: anywhere; }
+/* Material の表の余白（.9375em 1.25em）は箇条書きより縦に長くなるので、行の上下を詰める */
+html[data-slp~="C23"] .md-typeset table[data-slp-keytable] :is(th, td) { padding: .45em .9em; }
+html[data-slp~="C23"] .md-typeset table[data-slp-keytable] td:first-child { font-weight: 700; }
+/* 名前の列は、広い画面でだけ折り返さない（狭い画面では長い名前で 375 px をはみ出すため） */
+@media screen and (min-width: 45em) {
+  html[data-slp~="C23"] .md-typeset table[data-slp-keytable] td:first-child { white-space: nowrap; }
+}
 
 /* C24: 暗い表示のリンクを明るい紺にする（afb2152 で紺 #1f4e8c になったリンクと左メニューの今の頁が、暗い地に 1.94:1 しかない） */
 html[data-slp~="C24"] [data-md-color-scheme="slate"] { --md-typeset-a-color: #8fb4e8; }
 
-/* C26・C27: 注釈の節（「さくらスクリプトの寿命」など、id が notes_ で始まる見出し）の頭にアイコンを置く（開発者の指摘 2026-10-25）。
+/* C26・C27: 注釈の節（「さくらスクリプトの寿命」など、id が notes_ で始まる見出し）と、補足の項目（note-1.md などの「補足」の見出し。assets/mockup.js が slp-note-head を付ける）の頭にアイコンを置く（開発者の指摘 2026-10-25）。
    C26 は開発者が添付した色付きの絵（assets/image/slp-notes-icon.png）、C27 はそれを手で白黒の線に起こしたもの（.svg。暗い表示では色を反転する）。同じ所なので両立しない */
-html:is([data-slp~="C26"], [data-slp~="C27"]) .md-typeset :is(h2, h3, h4)[id^="notes_"]::before {
+html:is([data-slp~="C26"], [data-slp~="C27"]) .md-typeset :is(:is(h2, h3, h4)[id^="notes_"], .slp-note-head)::before {
   content: "";
   display: inline-block;
   width: 1.5em;
@@ -323,6 +329,12 @@ html:is([data-slp~="C26"], [data-slp~="C27"]) .md-typeset :is(h2, h3, h4)[id^="n
   vertical-align: -.35em;
   background: center / contain no-repeat;
 }
-html[data-slp~="C26"] .md-typeset :is(h2, h3, h4)[id^="notes_"]::before { background-image: url("image/slp-notes-icon.png"); }
-html[data-slp~="C27"] .md-typeset :is(h2, h3, h4)[id^="notes_"]::before { background-image: url("image/slp-notes-icon.svg"); }
-html[data-slp~="C27"] [data-md-color-scheme="slate"] .md-typeset :is(h2, h3, h4)[id^="notes_"]::before { filter: invert(1); }
+html[data-slp~="C26"] .md-typeset :is(:is(h2, h3, h4)[id^="notes_"], .slp-note-head)::before { background-image: url("image/slp-notes-icon.png"); }
+html[data-slp~="C27"] .md-typeset :is(:is(h2, h3, h4)[id^="notes_"], .slp-note-head)::before { background-image: url("image/slp-notes-icon.svg"); }
+html[data-slp~="C27"] [data-md-color-scheme="slate"] .md-typeset :is(:is(h2, h3, h4)[id^="notes_"], .slp-note-head)::before { filter: invert(1); }
+html[data-slp~="C26"] .md-typeset .admonition.note > .admonition-title::before {
+  /* 「!!! note "注"」の題の Material のアイコン（mask の鉛筆）を、添付の絵に替える */
+  background: url("image/slp-notes-icon.png") center / contain no-repeat;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
