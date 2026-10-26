@@ -190,3 +190,66 @@ HTML の木の判定（`mockup.js` の C23 と同じ判定と、`list/` の頁�
 - `llms.txt`: SHA-256 が控えと同じ（`3916fa9ec45f431ba4c467a08a14371a51db8ecc9ed0a64d6a2636d70974075d`）
 - `_raw/`: `diff -rq` で違うのは直した 7 原稿だけ（`OnConfigurationDialogHelp`・`OnOtherObjectDropping`・`rateofusegraph`・`OnMusicPlayer.SongInfo`・`OnSpectrePlugin.Possession`・`OnWeatherStation.Astro`・`OnWeatherStation.Forecast.Hourly`）。`git diff --no-index --stat` は 7 ファイル・17 行足し・51 行除き（空行 34 と、`rateofusegraph` の字下げを足した 17 行の入れ替え）、`-w --ignore-blank-lines` では差が無い（7.5）
 - 違いが無かったので、2.1・2.3 は見直していない
+
+## 画面（タスク 3.4、2026-10-26）
+
+- 撮ったもの: 作業木 `fab1563` の `zensical serve`（`http://localhost:8000/ukadoc-spec/`）。式は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> screenshots/after-<名>-<light|dark>.png <light|dark>`（1000×700）。30 枚とも `scrollWidth` と `innerWidth` は 1000
+- 撮り直し: **2 枚**（`after-anim-code-light.png`・`after-sakura-script-example-light.png`。どちらも下の端の近くにヘッダの色の行が二重に出た。撮り直した画面には無い）。ほかの 28 枚に二重の跡は無い
+
+| 名（`after-<名>-light/dark.png`） | 頁とセレクタ | 見たもの |
+|---|---|---|
+| `propertysystem` | `list/propertysystem` `[id="system.cpu"]` | 目標と同じ所 |
+| `sakura-script` | `list/sakura-script` `#bang-set-wallpaper` | 目標と同じ所 |
+| `shiori-event` | `list/shiori-event` `#OnBoot` | 目標と同じ所 |
+| `notes-move` | `list/sakura-script` `#notes_move` | 注意書きの箱の中の表・注釈の絵 |
+| `notes-executehttp` | `list/sakura-script` `#notes_executehttp` | 注意書きの箱の中の長い名前の表（`--content-type=…` を含む表） |
+| `notes-selectfile` | `list/sakura-script` `#notes_selectfile` | 表にならない注意書きの箱（2 段落の項目があり、1.4 で外れる） |
+| `nar` | `dev/nar` `.admonition.tip` | 注記の箱の中の字下げ 4 の表・名前のリンク |
+| `shiori3` | `spec/shiori3` `#request` | 項目の中の表（`メソッド`） |
+| `headline-link` | `spec/headline` `#shiori-event` | 名前がリンクの表 |
+| `anim-code` | `list/sakura-script` `#bang-anim-add-overlay-ID` | 名前が `code` の表（長い名前を含む） |
+| `rateofusegraph` | `list/shiori-event` `#rateofusegraph` | 表の中の表 |
+| `mahjong` | `list/shiori-event-ex` `#OnMahjong` | 縦に並ぶ表 |
+| `sakura-script-example` | `list/sakura-script` `[id="bang-set-wallpaper-記述例"]` | 表のある頁の記述例の色 |
+| `manual-ghost` | `manual/ghost` `.manual-item` | manual の頁の項目の帯（4.8） |
+| `manual-ghost-tree` | `manual/ghost` `.filetree-file` | 木のファイル名の色（4.8） |
+
+### 目標の画面との見比べ（5.5）
+
+- 3 か所とも、表の部分は `mock-*-C23-*.png` と明・暗で同じ: 行の高さ（`system.cpu` の 6 行は 1 行ほぼ 38px）、字の大きさ（`.75rem`）、名前の列の太字、見出しの行「名前」「説明」、枠と地の色、幅の出方（`#OnBoot` の表は本文より狭く 556px で終わり、`#OnClose`・`#bang-set-wallpaper` の表は本文の幅いっぱい）
+- 違うのは表の外だけ: 目標の画面は「対応:」の区切りの線から次の項目名の帯までが約 25px 広く、頁の位置が 3px ほど下。変更の前の控え（8010、`#OnBoot`）も変更の後と同じ間で、この spec の変更ではない（目標の画面を撮った試作と今の `site-look-list-items` の詰めの違い）。右の欄の目次の位置もスクロールの位置の違いだけ
+- 設計の時の写し（`design-propertysystem-dark.png`・`design-nar-light.png`）とも同じ
+
+### 写っていない所（5.6）
+
+- 箱の中（1.7）: `#notes_move` の箱の中の表は箱の点線の枠・注釈の絵・題の中に収まり、箱の見え方は変わらない。表になる注意書きの箱は `notes_move`・`notes_sound`・`notes_inputbox-option`・`notes_executehttp`・`notes_executeical`・`notes_executerss` の 6 個。`#notes_selectfile` の箱は 2 段落の項目があり、今のままの箇条書き（1.4）
+- 項目の中（1.8）: `spec/shiori3` の `メソッド` は外側の箇条書きの点が残り、内側だけが表
+- 名前のリンク・`code`: `spec/headline` の名前のリンクは太字でリンクの色、`\![anim,add,overlay,ID]` の名前は `code` の地のまま太字
+- 表の中の表: `Reference*` の説明の欄の中に `1番目`〜`13番目` の表、`7番目` の続きの 4 行は `<br />` の改行のまま
+- 縦に並ぶ表: `OnMahjong` の表は空行ごとに別の表で、表ごとの幅はそろわない（3.3 のとおり）
+- 明・暗とも、表の地・枠・字・リンクの色はほかの表と同じに見え、暗い表示で白い地が出る所は無い
+
+### 崩れていないこと（4.8・4.9）
+
+- 項目名の帯と項目の間の詰め、注意書きの箱の注釈の絵、記述例の色（`#bang-set-wallpaper-記述例` の 3 行の色と区切りの線）、manual の頁の項目の帯と木のファイル名の色は、明・暗とも崩れていない。`manual/ghost` の暗い表示は変更の前の控え（8010）と同じ（帯の中のファイル名の下線と白い字も控えのとおり）
+
+### 字下げ 4 の `dev/nar` の表（設計の話し合いの議題 2）
+
+- build の HTML: `<div class="admonition tip">` の中が `<p class="admonition-title">ヒント</p>` の後に `<p><div class="definition-table"><table>…</table></div></p>`
+- ブラウザの DOM（明・暗とも同じ）: `P.admonition-title`・空の `P`・`DIV.definition-table`（中は Material の `div.md-typeset__scrollwrap` の包み）・空の `P`。ブラウザが `p` を表の手前で閉じ、前後に空の `p` が残る（設計のとおり）
+- 画面（`after-nar-light/dark.png`）: 表は注記の箱の枠の中に収まり、名前のリンク 2 つ（`※1 ベースウェア`・`※2 nar`）は太字でリンクの色。表の下から箱の下の端までが表の上より少し広い（空の `p` の分）ほかに崩れは無い
+
+### 判断を待つこと: 長い名前の表の説明の欄（開発者の判断待ち）
+
+幅 1000 で、名前の列を折り返さない指定（`@media screen and (min-width: 45em)` の `white-space: nowrap`、3.4）のため、名前のとても長い表 2 つで説明の欄が潰れる。
+
+| 表 | 表の幅 / 包みの幅 | 名前の欄 / 説明の欄 |
+|---|---|---|
+| `#notes_executehttp` の箱の表（いちばん長い名前は `--content-type=(multipart/form-data \| …)` の 83 字） | 771 / 707 | 669 / 100 |
+| `#bang-anim-add-overlay-ID` の表（`\![anim,add,overlay,ID,x,y,表示時間,…]` 69 字を含む） | 787 / 743 | 685 / 100 |
+
+- 説明の欄は 1〜2 字ごとに折り返し、表の右が包みからはみ出して、表の中を横にスクロールしないと読めない（`after-notes-executehttp-*.png`・`after-anim-code-*.png`）。頁の `scrollWidth` は 1000 のままで、頁ははみ出さない
+- 表のある 20 頁の 632 個のうち、幅 1000 で表が包みより広いのはこの 2 個だけ
+- 3.4（広い画面で名前を折り返さない）と 3.6（長い字をどちらの列でも折り返せる）がこの 2 個でぶつかる。見た目の値を変えるかどうかは開発者の判断を待つ（このタスクでは何も変えていない）
+
+開発者に画面やプレビューを見せるときは、古い写しが残らないよう Ctrl+F5 での読み込み直しを頼む（5.11）。
