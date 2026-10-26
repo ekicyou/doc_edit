@@ -128,3 +128,11 @@
   - `site-look-note-icon` の `.bundle-notes > :first-child` の絵と、箱の中の表がぶつからないか（箱の最初の子は見出しなので、当たらない見込み）
   - 印刷のときの `.md-typeset__table`（`display:block` に替わる指定がある）と、表の幅・折り返し
   - Revalidation Triggers の候補: 原稿に、行の続け方の新しい書き方（空行を挟む続き、`<br />` 無しの続きの行）や、名前の後ろの区切りの揺れが入ったとき、HTML の判定と行の判定の数を照らし直す
+
+## 要件の話し合いの後で設計に回すこと（2026-10-26）
+- Reference の箇条書き（Requirement 1.10）は、入れ子の箇条書きを説明の欄に入れる。Markdown の表（A1）は欄の中に箇条書きを書けないので、A2（HTML の表に `markdown="1"`）か案 B に絞られる。入れ子の中の名前と説明の箇条書き（直した後の `rateofusegraph` の `1番目`〜）が、欄の中で表になるか（表の中の表）を確かめる
+- Reference の箇条書きを `list/` の頁に限る見分けの置き場（`main()` の頁の見分けか、関数の引数か）。`spec/shiori3` の `request-サンプル`・`response-サンプル` のヘッダの一覧の中の `Reference*`・`Reference0`・`Reference1～` は外す
+- 名前の形 `Reference(\d+|\*)(～\d*)?`（`Reference0～23` を含む）
+- 空行で分かれた箇条書きの数え方（`bounds.py` 相当）: 意味のある空行 27・意味の無い空行 27 か所（`list/` の頁の 6 ファイル）。`spec/shiori3` の `response-サンプル` の `Reference0` | `Reference1～` も番号が続くが、ヘッダの一覧の空行で、Requirement 7 の当て先の外
+- 表が縦に続けて並ぶとき（`OnMahjong` の 14 の表など）の、表と表の間の空き（Material の包みの上下の余白）を画面で確かめる
+- `CLAUDE.md` に足す空行の決まりの言い回しと置き場（「書式」の「リストは `- ` で書き」の近く）
