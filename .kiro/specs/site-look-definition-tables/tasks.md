@@ -38,7 +38,7 @@
   - _Boundary: ManuscriptJoin_
   - _Requirements: 7.1, 7.2, 7.3, 7.5_
 
-- [ ] 2.4 (P) ukadoc-spec の `CLAUDE.md` に空行の決まりを足す
+- [x] 2.4 (P) ukadoc-spec の `CLAUDE.md` に空行の決まりを足す
   - 設計の「Modified Files」の文案のとおり、「書式」の「リストは `- ` で書き…」の項目の直後に 1 項目を足し、ほかの行は変えない
   - `git diff CLAUDE.md` の `+` の行が文案の 1 行だけである
   - _Boundary: BlankLineRule_
