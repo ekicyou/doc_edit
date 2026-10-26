@@ -44,7 +44,7 @@
   - _Boundary: BlankLineRule_
   - _Requirements: 7.4_
 
-- [ ] 2.5 Build Gate と規約 Gate を通し、変更の範囲を確かめてコミットする
+- [x] 2.5 Build Gate と規約 Gate を通し、変更の範囲を確かめてコミットする
   - 作業木で `prepare_site.py` と `zensical build --strict` を流し、規約 Gate（ukadoc-spec の `CLAUDE.md` の決まり）に照らす
   - 10 ファイルの変更をコミットにする（ukadoc-spec の履歴の型の日本語の 1 文。名前は `-c user.name=ekicyou -c user.email=dot.station@gmail.com` で渡す）。push も PR もしない
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`git diff --stat origin/main` が `scripts/prepare_site.py`・`assets/extra.css`・`CLAUDE.md`・7 つの原稿の 10 ファイルだけで（`requirements.txt`・`mkdocs.yml`・`.nav.yml`・`INDEX.md` を含まない）、作業木に未コミットの変更が無い
