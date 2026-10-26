@@ -52,7 +52,7 @@
   - _Requirements: 6.1, 6.2, 6.5_
 
 - [ ] 3. 配られた頁での確かめ
-- [ ] 3.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
+- [x] 3.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。`site-look-top-page` が先に入ってぶつかったときは、設計の「Integration & Migration Notes」のとおり、トップの行を `tabulate(mark_top(…), False)`、読み物の頁の行を `tabulate(mark_manual(…) …, False)` にして両方を残し、`extra.css` はほかの spec の塊の後ろにこの塊を置く
   - merge したときは Build Gate（2.5）と 2.1 の単体の例をやり直し、1.2 の控えを、作業木の HEAD でなく新しい `origin/main` のコミットから 1.2 の手順で作り直す。控えの置き場・コミットを `verification.md` に書き直す
   - 3.2〜3.5 はこの版で測る（測る版を `verification.md` に書く）

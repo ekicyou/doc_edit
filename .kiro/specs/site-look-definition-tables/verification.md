@@ -74,3 +74,9 @@
 | `spec/web/` | 1 / 3 | 0 / 0 | 0 / 0 | — |
 
 表に出ていない 10 頁（トップ・`dev/bind/`・`dev/ownerdraw/`・`dev/shell/`・`dev/shell-error/`・`dev/update/`・`manual/translator/`・`memo/memo/`・`memo/shiori-event/`・`spec/dll/`）は、箇条書き・空行・目印の数が 0。
+
+## 測る版（タスク 3.1、2026-10-26）
+
+- ukadoc-spec を fetch した。`origin/main` は `f54423d` のままで、作業木の分岐点から進んでいない。merge はせず、変更の前の控え（`f54423d`）もそのまま使う
+- 測る版: 作業木 `site-look-definition-tables` の `fab1563`（`origin/main` `f54423d` の上に 4 コミット）。`origin/main` は作業木の先祖である
+- Build Gate（2.5）: `prepare_site.py` exit 0、`zensical build --strict` exit 0（No issues found）。`git diff --stat origin/main` は 10 ファイル。build の HTML の `class="definition-table"` は 632
