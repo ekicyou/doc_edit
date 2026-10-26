@@ -29,7 +29,7 @@
 - 名前と説明の表の HTML の形（`div.definition-table > table > thead + tbody`）と、表の印 `definition-table`
 - `assets/extra.css` の、見出しのコメント `/* site-look-definition-tables: 名前と説明の表 */` で始まる 1 つの塊
 - Requirement 7 の 7 つの原稿の空行・字下げの直しと、ukadoc-spec の `CLAUDE.md` の「書式」の 1 項目
-- この spec の記録（`.kiro/specs/site-look-definition-tables/verification.md` と `screenshots/`。完了で `completed/` へ移る）
+- この spec の記録（`.kiro/specs/completed/site-look-definition-tables/verification.md` と `screenshots/`。完了で `completed/` へ移る）
 
 ### Out of Boundary
 - `prepare_site.py` のほかの処理（一覧の検査・まとめ頁の流れ・id の振り方・見出しの数の検査・`rewrite_links()`・`add_markers()`・`mark_manual()`・`_raw/`・`.nav.yml` の書き換え）。この spec はそれらの出力を受けて書き換えるだけで、中身を変えない
@@ -116,7 +116,7 @@ ukadoc-spec（作業木 .worktrees/site-look-definition-tables/、ブランチ s
         ├── plugin-spectre/OnSpectrePlugin.Possession.md               # 空行 2 つを除く
         └── app-music-player/OnMusicPlayer.SongInfo.md                 # 空行 10 を除く
 
-.kiro/specs/site-look-definition-tables/（doc_edit。完了で completed/ へ移る）
+.kiro/specs/completed/site-look-definition-tables/（doc_edit。完了で completed/ へ移る）
 ├── verification.md               # 新規。数・字・見出し・目印・画面・幅・対比・C16 の材料の記録
 └── screenshots/                  # 設計の写しの画面（design-*.png、済み）と、実装の後の画面（after-*.png）
 ```
@@ -304,7 +304,7 @@ ukadoc-spec で変えるのは上の 10 ファイルだけである（6.1）。�
 | ManuscriptJoin | Requirement 7 の 7 つの原稿（作業木） | 変える |
 | BlankLineRule | `CLAUDE.md`（作業木） | 変える |
 | TableCheck・ShotCheck | Claude のスクラッチの使い捨てのスクリプト、`.kiro/specs/completed/site-look-plan/tools/shot.mjs`（読むだけ） | ukadoc-spec には足さない |
-| VerificationRecord | `.kiro/specs/site-look-definition-tables/verification.md`・`screenshots/` | 新規 |
+| VerificationRecord | `.kiro/specs/completed/site-look-definition-tables/verification.md`・`screenshots/` | 新規 |
 
 ## System Flows
 
@@ -609,7 +609,7 @@ interface Contrast { scheme: 'light' | 'dark'; fg: string; bg: string; ratio: nu
 ### 記録
 
 #### VerificationRecord
-`.kiro/specs/site-look-definition-tables/verification.md` と `screenshots/after-*.png`。要約だけを書く。
+`.kiro/specs/completed/site-look-definition-tables/verification.md` と `screenshots/after-*.png`。要約だけを書く。
 
 ##### State Management
 - State model: TableCheck・ShotCheck の数と結果、外した形の例、目標の画面との見比べ、`spec/shiori3` の 7 個の表で C16 が足りそうかの見立てと理由（5.9）、PR の本文に写す頁ごとの数と外した例（6.6）、開発者に見せるときの Ctrl+F5 の頼み（5.11）

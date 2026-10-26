@@ -19,7 +19,7 @@
 - [x] site-look-list-markers -- `prepare_site.py` で目印を付け、注意書きの箱・対応ベースウェアの札・既定値の札と、明るい表示の札の濃い色を入れる（C04・C06・C07・C17）. Dependencies: site-look-list-items
 - [x] site-look-sakura-script-highlight -- `pymdownx.highlight` とブラウザの仕掛けでさくらスクリプトのタグに色・太字・地を付ける（C10・C19・C20・C21）. Dependencies: site-look-plan
 - [x] site-look-manual-files -- `manual/` の頁でファイルごとの切れ目とファイル名の帯を見せ、ファイル構成の木のファイル名に色を付ける（C14・C15・C22）. Dependencies: site-look-list-items
-- [ ] site-look-definition-tables -- 「`- **名前**: 説明`」だけが並ぶ箇条書きを、原稿を変えずに組み立ての処理で 2 列の表にする（C23）. Dependencies: site-look-manual-files
+- [x] site-look-definition-tables -- 「`- **名前**: 説明`」だけが並ぶ箇条書きを、原稿を変えずに組み立ての処理で 2 列の表にする（C23）. Dependencies: site-look-manual-files
 - [x] site-look-note-icon -- 注釈の節・補足の項目・`!!! note` の見出しの頭に、添付の色付きのアイコンを付ける（C26）. Dependencies: site-look-list-markers
 - [ ] site-look-sstp-playback -- さくらスクリプトの記述例・プロパティシステム・SHIORI Event を、利用者の操作で手元のゴーストへ送れるようにする（C13）. Dependencies: site-look-sakura-script-highlight, site-look-definition-tables. PR: site-look-sstp-playback
 - [ ] site-look-top-page -- トップページ（`INDEX.md`）に印を付け、節の見出し・目次の分類・「ukadocの見方」の箇条書きを、ほかの頁と同じ帯で見せる（開発者の指摘、2026-10-25。候補番号なし）. Dependencies: site-look-list-items, site-look-manual-files
@@ -35,11 +35,12 @@
 
 ## バックログ
 - **C12 キャラクターを頁に出す（保留）**: 本番の絵が無い（旧サイトの絵は再利用の許可が明記されていない）。決めるのに要るもの: 本番の絵（新しく描くか、管理者の許可を得て旧サイトの絵を使うか）、出す頁（`manual/` だけか全頁か）、頭の帯の題が早く切り替わるらしい副作用（`.md-content__inner { position: relative; }`）の確かめと、副作用の無い置き方の試作。決まったら、C11（バルーン）を C04 と入れ替えるかも考え直す（目印 `div.slp-notes` は同じ）
-- **C16 ヘッダの値の名前を列にそろえる（保留）**: `spec/shiori3` に当てた試作が無く、説明の中のリンクや `code` で列が崩れないか、暗い表示と幅 375 で 2 列をどう畳むかが確かめられていない。決めるのに要るもの: `spec/shiori3` に当てた試作の明・暗の画面と 375 px の測り、頁を絞る印（`site-look-manual-files` の頁の種類の印と共有）の要否。`site-look-definition-tables` の表（`spec/shiori3` の 7 個）で足りるかを先に見る
+- **C16 ヘッダの値の名前を列にそろえる（保留）**: `spec/shiori3` に当てた試作が無く、説明の中のリンクや `code` で列が崩れないか、暗い表示と幅 375 で 2 列をどう畳むかが確かめられていない。決めるのに要るもの: `spec/shiori3` に当てた試作の明・暗の画面と 375 px の測り、頁を絞る印（`site-look-manual-files` の頁の種類の印と共有）の要否。`site-look-definition-tables` の表（`spec/shiori3` の 7 個）で足りるかを先に見る。`site-look-definition-tables` の完了の時点の見立て（2026-10-26）: `spec/shiori3` の 7 個の表（36 行）で C16 は足りるとみなせそう（理由は `.kiro/specs/completed/site-look-definition-tables/verification.md` の「C16 の見立て」）。取り下げるかどうかは開発者が決める
 - **`site_url` と転送先の食い違い（解けた）**: 公開サイトは `https://ukatech.github.io/ukadoc-spec/` から `https://ukatech.shillest.net/ukadoc-spec/` へ 301 で転送されるのに、`mkdocs.yml` の `site_url` が github.io のままだった（`survey.md` の「見た目の外の問題」）。ukadoc-spec の `3d8e4a7`（PR #1）で `site_url` が `https://ukatech.shillest.net/ukadoc-spec/` に直った。残る作業は無い
 - **C25 さくらスクリプトの頁の外の記述例も同じく強調する（外した）**: 判断は「採る」だったが、`list/propertysystem` 5 個・`spec/plugin` 1 個のコードブロックに ```` ```sakurascript ```` を書き足すには原稿を変える。見た目の直しを原稿を変えない 1 本の PR（`site-look-visibility`）にまとめたので外した（開発者の判断、2026-10-25）。入れれば `site-look-sakura-script-highlight` の着色と `site-look-sstp-playback` の見分けがそのまま届く。決めるのに要るもの: 原稿を直す spec として起票するか、原稿を変えずに `prepare_site.py` で印を付ける代案にするか。目標の画面は `.kiro/specs/completed/site-look-plan/screenshots/mock-propertysystem-C25-light.png`・`mock-propertysystem-C25-dark.png`
 - **`manual/ghost` の `updates2.dau`**: 旧サイトでは `updates.txt` と 1 つの説明を共有しているが、今のサイトでは説明の無い箇条書きになる（D12）。原稿の書き方による見え方で、直すには原稿の spec が要る。`site-look-manual-files` の C14・C22 では直らない
 - **暗い表示のまま印刷したリンクの色（記録だけ）**: 暗い表示を選んだまま印刷すると、本文のリンク・C01 と C22 の帯の中のリンク・C15 の木のファイル名が、明るい表示の印刷の紺 `#1f4e8c` でなく、テーマの既定の藍 `#4051b5` になる（`site-look-manual-files` の 4.4 で見つけた。PR #10 の前からある振る舞い）。テーマの `:root` の `--md-typeset-a-color` が、紺のテーマの印 `data-md-color-primary` の無い `html` で解かれるため。白い紙に 6.86 で読める。開発者の判断（2026-10-26）で `site-look-manual-files` の 5.6 は設計の確かめ方（CSSOM）で満たすとし、直すかどうかはここに残す。決めるのに要るもの: 直すなら、印刷のときにリンクの色の変数を紺に戻す指定をどの spec で入れるか
+- **幅 375 の表の中の表の 3px（記録だけ）**: `list/shiori-event` の `#capability`・`#rateofusegraph` の `Reference*` の表は、説明の欄の中に表を持ち、幅 375 で自分の包みの中で 3px 横に流れる（頁の横幅は 375 に収まる。幅 1000 では流れない）。Material の表の欄の `min-width: 5rem` で、中の表が 2 列で 202px より狭くならないため（`site-look-definition-tables` の `/kiro-complete` の棚卸で見つけた）。決めるのに要るもの: 直すなら、`.definition-table` の中の表の欄の最小の幅をいくつにするか
 
 ## 棚卸（2026-10-25・ukadoc-spec afb2152）
 - 初めての棚卸である。`site-look-plan` の決定（`decisions.md`）から、後続の 8 本の spec を切り分けた

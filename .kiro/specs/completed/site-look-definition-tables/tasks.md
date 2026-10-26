@@ -111,3 +111,7 @@
   - `verification.md` の「引き継ぎ」の節に、`/kiro-complete` で `.kiro/steering/structure.md` の目印の名前の決まりに「どの頁の種類にも出る役は `<役>` だけの名前にする」を 1 文足すこと（設計の話し合いの議題 1）を書く
   - 最後のコミットで Build Gate が exit 0、`git diff --stat origin/main` が 10 ファイルだけで、作業木に未コミットの変更が無く、`origin/main` が作業木の先祖で、ブランチ `site-look-definition-tables` がまだ push されておらず、控えの配りと置き場が残っていない
   - _Requirements: 6.1, 6.4, 6.5, 6.7_
+
+## Implementation Notes
+- 完了時にその場で解決: `requirements.md` の 3.4 の文に、24em を超える名前は 24em で折り返すこと（3.4 の開発者の判断）を書き足した
+- 完了時に記録だけ: 幅 375 で `list/shiori-event` の `#capability`・`#rateofusegraph` の表が自分の包みの中で 3px 横に流れる件は、Material の欄の `min-width: 5rem` による。直すには見た目の値の判断が要るので `roadmap.md` のバックログに書いた
