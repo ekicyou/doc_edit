@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. 土台: 作業木と変更の前の控え
+- [x] 1. 土台: 作業木と変更の前の控え
 - [x] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューで開けることを見る
   - ukadoc-spec を fetch し、`origin/main`（`site-look-manual-files` の PR #15 を含む。設計の時点は `f54423d`）から作業木 `.worktrees/site-look-definition-tables/` とブランチ `site-look-definition-tables` を作り、作った直後に追う先を外す。ukadoc-spec のメインのチェックアウトは使わない
   - 作業木で `prepare_site.py` と `zensical build --strict` を流してから `zensical serve` を起動する（doc_edit の `.venv` を使う。動かなければスクラッチの使い捨ての venv で流し、そのことを控える）
@@ -15,7 +15,7 @@
   - 控えが 8010 などの口で開け、`verification.md` の「変更の前」の節に、目印の数（`bundle-support` 1640・`bundle-default` 423・`bundle-notes` 16・`bundle-baseware` 2719・`manual-item` 73）と空行の数（続く所 27・振り直す所 27）が書いてある
   - _Requirements: 4.3, 4.7, 4.8, 4.10, 5.4, 7.6_
 
-- [ ] 2. 表への書き換え・見た目・原稿の直し
+- [x] 2. 表への書き換え・見た目・原稿の直し
 - [x] 2.1 (P) 組み立ての処理で、名前と説明の箇条書きと `list/` の頁の Reference の箇条書きを表に書き換える
   - 1.1 で止めたプレビューを止めたまま書く（書きかけの `_site_src/` を拾わせない）
   - 設計の「Modified Files」の差分のとおり、モジュールの docstring の 1 項目、箇条書きの形の 3 つの定数、見分けと表の組み立ての 4 つの関数、`main()` の書き出しの 3 か所（まとめ頁・読み物の頁・トップ。Reference を見分けるのは `list/` のまとめ頁だけ）だけを変え、ほかの処理には触らない。警告・エラーは出さない
@@ -51,7 +51,7 @@
   - _Depends: 2.1, 2.2, 2.3, 2.4_
   - _Requirements: 6.1, 6.2, 6.5_
 
-- [ ] 3. 配られた頁での確かめ
+- [x] 3. 配られた頁での確かめ
 - [x] 3.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。`site-look-top-page` が先に入ってぶつかったときは、設計の「Integration & Migration Notes」のとおり、トップの行を `tabulate(mark_top(…), False)`、読み物の頁の行を `tabulate(mark_manual(…) …, False)` にして両方を残し、`extra.css` はほかの spec の塊の後ろにこの塊を置く
   - merge したときは Build Gate（2.5）と 2.1 の単体の例をやり直し、1.2 の控えを、作業木の HEAD でなく新しい `origin/main` のコミットから 1.2 の手順で作り直す。控えの置き場・コミットを `verification.md` に書き直す
@@ -94,7 +94,7 @@
   - `verification.md` の「幅 375」「対比」「切り替えと印刷」「検索の強調」の節に結果が書いてあり、すべて線を満たすか、開発者の判断を待つ状態で止まっている
   - _Requirements: 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4.2, 4.4, 5.7, 5.8_
 
-- [ ] 4. 記録と完了への引き継ぎ
+- [x] 4. 記録と完了への引き継ぎ
 - [x] 4.1 `verification.md` の記録を仕上げる
   - 頭に、測った版（作業木のコミット、`origin/main` の版）と日付、流した式（Build Gate・数えるスクリプト・`shot.mjs` の式）を書く
   - 1.2・2.1・3.1〜3.5 の結果の節がそろっていることを見て欠けた所を埋め、字下げ 4 の `dev/nar` の表の HTML の形と画面（設計の話し合いの議題 2）、色の値を足していないこと（3.10・6.3）を書く
