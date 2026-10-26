@@ -1,7 +1,7 @@
 # Implementation Plan
 
 - [ ] 1. 土台: 作業木と変更の前の控え
-- [ ] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューで開けることを見る
+- [x] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューで開けることを見る
   - ukadoc-spec を fetch し、`origin/main`（`site-look-manual-files` の PR #15 を含む。設計の時点は `f54423d`）から作業木 `.worktrees/site-look-definition-tables/` とブランチ `site-look-definition-tables` を作り、作った直後に追う先を外す。ukadoc-spec のメインのチェックアウトは使わない
   - 作業木で `prepare_site.py` と `zensical build --strict` を流してから `zensical serve` を起動する（doc_edit の `.venv` を使う。動かなければスクラッチの使い捨ての venv で流し、そのことを控える）
   - 頁が開けることを見たら、プレビューを止める（2.1〜2.4 は書きかけの `_site_src/` を拾わせないよう、プレビューの止まった作業木で書く）
