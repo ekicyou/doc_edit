@@ -83,7 +83,7 @@
 
 ## 配り（タスク 3.2、2026-10-26）
 
-- 作業木（`fab1563`）で `prepare_site.py`（exit 0）→ `zensical build --strict`（exit 0、`No issues found`）→ `zensical serve` の順に起動した（`http://localhost:8000/ukadoc-spec/`、`serve` の PID 13824・口を持つ子の PID 27520。3.3〜3.5 が使う）。控えの配り（8010、PID 20712）は動いたまま
+- 作業木（`fab1563`）で `prepare_site.py`（exit 0）→ `zensical build --strict`（exit 0、`No issues found`）→ `zensical serve` の順に起動した（`http://localhost:8000/ukadoc-spec/`、最初の `serve` はタスクの終わりに落ちたので、`Start-Process` で切り離して起動し直した。`serve` の PID 41168・口を持つ子の PID 8760。3.3〜3.5 が使う）。控えの配り（8010、PID 20712）は動いたまま
 - 配られた `/ukadoc-spec/assets/extra.css` は 200 で、`site-look-definition-tables:` の注は 1 つ（232 行目 `/* site-look-definition-tables: 名前と説明の表 */`）
 
 ## 表の数（タスク 3.2）
@@ -193,8 +193,9 @@ HTML の木の判定（`mockup.js` の C23 と同じ判定と、`list/` の頁�
 
 ## 画面（タスク 3.4、2026-10-26）
 
-- 撮ったもの: 作業木 `fab1563` の `zensical serve`（`http://localhost:8000/ukadoc-spec/`）。式は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> screenshots/after-<名>-<light|dark>.png <light|dark>`（1000×700）。30 枚とも `scrollWidth` と `innerWidth` は 1000
-- 撮り直し: **2 枚**（`after-anim-code-light.png`・`after-sakura-script-example-light.png`。どちらも下の端の近くにヘッダの色の行が二重に出た。撮り直した画面には無い）。ほかの 28 枚に二重の跡は無い
+- 撮ったもの: 作業木 `c4768f5`（名前の欄の上限 24em を足した後。初めは `fab1563` で撮り、開発者の判断の後に 30 枚とも撮り直した）の `zensical serve`（`http://localhost:8000/ukadoc-spec/`）。式は `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> screenshots/after-<名>-<light|dark>.png <light|dark>`（1000×700）。30 枚とも `scrollWidth` と `innerWidth` は 1000
+- 撮り直し（二重の跡）: `fab1563` の撮影で 2 枚（`after-anim-code-light.png`・`after-sakura-script-example-light.png`）、`c4768f5` の撮影で 1 枚（`after-anim-code-dark.png`。y=569 からヘッダの色の行）。どれも撮り直した画面には無い。`c4768f5` の 30 枚は、左の端の 2 か所の画素が上の端と同じヘッダの色になる行が y≥60 に無いことを、使い捨てのスクリプト（スクラッチの `doubled.py`）で確かめた
+- `fab1563` の画面との画素の比べ（スクラッチの `pxdiff.py`）: 変わったのは、長い名前の表 2 つ（`anim-code`・`notes-executehttp`）と、それより下にある `list/sakura-script` の画面（表の高さが変わってスクロールの位置がずれた `notes-move`・`notes-selectfile`・`sakura-script`・`sakura-script-example`）。ほかは 0 か、右の欄の目次の今の位置の色など 13〜38 行だけで、表の部分は同じ
 
 | 名（`after-<名>-light/dark.png`） | 頁とセレクタ | 見たもの |
 |---|---|---|
@@ -239,17 +240,18 @@ HTML の木の判定（`mockup.js` の C23 と同じ判定と、`list/` の頁�
 - ブラウザの DOM（明・暗とも同じ）: `P.admonition-title`・空の `P`・`DIV.definition-table`（中は Material の `div.md-typeset__scrollwrap` の包み）・空の `P`。ブラウザが `p` を表の手前で閉じ、前後に空の `p` が残る（設計のとおり）
 - 画面（`after-nar-light/dark.png`）: 表は注記の箱の枠の中に収まり、名前のリンク 2 つ（`※1 ベースウェア`・`※2 nar`）は太字でリンクの色。表の下から箱の下の端までが表の上より少し広い（空の `p` の分）ほかに崩れは無い
 
-### 判断を待つこと: 長い名前の表の説明の欄（開発者の判断待ち）
+### 長い名前の表の説明の欄（開発者の判断、2026-10-26）
 
-幅 1000 で、名前の列を折り返さない指定（`@media screen and (min-width: 45em)` の `white-space: nowrap`、3.4）のため、名前のとても長い表 2 つで説明の欄が潰れる。
+`fab1563` では、名前の列を折り返さない指定（`@media screen and (min-width: 45em)` の `white-space: nowrap`、3.4）のため、名前のとても長い表 2 つで説明の欄が潰れた。
 
-| 表 | 表の幅 / 包みの幅 | 名前の欄 / 説明の欄 |
-|---|---|---|
-| `#notes_executehttp` の箱の表（いちばん長い名前は `--content-type=(multipart/form-data \| …)` の 83 字） | 771 / 707 | 669 / 100 |
-| `#bang-anim-add-overlay-ID` の表（`\![anim,add,overlay,ID,x,y,表示時間,…]` 69 字を含む） | 787 / 743 | 685 / 100 |
+| 表 | 表の幅 / 包みの幅 | 名前の欄 / 説明の欄（`fab1563`） | 名前の欄 / 説明の欄（`c4768f5`） |
+|---|---|---|---|
+| `#notes_executehttp` の箱の表（いちばん長い名前は `--content-type=(multipart/form-data \| …)` の 83 字） | 771 / 707 → はみ出し 0 | 669 / 100 | 387 / 286 |
+| `#bang-anim-add-overlay-ID` の表（`\![anim,add,overlay,ID,x,y,表示時間,…]` 69 字を含む） | 787 / 743 → はみ出し 0 | 685 / 100 | 387 / 322 |
 
-- 説明の欄は 1〜2 字ごとに折り返し、表の右が包みからはみ出して、表の中を横にスクロールしないと読めない（`after-notes-executehttp-*.png`・`after-anim-code-*.png`）。頁の `scrollWidth` は 1000 のままで、頁ははみ出さない
-- 表のある 20 頁の 632 個のうち、幅 1000 で表が包みより広いのはこの 2 個だけ
-- 3.4（広い画面で名前を折り返さない）と 3.6（長い字をどちらの列でも折り返せる）がこの 2 個でぶつかる。見た目の値を変えるかどうかは開発者の判断を待つ（このタスクでは何も変えていない）
+- `fab1563` では説明の欄が 1〜2 字ごとに折り返し、表の中を横に流さないと読めなかった。3.4（広い画面で名前を折り返さない）と 3.6（長い字を折り返せる）がこの 2 個でぶつかったので、作業を止めて開発者に提示した
+- 幅 1000 で、表のある 20 頁の名前の字の幅を測った（多くは 300px 未満、`list/shiori-event-ex` の「戻り値：X-SSTP-PassThru-…」・`spec/saori-ex`・`spec/web` に 350〜440px、`list/sakura-script` の 2 つが 642px・658px）
+- 試作: 名前の欄の `strong`（唯一の子）を `display: inline-block; width: max-content; max-width: 24em` にする（`white-space: nowrap` は除く）。幅 1000 で、表が包みからはみ出す所 0、24em（387px）で折り返す名前は 5 頁の約 13 個（`list/sakura-script` 2 表・`list/shiori-event-ex` 4 表・`spec/saori-ex` 1・`spec/web` 1）、短い名前の表（`system.cpu` など）は変わらない
+- 開発者が「上限 24em の試作を採る」と判断した（2026-10-26）。作業木の `c4768f5` でコミットし、`design.md` の CSS と「実装で決まったこと」に書いた
 
 開発者に画面やプレビューを見せるときは、古い写しが残らないよう Ctrl+F5 での読み込み直しを頼む（5.11）。

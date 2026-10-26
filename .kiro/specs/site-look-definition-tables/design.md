@@ -11,7 +11,7 @@
 - 「`- **名前**: 説明`」だけが 2 つ以上並ぶ箇条書き（477 個・2105 行）を、どの頁でも形だけで見分けて名前と説明の表にする
 - `list/` の頁の Reference の箇条書きを、1 項目でも、入れ子の箇条書きを持っていても表にする（入れ子は説明の欄の中に入れ、中の名前と説明の箇条書きは表の中の表にする）
 - 表の名前と説明の字・並び・リンクの飛び先を、箇条書きのときと同じにする
-- 表を Material の表の見た目のまま、行の上下を詰め、字を `.75rem` にし、広い画面では名前を折り返さず、狭い画面では収める
+- 表を Material の表の見た目のまま、行の上下を詰め、字を `.75rem` にし、広い画面では 24em までの名前を折り返さず（それより長い名前だけ 24em で折り返す）、狭い画面では収める
 - `list/` の頁の意味の無い空行を原稿で直し（6 ファイルと `rateofusegraph`）、空行の決まりを `CLAUDE.md` に書く
 
 ### Non-Goals
@@ -259,15 +259,17 @@ ukadoc-spec で変えるのは上の 10 ファイルだけである（6.1）。�
   overflow-wrap: anywhere;
 }
 @media screen and (min-width: 45em) {
-  .md-typeset .definition-table td:first-child {
-    white-space: nowrap;
+  .md-typeset .definition-table td:first-child > strong:only-child {
+    display: inline-block;
+    width: max-content;
+    max-width: 24em;
   }
 }
 ```
 
 - 詳細度: Material の `.md-typeset table:not([class]) td`（0,2,2）に勝つよう、`:is(th, td)` の指定を `table:not([class])` の下に置く（0,3,2）。字の大きさの指定（0,2,1 + `:not` で 0,3,1）も Material の `.64rem`（0,2,1）に勝つ
 - 名前の太字は原稿の `strong` が出すので、CSS で付けない。幅は指定せず、Material の包み（`display: inline-block`、中の表は `width: 100%`）に任せる（3.3）
-- 名前を折り返さない指定は `@media screen` の中だけ（印刷では折り返す。3.9）
+- 名前を折り返さない指定は `@media screen` の中だけ（印刷では折り返す。3.9）。名前の欄の `strong`（名前の欄の唯一の子）を `inline-block` にし、幅を名前の字の幅（`max-content`）に、上限を `24em` にする。24em までの名前は 1 行のまま、それより長い名前（幅 1000 で 5 頁の約 13 個）だけが 24em で折り返し、説明の欄が潰れない（実装のタスク 3.4 で、`white-space: nowrap` のままでは長い名前の表 2 つで説明の欄が約 100px に潰れたため。開発者の判断、2026-10-26）
 - 色は足さない（3.7・3.10）
 
 #### 原稿（ukadoc-spec の作業木。Requirement 7）
@@ -369,12 +371,12 @@ Flows の記号: S = 見分けの流れ、W = 作業の流れ。
 | 3.1 | Material の表の見た目 | TableStyle（表に class を付けない） | `table:not([class])` | — |
 | 3.2 | 行の上下を詰める | TableStyle（`.45em .9em`） | 画面 | W |
 | 3.3 | 幅・字の大きさ・名前の太字を目標の画面と同じに | TableStyle（`.75rem`、幅は包み）, DefinitionTabulator（`strong`）, ShotCheck | 画面 | W |
-| 3.4 | 45em 以上で名前を折り返さない | TableStyle（`@media screen and (min-width: 45em)`） | 画面 | W |
+| 3.4 | 45em 以上で名前を折り返さない（24em を超える名前だけ折り返す） | TableStyle（`@media screen and (min-width: 45em)` の `max-width: 24em`） | 画面 | W |
 | 3.5 | 45em 未満で収める | TableStyle, ShotCheck | `scrollWidth` 375 | W |
 | 3.6 | 長い字を途中で折り返す | TableStyle（`overflow-wrap: anywhere`） | 375 の測り | W |
 | 3.7 | 明・暗でほかの表と同じ色、4.5:1 以上 | TableStyle（色を足さない）, ShotCheck（対比） | 対比の測り | W |
 | 3.8 | 明暗の切り替えで読み込み直さずに変わる | TableStyle（色はテーマの変数のまま） | 画面 | W |
-| 3.9 | 暗い表示のまま印刷しても明るい色 | TableStyle（暗い表示だけの色が無い、`nowrap` は screen だけ） | 印刷の確かめ | W |
+| 3.9 | 暗い表示のまま印刷しても明るい色 | TableStyle（暗い表示だけの色が無い、名前の幅の指定は screen だけ） | 印刷の確かめ | W |
 | 3.10 | 色を直書きしない | TableStyle | `extra.css` の差分 | — |
 | 4.1 | 表の中の字を検索で引ける | DefinitionTabulator（字を変えない）, TableCheck | `search.json` の字 | W |
 | 4.2 | 検索の強調を表の中でも | ShotCheck | `?h=` の画面 | W |
@@ -499,7 +501,7 @@ def tabulate(text: str, references: bool) -> str: ...
 
 | Field | Detail |
 |-------|--------|
-| Intent | 名前と説明の表の字を `.75rem` にし、行の上下を `.45em .9em` に詰め、45em 以上で名前を折り返さず、長い字を折り返す |
+| Intent | 名前と説明の表の字を `.75rem` にし、行の上下を `.45em .9em` に詰め、45em 以上で 24em までの名前を折り返さず、長い字を折り返す |
 | Requirements | 3.1〜3.10, 4.4, 4.9, 6.3, 6.8 |
 
 ##### State Management
@@ -647,3 +649,6 @@ interface Contrast { scheme: 'light' | 'dark'; fg: string; bg: string; ratio: nu
 2. **字下げ 4 以上の表の出し方**（1.7）: 印を付けずに書き、段落の中の HTML として読ませる（`dev/nar` の 1 個。ブラウザが `p` を表の手前で閉じ、前後に空の `p` が残る）。`verification.md` に HTML の形と画面を記録し、版を上げたときは Revalidation Triggers で確かめ直す。注記の箱の書き換え（ほかの spec の物）はしない
 3. **表にできない置き場所**（1.10）: 項目の中か注記の箱の中で入れ子を持つ Reference の箇条書きと、親の行に空行なしで続く名前と説明の箇条書きは、箇条書きのまま残す（どちらも今は 0 個）。`prepare_site.py` はエラーで止めず、TableCheck の「表になるはずで残った箇条書き 0」で見張る
 4. **`CLAUDE.md` の空行の決まりの文案**（7.4）: 「Modified Files」の `CLAUDE.md` の文案のまま、「書式」の「リストは `- ` で書き…」の項目の直後に足す（`OnMahjong` などの頁は名指ししない）
+
+## 実装で決まったこと（2026-10-26、開発者の判断）
+1. **長い名前の表の名前の欄**（3.4・3.6）: 実装のタスク 3.4 の画面で、`white-space: nowrap` のままでは `list/sakura-script` の `#notes_executehttp` の箱の表（83 字の `--content-type=…`）と `#bang-anim-add-overlay-ID` の表（69 字の `\![anim,add,overlay,…]`）の説明の欄が約 100px に潰れ、表の中を横に流さないと読めなかった。名前の欄の `strong` に上限 `24em` を付ける試作（幅 1000 で、はみ出す表 0、2 つの表の説明の欄 322px・286px、短い名前の表は変わらない）を開発者が採った。3.4 は「24em までの名前を折り返さない」と読む
