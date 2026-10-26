@@ -1,16 +1,16 @@
 {
   "feature_name": "site-look-top-page",
   "created_at": "2026-10-26T09:21:17Z",
-  "updated_at": "2026-10-26T09:25:44Z",
+  "updated_at": "2026-10-26T10:28:01Z",
   "language": "ja",
-  "phase": "requirements-generated",
+  "phase": "design-generated",
   "approvals": {
     "requirements": {
       "generated": true,
-      "approved": false
+      "approved": true
     },
     "design": {
-      "generated": false,
+      "generated": true,
       "approved": false
     },
     "tasks": {
