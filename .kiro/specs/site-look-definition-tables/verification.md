@@ -251,7 +251,52 @@ HTML の木の判定（`mockup.js` の C23 と同じ判定と、`list/` の頁�
 
 - `fab1563` では説明の欄が 1〜2 字ごとに折り返し、表の中を横に流さないと読めなかった。3.4（広い画面で名前を折り返さない）と 3.6（長い字を折り返せる）がこの 2 個でぶつかったので、作業を止めて開発者に提示した
 - 幅 1000 で、表のある 20 頁の名前の字の幅を測った（多くは 300px 未満、`list/shiori-event-ex` の「戻り値：X-SSTP-PassThru-…」・`spec/saori-ex`・`spec/web` に 350〜440px、`list/sakura-script` の 2 つが 642px・658px）
-- 試作: 名前の欄の `strong`（唯一の子）を `display: inline-block; width: max-content; max-width: 24em` にする（`white-space: nowrap` は除く）。幅 1000 で、表が包みからはみ出す所 0、24em（387px）で折り返す名前は 5 頁の約 13 個（`list/sakura-script` 2 表・`list/shiori-event-ex` 4 表・`spec/saori-ex` 1・`spec/web` 1）、短い名前の表（`system.cpu` など）は変わらない
+- 試作: 名前の欄の `strong`（唯一の子）を `display: inline-block; width: max-content; max-width: 24em` にする（`white-space: nowrap` は除く）。幅 1000 で、表が包みからはみ出す所 0、24em（360px。名前の欄は余白込みで 387px）で折り返す名前は 4 頁の 16 個（3.5 で数え直した。`list/sakura-script` 7・`list/shiori-event-ex` 6・`spec/saori-ex` 1・`spec/web` 2）、短い名前の表（`system.cpu` など）は変わらない
 - 開発者が「上限 24em の試作を採る」と判断した（2026-10-26）。作業木の `c4768f5` でコミットし、`design.md` の CSS と「実装で決まったこと」に書いた
 
 開発者に画面やプレビューを見せるときは、古い写しが残らないよう Ctrl+F5 での読み込み直しを頼む（5.11）。
+
+## 幅 375（タスク 3.5、2026-10-26）
+
+- 測った版: 作業木 `c4768f5` の `zensical serve`（`http://localhost:8000/ukadoc-spec/`）。式は `shot.mjs` と同じ Edge ヘッドレス + CDP の使い捨てのスクリプト（スクラッチの `m2.mjs`。1 つの Edge で頁を順に開き、式の値を出す。`node m2.mjs light|dark <幅> <高さ>`、環境変数 `URLS`・`EXPR`・`MEDIA`）。`scrollWidth` は `shot.mjs` と同じく `scrollWidth + innerWidth − clientWidth`（縦のスクロールバーの 15px を足す）
+- 幅 375（高さ 812）の明・暗で、表のある 20 頁と `manual/ghost` の 21 頁とも `scrollWidth` 375・`innerWidth` 375（4.4・5.8）。画面は残していない
+- 表の包み（`div.md-typeset__scrollwrap`）が横にはみ出す表は、21 頁で `list/shiori-event` の 2 個だけ（明・暗とも同じ）: `#capability` と `#rateofusegraph` の `Reference*` の表（説明の欄の中に表を持つ表）で、包みの幅 360 に対し中身が 363（3px）。説明の欄の中の表の包みに Material の `margin: 1em -.8rem`（左右 −16px）が付き、欄の外へ 3px 出るため。頁の横幅は 375 に収まる。幅 1000 では 0
+- 幅 1000（高さ 700）の明で、20 頁の名前の欄の `strong`（2287 個。行の数と同じ）を測った。24em は 360px（字の大きさ 15px）
+  - 24em を超える幅の名前 0、24em より狭いのに折り返した名前 0（3.4）
+  - 24em で折り返した名前は 4 頁の 16 個（どれも 2 行、幅 360px）: `list/sakura-script` 7（`\![anim,add,overlay,ID,x,y,表示時間,…]` 2・`--accept-language=…`・`--authorization=…`・`--content-type=…`・`--header=…`・`--m_websocketProtocol=…`）、`list/shiori-event-ex` 6（「戻り値：X-SSTP-PassThru-CustomLoginInfo（オプション）」など）、`spec/saori-ex` 1（`aes-256-gcm（推奨） / aes-128-gcm / chacha20-poly1305`）、`spec/web` 2（`x-ukagaka-link:type=event&…`・`x-ukagaka-link:type=homeurl&…`）。3.4 の見込み（5 頁の約 13 個）は 24em を欄の幅の 387px として数えた値で、`strong` の上限の 360px で数え直すとこの 16 個になる（`list/shiori-event` のいちばん長い 347px の名前は折り返さない）
+  - 20 頁とも `scrollWidth` 1000、表の包みからはみ出す表 0
+- 幅 375 の長い名前（3.5・3.6）: 名前の欄の `strong` は `display: inline`（45em 未満では上限の指定が当たらない）で、字の 1 つずつの位置で行の変わり目を調べると、語の途中で折り返している。`list/sakura-script` の `\![anim,add,overlay,ID]` は「`[anim,add,overlay,I`」「`D]`」、`spec/web` の `x-ukagaka-link:type=homeurl&…` は「`link:type=home`」「`url&url=(エンコ`」で行が変わる
+
+## 対比（タスク 3.5）
+
+- 式: 幅 1000 の明・暗で、20 頁の名前と説明の表のすべての見出しの字（`th`）・名前の字（`td:first-child > strong`）・名前のリンク・説明の字・説明のリンクの、計算された色と地を取った。行の地は表から上へたどって重なる地を `--md-default-bg-color` の上に重ねた色、指したときの地は `--md-typeset-table-color--light`（明 `#00000009`、暗 `hsla(225deg,15%,95%,.035)`。行の地の変数は明 `#fff`、暗 `hsla(225deg,15%,14%,1)`）を行の地に重ねた色。字の色の透明度も地に重ねてから WCAG の式で比べた
+- 頁・置き場所（一番外・注意書きの箱・注記の箱）によらず、色の組み合わせは明・暗それぞれ下の 2 つだけだった（箱の中の表の地も行の地と同じ）
+
+| 表示 | 字 | 色 | 行の地 | 対比 | 指したときの地 | 対比 |
+|---|---|---|---|---|---|---|
+| 明 | 見出し・名前・説明の字 | `rgba(0,0,0,.87)` | `rgb(255,255,255)` | 16.07 | `rgb(246,246,246)` | 15.09 |
+| 明 | 名前・説明のリンク | `rgb(31,78,140)` | `rgb(255,255,255)` | 8.31 | `rgb(246,246,246)` | 7.70 |
+| 暗 | 見出し・名前・説明の字 | `rgba(226,228,233,.82)` | `rgb(30,33,41)` | 8.93 | `rgb(37,40,48)` | 8.26 |
+| 暗 | 名前・説明のリンク | `rgb(143,180,232)` | `rgb(30,33,41)` | 7.56 | `rgb(37,40,48)` | 6.90 |
+
+- すべて 4.5:1 以上（3.7・5.7）。色は Material の表とサイトのリンクの色のままで、この spec の塊に色の値は無い
+
+## 切り替えと印刷（タスク 3.5）
+
+- 切り替え（3.8）: 明・暗それぞれで `spec/headline`・`list/sakura-script` を開き、ヘッダの明暗の切り替え（「ダークモードに切り替え」「ライトモードに切り替え」）を押して 0.6 秒後に測った。頁に置いた印の変数が残り、`navigation` の記録が 1 のまま（読み込み直しなし）で、表の見出しの字・欄の字・名前の字・リンク・`code`・枠・表の地がすべて切り替えた表示の色に変わった（明 → 暗: 字 `rgba(0,0,0,.87)` → `rgba(226,228,233,.82)`、地 `rgb(255,255,255)` → `rgb(30,33,41)`、リンク `rgb(31,78,140)` → `rgb(143,180,232)`。暗 → 明はその逆）
+- 印刷（3.9）: 印刷の媒体（`Emulation.setEmulatedMedia {media:'print'}`）で、明るい表示と、暗い表示を選んだまま（`prefers-color-scheme: dark`、`data-md-color-scheme="slate"`）の `list/sakura-script`・`spec/headline` を比べた
+  - 表の見出しの字・欄の字・名前の字 `rgba(0,0,0,.87)`、見出しの下の線 `rgba(0,0,0,.87)`、欄の線 `rgba(0,0,0,.12)`、表の地と頁の地 `rgb(255,255,255)`、`code` の `rgb(54,70,78)` / `rgb(245,245,245)` は、暗い表示のままでも明るい表示の印刷と同じ（暗い表示だけの色は出ない）
+  - リンクの色だけが違う: 明るい表示の印刷 `rgb(31,78,140)`、暗い表示のままの印刷 `rgb(64,81,181)`（白に対して 6.85:1）。表の外のリンクも同じで、変更の前の控え（8010）の箇条書きのリンクも暗い表示のままの印刷で `rgb(64,81,181)` だった。この spec の変更でなく、サイトのリンクの色（`site-look-dark-link-color` の指定が印刷で当たらず Material の既定の色に戻る）による
+  - 名前の折り返し: 印刷では名前の `strong` が `display: inline`・`max-width: none`（上限は `@media screen` の中だけ）で、`list/sakura-script` の 151 個の名前のうち 42 個が欄の幅で折り返す（画面の幅 1000 では 7 個）。`--content-type=…` は欄 291px の中で 3 行
+
+## 検索の強調（タスク 3.5）
+
+- `spec/headline/?h=headline` と `list/propertysystem/?h=name` を明・暗で開いた（4.2）。表の中の `mark` は `spec/headline` で説明の字・名前の字・名前のリンクの中に、`list/propertysystem` で名前の字の中にあり、どれも `visibility: visible`、大きさ 59×18・38×18 px
+- `mark` の色は Material の既定のまま（表の外の `mark` と同じ指定）
+
+| 表示 | `mark` の地 | 字の色 | 字と `mark` の地の対比 | `mark` の地と行の地の対比 |
+|---|---|---|---|---|
+| 明 | `rgba(255,255,0,.5)`（白に重ねて `rgb(255,255,128)`） | `rgba(0,0,0,.87)` | 15.37 | 1.06（黄の色相で見分ける） |
+| 暗 | `rgba(66,135,255,.3)` | `rgba(226,228,233,.82)` | 6.08 | 1.55 |
+
+- 語の選び: `?h=cpu` は `list/propertysystem` の見出しと段落の 2 個だけを強調し（名前の `system.cpu.name` は `cpu` の語に分かれない。控え（8010）も同じ 2 個）、表の中の語には `?h=headline`・`?h=name` を使った
