@@ -59,7 +59,7 @@
   - `origin/main` が作業木の先祖で、Build Gate が exit 0 で、測る版が `verification.md` に書いてある
   - _Requirements: 6.7_
 
-- [ ] 3.2 配りと、表の数・外した形・空行を、プレビューの頁の HTML で数える
+- [x] 3.2 配りと、表の数・外した形・空行を、プレビューの頁の HTML で数える
   - プレビューを止め、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動し直す。控えが配られていなければ、`verification.md` に書いた置き場から配り直す（無ければ書いたコミットから 1.2 の手順で作り直す）
   - 配られた `/ukadoc-spec/assets/extra.css` が 200 で、`site-look-definition-tables:` の注が 1 つあることを見る。無ければ起動し直す
   - 設計の「TableCheck」のとおり、全頁の `div.definition-table` を頁ごとに名前と説明の箇条書きの表と Reference の箇条書きの表に分けて数え、置き場所（一番外・`div.bundle-notes`・注記の箱・項目の中・表の中）も数えて、期待の数の表（計 632 個、477 / 2105 と 155 / 182）と比べる

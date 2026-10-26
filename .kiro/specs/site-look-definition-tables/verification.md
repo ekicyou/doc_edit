@@ -80,3 +80,68 @@
 - ukadoc-spec を fetch した。`origin/main` は `f54423d` のままで、作業木の分岐点から進んでいない。merge はせず、変更の前の控え（`f54423d`）もそのまま使う
 - 測る版: 作業木 `site-look-definition-tables` の `fab1563`（`origin/main` `f54423d` の上に 4 コミット）。`origin/main` は作業木の先祖である
 - Build Gate（2.5）: `prepare_site.py` exit 0、`zensical build --strict` exit 0（No issues found）。`git diff --stat origin/main` は 10 ファイル。build の HTML の `class="definition-table"` は 632
+
+## 配り（タスク 3.2、2026-10-26）
+
+- 作業木（`fab1563`）で `prepare_site.py`（exit 0）→ `zensical build --strict`（exit 0、`No issues found`）→ `zensical serve` の順に起動した（`http://localhost:8000/ukadoc-spec/`、`serve` の PID 13824・口を持つ子の PID 27520。3.3〜3.5 が使う）。控えの配り（8010、PID 20712）は動いたまま
+- 配られた `/ukadoc-spec/assets/extra.css` は 200 で、`site-look-definition-tables:` の注は 1 つ（232 行目 `/* site-look-definition-tables: 名前と説明の表 */`）
+
+## 表の数（タスク 3.2）
+
+### 数えるスクリプト
+- `C:\Users\maz-o\AppData\Local\Temp\claude\C--home-maz-git-doc-edit\4124383f-68b4-478c-8a28-dbceca1ecaf3\scratchpad\tablecheck.py` に、頁ごとの `tables`（`div.definition-table` ごとの種類・置き場所・行の（名前の欄・説明の欄・`href`））、`excluded`（表にならなかった、頭が太字の箇条書きの形）、`tsplits`（並んだ Reference の表の番号）を足した
+- 式: `python -I tablereport.py <_site> <out.json>`（同じ置き場。`tablecheck.snapshot()` で数え、頁ごとの数と外した形の例を出す）。変更の後の控えは同じ置き場の `after_x.json`（3.3 の字の照合はこれと `baseline\before.json` を比べる）
+- 種類: 2 行以上で、どの欄も `p`・`ul`・`ol`・`table`・`pre` を持たない表を「名前と説明の箇条書きの表」、それ以外を「Reference の箇条書きの表」とした（設計の TableCheck のとおり）
+- 置き場所: 表から `article` へ上がって一番近い入れ物（`td` → 表の中、`li` → 項目の中、`div.bundle-notes`、`.admonition` → 注記の箱、無ければ一番外）
+
+### 頁ごとの数（変更の後）
+| 頁 | 名前と説明の表 / 行 | Reference の表 / 行 | 置き場所 | 設計の期待 |
+|---|---|---|---|---|
+| `list/shiori-event/` | 217 / 892 | 83 / 88 | 一番外 298・表の中 2 | 合う |
+| `list/shiori-event-ex/` | 124 / 552 | 62 / 84 | 一番外 186 | 合う |
+| `spec/saori-ex/` | 45 / 177 | 0 / 0 | 一番外 45 | 合う |
+| `list/sakura-script/` | 22 / 151 | 0 / 0 | 一番外 16・`bundle-notes` 6 | 合う |
+| `spec/sstp/` | 10 / 71 | 0 / 0 | 一番外 10 | 合う |
+| `list/propertysystem/` | 9 / 56 | 0 / 0 | 一番外 9 | 合う |
+| `list/plugin-event/` | 8 / 34 | 9 / 9 | 一番外 17 | 合う |
+| `descript/shell/` | 7 / 23 | 0 / 0 | 一番外 7 | 合う |
+| `spec/shiori3/` | 7 / 36 | 0 / 0 | 項目の中 7 | 合う |
+| `spec/headline/` | 5 / 15 | 0 / 0 | 一番外 5 | 合う |
+| `descript/shell-surfaces/` | 4 / 20 | 0 / 0 | 一番外 4 | 合う |
+| `list/shiori-resource/` | 4 / 18 | 1 / 1 | 一番外 5 | 合う |
+| `spec/update-file/` | 4 / 9 | 0 / 0 | 一番外 1・項目の中 3 | 合う |
+| `descript/install/` | 3 / 17 | 0 / 0 | 一番外 3 | 合う |
+| `descript/ghost/` | 2 / 6 | 0 / 0 | 一番外 2 | 合う |
+| `spec/fmo-mutex/` | 2 / 15 | 0 / 0 | 一番外 1・項目の中 1 | 合う |
+| `descript/plugin/` | 1 / 6 | 0 / 0 | 一番外 1 | 合う |
+| `dev/nar/` | 1 / 2 | 0 / 0 | 注記の箱 1 | 合う |
+| `spec/plugin/` | 1 / 2 | 0 / 0 | 一番外 1 | 合う |
+| `spec/web/` | 1 / 3 | 0 / 0 | 一番外 1 | 合う |
+| 計 | 477 / 2105 | 155 / 182 | 一番外 612・`bundle-notes` 6・注記の箱 1・項目の中 11・表の中 2 | 合う（計 632） |
+
+- ほかの 20 頁（トップ・manual の 7 頁・`descript/balloon/` など）は表 0。manual の頁の表は 0（1.6）
+- 置き場所の中身: `bundle-notes` 6 は `list/sakura-script` の注意書きの箱（`screen`…・`--volume=…`…・`--option=…`…・`--accept=…`…・`期間の決め方`…・`期間（--from・--to）`…）。注記の箱 1 は `dev/nar` の `.admonition.tip`（`※1 ベースウェア`・`※2 nar`）。項目の中 11 は `spec/shiori3` 7（`メソッド` の `GET`・`NOTIFY`、`SenderType`・`SecurityLevel`・`Status`・`ステータスコード`・`SecurityLevel [SSP拡張]`・`ErrorLevel [SSP拡張]` の値）・`spec/fmo-mutex` 1（`キー名・値` の `path`…）・`spec/update-file` 3（`行情報`・`必須フィールド`・`拡張フィールド (位置[2]以降)`）。表の中 2 は `list/shiori-event` の `request.(ヘッダ名…)`・`response.(…)` と `rateofusegraph` の `1番目`〜`13番目`
+- HTML に `markdown=` は 0
+
+## 外した形（タスク 3.2）
+
+HTML の木の判定（`mockup.js` の C23 と同じ判定と、`list/` の頁の Reference の判定）で、表になるはずで残った箇条書きは **0**（変更の前は 659 = 477 + 182）。頭が太字の項目だけの箇条書きで表にならなかったものは、変更の前と後で同じ数だった。
+
+| 外した形 | 数 | 設計の期待 | 例 |
+|---|---|---|---|
+| Reference でない 1 項目 | 42 | 42 | `descript/install` の `charset,(文字コード)`、`list/sakura-script` の `--title=テキスト`、`spec/shiori3` の `Charset`、`spec/sstp` の `Option` |
+| `spec/shiori3` のヘッダの一覧の中の `Reference` | 3 | 3 | `Reference*`・`Reference0`・`Reference1～`（`list/` の頁でないので 1 項目のまま） |
+| 2 つ以上の段落 | 8 | 8 | トップの 6（`ファイル構成`・`設定ファイル`・`さくらスクリプト`・`イベント`・`規格`・`HowTo`）、`list/sakura-script` の `--dir=パス`、`manual/shell` の `※1,※2` |
+| コードブロック | 4 | 4 | `list/propertysystem` の `%property[プロパティ名]`・`\![get,property,…]`・`\![set,property,…]`、`spec/update-file` の `行フォーマット` |
+| 入れ子の箇条書き（外側） | 12 | — | `spec/shiori3` 7・`spec/fmo-mutex` 1・`spec/update-file` 4。うち 9 は内側が表になった（項目の中の 11 のうち、外側が「`: `」で続く 9）。`ValueNotify [SSP拡張 2.5.35]`・`セキュリティチェック`・`ファイル名` は内側が表にならない箇条書き |
+| 名前の後ろが「`: `」でない 1 項目 | 11 | 84（manual の 73 を含む） | `descript/shell-surfaces` の `列挙指定「,」`、`list/sakura-script` の `5帯域(…：Hz)`、`spec/shiori3` の `メソッド`、`spec/update-file` の `必須フィールド` |
+| 同（2 項目以上） | 1 | 1 | `spec/saori-ex` の `必ず守ること（MUST）：` ほかの 5 項目 |
+| manual の頁のファイルの箇条書き（`manual-item`） | 73 | 0（表）。73 は上の 84 に含む | `manual/ghost` の `descript.txt`・`shiori.dll`、`manual/directory` の `(myghost)\` |
+
+- 設計の期待との違いは数え方だけ: 設計は「名前の後ろが「`: `」でない 1 項目 84」に manual の 73（目印の付いた項目は「`: `」が外れている）を含め、「manual の頁 0」を manual の頁の表の数としていた。ここでは 11 と 73 に分けた（11 + 73 = 84）。「入れ子の箇条書き」12 は設計の外した形の一覧に無いが、1.4 の形で、どれも外側は箇条書きのまま（1.8）
+- 頭が太字の項目だけの箇条書きの計: 変更の前 813（表になる見込み 659 + 外した 154）、後は外した 154 だけ
+
+## 空行（タスク 3.2）
+
+- `list/` の頁で並んだ Reference の表（同じ親の中で隣り合う `div.definition-table` で、どの名前も `Reference…`）: 番号が続く所 **0**、振り直す所 **27**（どれも `list/shiori-event-ex`。`OnMahjong` など）。`Reference*` で始まる並びは 0（7.3・7.6）
+- 変更の前の「番号が続く所 27」（直した 6 ファイルの意味の無い空行）は、表がつながって 0 になった。並んだ Reference の箇条書き（`ul`）は後で 0（どれも表になった）
