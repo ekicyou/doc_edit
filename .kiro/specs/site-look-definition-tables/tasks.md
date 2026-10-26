@@ -31,7 +31,7 @@
   - _Boundary: TableStyle_
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.10, 2.5, 6.3, 6.8_
 
-- [ ] 2.3 (P) 意味の無い空行のある原稿 6 つと `rateofusegraph` を直す
+- [x] 2.3 (P) 意味の無い空行のある原稿 6 つと `rateofusegraph` を直す
   - 設計の「Modified Files」の原稿の表のとおり、6 ファイルの空行（4・3・12・2・2・10）を除き、`rateofusegraph.md` の `1番目`〜`13番目` の 13 行と `7番目` の続きの 4 行に 2 字の字下げを足して `Reference*` の行との間の空行を除く
   - 空行と字下げのほかは 1 字も変えず、改行の形も変えない（索引は LF のまま）。意味のある空行（`OnPoker`・`OnPokerNotify`・`OnMahjong`・`OnMahjongResponse` の 27 か所）には触らない
   - `git diff --stat -- list/` が 7 ファイルで、`git diff --ignore-blank-lines --ignore-all-space -- list/` が空になり、字下げの変わった行が `rateofusegraph.md` の 17 行（2 字を足しただけ）だけで、7 ファイルの見出しの行が変わっていない（2.1・2.2・2.4 が同じ作業木のほかのファイルを並べて書くので、確かめは `list/` に限る）
