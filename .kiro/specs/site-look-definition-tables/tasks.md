@@ -103,7 +103,7 @@
   - `verification.md` と `screenshots/` がそろい、設計の「Testing Strategy」の各項目の結果と、C16 の見立てと、PR の本文の材料が書いてある
   - _Requirements: 3.10, 5.9, 5.11, 6.3, 6.6_
 
-- [ ] 4.2 作業木を `/kiro-complete` に渡せる状態にする
+- [x] 4.2 作業木を `/kiro-complete` に渡せる状態にする
   - ukadoc-spec を fetch し、3.1 の後に `origin/main` がまた進んでいれば、3.1 と同じく追いつき、変わった所に当たる 3.2〜3.5 の確かめをやり直して `verification.md` の版と結果を直す
   - 作業木の変更をすべてコミットし、push も PR もしない（PR とスクワッシュマージは `/kiro-complete` で行う）
   - 最後のコミットの後で、Build Gate・規約 Gate・`git diff --stat origin/main` をやり直し、結果を `verification.md` に書き直す

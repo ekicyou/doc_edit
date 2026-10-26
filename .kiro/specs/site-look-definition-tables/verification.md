@@ -424,3 +424,12 @@ PR の本文に写す。説明は brief の「続きの PR の説明」に従い
 
 ### 見せるときの頼み（5.11）
 - 開発者に画面やプレビュー（`http://localhost:8000/ukadoc-spec/`）を見せるときは、古い `extra.css` が残らないよう、ブラウザで Ctrl+F5 の読み込み直しを頼む
+
+## 引き継ぎ（タスク 4.2、2026-10-26）
+
+- ukadoc-spec を fetch した。`origin/main` は `f54423d` のままで、3.1 の後に進んでいない。追いつきと 3.2〜3.5 のやり直しは要らなかった
+- 作業木の最後のコミットは `c4768f5`（`origin/main` の上に 5 コミット）。未コミットの変更は無い。ブランチ `site-look-definition-tables` は追う先が無く、origin に push していない（PR とスクワッシュマージは `/kiro-complete` で行う）
+- 最後のコミットで流し直した: `prepare_site.py` exit 0、`zensical build --strict` exit 0（No issues found）、build の HTML の `class="definition-table"` 632。規約 Gate（ukadoc-spec の `CLAUDE.md`）: 原稿の直しは空行と字下げだけ、コミットは履歴の型の日本語の 1 文
+- `git diff --stat origin/main`: 10 ファイル（`CLAUDE.md`・`assets/extra.css`・`scripts/prepare_site.py`・直した 7 原稿）、124 行の追加と 54 行の削除。`requirements.txt`・`mkdocs.yml`・`.nav.yml`・`INDEX.md` は含まない
+- プレビュー（8000）と変更の前の控えの配り（8010）を止め、控えの置き場（スクラッチの `baseline/`）を消した
+- `/kiro-complete` でする事: `.kiro/steering/structure.md` の目印の名前の決まりに「どの頁の種類にも出る役は `<役>` だけの名前にする」を 1 文足す（設計の話し合いの議題 1。表の印 `definition-table`）
