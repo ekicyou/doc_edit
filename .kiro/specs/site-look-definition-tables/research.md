@@ -218,3 +218,10 @@
 - `.kiro/specs/completed/site-look-plan/screenshots/mock-*-C23-*.png` — 目標の画面
 - `.kiro/specs/completed/site-look-manual-files/design.md` — 後処理の型・Revalidation Triggers
 - Python-Markdown の `md_in_html`（3.11.2、`.venv` の中の版）— `markdown="1"`・`"block"`・`"span"` の扱い
+
+## 設計の話し合いの決定（2026-10-26）
+- 開発者の「承認」で、設計の 4 議題をすべて推奨案で確定した（design.md の「設計の話し合いで決まったこと」）
+- 印 `definition-table`: どの頁の種類にも出る役なので `<頁の種類>-<役>` に当てはまらない。短く、`site-look-sstp-playback` が見つけやすい名前を採り、完了のときに `structure.md` の決まりを 1 文広げる
+- `dev/nar` の字下げ 4 以上の表: 当て先が 1 個で、正しい HTML にするには注記の箱の書き方（ほかの spec の物）まで変えるため、ブラウザが直して見せる形のまま記録して入れる
+- 表にできない置き場所（今は 0 個）: 原稿の誤りではないもので build を止めないため、確かめの段の数え（残り 0）で見張る
+- `CLAUDE.md` の文案: 原稿が動いても古くならないよう、頁を名指ししない
