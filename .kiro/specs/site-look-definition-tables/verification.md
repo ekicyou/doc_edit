@@ -145,3 +145,48 @@ HTML の木の判定（`mockup.js` の C23 と同じ判定と、`list/` の頁�
 
 - `list/` の頁で並んだ Reference の表（同じ親の中で隣り合う `div.definition-table` で、どの名前も `Reference…`）: 番号が続く所 **0**、振り直す所 **27**（どれも `list/shiori-event-ex`。`OnMahjong` など）。`Reference*` で始まる並びは 0（7.3・7.6）
 - 変更の前の「番号が続く所 27」（直した 6 ファイルの意味の無い空行）は、表がつながって 0 になった。並んだ Reference の箇条書き（`ul`）は後で 0（どれも表になった）
+
+## 字の照合（タスク 3.3、2026-10-26）
+
+- スクリプト: Claude のスクラッチの `compare33.py` と `c2.py`（`tablecheck.py` の木を使う。`c2.py` が search.json の照合を足した版）。式は `python -I c2.py <控えの _site> <作業木の _site>`。控えは `baseline\src\_site`（`f54423d`）、後は作業木（`fab1563`）の今の `_site`
+- 比べ方: 頁ごとに、控えの表になる見込みの箇条書き（1.2 と同じ判定）の項目の（名前・説明・`href`）を文書順に並べ、後の `div.definition-table` の `tbody` の行の（名前の欄・説明の欄・`href`）を文書順に並べて、1 行ずつ比べた。空白は詰め、説明の頭の「`: `」は除いた
+- 中の表の扱い: 欄の中の表（`div.definition-table`）は外側の欄の字と `href` から除き（中の表の見出しの行「名前」「説明」もこれで除かれる）、中の表の行は自身の行として、文書順（外側の行の直後）に比べた。控えの側も、項目の中の、それ自身が表になる見込みの箇条書きは外側の項目の字から除き、自身の行として比べた。中の行は「名前」「説明」の 2 欄に分かれ「`:`」が無いので、外側の字に混ぜずに行として比べると、名前と説明の字がそのまま照合される
+- `rateofusegraph` の順: 控えでは `1番目`〜`13番目` は `Reference*` の箇条書きの後ろに空行を挟んで並ぶ別の箇条書き、後では `Reference*` の説明の欄の中の表。どちらも文書順で `Reference*` の直後に `1番目`〜`13番目` が来るので、並びは同じになる。`list/shiori-event/` の 936〜950 行目（`Reference*`・`1番目`〜`13番目`・次の `Reference0`）を取り出し、控えと後で（名前・説明・`href`）が同じことを確かめた（`Reference*` の説明は「バイト値1区切りにされた以下の情報。」、`7番目` の続きの 4 行の字も同じ）。中の表を持つ欄は `list/shiori-event/` の 2 つ（どちらも `Reference*`）
+- 直した 6 原稿（空行を除いただけ）: 控えでは 1 項目ずつの箇条書きが並び、後では 1 つの表の行になる。行を頁ごとに通して並べて比べるので、箇条書き・表の切れ目の違いは字の照合に入らない
+
+| 見たもの | 結果 |
+|---|---|
+| 表のある頁 | 20 |
+| 行（控えの項目 / 後の行） | 2287 / 2287 |
+| 頁ごとの行の数の違い | 0 |
+| （名前・説明・`href`）の違い | **0** |
+| `\` を含む名前（後の表） | 7（どれも `list/sakura-script/` の `\![anim,add,…]`）。7 つとも、その頁の `search.json` の字（タグを外し空白を除いたもの）に含まれる |
+| 後の表の名前の欄・説明の欄の字で、その頁の `search.json` に無いもの | **0**（4574 の字のうち。控えの項目の字も控えの `search.json` で 0） |
+
+## 変わらないこと（タスク 3.3）
+
+`tablecheck.snapshot()` で作業木の今の `_site` を数え直し（同じ置き場の `after33.json`、式は `python -I c4.py <作業木の _site>`）、控えの `baseline\before.json` と頁ごとに比べた。
+
+| 見たもの | 控え | 後 | 頁ごとの違い |
+|---|---|---|---|
+| 頁 | 40 | 40 | — |
+| 見出しの id（並びを頁ごとに比べた） | 2579 | 2579 | 0 |
+| `a.headerlink` | 2579 | 2579 | 0 |
+| 右の欄の目次の項目 | 2041 | 2041 | 0 |
+| `pre` | 449 | 449 | 0 |
+| HTML の `markdown=`（`article` の頁の数え・`_site` の全 HTML の grep） | 0 | 0・0 ファイル | — |
+
+## 目印（タスク 3.3）
+
+| 見たもの | 控え | 後 | 頁ごとの違い |
+|---|---|---|---|
+| `bundle-support` | 1640 | 1640 | 0 |
+| `bundle-default` | 423 | 423 | 0 |
+| `bundle-notes` | 16 | 16 | 0 |
+| `bundle-baseware` | 2719 | 2719 | 0 |
+| 本文の `{:` | 0 | 0 | 0 |
+| `manual-item` | 73 | 73 | 0 |
+
+- `llms.txt`: SHA-256 が控えと同じ（`3916fa9ec45f431ba4c467a08a14371a51db8ecc9ed0a64d6a2636d70974075d`）
+- `_raw/`: `diff -rq` で違うのは直した 7 原稿だけ（`OnConfigurationDialogHelp`・`OnOtherObjectDropping`・`rateofusegraph`・`OnMusicPlayer.SongInfo`・`OnSpectrePlugin.Possession`・`OnWeatherStation.Astro`・`OnWeatherStation.Forecast.Hourly`）。`git diff --no-index --stat` は 7 ファイル・17 行足し・51 行除き（空行 34 と、`rateofusegraph` の字下げを足した 17 行の入れ替え）、`-w --ignore-blank-lines` では差が無い（7.5）
+- 違いが無かったので、2.1・2.3 は見直していない
