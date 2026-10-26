@@ -1,5 +1,18 @@
 # 確かめの記録: site-look-definition-tables
 
+## 測った版と式（タスク 4.1、2026-10-26）
+
+- 測った版: ukadoc-spec の作業木 `.worktrees/site-look-definition-tables/` の `c4768f5`（`origin/main` `f54423d` の上に 5 コミット: `e158ea2`・`a6b4427`・`cdd9697`・`fab1563`・`c4768f5`）。変更の前の控えは `f54423d`
+- 日付: 2026-10-26。3.2・3.3 の数と字の照合は `fab1563` で取った。`c4768f5` は `assets/extra.css` だけを変える（4 行足し・2 行除き）ので、build の HTML・`search.json`・`llms.txt`・`_raw/` は `fab1563` と同じ。3.4（撮り直し）・3.5 は `c4768f5` で測った
+- 変更の範囲: `git diff --stat origin/main` は 10 ファイル・124 行足し・54 行除き（`scripts/prepare_site.py`・`assets/extra.css`・`CLAUDE.md`・直した 7 原稿）
+- 流した式（作業木で。Claude のスクラッチは `C:\Users\maz-o\AppData\Local\Temp\claude\C--home-maz-git-doc-edit\4124383f-68b4-478c-8a28-dbceca1ecaf3\scratchpad\`）
+  - Build Gate: `python scripts/prepare_site.py` → `zensical build --strict`（どちらも `doc_edit\.venv` の物。exit 0、`No issues found`）
+  - 単体: `doc_edit\.venv\Scripts\python.exe <スクラッチ>\unit_tabulate.py`（2.1）
+  - 数える: `python -I tablecheck.py <_site> <out.json>`（1.2 の控え）、`python -I tablereport.py <_site> <out.json>`（3.2 の表の数・外した形・空行）
+  - 字の照合と変わらないこと: `python -I c2.py <控えの _site> <作業木の _site>`、`python -I c4.py <作業木の _site>`（3.3）
+  - 画面: `node .kiro/specs/completed/site-look-plan/tools/shot.mjs <url> <selector> screenshots/after-<名>-<light|dark>.png <light|dark>`（1000×700。3.4）。二重の跡は `doubled.py`、前の画面との画素の比べは `pxdiff.py`
+  - 幅・対比・切り替え・印刷・検索の強調: `node m2.mjs light|dark <幅> <高さ>`（環境変数 `URLS`・`EXPR`・`MEDIA`。3.5）、`measure.mjs`（3.4 の名前の幅）
+
 ## 変更の前（タスク 1.2、2026-10-26）
 
 ### 控えの置き場と配り
@@ -74,6 +87,21 @@
 | `spec/web/` | 1 / 3 | 0 / 0 | 0 / 0 | — |
 
 表に出ていない 10 頁（トップ・`dev/bind/`・`dev/ownerdraw/`・`dev/shell/`・`dev/shell-error/`・`dev/update/`・`manual/translator/`・`memo/memo/`・`memo/shiori-event/`・`spec/dll/`）は、箇条書き・空行・目印の数が 0。
+
+## 単体（タスク 2.1、2026-10-26）
+
+- スクリプト: Claude のスクラッチの `unit_tabulate.py`（作業木の `scripts/prepare_site.py` から `tabulate()` を import し、直に呼ぶ）。式は `doc_edit\.venv\Scripts\python.exe unit_tabulate.py`。4.1 で `c4768f5` の作業木に対して流し直し、exit 0（`ALL OK`）
+
+| 例（設計の Testing Strategy の単体） | 結果 |
+|---|---|
+| 2 項目の名前と説明の箇条書き → 表 1 個 2 行、名前の欄に `**a**`、説明の欄に「`: `」の後ろの字と `<br />` の続きの行 | OK |
+| 1 項目で `Reference` でない名前 → 字が 1 字も変わらない | OK |
+| `references` が偽の `Reference0` 1 項目 → 変わらない | OK |
+| `references` が真の `- **Reference0**: …` と 2 字下げの入れ子 → `td markdown="block"` の中に、字下げを外した入れ子の表 | OK |
+| `- **必ず守ること（MUST）：**` を含む 5 項目 → 変わらない | OK |
+| コードブロックの中の `- **a**: b` → 変わらない | OK |
+| 字下げ 4 の 2 項目 → `markdown=` の無い表 | OK |
+| 字下げ 2 の 2 項目 → `div`・`table`・`tbody`・`tr`・`td` の各段に `markdown="1"` | OK |
 
 ## 測る版（タスク 3.1、2026-10-26）
 
@@ -281,6 +309,11 @@ HTML の木の判定（`mockup.js` の C23 と同じ判定と、`list/` の頁�
 
 - すべて 4.5:1 以上（3.7・5.7）。色は Material の表とサイトのリンクの色のままで、この spec の塊に色の値は無い
 
+### 色の値を足していないこと（3.10・6.3、タスク 4.1）
+
+- `git -C <作業木> diff origin/main -- assets/extra.css` は、ファイルの末尾（`.filetree-file` の塊の後ろ）に 16 行を足すだけ。注は `/* site-look-definition-tables: 名前と説明の表 */` の 1 行（6.3）
+- 足した指定は `font-size: .75rem`・`padding: .45em .9em`・`overflow-wrap: anywhere`・`@media screen and (min-width: 45em)` の中の `display: inline-block; width: max-content; max-width: 24em` だけで、色・地・枠の値も色の変数も無い。表の枠・地・字・リンクの色は Material の表の指定とサイトのリンクの色から来る（3.10）。足した色が無いので、記録する色と地の対比も無い
+
 ## 切り替えと印刷（タスク 3.5）
 
 - 切り替え（3.8）: 明・暗それぞれで `spec/headline`・`list/sakura-script` を開き、ヘッダの明暗の切り替え（「ダークモードに切り替え」「ライトモードに切り替え」）を押して 0.6 秒後に測った。頁に置いた印の変数が残り、`navigation` の記録が 1 のまま（読み込み直しなし）で、表の見出しの字・欄の字・名前の字・リンク・`code`・枠・表の地がすべて切り替えた表示の色に変わった（明 → 暗: 字 `rgba(0,0,0,.87)` → `rgba(226,228,233,.82)`、地 `rgb(255,255,255)` → `rgb(30,33,41)`、リンク `rgb(31,78,140)` → `rgb(143,180,232)`。暗 → 明はその逆）
@@ -300,3 +333,94 @@ HTML の木の判定（`mockup.js` の C23 と同じ判定と、`list/` の頁�
 | 暗 | `rgba(66,135,255,.3)` | `rgba(226,228,233,.82)` | 6.08 | 1.55 |
 
 - 語の選び: `?h=cpu` は `list/propertysystem` の見出しと段落の 2 個だけを強調し（名前の `system.cpu.name` は `cpu` の語に分かれない。控え（8010）も同じ 2 個）、表の中の語には `?h=headline`・`?h=name` を使った
+
+## C16 の見立て（5.9、タスク 4.1）
+
+`spec/shiori3` の 7 個の表を、build の HTML（`_site/spec/shiori3/index.html`）と画面（`after-shiori3-light/dark.png`、`#request`）で見た。
+
+| 外側の項目（ヘッダ） | 行 | 値の名前 | 説明の欄にあるもの |
+|---|---|---|---|
+| `メソッド` | 2 | `GET`・`NOTIFY` | `<br />` の改行（`NOTIFY`） |
+| `SenderType [SSP 2.5.05～拡張]` | 9 | `internal`〜`communicate` | `code`（`embed`・`raise`） |
+| `SecurityLevel` | 2 | `local`・`external` | — |
+| `Status [SSP拡張]` | 10 | `talking`〜`balloon(ID群)` | `code`（5 行）・`<br />` の改行（`opening(種類)`・`balloon(ID群)`） |
+| `ステータスコード` | 6 | `200`〜`500` | `<br />` の改行（6 行とも） |
+| `SecurityLevel [SSP拡張]`（response） | 2 | `local`・`external` | — |
+| `ErrorLevel [SSP拡張]`（response） | 5 | `info`〜`critical` | — |
+
+- 見立て: **C16 はこの 7 個の表で足りるとみなせる**（開発者が決める。roadmap のバックログの C16 を閉じる材料）
+- 理由
+  - C16 が解く差 D10（`site-look-plan` の `survey.md`）の当て先は、旧サイトの `dl.property` 7 個 ＝ ヘッダの取る値の一覧で、この spec の 7 個の表と同じ 7 か所・同じ中身（計 36 行）。値の名前は表の左の列に太字でそろい、説明が折り返しても名前の列は崩れない（D10 の「説明が折り返すと名前の列がそろわない」が解ける）
+  - roadmap が C16 を保留にした確かめの残りは、この spec で済んでいる: 説明の中の `code`・`<br />` の改行のある行（`Status`・`SenderType`・`ステータスコード`）も列が崩れない（3.4 の画面）。明・暗の色と対比（3.5、どの表も同じ 2 組）、幅 375 で `spec/shiori3` も `scrollWidth` 375（3.5）。値の名前はどれも短く、24em で折り返す名前は無い
+  - 頁を絞る印は要らない: 表は形だけで見分けて全頁に出るので、`spec/shiori3` だけの印を足す理由が無い
+  - 旧サイトとの違いは見た目の細部だけ: 旧サイトは値の名前を右寄せの灰緑の欄、説明を 1 行おきに色の違う緑の欄にしていた。この表はサイトのほかの表と同じ Material の表（名前は左寄せの太字、縞の地は無い）。C16 の見込み（`grid` で 2 列に見せる）の目的は値の名前を縦に目で追えることで、表で満たされる
+- 足りないもの（C16 の外）: ヘッダそのもの（`メソッド`・`Charset`・`Sender` など）は外側の箇条書きのままで、ヘッダの切れ目の帯（D11）は無い。`ValueNotify [SSP拡張 2.5.35]` の入れ子は表にならない箇条書きのまま（1.4）、`Reference*`・`Reference0`・`Reference1～` は `list/` の頁でないので 1 項目の箇条書きのまま（3.2 の外した形）。これらは C16 でなく D11 の話で、残すかどうかは別に決める
+
+## PR の本文の材料（6.6、タスク 4.1）
+
+PR の本文に写す。説明は brief の「続きの PR の説明」に従い、並びは PR を出すときの roadmap による。
+
+### 何が変わるか
+- `- **名前**: 説明` だけが並ぶ箇条書き（2 項目以上、各項目が 1 段落）と、`list/` の頁の `Reference0` などの箇条書き（1 項目でも）を、組み立ての処理（`scripts/prepare_site.py` の `tabulate()`）で「名前」「説明」の 2 列の表（`div.definition-table`）にする。原稿の書き方は変わらない
+- 表は Material の表の見た目のまま、字を `.75rem`、行の上下を `.45em .9em` に詰める。幅 45em 以上では名前を 24em まで折り返さない（`assets/extra.css` の末尾の 1 塊。色の値は足していない）
+- `list/` の頁の意味の無い空行（表が切れる元）を 7 原稿で直し、ukadoc-spec の `CLAUDE.md` の「書式」に空行の決まりを 1 項目足す
+
+### 頁ごとの表の数（build の HTML、計 632 個・2287 行）
+| 頁 | 名前と説明の表 / 行 | Reference の表 / 行 |
+|---|---|---|
+| `list/shiori-event/` | 217 / 892 | 83 / 88 |
+| `list/shiori-event-ex/` | 124 / 552 | 62 / 84 |
+| `spec/saori-ex/` | 45 / 177 | 0 / 0 |
+| `list/sakura-script/` | 22 / 151 | 0 / 0 |
+| `spec/sstp/` | 10 / 71 | 0 / 0 |
+| `list/propertysystem/` | 9 / 56 | 0 / 0 |
+| `list/plugin-event/` | 8 / 34 | 9 / 9 |
+| `descript/shell/` | 7 / 23 | 0 / 0 |
+| `spec/shiori3/` | 7 / 36 | 0 / 0 |
+| `spec/headline/` | 5 / 15 | 0 / 0 |
+| `descript/shell-surfaces/` | 4 / 20 | 0 / 0 |
+| `list/shiori-resource/` | 4 / 18 | 1 / 1 |
+| `spec/update-file/` | 4 / 9 | 0 / 0 |
+| `descript/install/` | 3 / 17 | 0 / 0 |
+| `descript/ghost/` | 2 / 6 | 0 / 0 |
+| `spec/fmo-mutex/` | 2 / 15 | 0 / 0 |
+| `descript/plugin/` | 1 / 6 | 0 / 0 |
+| `dev/nar/` | 1 / 2 | 0 / 0 |
+| `spec/plugin/` | 1 / 2 | 0 / 0 |
+| `spec/web/` | 1 / 3 | 0 / 0 |
+| 計 | 477 / 2105 | 155 / 182 |
+
+- 置き場所: 一番外 612・注意書きの箱（`list/sakura-script`）6・注記の箱（`dev/nar`）1・箇条書きの項目の中 11（`spec/shiori3` 7 など）・表の中 2（`list/shiori-event` の `Reference*` の説明の欄の中）
+- ほかの 20 頁（トップ・manual の 7 頁など）は表 0
+
+### 表にしない形（今のままの箇条書き）
+| 形 | 数 | 例 |
+|---|---|---|
+| `Reference` でない 1 項目 | 42 | `spec/shiori3` の `Charset`、`spec/sstp` の `Option`、`list/sakura-script` の `--title=テキスト` |
+| `list/` の頁でない `Reference` | 3 | `spec/shiori3` の `Reference*`・`Reference0`・`Reference1～` |
+| 2 つ以上の段落 | 8 | トップの `ファイル構成` など 6、`list/sakura-script` の `--dir=パス` |
+| コードブロック | 4 | `list/propertysystem` の `%property[プロパティ名]`、`spec/update-file` の `行フォーマット` |
+| 入れ子の箇条書き（外側） | 12 | `spec/shiori3` の `メソッド`（内側の値の一覧だけが表になる） |
+| 名前の後ろが「`: `」でない | 11 + 1 | `spec/shiori3` の `メソッド`、`spec/saori-ex` の `必ず守ること（MUST）：` ほかの 5 項目 |
+| manual の頁のファイルの箇条書き | 73 | `manual/ghost` の `descript.txt`・`shiori.dll` |
+
+### 変わらないもの（変更の前の `f54423d` と比べた）
+- 表の 2287 行の名前と説明の字と `href` は箇条書きのときと同じ（違い 0）。検索（`search.json`）でも同じ字で引ける
+- 見出しの id 2579・¶ 2579・右の欄の目次 2041・`pre` 449、`site-look-list-markers` と `site-look-manual-files` の目印の数、`llms.txt` は同じ
+- 意味のある空行（値ごとのまとまりの間、`list/shiori-event-ex` の `OnMahjong` など）27 か所はそのまま、別の表に分かれる
+
+### 直した 7 原稿（`_raw/` で違うのはこれだけ。空行と字下げのほかの字は同じ）
+- 意味の無い空行を除いた 6: `list/shiori-event/dialogbox/OnConfigurationDialogHelp.md`・`list/shiori-event/file-drop/OnOtherObjectDropping.md`・`list/shiori-event-ex/plugin-weather-station/OnWeatherStation.Astro.md`・`list/shiori-event-ex/plugin-weather-station/OnWeatherStation.Forecast.Hourly.md`・`list/shiori-event-ex/plugin-spectre/OnSpectrePlugin.Possession.md`・`list/shiori-event-ex/app-music-player/OnMusicPlayer.SongInfo.md`
+- 入れ子に直した 1: `list/shiori-event/notify/rateofusegraph.md`（`1番目`〜`13番目` を `Reference*` の入れ子にし、`Reference*` の説明の欄の中の表にする）
+
+### 開発者の判断（2026-10-26）
+- 名前の欄の上限 24em: 広い画面で名前を折り返さない指定のままでは、名前のとても長い 2 個（`list/sakura-script` の `--content-type=…` の箱の表、`\![anim,add,overlay,…]` の表）で説明の欄が約 100px に潰れた。名前を 24em まで折り返さず、それより長い名前だけを折り返す形を開発者が採った（幅 1000 で 4 頁の 16 個の名前が 2 行になる。短い名前の表は変わらない）
+
+### 確かめたこと（要約）
+- Build Gate（`prepare_site.py`・`zensical build --strict`）が通る
+- 明・暗の画面（`screenshots/after-*.png` の 30 枚）で、目標の画面と表の部分が同じ。箱の中・項目の中・表の中・長い名前の表も崩れない
+- 幅 375 で表のある 20 頁と `manual/ghost` の横幅が 375 に収まる。字とリンクの対比は明・暗とも 4.5:1 以上。明暗の切り替え・印刷・検索の強調も表の中で効く
+- 既知のこと（この PR の外）: 暗い表示を選んだまま印刷するとリンクが `rgb(64,81,181)` になる。表の外のリンクも変更の前から同じで、roadmap のバックログ「暗い表示のまま印刷したリンクの色（記録だけ）」に残っている
+
+### 見せるときの頼み（5.11）
+- 開発者に画面やプレビュー（`http://localhost:8000/ukadoc-spec/`）を見せるときは、古い `extra.css` が残らないよう、ブラウザで Ctrl+F5 の読み込み直しを頼む
