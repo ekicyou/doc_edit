@@ -24,7 +24,7 @@
   - _Boundary: DefinitionTabulator_
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 1.10, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 4.1, 4.5, 4.6, 6.8_
 
-- [ ] 2.2 (P) `extra.css` の末尾に名前と説明の表の塊を足す
+- [x] 2.2 (P) `extra.css` の末尾に名前と説明の表の塊を足す
   - 設計の「Modified Files」の CSS のとおり、`/* site-look-definition-tables: 名前と説明の表 */` の 1 行の注で始まる 1 つの塊を末尾に足す（字の大きさ `.75rem`、行の上下 `.45em .9em` と `overflow-wrap: anywhere`、`@media screen and (min-width: 45em)` の中だけ名前の列の `nowrap`）
   - 色・幅・太字の指定と、ほかの塊・旧サイトや試作の指定（`data-slp`）は足さず、変えない
   - 作業木の `git diff assets/extra.css` の `+` の行がこの 1 つの塊だけで、注が 1 行、色の値が 0 である
