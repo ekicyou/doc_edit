@@ -10,6 +10,7 @@
   - 自作の Markdown 拡張（案 B）は、今の `zensical build` からは import できない（`ModuleNotFoundError: No module named 'scripts'`。`PYTHONPATH=.` を付けると読める）。CI（`.github/workflows/pages.yml` の `zensical build --strict`）と手元の確かめの手順を変える必要がある
   - `prepare_site.py` で表を書く案 A は、「Markdown の表を `<div markdown="1">` で包む」書き方も、「HTML の表の各段に `markdown="1"` を付ける」書き方も、一番外・項目の中・注記の箱・`div.bundle-notes` の 4 つの置き場所で、表の中のリンクと `code` が Markdown として読まれた（手元の Python-Markdown 3.11.2 と同じ拡張の組で確かめた）
   - Material の表の見た目と、横に流せる包み（`div.md-typeset__scrollwrap > div.md-typeset__table`）は、どちらも `table:not([class])` にだけ付く（包みはテーマのスクリプトが頁を開いたときに付ける）。表そのものに `class` を付けてはいけない、という試作の事実は今の Zensical 0.0.67 でも同じ
+  - 設計の調査（下の「設計の調査（2026-10-26）」）で、A2（HTML の表に `markdown="1"`）を設計の差分そのものとして build し、表 632 個・字の照合の差 0・見出しと目印の変わり 0・幅 375 の 21 頁がすべて 375 を確かめた。説明の欄の中の箇条書きは字下げ 0 の所だけで書け、字下げ 4 以上（注記の箱の中）は HTML がブロックとして読まれない
 
 ## Research Log
 
@@ -136,3 +137,84 @@
 - 空行で分かれた箇条書きの数え方（`bounds.py` 相当）: 意味のある空行 27・意味の無い空行 27 か所（`list/` の頁の 6 ファイル）。`spec/shiori3` の `response-サンプル` の `Reference0` | `Reference1～` も番号が続くが、ヘッダの一覧の空行で、Requirement 7 の当て先の外
 - 表が縦に続けて並ぶとき（`OnMahjong` の 14 の表など）の、表と表の間の空き（Material の包みの上下の余白）を画面で確かめる
 - `CLAUDE.md` に足す空行の決まりの言い回しと置き場（「書式」の「リストは `- ` で書き」の近く）
+
+## 設計の調査（2026-10-26）
+
+### 読んだもの・使った決まり
+- 読んだもの: この spec の `requirements.md`・`brief.md`・上のギャップ分析、steering の `product.md`・`tech.md`・`structure.md`・`roadmap.md`、ukadoc-spec `f54423d` の `scripts/prepare_site.py`（380 行）・`assets/extra.css`（230 行）・`mkdocs.yml`・`CLAUDE.md`、Requirement 7 の 7 つの原稿、`spec/shiori3/request.md`・`spec/update-file/fields.md`・`spec/fmo-mutex/fmo.md`・`list/shiori-event/notify/capability.md`（項目の中の箇条書き）、build の `assets/stylesheets/classic/main.*.min.css` の表の指定、`.kiro/specs/completed/site-look-manual-files/design.md`・`.kiro/specs/completed/site-look-list-markers/design.md`（後処理の型・Revalidation Triggers の書き方）、`.kiro/specs/site-look-top-page/design.md`（同じ `write('index.md', …)` の行を触る）
+- 使った決まり: `kiro-spec-design` の `design-principles.md`・`design-discovery-light.md`（Extension として、組み込み先・既にある型・壊しうるものを見た）・`design-synthesis.md`・`design-review-gate.md`。開発者の覚え書き（公開の CSS の注は塊ごとに 1 行、UKADOC の誤りは build で救済しない、注釈の絵の出どころに触れない）
+
+### 試し方
+- ukadoc-spec `f54423d` を `git archive` で Claude のスクラッチ（`C:\Users\maz-o\AppData\Local\Temp\claude\C--home-maz-git-doc-edit\f3bce9da-3850-4bce-bee6-31c7722a037e\scratchpad\design\impl\`）に書き出し、`design.md` の差分（`prepare_site.py`・`extra.css`・7 つの原稿）を使い捨ての `patch_impl.py` で当てて、`prepare_site.py` と `zensical build --strict` を流した（どちらも exit 0、`No issues found`）。変更の前は、ギャップ分析の写し（`scratchpad\dt\src\_site`）を使った
+- 数えと照合は使い捨ての `verify.py`・`excl.py`・`perpage.py`（`count_c23.py` の木と判定を使う）。画面と 375 px は `python -m http.server`（8041・8042。終わったら止めた）で配り、`.kiro/specs/completed/site-look-plan/tools/shot.mjs` で撮った（読むだけ）。`ukadoc-spec/`・作業木・`_site_src/` は触っていない
+- 書き方の試しは、Python-Markdown 3.11.2 の小さな試し（`probe_td.py`・`probe_adm*.py`・`probe3.py`・`probe_bs*.py`）でした
+
+### 分かったこと
+- **HTML の表（A2）で足りる**: 一番外・`div.bundle-notes` の中・項目の中（2 字下げ）で、`div`・`table`・`tbody`・`tr`・`td` に `markdown="1"` を付けた表が、リンク・`code`・`\`・`<br />`・強調を箇条書きと同じ字で出す。`` `<html>` ``・`a&b` などのコードの中の `<`・`&` もそのまま（箇条書きと同じ HTML）。説明の中の `|` のエスケープは要らない
+- **説明の欄の中の箇条書き・表は、字下げ 0 の所でだけ書ける**: `td` に `markdown="block"` を付けると、中の箇条書きと名前と説明の表（表の中の表）が読まれる。ただし段落の行の直後に箇条書きが続くと 1 つの段落にされるので、最初の段落の後ろに空行が要る。項目の中（2 字下げ）・注記の箱の中（4 字下げ）では、`markdown="block"` の中の箇条書きが読まれなかった（字のまま残るか、表が崩れる）
+- **4 字以上の字下げでは HTML がブロックとして読まれない**: 注記の箱（`dev/nar` の `!!! tip`）の中に `markdown="1"` の表を書くと、全体が段落の中の字として読まれ、`markdown="1"` が HTML に残った。印を付けずに書くと、段落の中の字として読まれた行の中の Markdown（太字・リンク）は箇条書きと同じに変わり、ブラウザは `<p>` を表の手前で閉じて表を出す（画面で確かめた。前後に空の `p` が残る）。Python-Markdown の HTML のブロックの見分けが、3 字までの字下げしか見ないため
+- **字下げ 2 の表の手前には空行が要る**: 項目の行の直後（空行なし）に表の HTML を書くと、表が崩れた。今の原稿の項目の中の 12 個は、どれも親の項目との間に空行がある
+- **数（設計の写しの build）**: 名前と説明の表 632 個。うち「名前と説明の箇条書き」から 477 個・2105 行（頁ごとの数もギャップ分析と同じ）、Reference の箇条書きだけから 155 個・182 行。置き場所は一番外 612・`div.bundle-notes` の中 6・注記の箱の中 1・項目の中 11・表の中 2（`rateofusegraph` の `1番目`〜 と `capability` の `request.(ヘッダ名小文字)`）。表になるはずで箇条書きのまま残ったもの 0。`markdown=` が HTML に残った頁 0
+- **Reference の箇条書きの数の直し**: requirements.md の「名前と説明の箇条書きに当たらない 1 項目のもの 181 個（`list/shiori-event-ex` 83）」は、名前 `Reference0～23`（`OnWeatherStation.Forecast.Hourly`）を数えていなかった。Requirement の名前の形（`～23` を含む）で数えると 182 個（`list/shiori-event-ex` 84）で、うち入れ子の箇条書きを持つもの 11。Requirement 5.2 の見込みは 477 + 182 − 33 + 6 = **632** になる（設計の写しの数と同じ）
+- **意味の無い空行**: 直した後の `list/` の頁で、並んだ Reference の表の番号が続く所 0、振り直す所（意味のある空行）27
+- **外す形（設計の写しの build）**: 1 項目で `Reference` でない 42（今のまま）、`spec/shiori3` のヘッダの一覧の中の `Reference` 3、2 つ以上の段落 8、コードブロック 4、名前の後ろが「`: `」でない 84 個の 1 項目と `spec/saori-ex` の 5 項目の 1 個、manual の頁 0。外側に残る箇条書きのうち、中の箇条書きが表になったものは、HTML の木の判定では「1 項目」「2 つ以上の段落」に移って見える（42→48、8→11、入れ子 12→3）が、どれも原稿の行の判定では入れ子を持つ項目で、表にはならない
+- **変わらないもの**: 全 40 頁で見出しの id の並び・`a.headerlink` の数・右の欄の目次の項目の数が変更の前と同じ。表にした行の名前と説明の字（空白を詰め、「`: `」を除く）は変更の前の箇条書きと同じ（中に表を持つ行は、中の表の見出しの行と「`:`」を除いて比べた）。`site-look-list-markers` の目印（対応 1640・既定値 423・注意書き 16・札 2719）と `manual-item` 73 は同じ。`llms.txt` は同じで、`_raw/` は直した 7 つの原稿だけが違う（原稿の写しなので、直した字になる）。検索の索引には表の中の字が入る（`名前 説明 Reference0 起動時のシェル名。`）
+- **幅 375**: 表のある 20 頁と `manual/ghost` のどれも `scrollWidth` 375・`innerWidth` 375
+- **画面**: `#OnBoot`・`[id="system.cpu"]`（明・暗）・`#bang-set-wallpaper` は目標の画面と同じ詰め方・幅の出方になった。初めの指定は Material の `.md-typeset table:not([class]) td`（詳細度 0,2,2）に負けて詰まらなかったので、`.md-typeset .definition-table table:not([class]) :is(th, td)` に上げた。画面は `screenshots/design-*.png`
+- **表と表の間**: Material の包み（`div.md-typeset__scrollwrap` の上下 1em と `div.md-typeset__table` の下 .5em）で、縦に並ぶ表（`OnMahjong` の 14 の表）の間は約 1.5em 空く。項目の中の表の後ろの空きは、箇条書きのときより少し広い（`spec/shiori3` の `メソッド` の後ろ）。どちらも詰める指定は足さない
+- **Material の表の色**: 表の地は `--md-default-bg-color`、枠は `--md-typeset-table-color`、行に指したときの地は `--md-typeset-table-color--light`。縞の地は無い。印刷のときは `table:not([class])` が `display: table`、包みが `display: block` になる
+- **`site-look-top-page` とのぶつかり**: その spec の設計は `write('index.md', …)` の行を `mark_top(…)` で包む。この spec はその行の外側を `tabulate(…)` で包むので、後に入る方が追いついて `tabulate(mark_top(…), False)` にする（トップの見方の箇条書きは 2 つの段落を持つので、どちらの順でも表にならない）
+
+## Architecture Pattern Evaluation
+
+| Option | Description | Strengths | Risks / Limitations | Notes |
+|--------|-------------|-----------|---------------------|-------|
+| A1 Markdown の表を `div` で包む | `prepare_site.py` が `| 名前 | 説明 |` の表を書く | 表の HTML が Material の既定のまま | 説明の欄に箇条書きを書けない（Requirement 1.10 に足りない）。`|` のエスケープと続きの行のつなぎが要る | 外した |
+| A2 HTML の表に `markdown="1"` | `prepare_site.py` が `div.definition-table > table` を各段の印付きで書く | 欄の中に箇条書き・表を入れられる。字の照合で差 0 | 字下げ 4 以上はブロックとして読まれない（段落の中の字として読ませる）。説明の欄の中の箇条書きは字下げ 0 だけ | 採った |
+| B 自作の Markdown 拡張 | treeprocessor で `ul` を `table` に替える | HTML の木の上で判定でき、エスケープの心配が無い | 今の `zensical build` から import できず、`pages.yml` か `requirements.txt` と確かめの手順を変える | 外した（ギャップ分析） |
+| C 印だけ付けて見せ方はブラウザ | スクリプトか CSS の格子で表に見せる | HTML の変わりが小さい | brief の決めた方向から外れ、スクリプトが動かないと表にならない | 外した（方向を議論し直さない） |
+
+## Design Decisions
+
+### Decision: 組み立ての処理の置き場と表の書き方
+- **Context**: Requirement 1.2・1.10・6.1・6.2。Reference の箇条書きは入れ子の箇条書きを説明の欄に入れる
+- **Alternatives Considered**: A1（Markdown の表）、A2（HTML の表）、B（Markdown 拡張）
+- **Selected Approach**: A2。`prepare_site.py` に `tabulate()` を足し、`main()` の 3 か所（まとめ頁・読み物の頁・トップ）で、書き出す直前に通す
+- **Rationale**: 変えるファイルが brief の範囲に収まり、`requirements.txt`・`pages.yml`・`mkdocs.yml`・確かめの手順が変わらない。設計の写しで字の照合の差 0
+- **Trade-offs**: 原稿の行の上の見分けは Markdown の読み方の真似で、書き方が変わるとずれうる → 確かめで HTML の木の判定と数を照らす（Revalidation Triggers）
+- **Follow-up**: 実装の build で、数・字・見出し・目印を数え直す
+
+### Decision: 表の印
+- **Context**: Requirement 2.5（ほかの表と見分ける）・3.1（Material の表の見た目）。Material の見た目と包みは `table:not([class])` にだけ付く
+- **Alternatives Considered**: 表に `data-` の属性を付ける / 表を包む `div` に class を付ける
+- **Selected Approach**: 表を `div.definition-table` で包み、表そのものには何も付けない
+- **Rationale**: `structure.md` の「見た目のための目印は class で付ける」にそろう。表は Material の見た目と包みをそのまま受ける。後続の `site-look-sstp-playback` は `.definition-table table` で見分けられる
+- **Trade-offs**: 名前が `<頁の種類>-<役>` の形でない（どの頁の種類にも出るため）→ OPEN QUESTION として `design.md` に記録
+
+### Decision: 字下げの深い所での書き方
+- **Context**: Requirement 1.7（注記の箱の中）・1.10（Reference の欄の中の箇条書き）
+- **Alternatives Considered**: (1) 字下げ 4 以上では印を外し、段落の中の字として読ませる、(2) 注記の箱を HTML の `div.admonition` に書き換えてから表を書く、(3) 字下げ 4 以上は表にしない
+- **Selected Approach**: (1)。説明の欄の中に箇条書き・表を入れる行（Reference の入れ子）は、字下げ 0 の箇条書きだけで作る
+- **Rationale**: 当て先は `dev/nar` の 1 個で、(1) は 1 行の分岐で済み、画面と字の照合で崩れが無い。(2) はほかの spec の物（注記の箱）を書き換える。(3) は Requirement 1.7 に足りない
+- **Trade-offs**: (1) は HTML として正しくない形（`p` の中の `div`）を出し、ブラウザが直す。字下げ 1〜3 の Reference の入れ子と字下げ 4 以上の Reference の入れ子は、箇条書きのまま残る（今は 0）
+
+### Decision: 原稿の直し（Requirement 7）
+- **Context**: 開発者の原則「無意味な空行は修正対象」
+- **Selected Approach**: 6 ファイルは、最初の `- **Reference` の行から箇条書きの最後の行までの空行を除く（字下げは変えない）。`rateofusegraph` は、`1番目`〜`13番目` の行と続きの行に 2 字の字下げを足し、`Reference*` の行との間の空行を除く。`CLAUDE.md` の「書式」の「リストは」の項目の次に 1 項目足す
+- **Rationale**: 直した後の箇条書きは空行の無い 1 つの箇条書きになり、`tabulate()` は空行で分かれた箇条書きをつながない（Requirement 1.9）
+
+## Synthesis
+- **Generalization**: 名前と説明の箇条書きと Reference の箇条書きは、どちらも「頭が太字の名前と「`: `」の項目の並び」を表の行にする同じ問題で、違いは「項目の数の下限」と「説明が 1 段落を超えてよいか」だけ。1 つの関数 `tabulate(text, references)` にまとめ、`references` で Reference の決まりを足す
+- **Build vs. Adopt**: 定義の並び（`def_list`）の拡張は表を作らず、Requirement の外。Markdown の表の拡張（`tables`）は欄の中に箇条書きを書けない。Python-Markdown の `md_in_html` を使い、表の HTML の組み立てだけを自作する。新しい依存は足さない
+- **Simplification**: 表の種類ごとの印・頁の種類の印・名前の列の太字の CSS（原稿の `**…**` が `strong` のまま残る）・幅の指定（Material の包みに任せる）・表と表の間の詰めは足さない。CSS は 1 つの塊の 3 つの指定だけ
+
+## Risks & Mitigations
+- 原稿の行の上の見分けが HTML とずれる（新しい書き方）— 確かめで、HTML の木の判定で「表になるはずで残った箇条書き 0」を数える。Revalidation Triggers に書き方の種類を挙げる
+- 表の中の字が変わる（エスケープ・続きの行）— 全行の名前と説明の字を変更の前と照合する
+- 字下げ 4 以上の表が段落の中の HTML として出る — `dev/nar` の画面と、HTML に `markdown=` が残らないことを確かめる。Zensical・Python-Markdown の版を上げたら確かめ直す
+- `site-look-top-page` と同じ行を触る — 後に入る方が追いつき、`tabulate(mark_top(…), False)` にする
+
+## References
+- `.kiro/specs/completed/site-look-plan/screenshots/mock-*-C23-*.png` — 目標の画面
+- `.kiro/specs/completed/site-look-manual-files/design.md` — 後処理の型・Revalidation Triggers
+- Python-Markdown の `md_in_html`（3.11.2、`.venv` の中の版）— `markdown="1"`・`"block"`・`"span"` の扱い
