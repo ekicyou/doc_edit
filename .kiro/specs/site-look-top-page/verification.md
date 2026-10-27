@@ -2,11 +2,32 @@
 
 ## 測った版と日付
 
-- 日付: 2026-10-27〜
-- 作業木: `.worktrees/site-look-top-page/`（ブランチ `site-look-top-page`。ukadoc-spec の作業木）
-- `origin/main`: `1080225`。変更の前の控え（1.2）はこの版
-- 頁: 作業木の `zensical serve`（`http://127.0.0.1:8000/ukadoc-spec/…`）。控えは 8010
+- 日付: 2026-10-27（1.2〜4.1 のすべて）
+- 測った版: 作業木 `.worktrees/site-look-top-page/`（ブランチ `site-look-top-page`。ukadoc-spec の作業木）の `a61b9de`。ukadoc-spec の `origin/main` `1080225` の上の 1 コミットで、変えたのは `scripts/prepare_site.py` と `assets/extra.css` だけ
+- 控えの版: `origin/main` の `1080225`（変更の前。1.2）。3.1 で fetch し、`origin/main` が進んでいないことを確かめた
+- 頁: 後は作業木の `zensical serve`（`http://127.0.0.1:8000/ukadoc-spec/…`）、控えは `1080225` の `_site/` を 8010 で配ったもの
+- 道具: 使い捨ての `snapshot.py`・`mark_top_examples.py`・`topcheck.py`・`topprobe.mjs`・`summarize.py`（どれも `C:/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/6ec24e7b-70a2-442e-bd85-89bad02cc5d7/scratchpad/tools/`）と、画面の `.kiro/specs/completed/site-look-plan/tools/shot.mjs`（読むだけで使った）
 - 開発者に画面や `serve` を見せるときは、古い `extra.css` が残らないよう Ctrl+F5（強制の再読み込み）を頼む（8.9）
+
+### 流した式
+
+```sh
+# Build Gate（作業木の根で。PY = doc_edit の .venv/Scripts）
+rm -rf .cache
+PY/python scripts/prepare_site.py      # 一覧の検査・見出しの数の検査を含む。exit 0
+PY/zensical build --strict             # exit 0、「No issues found」
+git diff --stat origin/main            # scripts/prepare_site.py・assets/extra.css だけ
+
+# 測りのスクリプト（tools の中で。式の細かい所は各節）
+PY/python -I snapshot.py <_site の根> <json>              # 1.2 控えの数
+PY/python -I mark_top_examples.py                          # 2.1 mark_top() に字を直に渡す
+PY/python -I topcheck.py <口> before.json <木の根>          # 3.2 印の数・変わらないこと
+node topprobe.mjs <口> <幅> <高さ> > probe.json             # 3.3 位置・余白・対比・切り替え・検索の強調・幅 375
+PY/python -I summarize.py probe.json
+node shot.mjs <口> <セレクタ> <画面> <light|dark> <幅> <高さ>   # 3.3 幅 375 の物差し、3.4 画面
+```
+
+- 重ねの計算（対比。3.3）: fg は `getComputedStyle` の `color`。bg は要素から `html` までの `backgroundColor` を白の上に外から順に重ねた地（`c = a·fg + (1 − a)·bg` を各段で）。半透明の字は、その地の上に同じ式で重ねてから測る。対比は WCAG 2.x の `(L1 + 0.05) / (L2 + 0.05)`（L は sRGB を線形にした相対輝度）を小数 2 桁に四捨五入して出す（`topprobe.mjs` の `over`・`bgOf`・`lum`・`ratio`）。式は `site-look-list-items` の `verification.md` の「流した式」と同じ
 
 ## 変更の前（1.2）
 
@@ -303,3 +324,33 @@ node SHOT B/manual/ghost/ '.md-typeset > ul' after-ref-manual-ghost-$m.png $m 10
 
 - 二重に重なった跡（上の端以外の左右の端に、ヘッダの紺の行）は、14 枚とも無かった（撮り直した 2 枚も無い）
 - 撮り直したのは 2 枚（`after-ref-shiori-event-light.png`・`after-ref-shiori-event-dark.png`）。わけ: 1 回目は設計の `.bundle-item` で撮り、(1) 当たったのが前書きの `h2#caption_format` だった（上の注）、(2) ヘッダの題が切り替わりの途中で、「UKADOC project」と「SHIORI Event」が重なって薄く描かれていた（8.8 の跡ではないが、見比べに向かないので）。`h3.bundle-item` で撮り直し、2 枚ともヘッダの題が「SHIORI Event」の 1 つだけになった
+
+## 仕上げ（4.1）
+
+- 日付: 2026-10-27。作業木の `a61b9de`（`origin/main` `1080225` の上の 1 コミット）で流し直した
+
+### 宣言と色（6.4・9.2）
+
+`git -C .worktrees/site-look-top-page diff origin/main -- assets/extra.css` は 4 か所・8 行の入れ替えで、消した行も足した行もどれもセレクタの行（`… {` で終わる行）だった。宣言（`property: value;`）の行・注の行・新しい塊は足しても消してもいない。差分全体（2 ファイル）の足した行に、直書きの色（`#…`・`rgb(…)`・`rgba(…)`・`hsl(…)`）は 0 個。帯の色はどれも、前からある塊の `var(--md-…)` から来る（2.2 の表と同じ）。
+
+### Build Gate と規約 Gate（9.1・9.4）
+
+- 作業木で `.cache/` を消し、`prepare_site.py` は exit 0、`zensical build --strict` は exit 0（「No issues found」）
+- `git diff --stat origin/main` は 2.3 と同じ（`assets/extra.css` 16 行・`scripts/prepare_site.py` 19 行、2 files changed, 23 insertions(+), 12 deletions(-)）。`git status --short` は空（未コミットの変更なし）
+- 規約 Gate: 原稿（`.md`）の変更は無く、ukadoc-spec の `CLAUDE.md` の書式・リンクの決まりに当たる所は無い。「見た目のための構造」の分担（`prepare_site.py` は class を付けるところまで、JavaScript は使わない）にも合う（`mark_top()` は attr_list の class を足し「`: `」を外すだけ、`site_ext/` は変えていない）
+- build の後も 8000 の `serve`（PID `40096`・`38952`）は動いたまま: `/ukadoc-spec/` と `/ukadoc-spec/assets/extra.css` が 200 で、`extra.css` に `.top-section` 3・`.top-category` 1・`.top-item` 7、トップの HTML の `top-section` 5・`top-category` 7・`top-item` 7。控えの 8010 も 200
+
+### 設計の「Testing Strategy」と結果の在りか
+
+| 項目 | 結果の節 | 結果 |
+|---|---|---|
+| Build Gate（7.5・9.1・9.4） | 2.3・仕上げ（4.1） | `prepare_site.py`・`build --strict` とも exit 0、`git diff --stat origin/main` は 2 ファイルだけ |
+| `mark_top()` の例 | 2.1 | 12 通りとも合う。`mark_manual(text)` は今と同じ `{: .manual-item }` |
+| 印の数 | 3.2「印の数」 | 5・7・7（1）・7、漏れ 0、帯の中のリンク 0・コード 0、`table` 0、トップの外の `top-` 0 |
+| 変わらないこと | 3.2「変わらないこと」 | id 13・¶ 13・目次 82 が同じ、本文の字の違いは「`:`」7 か所、ほかの 40 頁は同じ、`search.json` は 1 件だけ違う、`_raw/`・`llms.txt` は同じ |
+| 位置・余白と対比、切り替え、`@media screen` | 3.3「位置と余白」「対比」「切り替えと印刷」 | 帯 19 個が 16・711 の 1 通り、説明の左 40、余白は写しと同じ、対比はどれも線を満たす、読み込み直さずに切り替わる、暗い表示の規則は 12 個とも `@media screen` の中 |
+| 失わないもの | 3.3「検索の強調」「幅 375」 | 3 種の帯の中で `mark` が明・暗とも見える、幅 375 は明・暗とも `scrollWidth` = `innerWidth` = 375（`shot.mjs` の物差し） |
+| 見比べ | 3.4「画面」「見比べ」 | `screenshots/after-*.png` 14 枚（トップ 4 所・当て先 3 所 × 明・暗）を当て先と並べた。開発者が見る |
+| 宣言・色を足さない（6.4・9.2） | 2.2・仕上げ（4.1） | セレクタの行だけ、直書きの色 0 |
+| Ctrl+F5（8.9） | 頭・3.4 | 画面やプレビューを見せるときに頼む |
+
