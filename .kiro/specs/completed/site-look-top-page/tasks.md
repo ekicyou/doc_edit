@@ -92,3 +92,4 @@
 
 ## Implementation Notes
 - doc_edit の `.venv` は uv で作られ pip が無い。`requirements.txt` は作業木の根で `uv pip install --python .venv/Scripts/python.exe -r requirements.txt` で入れる（editable の `site_ext` が古い作業木を指したままだと build が import で落ちる）
+- 完了時にその場で解決: 設計の画面の一覧の `after-ref-shiori-event` のセレクタを、撮った `h3.bundle-item` に直した。`.venv` に pip が無いことを `workflow.md` の Build Gate に書いた

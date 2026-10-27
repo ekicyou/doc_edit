@@ -88,7 +88,7 @@ git push origin main
    python scripts/prepare_site.py   # 各 index.md の「## 一覧」と中身の食い違いを検査
    zensical build --strict          # リンク切れ・アンカー切れで失敗する
    ```
-   初回は `pip install -r requirements.txt` が要る。doc_edit 直下の `.venv/`（`.gitignore` 済み）に入れるのを勧める。`-e ./site_ext` を今のフォルダから読むので、作業木の根で流す（`site_ext/` を変える spec は、自分の作業木から入れ直す）。`site_ext/` や `assets/` を直した後は `.cache/` を消してから build する
+   初回は `pip install -r requirements.txt` が要る。doc_edit 直下の `.venv/`（`.gitignore` 済み）に入れるのを勧める。`-e ./site_ext` を今のフォルダから読むので、作業木の根で流す（`site_ext/` を変える spec は、自分の作業木から入れ直す）。`site_ext/` や `assets/` を直した後は `.cache/` を消してから build する。doc_edit の `.venv` は uv で作ってあり pip が無いので、`uv pip install --python <doc_edit>/.venv/Scripts/python.exe -r requirements.txt` で入れる
 3. **規約 Gate**: 変更が `ukadoc-spec/CLAUDE.md` の規約に沿っている（書式・文体「だ/である調」・ファイル名は ASCII・`index.md` の `## 一覧`・新しいページなら `.nav.yml` と `INDEX.md` の目次）
 4. **Doc Gate**: 仕様の差分を spec の文書に反映した
 5. **Steering Gate**: doc_edit の steering と整合している（自作アプリの載せ方など、初めて決めたことは steering に書き足した）

@@ -495,7 +495,7 @@ interface ContrastProbe {
 | `after-top-howto-other-{light,dark}.png` | トップ | `li:has(> strong.top-item)`（「その他」）、1000×500 | 段落に分かれない項目（4.3） |
 | `after-top-toc-{light,dark}.png` | トップ | `h2.top-section:nth-of-type(5)`、1000×1300 | `list/shiori-event` の項目名の帯（`after-ref-shiori-event-*`） |
 | `after-ref-sakura-script-{light,dark}.png` | `list/sakura-script/` | `.bundle-category`、1000×700 | 分類の帯の当て先 |
-| `after-ref-shiori-event-{light,dark}.png` | `list/shiori-event/` | `.bundle-item`、1000×700 | 項目名の帯の当て先 |
+| `after-ref-shiori-event-{light,dark}.png` | `list/shiori-event/` | `h3.bundle-item`、1000×700（`.bundle-item` は前書きの `h2` に当たる。`verification.md` の「画面（3.4）」） | 項目名の帯の当て先 |
 | `after-ref-manual-ghost-{light,dark}.png` | `manual/ghost/` | `.md-typeset > ul`、1000×900 | ファイル名の帯と説明の字下げの当て先 |
 
 - 幅 375 の画面は残さない（8.7）
