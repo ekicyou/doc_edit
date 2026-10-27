@@ -8,7 +8,7 @@
   - 作業木の先頭が `origin/main` と同じコミットで、追う先が無く、`/ukadoc-spec/` のトップがプレビューで開けたことを見て、プレビューが止まっている
   - _Requirements: 9.3_
 
-- [ ] 1.2 変更の前の控えを書き出して配り、比べるための数を取る
+- [x] 1.2 変更の前の控えを書き出して配り、比べるための数を取る
   - 作業木の HEAD を `git archive` で Claude のスクラッチの下の新しいフォルダに書き出し、`prepare_site.py` と `zensical build --strict` を流して、`_site/` を `python -m http.server` で 8000 以外の口（例: 8010）に `/ukadoc-spec/` の下で配る（3.2〜3.4 がここと比べる。4.2 で止めて消す）
   - 控えの全 41 頁の HTML・`search.json`・`_raw/`・`llms.txt` を残し、トップの見出しの id の並び・`class="headerlink"` の数・`md-nav__link` の数・`article` の本文の字（タグを外し空白を詰めたもの）を控える（位置と余白は 3.3 で控えと後を並べて測る）
   - spec の `verification.md` を作り、「変更の前」の節に、控えの置き場の絶対パスと口・控えのコミット・トップの id・¶・目次の数を書く（後のタスクが控えを配り直し、作り直すときの手がかりにする）
