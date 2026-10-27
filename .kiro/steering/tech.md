@@ -14,10 +14,10 @@ doc_edit は、cc-sdd の作業環境（ルート）と、4 つの git サブモ
 
 - **原稿**: Markdown（UTF-8、LF）。1 項目 1 ファイル
 - **サイト生成**: Zensical（Material テーマ、設定は `mkdocs.yml`）。左メニューは `.nav.yml`（mkdocs-awesome-nav）
-- **前処理**: `scripts/prepare_site.py` が各 `index.md` の `## 一覧` と中身を照合し、`_site_src/` に写す
+- **前処理**: `scripts/prepare_site.py` が各 `index.md` の `## 一覧` と中身を照合し、`_site_src/` に写す。見た目のためには、頁ごとの判断（どの頁のどの段落か）を attr_list の class にして写しに付けるところまでをする（メンテナの分担。ukadoc-spec の `CLAUDE.md` の「GitHub Pages」）
 - **公開**: `main` への push で GitHub Actions がビルドし、GitHub Pages に出す（Python 3.12）
 - **見た目の指定**: `assets/extra.css`。色はなるべく Material のテーマの色の変数（`--md-primary-fg-color` など）から取り、テーマの色が変わってもついてくるようにする。変数で出せない色（暗い表示のリンクの明るい紺、さくらスクリプトのタグの色、ベースウェアの札など）は、明・暗の地との対比を測って記録する（`site-look-plan` の試作で、テーマが緑から紺に変わったときに分かった）
-- **ブラウザの仕掛け**: 自作のスクリプトを `assets/` に置き、`mkdocs.yml` の `extra_javascript` で読む（`assets/sakurascript.js` はさくらスクリプトの記述例を、`assets/filetree.js` はファイル構成の木のファイル名を `span` で包む）。ライブラリ・外部の資源は読まない。字を変えずに包むだけにし、スクリプトが動かなくても今の見え方に戻るようにする。記述例の誤り（閉じない `[` など）は救済せず、波線と `console.warn` で示して原稿を直させる（`site-look-sakura-script-highlight`）
+- **構造と色付け**: `site_ext/`（ビルドの部品。`requirements.txt` の `-e ./site_ext` で入る）が受け持つ。class と木の形を見て作る構造（対応の札・名前と説明の表）は Python-Markdown の拡張 `site_ext/ukadoc_site/structure.py`、記述例とファイル構成の木の色付けは Pygments レキサー `site_ext/ukadoc_site/lexers.py`（`sakurascript`・`ss`・`filetree`）。JavaScript は使わない（メンテナの方針、2026-10-27。それまでの `assets/sakurascript.js`・`assets/filetree.js` はメンテナがレキサーに移した）。記述例の誤り（閉じない `[` など）は救済せず、波線とビルドの警告で示して原稿を直させる
 
 編集規約（書式・文体・リンク・項目の追加手順）の正本は `ukadoc-spec/CLAUDE.md` である。steering には写さず、そちらに従う。
 
@@ -32,13 +32,13 @@ doc_edit は、cc-sdd の作業環境（ルート）と、4 つの git サブモ
 
 ```sh
 cd ukadoc-spec
-pip install -r requirements.txt
+pip install -r requirements.txt   # 根で流す（-e ./site_ext を今のフォルダから読む）
 python scripts/prepare_site.py   # 一覧と中身の食い違いを検査
 zensical build --strict          # リンク切れ・アンカー切れで失敗する
 zensical serve                   # http://127.0.0.1:8000/ukadoc-spec/ でプレビュー
 ```
 
-`build --strict` が通らない変更は PR にしない。
+`site_ext/` や `assets/` を直した後は `.cache/` を消してから build する（原稿の変わっていない頁が作り直されないことがある）。`build --strict` が通らない変更は PR にしない。
 
 ### git の運用
 

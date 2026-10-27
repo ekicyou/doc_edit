@@ -6,7 +6,7 @@
 方向は計画の spec `site-look-plan` が、旧サイトとの見比べと試作で決めた。候補ごとの判断と行き先は `.kiro/specs/completed/site-look-plan/decisions.md` にある。
 後続の spec は、その決定を小さな PR の単位に切ったものである。方向は議論し直さず、各 spec の brief から要件へ進む。
 
-- 切り分けの規則: 他者も使う公開リポジトリへの PR として小さく切る。Markdown 拡張を足す改造（さくらスクリプトの着色）は見た目の改造と別にする。目印を付ける後処理（`prepare_site.py`）やテンプレートの上書きは、その目印を使う見た目の改造と同じ spec に入れる。画像やブラウザで動く仕掛けを要する遊びは、視認性の改造と別にする
+- 切り分けの規則: 他者も使う公開リポジトリへの PR として小さく切る。Markdown 拡張・Pygments レキサー（`site_ext/`）を変える改造は見た目の改造と別にする。目印を付ける後処理（`prepare_site.py`）やテンプレートの上書きは、その目印を使う見た目の改造と同じ spec に入れる。画像やブラウザで動く仕掛けを要する遊びは、視認性の改造と別にする
 - 並びの規則: 目印を作る spec が、それを使う spec より先。`Dependencies:` には中身で依るものだけを書く（`workflow.md`「依存する spec の PR」）。どの spec も `assets/extra.css` を触り、多くが `prepare_site.py`・`mkdocs.yml` も触るが、同じファイルを触るだけでは依存にしない。互いに依らない単位は同時に進めて PR を出し、先にマージされた PR とぶつかったら、残りの PR が `origin/main` に追いつく（`workflow.md`「開いている PR に追いつく」）。下の並びは、依存を満たす並びの 1 つである
 - PR の単位（`workflow.md`「PR の単位」）: 原則 1 spec = 1 PR で、spec を完了するたびに PR を出す（開発者の指示、2026-10-25。ほかの人のコミットを妨げないため。それまでの、6 本を `site-look-visibility` の 1 本にまとめる決めは取りやめた）。8 本のどれも、単独で入れてもサイトは壊れないので、どれも溜めない（`site-look-list-items` は `site-look-visibility` の作業木で書き終えた後に、自分の名前の作業木とブランチに移した）。依存先は、その PR がマージされてから始める（`site-look-note-icon` の絵の使ってよい範囲は、開発者が 2026-10-25 に確かめ済み）
 - 土台: ukadoc-spec の `origin/main` の `afb2152`（テーマの色は紺 `#1f4e8c`）。Markdown の原稿（`.md`）を変える spec は無い（原稿を変える C25 は、`site-look-visibility` から外してバックログに移した）。後続の 8 本はどれも ukadoc-spec の `assets/` などを変えるので、`workflow.md` の「原稿を変えない spec」には当たらない
@@ -22,6 +22,7 @@
 - [x] site-look-definition-tables -- 「`- **名前**: 説明`」だけが並ぶ箇条書きを、原稿を変えずに組み立ての処理で 2 列の表にする（C23）. Dependencies: site-look-manual-files
 - [x] site-look-note-icon -- 注釈の節・補足の項目・`!!! note` の見出しの頭に、添付の色付きのアイコンを付ける（C26）. Dependencies: site-look-list-markers
 - [ ] site-look-sstp-playback -- さくらスクリプトの記述例・プロパティシステム・SHIORI Event を、利用者の操作で手元のゴーストへ送れるようにする（C13）. Dependencies: site-look-sakura-script-highlight, site-look-definition-tables. PR: site-look-sstp-playback
+  - 始める前にメンテナと方針を決める（2026-10-27）: 送るにはブラウザで動く仕掛けが要るが、メンテナは「JavaScript は使わない」と決めた（ukadoc-spec `1080225` の `CLAUDE.md`）。記述例の言語の印は Pygments の `language-sakurascript`、名前と説明の表は `site_ext` の拡張が作る形に変わった
 - [ ] site-look-top-page -- トップページ（`INDEX.md`）に印を付け、節の見出し・目次の分類・「ukadocの見方」の箇条書きを、ほかの頁と同じ帯で見せる（開発者の指摘、2026-10-25。候補番号なし）. Dependencies: site-look-list-items, site-look-manual-files
 
 依存の理由（どれも中身で依るもの。同じファイルを触るだけのものは書かない）:
@@ -29,7 +30,7 @@
 - `site-look-manual-files` の C22 は、C01 の項目名の帯を使う
 - `site-look-definition-tables` は、`manual/` のファイルの箇条書き（C14・C22 の当て先）を表にしないことを、`site-look-manual-files` の後に確かめる（C23 は段落を 2 つ以上持つ箇条書きを初めから除く）
 - `site-look-note-icon` の C26 は、C04 の箱に入る `notes_` の見出しにアイコンを付ける
-- `site-look-top-page` は、C01・C03 の帯の指定と、`site-look-manual-files` の C14・C22 の箇条書きの指定を、トップの印にも当てる
+- `site-look-top-page` は、C01・C03 の帯の指定と、`site-look-manual-files` の C14・C22 の箇条書きの指定を、トップの印にも当てる（印は `prepare_site.py` が class で付ける。メンテナの分担のまま）
 - `site-look-sstp-playback` は、C10 の言語の印で記述例を見分け、プロパティシステムのキーの表（C23）からプロパティの名前を組み立てる
 - `site-look-sakura-script-highlight` は `site-look-plan` だけに依る。`site-look-list-items` の C09・C18 と `site-look-manual-files` の C15 は、着色の前後どちらのコードブロックの HTML（`pre > code`・`pre.highlight > code`）にも効く書き方にするので、並びの縛りにはならない
 

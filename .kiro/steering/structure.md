@@ -41,7 +41,8 @@
 - どのディレクトリにも `index.md` があり、その `## 一覧` が項目の順序を決める。一覧に無いファイルがあると `prepare_site.py` が止まる
 - 新しいページを作ったら、ルートの `.nav.yml` と `INDEX.md` の目次にも加える
 - `manual/` `dev/` `memo/` は 1 ファイル 1 ページ
-- サイトの見た目は `assets/extra.css`（spec ごとに見出しのコメントで始まる塊を末尾に足す）、ブラウザの仕掛けは `assets/*.js`（`extra_javascript` で読む）。`prepare_site.py` が `assets/` を丸ごと写すので、ファイルを足しても前処理は変えない
+- サイトの見た目は `assets/extra.css`（spec ごとに見出しのコメントで始まる塊を末尾に足す）。`prepare_site.py` が `assets/` を丸ごと写すので、ファイルを足しても前処理は変えない
+- 見た目のための処理の分担（メンテナの決め。ukadoc-spec の `CLAUDE.md` の「GitHub Pages」）: 頁ごとの判断は `prepare_site.py` が class で付け、class と木の形を見て作る構造は `site_ext/ukadoc_site/structure.py`（Markdown 拡張。頁を知らず全頁に掛かる）、コードブロックの色付けは `site_ext/ukadoc_site/lexers.py`（Pygments）。JavaScript は使わない
 - 見た目のための目印は `prepare_site.py` が `<頁の種類>-<役>` の class で付け（まとめ頁は `bundle-item`・`bundle-notes`・`bundle-supplement` など、`manual/` の頁は `manual-item`。どの頁の種類にも出る役は `<役>` だけの名前にする。例: 名前と説明の表 `definition-table`）、頁の種類は `main()` の 1 か所で見分け、使う見た目の無い頁の種類だけの印は足さない。頁や項目を名指しせず原稿のファイル名や形で見分ける。見た目に使う絵は、`assets/` に今あるもの（例: 注釈の絵はサイトのロゴ `assets/logo.png`）を先に使い、同じ絵を足さない
 
 ## Naming Conventions
