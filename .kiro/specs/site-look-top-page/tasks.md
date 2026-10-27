@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. 土台: 作業木と変更の前の控え
+- [x] 1. 土台: 作業木と変更の前の控え
 - [x] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューを起動する
   - ukadoc-spec を fetch し、最新の `origin/main`（`site-look-manual-files` の PR #15 を含む。今は `1080225`）から作業木 `.worktrees/site-look-top-page/` とブランチ `site-look-top-page` を作り、作った直後に追う先を外す。ukadoc-spec のメインのチェックアウトは使わない
   - 作業木の根で `pip install -r requirements.txt` を流して `site_ext` を入れ（doc_edit の `.venv` を使う。動かなければスクラッチの使い捨ての venv で流し、そのことを控える）、`prepare_site.py` と `zensical build --strict` を流してから `zensical serve` を起動する
@@ -15,7 +15,7 @@
   - 控えが 8010 などの口で開け、`verification.md` の「変更の前」の節がある
   - _Requirements: 1.3, 7.5, 8.3, 8.4_
 
-- [ ] 2. 印と見た目の指定
+- [x] 2. 印と見た目の指定
 - [x] 2.1 (P) 組み立ての処理で、トップの見出しと見方の箇条書きの名前に印を付ける
   - 1.1 で止めたプレビューを止めたまま書く（書きかけの `_site_src/` を拾わせない）
   - 設計の「Modified Files」の 5 か所（モジュールの docstring の 1 項目、`TOP_HEADING`、`mark_manual()` の引数 `cls` と docstring、`mark_top()`、`main()` の `index.md` を書く 1 行）だけを変え、ほかの処理と manual の頁の `mark_manual(text)` の呼び出しには触らない。頁の種類だけを示す印は足さない
@@ -38,7 +38,7 @@
   - _Depends: 2.1, 2.2_
   - _Requirements: 9.1, 9.4_
 
-- [ ] 3. 配られた頁での確かめ
+- [x] 3. 配られた頁での確かめ
 - [x] 3.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `extra.css` はセレクタの並びに両方の印を残し、`prepare_site.py` の `index.md` の行は両方の処理を入れ子にして残す。メンテナの分担（`prepare_site.py` は class を付けるところまで、構造は `site_ext`）が変わっていれば `origin/main` の形に合わせ、合わせ方が設計と違うときは止めて開発者に提示する。`requirements.txt` か `site_ext/` が変わっていれば、作業木の根で `pip install -r requirements.txt` を流し直す
   - merge したときは Build Gate（2.3）と 2.1 の `mark_top()`・`mark_manual(text)` の例をやり直し、1.2 の控えを、作業木の HEAD でなく新しい `origin/main` のコミットから 1.2 の手順で作り直す。控えの置き場・コミットを `verification.md` に書き直す
@@ -74,7 +74,7 @@
   - `after-` の画面 14 枚がそろい、`verification.md` の「画面」の節に、見比べの結果と撮り直しの枚数が書いてあり、開発者の判断を待つときはその状態で止まっている
   - _Requirements: 2.1, 3.1, 4.1, 4.3, 5.1, 5.2, 5.4, 8.5, 8.8, 8.9_
 
-- [ ] 4. 記録と完了への引き継ぎ
+- [x] 4. 記録と完了への引き継ぎ
 - [x] 4.1 `verification.md` の記録を仕上げる
   - 頭に、測った版（作業木のコミット、`origin/main` の版）と日付、流した式（Build Gate・測りのスクリプト・重ねの計算）を書く
   - 1.2・2.1・3.1〜3.4 の結果の節がそろっていることを見て、欠けた所を埋め、宣言・直書きの色を足していないこと（6.4・9.2）、Build Gate・規約 Gate・`git diff --stat origin/main` を書く
@@ -82,7 +82,7 @@
   - `verification.md` と `screenshots/` がそろい、設計の「Testing Strategy」の各項目の結果が書いてある
   - _Requirements: 6.4, 8.9, 9.1, 9.2, 9.4_
 
-- [ ] 4.2 作業木を `/kiro-complete` に渡せる状態にする
+- [x] 4.2 作業木を `/kiro-complete` に渡せる状態にする
   - ukadoc-spec を fetch し、3.1 の後に `origin/main` がまた進んでいれば、3.1 と同じく追いつき、変わった所に当たる 3.2〜3.4 の確かめをやり直して `verification.md` の版と結果を直す
   - 作業木の変更をすべてコミットし、push も PR もしない。このタスクは、この spec だけの変更が 1 本のブランチにそろい、渡せる状態であることまでを確かめる（PR とスクワッシュマージは `/kiro-complete` で行う）
   - 最後のコミットの後で、Build Gate・規約 Gate・`git diff --stat origin/main` をやり直し、結果を `verification.md` に書き直す

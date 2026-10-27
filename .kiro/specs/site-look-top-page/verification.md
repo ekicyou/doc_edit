@@ -354,3 +354,31 @@ node SHOT B/manual/ghost/ '.md-typeset > ul' after-ref-manual-ghost-$m.png $m 10
 | 宣言・色を足さない（6.4・9.2） | 2.2・仕上げ（4.1） | セレクタの行だけ、直書きの色 0 |
 | Ctrl+F5（8.9） | 頭・3.4 | 画面やプレビューを見せるときに頼む |
 
+## 完了への引き継ぎ（4.2）
+
+- 日付: 2026-10-27。作業木の `a61b9de`（ブランチ `site-look-top-page`）
+
+### origin/main への追いつき（9.6）
+
+- ukadoc-spec を fetch した。`origin/main` は `10802250f6cff47e18e0d51ef2f6b7f3bf2ac49a`（`1080225`）のままで、`git merge-base --is-ancestor origin/main HEAD` は exit 0（作業木の先祖）。merge は要らず、していない
+
+### 最後の Build Gate（9.4）
+
+- 8000 のプレビューを止めてから流した（下）
+- 作業木で `.cache/` を消し、`prepare_site.py` は exit 0、`zensical build --strict` は exit 0（「No issues found」）
+- `git diff --stat origin/main` は 2.3・4.1 と同じ（`assets/extra.css` 16 行・`scripts/prepare_site.py` 19 行、2 files changed, 23 insertions(+), 12 deletions(-)）
+- `git status --porcelain` は空（`_site_src/`・`_site/`・`.cache/` は `.gitignore` 済み）
+- 規約 Gate: 4.1 から変わっていない（原稿の `.md` の変更は無い）
+
+### push していないこと（9.5。PR とスクワッシュマージは `/kiro-complete` で行う）
+
+- `git ls-remote origin site-look-top-page` は空。ブランチは push しておらず、上流も無い。PR も作っていない。push・PR・マージは `/kiro-complete` がする
+
+### 止めたものと消したもの
+
+- 8000 のプレビュー（`zensical serve`）: 口を開いていた PID `38952` と、その親の PID `6444`（`.venv/Scripts/python.exe … zensical.exe serve`）、さらにその親の PID `40096`（`zensical.exe`）を止めた
+- 8010 の控えの配り: PID `40296`（口）と親の PID `12740` を止めた
+- 8000・8010 とも、口を開いているプロセスは 0 個
+- 控えの置き場 `scratchpad/before-1080225/` と `scratchpad/serve/` を消した（`serve/ukadoc-spec` のジャンクションは先にジャンクションだけを外した）。`scratchpad/tools/` の道具は残した
+- このため、前の節に書いた PID・口（8000・8010）・控えの置き場のパスは、測ったときの記録として残るだけで、今は無い。控えを作り直すときは 1.2 の式を使う
+
