@@ -1,7 +1,7 @@
 # Implementation Plan
 
 - [ ] 1. 土台: 作業木と変更の前の控え
-- [ ] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューを起動する
+- [x] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューを起動する
   - ukadoc-spec を fetch し、最新の `origin/main`（`site-look-manual-files` の PR #15 を含む。今は `1080225`）から作業木 `.worktrees/site-look-top-page/` とブランチ `site-look-top-page` を作り、作った直後に追う先を外す。ukadoc-spec のメインのチェックアウトは使わない
   - 作業木の根で `pip install -r requirements.txt` を流して `site_ext` を入れ（doc_edit の `.venv` を使う。動かなければスクラッチの使い捨ての venv で流し、そのことを控える）、`prepare_site.py` と `zensical build --strict` を流してから `zensical serve` を起動する
   - トップが開けることを見たら、プレビューを止める（2.1・2.2 は書きかけの `_site_src/` を拾わせないよう、プレビューの止まった作業木で書く）
@@ -89,3 +89,6 @@
   - プレビューと 1.2 の控えの配りを止め、控えの置き場を消す
   - 最後のコミットで Build Gate が exit 0、`git diff --stat origin/main` が 2 ファイルだけで、作業木に未コミットの変更が無く、`origin/main` が作業木の先祖で、ブランチ `site-look-top-page` がまだ push されておらず、控えの配りと置き場が残っていない
   - _Requirements: 9.4, 9.5, 9.6_
+
+## Implementation Notes
+- doc_edit の `.venv` は uv で作られ pip が無い。`requirements.txt` は作業木の根で `uv pip install --python .venv/Scripts/python.exe -r requirements.txt` で入れる（editable の `site_ext` が古い作業木を指したままだと build が import で落ちる）
