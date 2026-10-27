@@ -39,14 +39,14 @@
   - _Requirements: 9.1, 9.4_
 
 - [ ] 3. 配られた頁での確かめ
-- [ ] 3.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
+- [x] 3.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
   - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `extra.css` はセレクタの並びに両方の印を残し、`prepare_site.py` の `index.md` の行は両方の処理を入れ子にして残す。メンテナの分担（`prepare_site.py` は class を付けるところまで、構造は `site_ext`）が変わっていれば `origin/main` の形に合わせ、合わせ方が設計と違うときは止めて開発者に提示する。`requirements.txt` か `site_ext/` が変わっていれば、作業木の根で `pip install -r requirements.txt` を流し直す
   - merge したときは Build Gate（2.3）と 2.1 の `mark_top()`・`mark_manual(text)` の例をやり直し、1.2 の控えを、作業木の HEAD でなく新しい `origin/main` のコミットから 1.2 の手順で作り直す。控えの置き場・コミットを `verification.md` に書き直す
   - 3.2〜3.4 はこの版で測る（測る版を `verification.md` に書く）
   - `origin/main` が作業木の先祖で、Build Gate が exit 0 で、測る版が `verification.md` に書いてある
   - _Requirements: 9.6_
 
-- [ ] 3.2 配りと、印の数・漏れ・変わらないことを、プレビューの頁の HTML で数える
+- [x] 3.2 配りと、印の数・漏れ・変わらないことを、プレビューの頁の HTML で数える
   - プレビューを止め、作業木で `.cache/` を消して `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動し直す。控えが配られていなければ、`verification.md` に書いた置き場から配り直す（無ければ書いたコミットから 1.2 の手順で作り直す）
   - 配られた `/ukadoc-spec/assets/extra.css` が 200 で、`.top-section` 3・`.top-category` 1・`.top-item` 7 があることを見る。無ければ起動し直す
   - 設計の「TopCheck」の期待の数の表を数える: `h2.top-section` 5・`h3.top-category` 7・`strong.top-item` 7（うち `li > strong` 1）・外した「`:`」7・漏れ 0・帯の中のリンク 0・帯の中のコード 0・トップの `table` 0・`h1` の class 無し・トップの外の頁の `top-` の class 0

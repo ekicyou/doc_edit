@@ -96,3 +96,61 @@ PY/python -I snapshot.py ../before-1080225 ../before-1080225/before.json
 ```
 
 作業木に未コミットの変更は無い。
+
+## 測る版（3.1）
+
+2026-10-27 に ukadoc-spec を fetch した。`origin/main` は `1080225` のままで、作業木の分岐点と同じだった（`origin/main` は作業木の先祖）。merge はせず、1.2 の控え（`1080225`）もそのまま使う。3.2〜3.4 は作業木の `a61b9de`（`origin/main` `1080225` の上の 1 コミット）で測る。
+
+## 配り（3.2）
+
+- 日付: 2026-10-27。作業木の `a61b9de` で測った
+- 1.1 のプレビューは止まっていた（8000 は空き）。作業木で `.cache/` を消し、`prepare_site.py`（exit 0）→ `zensical build --strict`（exit 0、「No issues found」）→ `zensical serve` の順に起動し直した
+- プレビューのプロセス: `Start-Process -WindowStyle Hidden -PassThru` で起こした `.venv/Scripts/zensical.exe serve`（cwd は作業木）の PID `40096`。口 8000 を開いているのは PID `38952`。3.3・3.4 で使い、4.2 で両方を止める
+- 控えは 8010 で配られたまま（PID `40296`）。配り直していない
+- 配られた `/ukadoc-spec/assets/extra.css` は 200 で、`.top-section` 3・`.top-category` 1・`.top-item` 7（2.2 の作業木のファイルと同じ）
+- `zensical serve` は頁の `</html>` の後に livereload の `<script>` を足す。数える道具は最後の `</html>` より後ろを外して比べる。外したトップの HTML は作業木の `_site/index.html` とバイト単位で同じだった
+- 数える道具: `C:/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/6ec24e7b-70a2-442e-bd85-89bad02cc5d7/scratchpad/tools/topcheck.py`（使い捨て。`before.json` の 41 頁を口から HTTP で取り、標準の `html.parser` で木にして数え、`before.json` と `before.json.top.txt`・控えの `search.json` と比べる。`_raw/` は配られないので木の根を渡して比べる）
+
+```sh
+# tools の中で（PY = doc_edit の .venv/Scripts、WT = .worktrees/site-look-top-page）
+PY/python -I topcheck.py http://127.0.0.1:8010/ukadoc-spec/ ../before-1080225/before.json ../before-1080225   # 控え（先に流す）
+PY/python -I topcheck.py http://127.0.0.1:8000/ukadoc-spec/ ../before-1080225/before.json WT                  # 後
+```
+
+結果はスクラッチの `topcheck-8010.txt`（控え）と `topcheck-8000.txt`（後）に書いた。
+
+## 印の数（3.2）
+
+| もの | 期待 | 控え（8010） | 後（8000） |
+|---|---|---|---|
+| `extra.css` の `.top-section`・`.top-category`・`.top-item` | 3・1・7 | 0・0・0 | 3・1・7 |
+| `h2.top-section` | 5 | 0 | 5 |
+| `h3.top-category` | 7 | 0 | 7 |
+| `strong.top-item`（うち `li > strong`） | 7（1） | 0（0） | 7（1）。ほかの 6 個は `li > p:first-child > strong` |
+| 外した「`:`」 | 7 | — | 7 |
+| 漏れ（`pre`・`code` の外の `{:`・`{#`・`{.`） | 0 | 0 | 0 |
+| 帯の中のリンク（`a:not(.headerlink)`。6.3） | 0 | 0 | 0 |
+| 帯の中のコード | 0 | 0 | 0 |
+| トップの `article` の中の `table` | 0 | 0 | 0 |
+| `h1` の class | 無し | 無し | 無し（`ukadoc-トップページ` の 1 個） |
+| トップの外の 40 頁の `top-` の class | 0 | 0 | 0 |
+
+- 節の見出しの帯: `ukadocについて`・`対象version`・`外部リンク`・`ukadocの見方`・`目次`
+- 目次の分類の帯と見方の分類名の帯: どちらも `ファイル構成`・`設定ファイル`・`さくらスクリプト`・`イベント`・`規格`・`HowTo`・`その他`
+- トップの `top-` の class は 19 個（5 + 7 + 7）で、帯の数と同じ
+- 帯の中のリンクは 0 個なので、帯の中のリンクの対比は測らない（6.3）
+
+## 変わらないこと（3.2）
+
+| もの | 期待 | 後（8000） |
+|---|---|---|
+| トップの見出しの id の並び | 控えと同じ（13） | 同じ（13） |
+| トップの `class="headerlink"`（¶） | 13 | 13 |
+| トップの `md-nav__link` | 82 | 82 |
+| トップの本文の字の違い | 「`:`」7 字と後ろの空白だけ | 空白を除くと「`:`」の削除 7 か所だけ（空白を詰めた字では「`: `」か「` :`」の 2 字の削除が 7 か所。外したのは「`: `」で、残った空白が詰められた分） |
+| 控えと HTML が違う頁 | `index.html` だけ | `index.html` だけ（41 頁のうちほかの 40 頁は `404.html` を含めてバイト単位で同じ） |
+| `search.json` | 「ukadocの見方」の 1 件だけ違う | 全体は違い、`config` は同じ、`items` は 2579 件で数が同じ、違うのは `#ukadocの見方` の 1 件だけ |
+| `_raw/` | 同じ | 2049 ファイルとも同じ |
+| `llms.txt` | 同じ | 同じ |
+
+数・漏れ・変わらないことはすべて期待どおりで、`prepare_site.py` を見直すところは無かった。
