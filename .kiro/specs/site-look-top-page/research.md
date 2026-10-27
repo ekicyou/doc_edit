@@ -184,3 +184,39 @@
 - 余白はテーマのまま: 「リンクの並びは詰めすぎない」（brief）に合い、宣言も塊も増えない。まとめ頁の詰め（`.5em 0 .3em`）に合わせると、目次の分類の帯が上のリンクの並びに近づく
 - 帯の中のコード・リンクの指定は広げない: 今はトップの帯の中に 0 個で、効き目の無い変更になる。原稿が変わったときは Revalidation Triggers で拾う
 - `mark_manual()` は名前を変えず引数を足す: 差分が最小で、manual の頁の呼び出しを変えない
+
+## 10. ukadoc-spec の進みの調べ（2026-10-27）
+
+ukadoc-spec の `origin/main` が `f54423d` から `1080225` に進んだ。開発者の指示「リモートを尊重する」に従い、改造の方針が変わりうるかを調べた。
+
+### 10.1 入ったコミット
+- `b091e1c`（#16、`site-look-definition-tables`）: 名前と説明だけの箇条書きを 2 列の表にする（当時は `prepare_site.py` の `tabulate()`）
+- `d01f9eb`（メンテナ）: 記述例とファイル構成の木の色付けを、`assets/sakurascript.js`・`assets/filetree.js` から、ビルド時の Pygments レキサー（`site_ext/ukadoc_site/lexers.py`）に移した。`extra_javascript` を外し、`requirements.txt` に `-e ./site_ext` を足した
+- `b1abe20`（メンテナ）: 対応の札と名前と説明の表を、`prepare_site.py` の HTML の埋め込みから Python-Markdown の Treeprocessor（`site_ext/ukadoc_site/structure.py`）に移した。`prepare_site.py` は、頁ごとの判断を attr_list の class にして付けるところまでになった
+- `1080225`（メンテナ）: ukadoc-spec の `CLAUDE.md` に分担を書いた（`prepare_site.py` は class、構造は Markdown 拡張、色付けは Pygments、見た目は `extra.css`、JavaScript は使わない）。確認の手順に、`site_ext` や `assets/` を直した後は `.cache/` を消して build することを足した
+
+### 10.2 この spec への影響
+- **方針**: この spec の印は、`main()` の 1 か所でトップを見分け、class を付ける（`mark_top()`）。メンテナの分担の `prepare_site.py` の側にそのまま入る。「`: `」を外すのは、`origin/main` の `mark_manual()` も続けている。`site_ext/` に処理を移す要は無い（拡張は頁を知らないので、頁の判断は `prepare_site.py` に残すのが分担どおり）
+- **表の処理**: `structure.py` の表の処理は全頁に掛かる。`definition_row()` は名前の `strong` に class があれば表にせず、`to_table()` は 1 項目だけの箇条書き（`Reference` の名前を除く）を表にしない。見方の 7 個はどちらにも当たり、表にならない（要件 4.7）
+- **行の番号**: `extra.css` の `site-look-manual-files: ファイル名の帯と説明の字下げ` の塊が 4 行下がった（213・216・220・223 行）。C01・C03・¶ と強調のセレクタ（30・59・105・108 行）と、広げない 36・41・66 行は同じ。`prepare_site.py` は `mark_manual()` が 274 行、`index.md` を書く行が 356 行になった
+- **手順**: `pip install -r requirements.txt` は `-e ./site_ext` を今のフォルダから読むので、写しや作業木の根で流す（根でないと失敗した）。`assets/extra.css` を直した後は `.cache/` を消して build する
+
+### 10.3 写しでの確かめ
+`1080225` を `git archive` で 2 つ書き出し、片方に設計の差分を当てて、使い捨ての venv（`requirements.txt` から `site_ext` も入れた）で `.cache/` の無いまま `prepare_site.py` と `zensical build --strict` を流した（どちらも exit 0）。
+
+| もの | 結果 |
+|---|---|
+| 控えと違うファイル | `index.html`・`search.json`・`assets/extra.css`（HTML 41 頁のうちほかの 40 頁は同じ） |
+| `h2.top-section`・`h3.top-category`・`strong.top-item` | 5・7・7 |
+| トップの `table`・`definition-table`・漏れ（`{:`）・`h1` の class | 0・0・0・0 |
+| トップの id・¶・`md-nav__link` | 13・13・82（控えと同じ、id の並びも同じ） |
+| トップの本文の字の違い | 7 字（外した「`:`」） |
+| トップの外の頁の `top-` の class | 0 |
+
+`f54423d` の写しで数えた設計の値と同じだった。帯の宣言・テーマの変数は変わっていないので、対比と余白は設計の写しの値を引き継ぐ（実装で測り直す）。
+
+### 10.4 steering への影響
+- `tech.md` の「ブラウザの仕掛け」（JavaScript で包む）が古くなった。Markdown 拡張と Pygments レキサーの分担に書き直す
+- `structure.md` の「ブラウザの仕掛けは `assets/*.js`」が古くなった
+- `workflow.md` の Build Gate に、作業木の根で `pip install` すること、`.cache/` を消すことを足す
+- `roadmap.md` の `site-look-sstp-playback`（手元のゴーストへ送る）は、ブラウザで動く仕掛けを要する。メンテナの「JavaScript は使わない」とぶつかるので、始める前にメンテナと話して方針を決める要がある（この spec では決めない）

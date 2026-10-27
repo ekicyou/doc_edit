@@ -29,18 +29,20 @@
   - `site-look-list-items: 項目名の帯` の帯のセレクタ（30 行）に `.top-category`・`.top-item`
   - `site-look-list-items: 分類の見出しの帯` の帯のセレクタ（59 行）に `.top-section`
   - `site-look-list-items: 濃い帯の中の ¶ と検索の強調` の 2 つのセレクタ（105・108 行）に `.top-section`
-  - `site-look-manual-files: ファイル名の帯と説明の字下げ` の 4 つのセレクタ（209・212・216・219 行）に `.top-item`
+  - `site-look-manual-files: ファイル名の帯と説明の字下げ` の 4 つのセレクタ（213・216・220・223 行）に `.top-item`
 - この spec の記録（`.kiro/specs/site-look-top-page/verification.md` と `screenshots/`。完了で `completed/` へ移る）
 
 ### Out of Boundary
 - `extra.css` の上の 8 つの外のセレクタと、すべての宣言の値: C01 の帯の中のコード（36 行）・暗い表示の帯の中のリンク（41 行）、C02 の詰め（48〜56 行）、C03 の帯の中のコード（66 行）、記述例の箱・list-markers・sakura-script-highlight・note-icon・木のファイル名の塊
 - `prepare_site.py` のほかの処理（一覧の検査・まとめ頁の流れ・`add_markers()`・id の振り方・見出しの数の検査・`rewrite_links()`・`_raw/`・`.nav.yml` の書き換え）と、manual の頁の `mark_manual(text)` の呼び出し
 - テーマの色の変数とリンクの色の変数、ヘッダの地の色
-- 原稿・`.nav.yml`・`mkdocs.yml`・`requirements.txt`・Zensical の版・`overrides/`、完了した `site-look-list-items`・`site-look-manual-files` の文書
+- 原稿・`.nav.yml`・`mkdocs.yml`・`requirements.txt`・`site_ext/`（Markdown 拡張と Pygments レキサー）・Zensical の版・`overrides/`、完了した `site-look-list-items`・`site-look-manual-files` の文書
 
 ### Allowed Dependencies
 - `prepare_site.py` の既にある部品: `fence_free_headings()`（コードブロックの外の見出し行）、`MANUAL_ITEM` と `mark_manual()`、`rewrite_links()` の後に書き出す流れ
 - Python-Markdown の `attr_list`（見出しの末尾の `{: .cls }` と、行の中の `**…**{: .cls }`）と toc（id を題の字から作る）。`mkdocs.yml` の今の設定のまま
+- メンテナの分担（ukadoc-spec の `CLAUDE.md` の「GitHub Pages」）: `prepare_site.py` は頁ごとの判断を attr_list の class にして写しに付けるところまで、構造は `site_ext/ukadoc_site/structure.py`、見た目は `assets/extra.css`、JavaScript は使わない。この spec の印は `prepare_site.py` の側に入る
+- `site_ext/ukadoc_site/structure.py` の名前と説明の表の処理（全頁に掛かる）が、名前の `strong` に class のある項目と 1 項目だけの箇条書きを表にしないこと（4.7 の守り）
 - `site-look-list-items` の C01・C03 の帯の宣言と、濃い帯の ¶ と検索の強調の宣言。`site-look-manual-files` の帯と字下げの宣言
 - テーマ（Zensical 0.0.67 の classic）の見出しの余白、`<body>` の `data-md-color-scheme`、暗い表示の変数を `@media screen` の中だけで定める作り
 - 確かめの道具: `zensical serve`、`python -m http.server`（変更の前の控えを配る）、Edge ヘッドレス + CDP の使い捨てのスクリプト、`.kiro/specs/completed/site-look-plan/tools/shot.mjs`（読むだけ）
@@ -49,7 +51,7 @@
 - `INDEX.md` に、末尾に `{…}` の付いた見出し・閉じの `#` の付いた見出し・段 2・3 の新しい見出し・頭が太字の一番外の箇条書きが入ったとき: 印の数と漏れを数え直す（今は 5・7・7、漏れ 0）
 - トップの帯の中にリンクかコードが入ったとき（今は 0 個）: 要件 6.3 の線で測り、C01 の暗い表示のリンク（41 行）・帯の中のコード（36・66 行）のセレクタにトップの印を足すかを決める
 - `mark_manual()` の規則（`MANUAL_ITEM`）か「`: `」の外し方を変えたとき: manual の頁とトップの両方の数を数え直す
-- `site-look-definition-tables` など、読み物の頁かトップの写しに処理を足す spec が入ったとき: 見方の 7 個が表にならないこと（要件 4.7）と、印の数を確かめ直す
+- `site_ext/ukadoc_site/structure.py` の表の処理（`definition_row()` の class の除外・`to_table()` の項目の数の線）を変えたとき、読み物の頁かトップの写しに処理を足す spec が入ったとき: 見方の 7 個が表にならないこと（要件 4.7）と、印の数を確かめ直す
 - C01・C03・C14・C22 の宣言、テーマの見出しの余白、色の変数を変えたとき、Zensical の版を上げたとき: 対比・余白・字下げを測り直す
 
 ## Architecture
@@ -77,7 +79,7 @@ graph LR
     C01[C01 と C03 の帯の宣言] --> Css
     C14[C14 と C22 の帯と字下げの宣言] --> Css
     Theme[テーマの変数と見出しの余白] --> Css
-    DefTables[site-look-definition-tables] -.見方の項目を表にしない.-> MarkManual
+    DefTables[site_ext の表の処理] -.class のある名前を表にしない.-> Html
 ```
 
 - **印の役**: `top-section`・`top-category`・`top-item` は「トップの中の役」の印で、見え方の名前にしない。見た目を替えるときは `extra.css` だけを替えればよい
@@ -115,30 +117,30 @@ ukadoc-spec で変えるのは上の 2 ファイルだけである（9.1）。�
 ### Modified Files
 
 #### `scripts/prepare_site.py`（ukadoc-spec の作業木）
-変える所は 5 か所で、ほかの関数は変えない。差分（`f54423d` に対して。写しで build を通したもの）:
+変える所は 5 か所で、ほかの関数は変えない。差分（`1080225` に対して。写しで build を通したもの。行の番号は `1080225` のもの）:
 
 ```diff
-@@ -14,3 +14,4 @@
+@@ -15,3 +15,4 @@
  - manual/ の頁のファイルの箇条書きの頭の名前に目印（manual-item）を付け、名前の後ろの「: 」を外す（見た目は assets/extra.css）
 +- トップページの節と目次の分類の見出しに目印（top-section・top-category）を、頭が太字の箇条書きの名前に目印（top-item）を付ける
  原稿そのものは書き換えない。
  """
-@@ -44,3 +45,4 @@
+@@ -45,3 +46,4 @@
  NOTE_FILE = re.compile(r'note-\d+\.md')   # 補足の項目の原稿のファイル名
 +TOP_HEADING = {2: 'top-section', 3: 'top-category'}   # トップの見出しの段 → 目印
  MANUAL_ITEM = re.compile(r'^(- \*\*(?:\\.|[^\\*])+\*\*)(: |:$|$)')   # 一番外の箇条書きの頭の太字の名前（\* と \\ は名前の字）
-@@ -283,8 +285,8 @@
+@@ -274,8 +276,8 @@
 -def mark_manual(text):
 -    """manual/ の頁のファイルの箇条書きの頭の名前に {: .manual-item } を足し、名前の後ろの「: 」を外す"""
 +def mark_manual(text, cls='manual-item'):
 +    """一番外の箇条書きの頭の太字の名前に {: .<cls> } を足し、名前の後ろの「: 」を外す"""
      lines = text.split('\n')
-@@ -293,3 +295,3 @@
+@@ -284,3 +286,3 @@
          if m:
 -            lines[i] = m.group(1) + '{: .manual-item }' + (' ' if m.group(2) == ': ' else '') + line[m.end():]
 +            lines[i] = m.group(1) + f'{{: .{cls} }}' + (' ' if m.group(2) == ': ' else '') + line[m.end():]
      return '\n'.join(lines)
-@@ -296,4 +298,13 @@
+@@ -287,4 +289,13 @@
  
  
 +def mark_top(text):
@@ -151,7 +153,7 @@ ukadoc-spec で変えるのは上の 2 ファイルだけである（9.1）。�
 +
 +
  # ---------------------------------------------------------------- 本体
-@@ -365 +376 @@
+@@ -356 +367 @@
 -    write('index.md', rewrite_links(read('INDEX.md'), 'INDEX.md', 'index.md'))
 +    write('index.md', mark_top(rewrite_links(read('INDEX.md'), 'INDEX.md', 'index.md')))
 ```
@@ -240,10 +242,10 @@ flowchart TD
     L -- 満たさない --> M[止めて開発者に提示する]
     L -- 満たす --> N[verification.md と screenshots に記録する]
 ```
-- A・B（`workflow.md` の「ukadoc-spec の作業木」）: `git -C ukadoc-spec fetch origin` → `git -C ukadoc-spec worktree add ../.worktrees/site-look-top-page -b site-look-top-page origin/main` → `git -C .worktrees/site-look-top-page branch --unset-upstream`。起点は `site-look-manual-files` の PR #15 を含む `origin/main`（今は `f54423d`。9.3）
-- C: 変更の前の控えは、作業木の HEAD（作った直後は `origin/main` と同じ）を `git archive HEAD` で Claude のスクラッチの下の新しいフォルダに書き出し、`prepare_site.py` と `zensical build --strict` を流して、`_site/` を `python -m http.server` で 8000 以外の口（例: 8010）に `/ukadoc-spec/` の下で配る。`ukadoc-spec/` のメインのチェックアウトは使わない。終わったら止めて消す
+- A・B（`workflow.md` の「ukadoc-spec の作業木」）: `git -C ukadoc-spec fetch origin` → `git -C ukadoc-spec worktree add ../.worktrees/site-look-top-page -b site-look-top-page origin/main` → `git -C .worktrees/site-look-top-page branch --unset-upstream`。起点は `site-look-manual-files` の PR #15 を含む最新の `origin/main`（今は `1080225`。9.3）。作業木の根で `pip install -r requirements.txt` を流す（`-e ./site_ext` が今のフォルダから読まれるので、根でないと失敗する。この spec は `site_ext/` を変えないので、どの写しの `site_ext` が入っていても同じ）
+- C: 変更の前の控えは、作業木の HEAD（作った直後は `origin/main` と同じ）を `git archive HEAD` で Claude のスクラッチの下の新しいフォルダに書き出し、`.cache/` の無いまま `prepare_site.py` と `zensical build --strict` を流して、`_site/` を `python -m http.server` で 8000 以外の口（例: 8010）に `/ukadoc-spec/` の下で配る。`ukadoc-spec/` のメインのチェックアウトは使わない。終わったら止めて消す
 - D のコミットは 1 つにする（印と見た目の指定は互いに依り、片方だけでは見え方が変わらないか、印の書きかけが残る）。`-c user.name=ekicyou -c user.email=dot.station@gmail.com` で名前を渡す。push と PR は `/kiro-complete` で行う
-- F: `serve` は `_site_src/` を見るので、動かしたまま `prepare_site.py` を流さない（書きかけを拾って `extra.css` が 404 になる）
+- F: `serve` は `_site_src/` を見るので、動かしたまま `prepare_site.py` を流さない（書きかけを拾って `extra.css` が 404 になる）。`assets/` を直した後は `.cache/` を消してから build する（ukadoc-spec の `CLAUDE.md` の「確認」。原稿の変わっていない頁が作り直されないことがある）
 - M: 線に届かないとき・余白を開発者が変えたいと見たときは、値を勝手に選び直さず、測った数と画面を添えて開発者に提示して判断を待つ
 
 ## Requirements Traceability
@@ -263,8 +265,8 @@ flowchart TD
 | 3.2 | 目次の分類の帯の字 4.5:1 | TopBandStyle, ContrastProbe | 明 14.13・暗 6.76 | K |
 | 3.3 | `h1`・`h2` に項目名の帯を付けない | TopMarker（段 3 だけ `top-category`）, TopCheck | — | H |
 | 3.4 | リンクの無いまとめの項目 8 個は今のまま | TopMarker（頭が太字でない行に付けない）, ContrastProbe | 一番外の項目の点 `disc`・左の端 46px | K |
-| 4.1 | 見方の分類名を C22 の帯で 1 行に | TopMarker（`mark_manual(…, 'top-item')`）, TopBandStyle（30・219 行）, ShotTool | `strong.top-item` | I |
-| 4.2 | 説明のすべての段落を同じ字下げ、点を見せない | TopBandStyle（209・212・216 行）, ContrastProbe | 説明の左の端 40px、点 `none` | K |
+| 4.1 | 見方の分類名を C22 の帯で 1 行に | TopMarker（`mark_manual(…, 'top-item')`）, TopBandStyle（30・223 行）, ShotTool | `strong.top-item` | I |
+| 4.2 | 説明のすべての段落を同じ字下げ、点を見せない | TopBandStyle（213・216・220 行）, ContrastProbe | 説明の左の端 40px、点 `none` | K |
 | 4.3 | 「その他」も次の行から同じ字下げ | TopBandStyle（`li > strong` の形も同じ）, ShotTool | `design-top-howto-other-*.png` | I |
 | 4.4 | 「`: `」7 個を見せず、ほかの字を変えない | TopMarker（「`:`」だけを外す）, TopCheck | 本文の字の違いが「`:`」7 字だけ | H |
 | 4.5 | 帯を見出しにせず、目次・id・¶ を増やさない | TopMarker（`strong` に class だけ）, TopCheck | id 13・¶ 13・`md-nav__link` 82 | H |
@@ -294,7 +296,7 @@ flowchart TD
 | 8.9 | 見せる前に Ctrl+F5 を頼む | VerificationRecord | — | — |
 | 9.1 | 変えるのは `extra.css` と `prepare_site.py` だけ | TopMarker, TopBandStyle | `git diff --stat origin/main` の 2 ファイル | — |
 | 9.2 | 宣言を書かずセレクタを広げる、新しい塊なら注 1 行 | TopBandStyle（8 つのセレクタだけ、塊 0） | 差分 | — |
-| 9.3 | 自分の作業木で、PR #15 の後の `origin/main` の上に書く | （作業木） | `.worktrees/site-look-top-page/` | A, B |
+| 9.3 | 自分の作業木で、PR #15 の後の最新の `origin/main` の上に書く | （作業木） | `.worktrees/site-look-top-page/` | A, B |
 | 9.4 | Build Gate と規約 Gate | TopMarker ほか全部 | `prepare_site.py`・`build --strict` | F |
 | 9.5 | 完了でこの spec だけの PR を作りスクワッシュマージ | （`/kiro-complete`） | PR の説明 | — |
 | 9.6 | `origin/main` とぶつかったら追いつき両方残す | TopBandStyle（セレクタの並びに両方の印）, TopMarker | merge の直し | — |
@@ -340,7 +342,7 @@ flowchart TD
 - Idempotency & recovery: 毎回 `_site_src/` を作り直すので、何度流しても同じ。原稿は書き換えない
 
 **Implementation Notes**
-- Integration: `mark_top()` は `rewrite_links()` の後に通す。`site-look-definition-tables` が同じ写しに処理を足すときは、入れ子にして両方を残し、見方の 7 個が表にならないことを確かめ直す
+- Integration: `mark_top()` は `rewrite_links()` の後に通す。ほかの spec が同じ写しに処理を足すときは、入れ子にして両方を残し、見方の 7 個が表にならないことを確かめ直す。名前と説明の表は `site_ext` の拡張が HTML の木で作り、class のある `strong` を表にしないので、`mark_top()` と並べる処理は要らない
 - Validation: TopCheck（下）と、`mark_top()` に字を直に渡す例（Testing Strategy）
 - Risks: 見出しの末尾に `{…}` や閉じの `#` を書く原稿が入ると、印が二重になるか字に漏れる（今は 0 個。Revalidation Triggers）
 
@@ -366,7 +368,7 @@ flowchart TD
 | Requirements | 1.1, 1.3, 1.5, 2.4, 3.3, 4.4, 4.5, 4.7, 6.3, 7.1, 7.3, 7.5, 8.1〜8.4 |
 
 **Responsibilities & Constraints**
-- 配り（8.1）: 作業木の `serve` の `/ukadoc-spec/assets/extra.css` が 200 で、`.top-section` が 3 つ（59・105・108 行）・`.top-category` が 1 つ（30 行）・`.top-item` が 7 つ（30・209・212・216・219 行。209・212 行は 2 つずつ）ある（8 つのセレクタ）
+- 配り（8.1）: 作業木の `serve` の `/ukadoc-spec/assets/extra.css` が 200 で、`.top-section` が 3 つ（59・105・108 行）・`.top-category` が 1 つ（30 行）・`.top-item` が 7 つ（30・213・216・220・223 行。213・216 行は 2 つずつ）ある（8 つのセレクタ）
 - 数（1.1・1.5・2.4・3.3・8.2）: トップの `article` の中の `h2.top-section`・`h3.top-category`・`strong.top-item`（うち `li > strong` の形）、`h1` に class が無いこと、外した「`:`」の数、漏れ（`pre`・`code` の外の `{:`・`{#`・`{.`）、帯の中のリンクとコードの数（6.3）、`table` の数（4.7）。全頁で `top-` を含む class がトップの外に 0
 - 変わらないこと（1.3・4.5・7.1・7.3・8.3・8.4）: 変更の前の控えと、トップの見出しの id の並び・`class="headerlink"` の数・`md-nav__link` の数が同じ。トップの本文の字（タグを外し空白を詰めたもの）の違いが「`:`」7 字と後ろの空白だけ。トップを除く 40 頁の HTML がバイト単位で同じ。`search.json` の違いが「ukadocの見方」の 1 件だけ
 - `_raw/` と `llms.txt` が控えと同じ（7.5）。`prepare_site.py` が exit 0（一覧の検査・見出しの数の検査）
@@ -397,7 +399,7 @@ interface TopCheck {
 }
 ```
 
-期待の数（`f54423d` の写しで数えた。実装で数え直し、それを正とする）:
+期待の数（`f54423d` の写しで数え、`1080225` の写しで数え直して同じだった。実装で数え直し、それを正とする）:
 
 | もの | 数 |
 |---|---|
@@ -471,7 +473,7 @@ interface ContrastProbe {
 
 | Field | Detail |
 |-------|--------|
-| Intent | 数と見比べの結果を、PR と後続 spec（`site-look-definition-tables`）の手がかりとして残す |
+| Intent | 数と見比べの結果を、PR と後続 spec の手がかりとして残す |
 | Requirements | 6.3, 8.5〜8.7, 8.9 |
 
 **Contracts**: State [x]
@@ -524,8 +526,8 @@ interface ContrastProbe {
 - **見比べ**: VerificationRecord の画面を、当て先と並べて開発者が見る（5.1・8.5）
 
 ## Integration & Migration Notes
-- 作業木: `.worktrees/site-look-top-page/`（ブランチ `site-look-top-page`）を `origin/main`（PR #15 の後。今は `f54423d`）から作り、作った直後に追う先を外す。コミットは `-c user.name=ekicyou -c user.email=dot.station@gmail.com` で名前を渡す（System Flows の A・B・D）
-- `site-look-definition-tables`: 同じ `prepare_site.py`・`extra.css` を変える見込み。どちらが先に入っても、後から入る方が `origin/main` に追いつき、両方の処理と塊を残す（9.6）。トップの見方の 7 個は「`: `」が外れ、6 個は 2 つの段落を持ち、どれも 1 項目だけの箇条書きなので、C23 の当て先にならない。後に入る spec が、見方の 7 個が表にならず要件 4 の見え方のままであることを確かめる（4.7）
+- 作業木: `.worktrees/site-look-top-page/`（ブランチ `site-look-top-page`）を 最新の `origin/main`（PR #15 の後。今は `1080225`）から作り、作った直後に追う先を外す。コミットは `-c user.name=ekicyou -c user.email=dot.station@gmail.com` で名前を渡す（System Flows の A・B・D）
+- `site-look-definition-tables`（#16）は先に入り、その表の処理はメンテナが `site_ext/ukadoc_site/structure.py` に移した（`b1abe20`）。拡張は頁を知らずトップにも掛かるが、トップの見方の 7 個は名前の `strong` に `top-item` の class があり、どれも 1 項目だけの箇条書きで、6 個は段落を持つので表にならない（`1080225` の写しで、トップの `table` 0・`definition-table` 0）。後に入るこの spec が、見方の 7 個が表にならず要件 4 の見え方のままであることを確かめる（4.7）
 - PR（9.5）: `/kiro-complete` で、この spec だけの PR を作ってスクワッシュマージする。説明には、roadmap の並び（出し済みの PR の番号・この PR・この後の PR）を短く並べ、この PR だけで完結してマージしてよいこと、中身で依る先が `site-look-list-items`（#11。C01・C03 の帯の宣言）と `site-look-manual-files`（#15。C14・C22 の帯と字下げの宣言、`mark_manual()`）であることを書く
 - 後続: トップに帯の中のリンクやコード、新しい段の見出しを足す原稿の変更は、Revalidation Triggers に従って数え直す
 
@@ -533,3 +535,11 @@ interface ContrastProbe {
 1. **帯の上下の余白はテーマのまま**（議題 1。5.2・5.4）: 余白の宣言を足さない。目次の分類の帯は上 32px・下 16px、見方の分類名の帯は manual と同じ上 10px・下 6px。設計の写しの画面（`screenshots/design-top-*.png`）で、帯とリンクの並びが分かれて見え、詰まりすぎない。実装の画面で開発者が余白を変えたいと見たときは、Error Handling のとおり作業を止めて提示する
 2. **帯の中のコードとリンクの指定は広げない**（議題 2。6.3・9.2）: `extra.css` の 36・41・66 行には印を足さない。トップの帯の中にリンクやコードが入る原稿の変更は、Revalidation Triggers で拾う
 3. **`mark_manual()` の名前は変えない**（議題 3。1.5）: 引数 `cls='manual-item'` を足すだけにし、manual の頁の呼び出しは変えない。docstring は manual に限らない書き方にする
+
+## ukadoc-spec の進みへの追随（2026-10-27）
+ukadoc-spec の `origin/main` が `f54423d` から `1080225` に進んだ（`site-look-definition-tables` の #16、メンテナの `d01f9eb`・`b1abe20`・`1080225`）。開発者の指示（リモートを尊重する）に従い、設計を次のように合わせた。設計の形（案 B、`mark_top()` と 8 つのセレクタ）は変わらない。
+- **分担**: メンテナは、`prepare_site.py` を頁ごとの判断を class にして付けるところまでにし、構造を `site_ext` の Markdown 拡張、色付けを Pygments レキサーに移し、JavaScript をやめた。`mark_top()` は class を付けるだけで（「`: `」の外しは、`origin/main` に残る `mark_manual()` と同じ）、この分担の `prepare_site.py` の側に入る。`site_ext/` は変えない
+- **表の処理**: `site_ext/ukadoc_site/structure.py` は全頁に掛かるが、class のある名前の `strong` と 1 項目だけの箇条書きを表にしないので、見方の 7 個は表にならない（4.7）
+- **行の番号**: `extra.css` のファイル名の帯と説明の字下げの塊が 4 行下がった（209〜219 行 → 213〜223 行）。`prepare_site.py` の差分の位置を `1080225` に合わせた。差分の中身は同じ
+- **確認の手順**: `pip install -r requirements.txt` を作業木の根で流す（`site_ext` が入る）。`assets/` を直した後は `.cache/` を消して build する
+- **写しでの確かめ**: `1080225` の写しに差分を当てて build し（`prepare_site.py`・`zensical build --strict` とも exit 0）、HTML が控えと違うのは `index.html`・`search.json`・`assets/extra.css` だけ（41 頁のうちほかの 40 頁は同じ）、`h2.top-section` 5・`h3.top-category` 7・`strong.top-item` 7、トップの `table` 0、漏れ 0、id 13・¶ 13・`md-nav__link` 82 が控えと同じ、本文の字の違いは「`:`」7 字、トップの外の `top-` の class 0 だった。帯の見た目の宣言は変わっていないので、対比・余白の数は設計の写しの値を引き継ぎ、実装で測り直す

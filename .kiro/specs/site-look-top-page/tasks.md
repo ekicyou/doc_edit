@@ -2,8 +2,8 @@
 
 - [ ] 1. 土台: 作業木と変更の前の控え
 - [ ] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューを起動する
-  - ukadoc-spec を fetch し、`origin/main`（`site-look-manual-files` の PR #15 を含む。今は `f54423d`）から作業木 `.worktrees/site-look-top-page/` とブランチ `site-look-top-page` を作り、作った直後に追う先を外す。ukadoc-spec のメインのチェックアウトは使わない
-  - 作業木で `prepare_site.py` と `zensical build --strict` を流してから `zensical serve` を起動する（doc_edit の `.venv` を使う。動かなければスクラッチの使い捨ての venv で流し、そのことを控える）
+  - ukadoc-spec を fetch し、最新の `origin/main`（`site-look-manual-files` の PR #15 を含む。今は `1080225`）から作業木 `.worktrees/site-look-top-page/` とブランチ `site-look-top-page` を作り、作った直後に追う先を外す。ukadoc-spec のメインのチェックアウトは使わない
+  - 作業木の根で `pip install -r requirements.txt` を流して `site_ext` を入れ（doc_edit の `.venv` を使う。動かなければスクラッチの使い捨ての venv で流し、そのことを控える）、`prepare_site.py` と `zensical build --strict` を流してから `zensical serve` を起動する
   - トップが開けることを見たら、プレビューを止める（2.1・2.2 は書きかけの `_site_src/` を拾わせないよう、プレビューの止まった作業木で書く）
   - 作業木の先頭が `origin/main` と同じコミットで、追う先が無く、`/ukadoc-spec/` のトップがプレビューで開けたことを見て、プレビューが止まっている
   - _Requirements: 9.3_
@@ -32,7 +32,7 @@
   - _Requirements: 2.1, 2.3, 3.1, 4.1, 4.2, 4.3, 5.1, 5.2, 5.4, 6.4, 7.2, 9.2_
 
 - [ ] 2.3 Build Gate と規約 Gate を通し、変更の範囲を確かめてコミットする
-  - 作業木で `prepare_site.py` と `zensical build --strict` を流し、規約 Gate（ukadoc-spec の `CLAUDE.md` の決まり）に照らす
+  - 作業木で `.cache/` を消してから `prepare_site.py` と `zensical build --strict` を流し、規約 Gate（ukadoc-spec の `CLAUDE.md` の決まり）に照らす
   - 2 ファイルの変更を 1 つのコミットにする（ukadoc-spec の履歴の型の日本語の 1 文。名前は `-c user.name=ekicyou -c user.email=dot.station@gmail.com` で渡す）。push も PR もしない
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`git diff --stat origin/main` が `scripts/prepare_site.py`・`assets/extra.css` だけで、作業木に未コミットの変更が無い
   - _Depends: 2.1, 2.2_
@@ -40,14 +40,14 @@
 
 - [ ] 3. 配られた頁での確かめ
 - [ ] 3.1 ukadoc-spec の `origin/main` に追いつき、測る版を決める
-  - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `extra.css` はセレクタの並びに両方の印を残し、`prepare_site.py` の `index.md` の行は両方の処理を入れ子にして残す（`site-look-definition-tables` が先に入ったときを含む）
+  - ukadoc-spec を fetch し、`origin/main` が作業木の分岐点から進んでいれば作業木で merge する。ぶつかったら `extra.css` はセレクタの並びに両方の印を残し、`prepare_site.py` の `index.md` の行は両方の処理を入れ子にして残す。メンテナの分担（`prepare_site.py` は class を付けるところまで、構造は `site_ext`）が変わっていれば `origin/main` の形に合わせ、合わせ方が設計と違うときは止めて開発者に提示する。`requirements.txt` か `site_ext/` が変わっていれば、作業木の根で `pip install -r requirements.txt` を流し直す
   - merge したときは Build Gate（2.3）と 2.1 の `mark_top()`・`mark_manual(text)` の例をやり直し、1.2 の控えを、作業木の HEAD でなく新しい `origin/main` のコミットから 1.2 の手順で作り直す。控えの置き場・コミットを `verification.md` に書き直す
   - 3.2〜3.4 はこの版で測る（測る版を `verification.md` に書く）
   - `origin/main` が作業木の先祖で、Build Gate が exit 0 で、測る版が `verification.md` に書いてある
   - _Requirements: 9.6_
 
 - [ ] 3.2 配りと、印の数・漏れ・変わらないことを、プレビューの頁の HTML で数える
-  - プレビューを止め、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動し直す。控えが配られていなければ、`verification.md` に書いた置き場から配り直す（無ければ書いたコミットから 1.2 の手順で作り直す）
+  - プレビューを止め、作業木で `.cache/` を消して `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動し直す。控えが配られていなければ、`verification.md` に書いた置き場から配り直す（無ければ書いたコミットから 1.2 の手順で作り直す）
   - 配られた `/ukadoc-spec/assets/extra.css` が 200 で、`.top-section` 3・`.top-category` 1・`.top-item` 7 があることを見る。無ければ起動し直す
   - 設計の「TopCheck」の期待の数の表を数える: `h2.top-section` 5・`h3.top-category` 7・`strong.top-item` 7（うち `li > strong` 1）・外した「`:`」7・漏れ 0・帯の中のリンク 0・帯の中のコード 0・トップの `table` 0・`h1` の class 無し・トップの外の頁の `top-` の class 0
   - 控えと、トップの id の並び・¶・`md-nav__link` の数が同じ、トップの本文の字の違いが「`:`」7 字だけ、トップを除く 40 頁の HTML がバイト単位で同じ、`search.json` の違いが「ukadocの見方」の 1 件だけ、`_raw/`・`llms.txt` が同じことを見る
@@ -56,7 +56,7 @@
   - _Requirements: 1.1, 1.3, 1.5, 2.4, 3.3, 4.4, 4.5, 4.7, 6.3, 7.1, 7.3, 7.5, 8.1, 8.2, 8.3, 8.4_
 
 - [ ] 3.3 帯の位置・余白と、帯の字と ¶ の対比・切り替え・印刷の指定・検索の強調・幅 375 を明・暗で測る
-  - プレビューが動いていなければ、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
+  - プレビューが動いていなければ、作業木で `.cache/` を消して `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
   - 控えが配られていなければ、3.2 と同じく `verification.md` に書いた置き場から配り直す（無ければ書いたコミットから 1.2 の手順で作り直す）
   - `site-look-list-items` の `verification.md` の「流した式」に従い、Edge ヘッドレス + CDP で、設計の「ContrastProbe」の「測る所と線」の表の所をすべて明・暗で測る（幅 1000。¶ はふだん・ホバー・フォーカス）
   - 帯 19 個の左の端と幅が 1 通り、見方の説明の左の端が 1 通り、見方の項目の点が `none`、ほかの一番外の項目の点が `disc` で左の端が控えと同じ、帯と段落の余白が設計の「写しの余白」と同じ、目次のリンクの行の間隔が控えと同じことを、控えと後を同じ式で測って見る
@@ -67,7 +67,7 @@
   - _Requirements: 2.2, 2.3, 3.2, 3.4, 4.2, 4.6, 5.2, 5.3, 5.4, 6.1, 6.2, 7.2, 7.4, 8.6, 8.7_
 
 - [ ] 3.4 変更の後の画面を撮り、当て先と並べて記録する
-  - プレビューが動いていなければ、作業木で `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
+  - プレビューが動いていなければ、作業木で `.cache/` を消して `prepare_site.py` → `zensical build --strict` → `zensical serve` の順に起動する
   - 設計の「VerificationRecord」の画面の一覧のとおり、`after-` の画面 7 組を `shot.mjs`（読むだけで使う）で明・暗で撮って spec の `screenshots/` に置く。二重に重なった跡があれば撮り直し、枚数とわけを控える
   - トップの画面を当て先（`after-ref-*`）と並べ、節の見出しが分類の帯、目次の分類が項目名の帯、見方の分類名がファイル名の帯と説明の字下げ（「その他」を含む）と同じ見え方で、帯とリンクの並びが見分けられることを確かめる
   - 開発者に画面やプレビューを見せるときは Ctrl+F5 を頼む。開発者が帯の上下の余白を変えたいと見たときは、値を勝手に選び直さず、そこで作業を止め、3.3 で測った余白を添えて提示して判断を待つ（設計の話し合いの議題 1）

@@ -38,11 +38,12 @@
   - 頭が太字の箇条書きを表にすること（`site-look-definition-tables` の C23）
   - 暗い表示のまま印刷したときのリンクの色（roadmap のバックログ「暗い表示のまま印刷したリンクの色（記録だけ）」。トップの帯の中にはリンクが無い）
 - **Adjacent expectations**:
-  - 土台は ukadoc-spec の `origin/main`（今は `f54423d`。`site-look-dark-link-color`（#10）・`site-look-list-items`（#11）・`site-look-list-markers`（#12）・`site-look-sakura-script-highlight`（#13）・`site-look-note-icon`（#14）・`site-look-manual-files`（#15）が入ったもの）
+  - 土台は ukadoc-spec の `origin/main`（今は `1080225`。`site-look-dark-link-color`（#10）・`site-look-list-items`（#11）・`site-look-list-markers`（#12）・`site-look-sakura-script-highlight`（#13）・`site-look-note-icon`（#14）・`site-look-manual-files`（#15）・`site-look-definition-tables`（#16）と、メンテナの 3 つのコミット（`d01f9eb`・`b1abe20`・`1080225`）が入ったもの）
+  - メンテナの分担（ukadoc-spec の `CLAUDE.md` の「GitHub Pages」、2026-10-27）に従う: `prepare_site.py` は頁ごとの判断を attr_list の class にして写しに付けるところまで、class と木の形を見て作る構造は `site_ext/ukadoc_site/structure.py`（Python-Markdown の拡張）、コードブロックの色付けは `site_ext` の Pygments レキサー、見た目は `assets/extra.css` で、JavaScript は使わない。トップの印は、この分担の `prepare_site.py` の側（`main()` の 1 か所で頁を見分け、class を付ける）に入り、`site_ext/` には足さない
   - 帯と字下げの見え方は、`site-look-list-items` の C01・C03 と `site-look-manual-files` の C14・C22 の指定を使い、同じ宣言を 2 か所に書かない（brief の目的。`site-look-manual-files` が C01 の帯のセレクタを `.manual-item` に広げたのと同じやり方）。完了した 2 つの spec の文書は直さない
   - `site-look-list-items` の Requirement 1.6・3.7（読み物の頁の見出しは今のまま、`h2` を帯にしない）は、トップを除くほかの読み物の頁で今のまま保たれる。トップはこの spec で帯を付ける頁になる
   - `site-look-manual-files` は「頁の種類の印」を足さなかった（その spec の設計の話し合いの議題 1）。トップの見分けも、組み立ての処理の 1 か所（`INDEX.md` を `index.md` に写す所）で行い、見た目の指定の使わない印は足さない
-  - `site-look-definition-tables`（C23）は、見方の箇条書きを表にしない。C23 は 1 項目だけの箇条書きと 2 つ以上の段落を持つ項目を初めから除くので、今の原稿では当たらない見込みである。どちらの spec が先に入っても、見方の箇条書きの見え方は Requirement 4 のままであることを、後に入る spec が確かめる
+  - `site-look-definition-tables`（C23）は先に入った（#16）。名前と説明の表は、今は `site_ext/ukadoc_site/structure.py` が頁を知らずに全頁で作り、トップにも掛かる。表にしないのは、名前の `strong` に class があるもの・1 項目だけの箇条書き（`Reference` の名前を除く）・段落を持つ項目などである。見方の箇条書きは、トップの印（名前の `strong` の class）と 1 項目ずつの箇条書きの形のどちらでも当たらない。後に入るこの spec が、見方の箇条書きの見え方が Requirement 4 のままであることを確かめる
   - 目標の画面は無い（`site-look-plan` の調べはトップを見ていない）。見え方は、同じ見え方の当て先（まとめ頁の分類の帯・項目名の帯、`manual/ghost` のファイル名の帯）と並べて開発者が確かめる
 
 ## Requirements
@@ -133,9 +134,9 @@
 **Objective:** As a ukadoc-spec のメンテナ, I want 小さく、印と見た目の指定に限った変更を受け取ること, so that 他者も使う公開リポジトリでもレビューしやすい
 
 #### Acceptance Criteria
-1. The site-look-top-page shall ukadoc-spec の中で `assets/extra.css` と `scripts/prepare_site.py` だけを変え、原稿（`.md`）・`.nav.yml`・`mkdocs.yml`・`requirements.txt`・Zensical の版を変えない
+1. The site-look-top-page shall ukadoc-spec の中で `assets/extra.css` と `scripts/prepare_site.py` だけを変え、原稿（`.md`）・`.nav.yml`・`mkdocs.yml`・`requirements.txt`・`site_ext/`・Zensical の版を変えない
 2. The site-look-top-page shall 帯と字下げの宣言を新しく書かず、`site-look-list-items` と `site-look-manual-files` が入れた塊のセレクタを広げて分け合うのを先にする。新しい塊が要るときは `assets/extra.css` の末尾に足し、塊ごとの注を `/* site-look-top-page: <何の指定か> */` の短い 1 行にとどめる（説明・測りの数・わけは spec の記録に書く）
-3. The site-look-top-page shall 変更を、この spec の作業木 `.worktrees/site-look-top-page/`（ブランチ `site-look-top-page`）で、`site-look-manual-files` の PR（#15）がマージされた後の ukadoc-spec の `origin/main` の上に書く
+3. The site-look-top-page shall 変更を、この spec の作業木 `.worktrees/site-look-top-page/`（ブランチ `site-look-top-page`）で、`site-look-manual-files` の PR（#15）がマージされた後の ukadoc-spec の最新の `origin/main`（今は `1080225`）の上に書く
 4. The site-look-top-page shall この spec の完了の前に、Build Gate（`prepare_site.py` と `zensical build --strict` が、どちらも失敗なく終わる）と規約 Gate を通す
 5. The site-look-top-page shall この spec の完了で、この spec だけの PR を作ってスクワッシュマージする（原則 1 spec = 1 PR）
 6. If 作業の途中に、ukadoc-spec の `origin/main` が同じ `assets/extra.css`・`scripts/prepare_site.py` を変えて進み、変更とぶつかったとき, the site-look-top-page shall `origin/main` に追いつき、この spec の指定と、ほかの spec（`site-look-definition-tables` など）が入れた指定の両方が残るようにする
@@ -145,3 +146,9 @@
 2. **見方の箇条書きの「`: `」**（議題 2。OPEN QUESTION 3）: `manual/` のファイル名の帯と同じく外す（Requirement 4.4）
 3. **帯にしない所**（議題 3。OPEN QUESTION 5・6）: 頁の題（`h1`）・「対象version」と「外部リンク」のリンクの箇条書き・「ukadocについて」の段落と引用・目次のリンクの無いまとめの項目 8 個は今のまま（Boundary Context・Requirement 3.4）
 4. **余白**（議題 4。OPEN QUESTION 2）: 目次のリンクの並びと段落の余白は今のまま。変えてよいのは帯の上下だけで、値は設計で画面を見て決める（Requirement 5.2・5.3）
+
+## ukadoc-spec の進みへの追随（2026-10-27）
+ukadoc-spec の `origin/main` が `f54423d` から `1080225` に進んだ（`site-look-definition-tables` の #16 と、メンテナの 3 つのコミット: 記述例と木の色付けを JavaScript から Pygments レキサーへ、対応の札と名前と説明の表を `prepare_site.py` から Markdown 拡張 `site_ext` へ、`CLAUDE.md` に分担と確認の手順）。開発者の指示（リモートを尊重する）に従い、次のように合わせた。要件の中身（何を見せるか）は変わらない。
+- トップの印は、メンテナの分担のとおり `prepare_site.py` が class を付けるところまでにする（Boundary Context）。`site_ext/` は変えない（Requirement 9.1）
+- 見方の箇条書きを表にしないこと（Requirement 4.7）は、`site_ext` の表の処理が名前の `strong` に class のある項目を表にしないことでも守られる（Boundary Context）
+- 土台を `1080225` にした（Requirement 9.3）。この版の写しに設計の差分を当てて build し、印の数・変わらないこと・表 0 が前の版と同じであることを確かめた（`research.md` の「10」）
