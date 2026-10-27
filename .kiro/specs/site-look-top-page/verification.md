@@ -49,3 +49,22 @@ PY/python -I snapshot.py ../before-1080225 ../before-1080225/before.json
 
 - 設計の TopCheck の見込み（id 13・¶ 13・`md-nav__link` 82、頁 41）と同じ
 - トップを除く 40 頁の本文の字・id・¶・目次の数と頁の sha256 は `before.json` に控えた。後（4.2）でこれと比べる
+
+## `mark_top()` の例（2.1）
+
+`scripts/prepare_site.py` に `TOP_HEADING`・`mark_top()` を足し、`mark_manual()` に引数 `cls`（既定値 `manual-item`）を足し、`write('index.md', …)` から `mark_top()` を呼ぶようにした（設計の差分の 5 か所のとおり）。スクラッチの `tools/mark_top_examples.py` で `mark_top()` に字を直に渡した。変える前は `mark_top` が無いので失敗し（`AttributeError`）、変えた後は 12 通りとも合った。
+
+| 渡した字 | 結果 |
+|---|---|
+| `# UKADOC トップページ` | 変わらない（2.4・3.3） |
+| `## 目次` | `## 目次 {: .top-section }` |
+| `### HowTo` | `### HowTo {: .top-category }` |
+| `#### x` | 変わらない |
+| `- **ファイル構成**: 説明` | `- **ファイル構成**{: .top-item } 説明` |
+| `- **その他**: 説明` | `- **その他**{: .top-item } 説明` |
+| `- [全体の構成](manual/directory.md)`・`- Ghost`・`  - [descript.txt](…)` | 変わらない（3.4・4.6） |
+| コードブロックの中の `## x`・`- **x**: y` | 変わらない |
+| 上をまとめて 1 つの字で渡したもの | 1 行ずつ渡したときと同じ |
+| `mark_manual(text)`（引数なし）に `- **x**: y` | `- **x**{: .manual-item } y`（manual の頁は変わらない） |
+
+作業木で `prepare_site.py` と `zensical build --strict` はどちらも exit 0。`_site_src/index.md` では、行の末尾の `{: .top-section }` が 5 行（`ukadocについて`・`対象version`・`外部リンク`・`ukadocの見方`・`目次`）、`{: .top-category }` が 7 行（目次の分類）、「ukadocの見方」の 7 行が `- **…**{: .top-item } 説明` の形だった。
