@@ -193,7 +193,7 @@ ukadoc-spec の `origin/main` が `f54423d` から `1080225` に進んだ。開�
 - `b091e1c`（#16、`site-look-definition-tables`）: 名前と説明だけの箇条書きを 2 列の表にする（当時は `prepare_site.py` の `tabulate()`）
 - `d01f9eb`（メンテナ）: 記述例とファイル構成の木の色付けを、`assets/sakurascript.js`・`assets/filetree.js` から、ビルド時の Pygments レキサー（`site_ext/ukadoc_site/lexers.py`）に移した。`extra_javascript` を外し、`requirements.txt` に `-e ./site_ext` を足した
 - `b1abe20`（メンテナ）: 対応の札と名前と説明の表を、`prepare_site.py` の HTML の埋め込みから Python-Markdown の Treeprocessor（`site_ext/ukadoc_site/structure.py`）に移した。`prepare_site.py` は、頁ごとの判断を attr_list の class にして付けるところまでになった
-- `1080225`（メンテナ）: ukadoc-spec の `CLAUDE.md` に分担を書いた（`prepare_site.py` は class、構造は Markdown 拡張、色付けは Pygments、見た目は `extra.css`、JavaScript は使わない）。確認の手順に、`site_ext` や `assets/` を直した後は `.cache/` を消して build することを足した
+- `1080225`（メンテナ）: ukadoc-spec の `CLAUDE.md` に分担を書いた（`prepare_site.py` は class、構造は Markdown 拡張、色付けは Pygments、見た目は `extra.css`、「JavaScript は使わない」）。確認の手順に、`site_ext` や `assets/` を直した後は `.cache/` を消して build することを足した
 
 ### 10.2 この spec への影響
 - **方針**: この spec の印は、`main()` の 1 か所でトップを見分け、class を付ける（`mark_top()`）。メンテナの分担の `prepare_site.py` の側にそのまま入る。「`: `」を外すのは、`origin/main` の `mark_manual()` も続けている。`site_ext/` に処理を移す要は無い（拡張は頁を知らないので、頁の判断は `prepare_site.py` に残すのが分担どおり）
@@ -219,4 +219,4 @@ ukadoc-spec の `origin/main` が `f54423d` から `1080225` に進んだ。開�
 - `tech.md` の「ブラウザの仕掛け」（JavaScript で包む）が古くなった。Markdown 拡張と Pygments レキサーの分担に書き直す
 - `structure.md` の「ブラウザの仕掛けは `assets/*.js`」が古くなった
 - `workflow.md` の Build Gate に、作業木の根で `pip install` すること、`.cache/` を消すことを足す
-- `roadmap.md` の `site-look-sstp-playback`（手元のゴーストへ送る）は、ブラウザで動く仕掛けを要する。メンテナの「JavaScript は使わない」とぶつかるので、始める前にメンテナと話して方針を決める要がある（この spec では決めない）
+- `roadmap.md` の `site-look-sstp-playback`（手元のゴーストへ送る）は、ブラウザで動く仕掛けを要する。ukadoc-spec の `CLAUDE.md` に「JavaScript は使わない」と書かれ、ブラウザで動く仕掛けを足してよいかは書かれていないので、始める前にメンテナと話して決める要がある（この spec では決めない）

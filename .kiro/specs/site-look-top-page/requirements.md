@@ -39,7 +39,7 @@
   - 暗い表示のまま印刷したときのリンクの色（roadmap のバックログ「暗い表示のまま印刷したリンクの色（記録だけ）」。トップの帯の中にはリンクが無い）
 - **Adjacent expectations**:
   - 土台は ukadoc-spec の `origin/main`（今は `1080225`。`site-look-dark-link-color`（#10）・`site-look-list-items`（#11）・`site-look-list-markers`（#12）・`site-look-sakura-script-highlight`（#13）・`site-look-note-icon`（#14）・`site-look-manual-files`（#15）・`site-look-definition-tables`（#16）と、メンテナの 3 つのコミット（`d01f9eb`・`b1abe20`・`1080225`）が入ったもの）
-  - メンテナの分担（ukadoc-spec の `CLAUDE.md` の「GitHub Pages」、2026-10-27）に従う: `prepare_site.py` は頁ごとの判断を attr_list の class にして写しに付けるところまで、class と木の形を見て作る構造は `site_ext/ukadoc_site/structure.py`（Python-Markdown の拡張）、コードブロックの色付けは `site_ext` の Pygments レキサー、見た目は `assets/extra.css` で、JavaScript は使わない。トップの印は、この分担の `prepare_site.py` の側（`main()` の 1 か所で頁を見分け、class を付ける）に入り、`site_ext/` には足さない
+  - メンテナの分担（ukadoc-spec の `CLAUDE.md` の「GitHub Pages」、2026-10-27）に従う: `prepare_site.py` は頁ごとの判断を attr_list の class にして写しに付けるところまで、class と木の形を見て作る構造は `site_ext/ukadoc_site/structure.py`（Python-Markdown の拡張）、コードブロックの色付けは `site_ext` の Pygments レキサー、見た目は `assets/extra.css` で、「JavaScript は使わない」と書かれている。トップの印は、この分担の `prepare_site.py` の側（`main()` の 1 か所で頁を見分け、class を付ける）に入り、`site_ext/` には足さない
   - 帯と字下げの見え方は、`site-look-list-items` の C01・C03 と `site-look-manual-files` の C14・C22 の指定を使い、同じ宣言を 2 か所に書かない（brief の目的。`site-look-manual-files` が C01 の帯のセレクタを `.manual-item` に広げたのと同じやり方）。完了した 2 つの spec の文書は直さない
   - `site-look-list-items` の Requirement 1.6・3.7（読み物の頁の見出しは今のまま、`h2` を帯にしない）は、トップを除くほかの読み物の頁で今のまま保たれる。トップはこの spec で帯を付ける頁になる
   - `site-look-manual-files` は「頁の種類の印」を足さなかった（その spec の設計の話し合いの議題 1）。トップの見分けも、組み立ての処理の 1 か所（`INDEX.md` を `index.md` に写す所）で行い、見た目の指定の使わない印は足さない

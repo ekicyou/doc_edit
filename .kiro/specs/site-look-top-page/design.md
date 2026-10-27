@@ -41,7 +41,7 @@
 ### Allowed Dependencies
 - `prepare_site.py` の既にある部品: `fence_free_headings()`（コードブロックの外の見出し行）、`MANUAL_ITEM` と `mark_manual()`、`rewrite_links()` の後に書き出す流れ
 - Python-Markdown の `attr_list`（見出しの末尾の `{: .cls }` と、行の中の `**…**{: .cls }`）と toc（id を題の字から作る）。`mkdocs.yml` の今の設定のまま
-- メンテナの分担（ukadoc-spec の `CLAUDE.md` の「GitHub Pages」）: `prepare_site.py` は頁ごとの判断を attr_list の class にして写しに付けるところまで、構造は `site_ext/ukadoc_site/structure.py`、見た目は `assets/extra.css`、JavaScript は使わない。この spec の印は `prepare_site.py` の側に入る
+- メンテナの分担（ukadoc-spec の `CLAUDE.md` の「GitHub Pages」）: `prepare_site.py` は頁ごとの判断を attr_list の class にして写しに付けるところまで、構造は `site_ext/ukadoc_site/structure.py`、見た目は `assets/extra.css` で、「JavaScript は使わない」と書かれている。この spec の印は `prepare_site.py` の側に入る
 - `site_ext/ukadoc_site/structure.py` の名前と説明の表の処理（全頁に掛かる）が、名前の `strong` に class のある項目と 1 項目だけの箇条書きを表にしないこと（4.7 の守り）
 - `site-look-list-items` の C01・C03 の帯の宣言と、濃い帯の ¶ と検索の強調の宣言。`site-look-manual-files` の帯と字下げの宣言
 - テーマ（Zensical 0.0.67 の classic）の見出しの余白、`<body>` の `data-md-color-scheme`、暗い表示の変数を `@media screen` の中だけで定める作り
@@ -538,7 +538,7 @@ interface ContrastProbe {
 
 ## ukadoc-spec の進みへの追随（2026-10-27）
 ukadoc-spec の `origin/main` が `f54423d` から `1080225` に進んだ（`site-look-definition-tables` の #16、メンテナの `d01f9eb`・`b1abe20`・`1080225`）。開発者の指示（リモートを尊重する）に従い、設計を次のように合わせた。設計の形（案 B、`mark_top()` と 8 つのセレクタ）は変わらない。
-- **分担**: メンテナは、`prepare_site.py` を頁ごとの判断を class にして付けるところまでにし、構造を `site_ext` の Markdown 拡張、色付けを Pygments レキサーに移し、JavaScript をやめた。`mark_top()` は class を付けるだけで（「`: `」の外しは、`origin/main` に残る `mark_manual()` と同じ）、この分担の `prepare_site.py` の側に入る。`site_ext/` は変えない
+- **分担**: メンテナは、`prepare_site.py` を頁ごとの判断を class にして付けるところまでにし、構造を `site_ext` の Markdown 拡張、色付けを Pygments レキサーに移して `extra_javascript` を外した（`CLAUDE.md` には「JavaScript は使わない」と書かれている）。`mark_top()` は class を付けるだけで（「`: `」の外しは、`origin/main` に残る `mark_manual()` と同じ）、この分担の `prepare_site.py` の側に入る。`site_ext/` は変えない
 - **表の処理**: `site_ext/ukadoc_site/structure.py` は全頁に掛かるが、class のある名前の `strong` と 1 項目だけの箇条書きを表にしないので、見方の 7 個は表にならない（4.7）
 - **行の番号**: `extra.css` のファイル名の帯と説明の字下げの塊が 4 行下がった（209〜219 行 → 213〜223 行）。`prepare_site.py` の差分の位置を `1080225` に合わせた。差分の中身は同じ
 - **確認の手順**: `pip install -r requirements.txt` を作業木の根で流す（`site_ext` が入る）。`assets/` を直した後は `.cache/` を消して build する
