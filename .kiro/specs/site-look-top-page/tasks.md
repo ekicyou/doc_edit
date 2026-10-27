@@ -24,7 +24,7 @@
   - _Boundary: TopMarker_
   - _Requirements: 1.1, 1.2, 1.4, 1.5, 2.4, 3.3, 3.4, 4.4, 4.5, 4.6, 4.7, 5.3, 7.1, 7.3, 7.5_
 
-- [ ] 2.2 (P) `extra.css` の既にある 4 つの塊の 8 つのセレクタにトップの印を足す
+- [x] 2.2 (P) `extra.css` の既にある 4 つの塊の 8 つのセレクタにトップの印を足す
   - 設計の「Modified Files」の `extra.css` の差分のとおり、C01 の帯（`.top-category`・`.top-item`）、C03 の帯（`.top-section`）、濃い帯の ¶ と検索の強調の 2 つ（`.top-section`）、ファイル名の帯と説明の字下げの 4 つ（`:is(.manual-item, .top-item)`）だけを広げる
   - 宣言・塊の注・ほかのセレクタ（帯の中のコード・暗い表示の帯の中のリンク・C02 の詰め）は変えず、新しい塊・注・直書きの色・`@media screen` の指定を足さない
   - 作業木の `assets/extra.css` で、`.top-section` が 3 つ・`.top-category` が 1 つ・`.top-item` が 7 つあり、`git diff` の `+` の行がセレクタの行だけである

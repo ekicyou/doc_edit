@@ -68,3 +68,17 @@ PY/python -I snapshot.py ../before-1080225 ../before-1080225/before.json
 | `mark_manual(text)`（引数なし）に `- **x**: y` | `- **x**{: .manual-item } y`（manual の頁は変わらない） |
 
 作業木で `prepare_site.py` と `zensical build --strict` はどちらも exit 0。`_site_src/index.md` では、行の末尾の `{: .top-section }` が 5 行（`ukadocについて`・`対象version`・`外部リンク`・`ukadocの見方`・`目次`）、`{: .top-category }` が 7 行（目次の分類）、「ukadocの見方」の 7 行が `- **…**{: .top-item } 説明` の形だった。
+
+## `extra.css` のセレクタ（2.2）
+
+作業木の `assets/extra.css` で、変える前と後の数（`grep -o`）:
+
+| 印 | 前 | 後 | 行 |
+|---|---|---|---|
+| `.top-section` | 0 | 3 | 59・105・108 |
+| `.top-category` | 0 | 1 | 30 |
+| `.top-item` | 0 | 7 | 30・213・216・220・223（213・216 は 2 つずつ） |
+
+`git diff -- assets/extra.css` は 8 行を消して 8 行を足しただけで、足した行はどれも消した行と組になるセレクタの行だった（設計の「Modified Files」の差分のとおり）。宣言・注・塊・色・`@media screen` の指定は変わらず、帯の中のコード（36・66 行）と暗い表示の帯の中のリンク（41 行）には印を足していない。
+
+`.cache/` を消してから `prepare_site.py` と `zensical build --strict` はどちらも exit 0。配られる `_site/assets/extra.css` にも `.top-section` 3・`.top-category` 1・`.top-item` 7 がある。
