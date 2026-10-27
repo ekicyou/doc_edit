@@ -17,7 +17,7 @@ doc_edit は、cc-sdd の作業環境（ルート）と、4 つの git サブモ
 - **前処理**: `scripts/prepare_site.py` が各 `index.md` の `## 一覧` と中身を照合し、`_site_src/` に写す。見た目のためには、頁ごとの判断（どの頁のどの段落か）を attr_list の class にして写しに付けるところまでをする（メンテナの分担。ukadoc-spec の `CLAUDE.md` の「GitHub Pages」）
 - **公開**: `main` への push で GitHub Actions がビルドし、GitHub Pages に出す（Python 3.12）
 - **見た目の指定**: `assets/extra.css`。色はなるべく Material のテーマの色の変数（`--md-primary-fg-color` など）から取り、テーマの色が変わってもついてくるようにする。変数で出せない色（暗い表示のリンクの明るい紺、さくらスクリプトのタグの色、ベースウェアの札など）は、明・暗の地との対比を測って記録する（`site-look-plan` の試作で、テーマが緑から紺に変わったときに分かった）
-- **構造と色付け**: `site_ext/`（ビルドの部品。`requirements.txt` の `-e ./site_ext` で入る）が受け持つ。class と木の形を見て作る構造（対応の札・名前と説明の表）は Python-Markdown の拡張 `site_ext/ukadoc_site/structure.py`、記述例とファイル構成の木の色付けは Pygments レキサー `site_ext/ukadoc_site/lexers.py`（`sakurascript`・`ss`・`filetree`）。JavaScript は使わない（メンテナの方針、2026-10-27。それまでの `assets/sakurascript.js`・`assets/filetree.js` はメンテナがレキサーに移した）。記述例の誤り（閉じない `[` など）は救済せず、波線とビルドの警告で示して原稿を直させる
+- **構造と色付け**: `site_ext/`（ビルドの部品。`requirements.txt` の `-e ./site_ext` で入る）が受け持つ。class と木の形を見て作る構造（対応の札・名前と説明の表）は Python-Markdown の拡張 `site_ext/ukadoc_site/structure.py`、記述例とファイル構成の木の色付けは Pygments レキサー `site_ext/ukadoc_site/lexers.py`（`sakurascript`・`ss`・`filetree`）。ukadoc-spec の `CLAUDE.md` は、見た目のための構造を Zensical のカスタマイズの方法（`extra_css`、Markdown 拡張、Pygments）に載せ、「JavaScript は使わない」と書いている（2026-10-27。それまでの `assets/sakurascript.js`・`assets/filetree.js` は、メンテナが「Zensical のカスタマイズの方法に合わせ」てレキサーに移した）。記述例の誤り（閉じない `[` など）は救済せず、波線とビルドの警告で示して原稿を直させる
 
 編集規約（書式・文体・リンク・項目の追加手順）の正本は `ukadoc-spec/CLAUDE.md` である。steering には写さず、そちらに従う。
 
