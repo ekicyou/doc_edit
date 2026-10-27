@@ -31,7 +31,7 @@
   - _Boundary: TopBandStyle_
   - _Requirements: 2.1, 2.3, 3.1, 4.1, 4.2, 4.3, 5.1, 5.2, 5.4, 6.4, 7.2, 9.2_
 
-- [ ] 2.3 Build Gate と規約 Gate を通し、変更の範囲を確かめてコミットする
+- [x] 2.3 Build Gate と規約 Gate を通し、変更の範囲を確かめてコミットする
   - 作業木で `.cache/` を消してから `prepare_site.py` と `zensical build --strict` を流し、規約 Gate（ukadoc-spec の `CLAUDE.md` の決まり）に照らす
   - 2 ファイルの変更を 1 つのコミットにする（ukadoc-spec の履歴の型の日本語の 1 文。名前は `-c user.name=ekicyou -c user.email=dot.station@gmail.com` で渡す）。push も PR もしない
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`git diff --stat origin/main` が `scripts/prepare_site.py`・`assets/extra.css` だけで、作業木に未コミットの変更が無い

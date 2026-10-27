@@ -82,3 +82,17 @@ PY/python -I snapshot.py ../before-1080225 ../before-1080225/before.json
 `git diff -- assets/extra.css` は 8 行を消して 8 行を足しただけで、足した行はどれも消した行と組になるセレクタの行だった（設計の「Modified Files」の差分のとおり）。宣言・注・塊・色・`@media screen` の指定は変わらず、帯の中のコード（36・66 行）と暗い表示の帯の中のリンク（41 行）には印を足していない。
 
 `.cache/` を消してから `prepare_site.py` と `zensical build --strict` はどちらも exit 0。配られる `_site/assets/extra.css` にも `.top-section` 3・`.top-category` 1・`.top-item` 7 がある。
+
+## Build Gate とコミット（2.3）
+
+作業木で `.cache/` を消してから `prepare_site.py` と `zensical build --strict` を流し、どちらも exit 0（「No issues found」）。変えたのは `scripts/prepare_site.py` と `assets/extra.css` だけで、ukadoc-spec の `CLAUDE.md` の書式・リンクの決まりに当たる原稿の変更は無い（規約 Gate）。2 ファイルを 1 つのコミット `a61b9de`（「トップページの節・目次の分類・見方の名前に、ほかの頁と同じ帯と字下げを当てる」）にした。push も PR もしていない。
+
+`git diff --stat origin/main`:
+
+```
+ assets/extra.css        | 16 ++++++++--------
+ scripts/prepare_site.py | 19 +++++++++++++++----
+ 2 files changed, 23 insertions(+), 12 deletions(-)
+```
+
+作業木に未コミットの変更は無い。
