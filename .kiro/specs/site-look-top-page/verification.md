@@ -255,3 +255,51 @@ node SHOT http://127.0.0.1:8000/ukadoc-spec/ h1 - light 375 812   # dark も。�
 
 - ヘッドレスの Edge は縦のスクロールバー（15px）を描くので、`scrollWidth` は `clientWidth` と同じ 360 で、横にはみ出していない。設計の写しと同じ物差しの `shot.mjs`（スクロールバーの幅を足す）では `scrollWidth` = `innerWidth` = 375。`topprobe.mjs` は切り替えで暗にし、`shot.mjs` は `prefers-color-scheme: dark` で開いた。幅 375 の画面は残していない
 - 控え（8010）も 360 / 360 / 375 で同じ
+
+## 画面（3.4）
+
+- 日付: 2026-10-27。作業木の `a61b9de` を 8000（PID `40096`・`38952`）で撮った。配り直していない（トップが 200、`/ukadoc-spec/assets/extra.css` に `.top-section` 3）
+- 道具: `.kiro/specs/completed/site-look-plan/tools/shot.mjs`（読むだけで使い、変えていない）。明は `light`、暗は `dark`（`prefers-color-scheme`）で開いた。14 枚とも `scrollWidth` = `innerWidth` = 1000
+- 置き場: `.kiro/specs/site-look-top-page/screenshots/`（`design-*.png` は変えていない）。幅 375 の画面は撮っていない（8.7）
+- 開発者にこの画面や `serve` を見せるときは、Ctrl+F5（強制の再読み込み）を頼む（8.9）
+
+```sh
+# screenshots の中で（SHOT = .kiro/specs/completed/site-look-plan/tools/shot.mjs、B = http://127.0.0.1:8000/ukadoc-spec。m は light と dark）
+node SHOT B/ '.md-content' after-top-head-$m.png $m 1000 1100
+node SHOT B/ 'h2.top-section:nth-of-type(4)' after-top-howto-$m.png $m 1000 1100
+node SHOT B/ 'li:has(> strong.top-item)' after-top-howto-other-$m.png $m 1000 500
+node SHOT B/ 'h2.top-section:nth-of-type(5)' after-top-toc-$m.png $m 1000 1300
+node SHOT B/list/sakura-script/ '.bundle-category' after-ref-sakura-script-$m.png $m 1000 700
+node SHOT B/list/shiori-event/ 'h3.bundle-item' after-ref-shiori-event-$m.png $m 1000 700
+node SHOT B/manual/ghost/ '.md-typeset > ul' after-ref-manual-ghost-$m.png $m 1000 900
+```
+
+| 画面（明・暗） | 頁 | セレクタ（当たった所） | 大きさ |
+|---|---|---|---|
+| `after-top-head-{light,dark}.png` | トップ | `.md-content`（頁の題から「外部リンク」の箇条書きまで） | 1000×1100 |
+| `after-top-howto-{light,dark}.png` | トップ | `h2.top-section:nth-of-type(4)`（「ukadocの見方」。設計のとおり当たった） | 1000×1100 |
+| `after-top-howto-other-{light,dark}.png` | トップ | `li:has(> strong.top-item)`（「その他」。段落に分かれない 1 個） | 1000×500 |
+| `after-top-toc-{light,dark}.png` | トップ | `h2.top-section:nth-of-type(5)`（「目次」。設計のとおり当たった） | 1000×1300 |
+| `after-ref-sakura-script-{light,dark}.png` | `list/sakura-script/` | `.bundle-category`（「スコープコマンド」） | 1000×700 |
+| `after-ref-shiori-event-{light,dark}.png` | `list/shiori-event/` | `h3.bundle-item`（「OnFirstBoot」。設計の `.bundle-item` から変えた。下の注） | 1000×700 |
+| `after-ref-manual-ghost-{light,dark}.png` | `manual/ghost/` | `.md-typeset > ul`（ファイル名の帯の並び） | 1000×900 |
+
+- `list/shiori-event/` で設計の `.bundle-item` が最初に当たるのは頁の前書きの `h2#caption_format`（「このページの書式について」。帯は同じ項目名の帯）で、帯の下は段落だった。目次の分類の帯（帯の下にリンクの並び）と並べるには、イベントの項目の帯の下に中身が続く所が見比べやすいので、同じ項目名の帯の `h3.bundle-item`（最初は `OnFirstBoot`）に変えた。帯の見え方そのものは `h2.bundle-item` と同じ
+
+### 見比べ（4.3・5.1・5.4・8.5）
+
+| 見比べ | トップ | 当て先 | 結果 |
+|---|---|---|---|
+| 節の見出しの帯 | `after-top-head-*`・`after-top-howto-*`・`after-top-toc-*` の「ukadocについて」「対象version」「外部リンク」「ukadocの見方」「目次」 | `after-ref-sakura-script-*` の「スコープコマンド」 | 同じ見え方（紺の地に白い太字、本文の幅いっぱい、明・暗で同じ色）。頁の題（`h1`）は帯にならず今のまま |
+| 目次の分類の帯 | `after-top-toc-*` の「ファイル構成」「設定ファイル」「さくらスクリプト」 | `after-ref-shiori-event-*` の「OnFirstBoot」「OnBoot」 | 同じ見え方（左の紺の太線、薄い灰の地、下の線、明・暗で地と字が切り替わる） |
+| 見方の分類名の帯と説明の字下げ | `after-top-howto-*` の 6 個 | `after-ref-manual-ghost-*` の `descript.txt`・`shiori.dll` など | 同じ見え方（項目名の帯の下に、説明が帯の左の端より字下げして続く。点は無い） |
+| 「その他」（段落に分かれない項目） | `after-top-howto-other-*` | 同上（`manual/ghost` の段落に分かれた項目） | ほかの 6 個と同じ帯と同じ字下げで、説明 1 行が帯の下に続く（4.3） |
+| 帯とリンクの並びの見分け（5.1） | `after-top-head-*`（「対象version」「外部リンク」の下）、`after-top-toc-*`（分類の帯の下） | — | 帯は地の色と幅で一目で分かれ、下のリンクの並びは点の付いた白い（暗は暗い）地の行のままで、帯と取り違えない |
+| 帯の上の余白（5.4） | `after-top-head-*`・`after-top-toc-*`・`after-top-howto-other-*` | — | 前の箇条書き（「対象version」の 4 行、目次の分類のリンクの並び）・段落・引用と次の帯の間に余白（節の見出し 40px、目次の分類 32px。3.3 で測った値）があり、前の並びと帯がくっついて見えない。余白の良し悪しは開発者が画面を見て決める |
+
+- 変更の前（8010）を参考に 1 枚だけスクラッチに撮った（`C:/Users/maz-o/AppData/Local/Temp/claude/C--home-maz-git-doc-edit/6ec24e7b-70a2-442e-bd85-89bad02cc5d7/scratchpad/before-top-howto-light.png`。`h2#ukadocの見方`、明、1000×1100）。前は見出しが白い地の字で、見方の項目は点の付いた「**名前**: 説明」の行だった。後はこれが帯と字下げに変わり、ほかの所（段落・リンクの並び・目次の右の欄）は同じ位置に見える
+
+### 撮り直し（8.8）
+
+- 二重に重なった跡（上の端以外の左右の端に、ヘッダの紺の行）は、14 枚とも無かった（撮り直した 2 枚も無い）
+- 撮り直したのは 2 枚（`after-ref-shiori-event-light.png`・`after-ref-shiori-event-dark.png`）。わけ: 1 回目は設計の `.bundle-item` で撮り、(1) 当たったのが前書きの `h2#caption_format` だった（上の注）、(2) ヘッダの題が切り替わりの途中で、「UKADOC project」と「SHIORI Event」が重なって薄く描かれていた（8.8 の跡ではないが、見比べに向かないので）。`h3.bundle-item` で撮り直し、2 枚ともヘッダの題が「SHIORI Event」の 1 つだけになった
