@@ -8,7 +8,7 @@
   - 作業木の先頭が `origin/main` と同じコミットで、ブランチに追う先が無く、`/ukadoc-spec/list/sakura-script/` の頁がプレビューで開ける
   - _Requirements: 9.4_
 
-- [ ] 1.2 変更の前の控えを書き出して配り、比べる数・通信・索引を取る
+- [x] 1.2 変更の前の控えを書き出して配り、比べる数・通信・索引を取る
   - 作業木の HEAD を `git archive` で Claude のスクラッチの下の新しいフォルダに書き出し、`prepare_site.py` と `zensical build --strict` を流して、`_site/` を 8000 以外の口（例: 8040）で配る。控えの置き場と書き出したコミットを控える
   - 3 頁の `article` の中の見出しの id の並び・`a.headerlink` の数・`md-nav__link` の数、`list/sakura-script` の 287 個の `code.innerText`、`search.json` を控える
   - 開いた時点の通信を記録する使い捨てのスクリプト（Edge ヘッドレス + CDP の `Network`。置き場はスクラッチ）を書き、3 頁と `list/plugin-event` を押さずに 3 秒開いて、要求の URL の並びを控える（後の 4.1 で同じスクリプトを使う）
@@ -137,3 +137,7 @@
 ## Implementation Notes
 - 2〜6 のタスクは同じ作業木の同じブランチにコミットし、プレビュー（`serve`）と `_site_src/` を共にするので、`(P)` は付けない。4.2 だけは doc_edit の `tools/` に道具を書くので、4.1 と並べてよい
 - 手で押す確かめ（3.2・6.1）は開発者を待つ。V1 が通らなければ、そこで止める
+- 控え（8a7d8da）の頁は、テーマのリポジトリの部品が pi.github.com に 2 回ずつ問い合わせる（設計の「ウェブフォントだけ」と違う）。4.1 は外への要求を並びではなく集まりで比べ、この差を書く
+- 控えの rticle の中の id は見出しの id と同じ数（649・206・360）。4.3 は rticle の中のすべての id を headingIds と比べる（sstp.js が足した id も拾う）
+- 通信の確かめは scratch の 
+et.mjs <base> <path> [facts.json]（9801 を塞ぎ、触れたら exit 2）
