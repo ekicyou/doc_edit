@@ -23,7 +23,7 @@
 - **値を見られるプロパティ**: `list/propertysystem` の項目のうち、次のどちらかに当たるもの（要件の話し合いで確定、2026-10-28）
   - 名前に置き換える部分の無い項目（`system.year`・`baseware.version` など。今は 44 個。`developer.log.ログ種別.count` は置き換える部分を持つので含まない）
   - 名前に置き換える部分が `(キー)` だけで、項目の名前と説明の表にキーが並ぶ項目（`system.os`・`system.cpu`・`system.memory`・`system.power`・`system.network` の 5 項目、キーは 34 個）。キーごとに 1 つの名前（例: `system.cpu.name`）とする
-- **発生させられるイベント**: `list/shiori-event` の項目のうち、名前が `On` で始まるもの（今は 283 個）から、除くイベントを引いたもの。`Reference一覧について` などの説明の項目と、`Notifyイベント` の `basewareversion` などの `On` で始まらない項目は含まない
+- **発生させられるイベント**: `list/shiori-event` の項目のうち、名前が `On` で始まるもの（今は 283 個）から、除くイベントと、`On` で始まる説明の項目（`OnMusicPlayExの拡張情報リスト`）を引いたもの（272 個の見込み）。`Reference一覧について` などの説明の項目と、`Notifyイベント` の `basewareversion` などの `On` で始まらない項目は含まない
 - **除くイベント**: ゴーストの終わり・消滅・初回の系のイベント。`消滅イベント` の分類の 6 個（`OnVanishSelecting`・`OnVanishSelected`・`OnVanishCancel`・`OnVanishButtonHold`・`OnVanished`・`OnOtherGhostVanished`）と、`OnFirstBoot`・`OnClose`・`OnCloseAll`・`OnGhostChanging` の計 10 個（要件の話し合いで確定、2026-10-28）
 - **危険なタグの説明**: 「ゴーストの削除などの危険なタグは、`OnUkadocScriptExample` に対応したゴーストでしか実行されない」旨の説明（旧サイトの「Target Ghost」の欄の説明と同じ趣旨。字は書き直す）
 
@@ -64,7 +64,7 @@
 **Objective:** As a 手元の SSP で試したいゴースト制作者, I want 自分が「読み込み」を押したときだけ手元のゴーストの一覧が取られ、送る先を選べること, so that 頁を読むだけのときは何も起きず、試したいときだけ手元のゴーストにつながる
 
 #### Acceptance Criteria
-1. When 送る先の頁が開かれたとき, the UKADOC のサイト shall 頁の外（手元のベースウェアを含む）への読み込みと送信を 1 つも行わない
+1. When 送る先の頁が開かれたとき, the UKADOC のサイト shall この spec の仕掛けによる頁の外（手元のベースウェアを含む）への読み込みと送信を 1 つも行わない（テーマが今も読むウェブフォントは、この spec の前からの振る舞いで対象の外）
 2. The UKADOC のサイト shall 送る先の頁にだけ、ゴーストを選ぶ欄と「読み込み」ボタンを 1 組表示し、ほかの頁には表示しない
 3. While 「読み込み」が押されていないとき, the UKADOC のサイト shall 送るボタンを 1 つも表示しない
 4. When 利用者が「読み込み」を押したとき, the UKADOC のサイト shall 手元のベースウェアから起動中のゴーストの一覧を取り、ゴーストの名前を選ぶ欄に並べる
@@ -99,11 +99,11 @@
 **Objective:** As a SHIORI Event を調べるゴースト制作者, I want 項目ごとの「発生させる」で、そのイベントを手元のゴーストに送れること, so that 自分のゴーストがそのイベントにどう応えるかを、その場で確かめられる
 
 #### Acceptance Criteria
-1. While 読み込みの後のとき, the UKADOC のサイト shall 発生させられるイベント（今の案では 273 個）のそれぞれに、項目の見出しの近くに「発生させる」ボタンを 1 つ表示する
+1. While 読み込みの後のとき, the UKADOC のサイト shall 発生させられるイベント（272 個の見込み）のそれぞれに、項目の見出しの近くに「発生させる」ボタンを 1 つ表示する
 2. When 利用者が「発生させる」を押したとき, the UKADOC のサイト shall そのイベントの名前（例: `OnBoot`）を `Event` にした SSTP の `NOTIFY` を、選んだゴーストへ送る
 3. The UKADOC のサイト shall 除くイベント（10 個）に「発生させる」ボタンを表示しない
 4. The UKADOC のサイト shall `Reference` を付けずにイベントを送る（Reference の表は値の説明で、送れる値の例を持たないため）
-5. The UKADOC のサイト shall `On` で始まらない項目（説明の項目・`Notifyイベント` の `basewareversion` など）に「発生させる」ボタンを表示しない
+5. The UKADOC のサイト shall イベントの名前でない項目（説明の項目・`OnMusicPlayExの拡張情報リスト`・`Notifyイベント` の `basewareversion` など）に「発生させる」ボタンを表示しない
 
 ### Requirement 5: 送った結果と失敗
 **Objective:** As a 送るボタンを押したゴースト制作者, I want 送れたかどうかが分かり、失敗しても頁が使えなくならないこと, so that 何も起きないときに、送れなかったのかゴーストが応えなかったのかを見分けられる
@@ -164,8 +164,8 @@
 
 #### Acceptance Criteria
 1. The site-look-sstp-playback shall 自動の確かめ（ビルド・画面の撮影・数え上げ）では送るボタンを押さず、手元のベースウェアへ送らない
-2. The site-look-sstp-playback shall `zensical serve` の 3 頁を開いた時点のブラウザの通信の記録で、頁の外への読み込みと手元のベースウェアへの通信が 0 件であることを確かめて記録する
-3. The site-look-sstp-playback shall 送るボタンの数（記述例 287・置き換える部分の無いプロパティ 44・キー 34・イベント 273 の見込み）を build の HTML から数え直し、要件の数との差を記録する
+2. The site-look-sstp-playback shall `zensical serve` の 3 頁を開いた時点のブラウザの通信の記録で、この spec が足す頁の外への読み込み（第三者のスクリプトなど）と手元のベースウェアへの通信が 0 件で、ほかの読み込みが変更の前と同じであることを確かめて記録する
+3. The site-look-sstp-playback shall 送るボタンの数（記述例 287・置き換える部分の無いプロパティ 44・キー 34・イベント 272 の見込み）を build の HTML から数え直し、要件の数との差を記録する
 4. The site-look-sstp-playback shall 目標の画面と同じ当て先とセレクタで、読み込みの前と後の明・暗の画面を撮り、目標の画面と並べて記録する（読み込みの後の画面は、手元のベースウェアにつながずにボタンを出した状態で撮る方法を設計で決める）
 5. The site-look-sstp-playback shall 幅 375 px で 3 頁の `scrollWidth` と `innerWidth` が同じであることを測って記録する
 6. The site-look-sstp-playback shall 送信の確かめを、SSP の動く手元の環境で開発者がボタンを押して行う手順（用意するベースウェアとゴースト・押すボタン・見るもの）として書き、その結果（3 種類のボタンそれぞれで、ゴーストに届いたか、ベースウェアが断ったか）を記録する
