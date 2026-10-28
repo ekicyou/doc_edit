@@ -16,7 +16,7 @@
   - _Requirements: 7.3, 7.5, 7.6, 10.2_
 
 - [ ] 2. 送る仕掛けと見た目
-- [ ] 2.1 `mkdocs.yml` にスクリプトの読み込みを足し、`assets/sstp.js` を書く
+- [x] 2.1 `mkdocs.yml` にスクリプトの読み込みを足し、`assets/sstp.js` を書く
   - プレビューを止めてから書く（書きかけの `_site_src/` を拾わせない）
   - 設計の「Modified Files」のとおり、`mkdocs.yml` の `extra_css` の後に `extra_javascript` の `assets/sstp.js` を足す。ほかの行と `scripts/prepare_site.py`・`site_ext/`・`requirements.txt` には触らない
   - `assets/sstp.js` を設計の見本のとおりに書く: 道による 3 頁の見分け、頁の題の直後の説明・選ぶ欄・「読み込み」、`GetFMO` の読み、要求の字の組み立て（決まった 4 行・改行の拒否）と 15 秒の打ち切り、3 種類のボタンの置き場と送る中身（▶ はコピーのボタンの下、キーは表の直後の 1 行、`SKIP` の 10 個と名前の規則）、`data-sstp`、結果の字、二度押しの `disabled`、失敗で `hidden`
@@ -141,3 +141,4 @@
 - 控えの rticle の中の id は見出しの id と同じ数（649・206・360）。4.3 は rticle の中のすべての id を headingIds と比べる（sstp.js が足した id も拾う）
 - 通信の確かめは scratch の 
 et.mjs <base> <path> [facts.json]（9801 を塞ぎ、触れたら exit 2）
+- 4.3 で、287 個の ▶ の名前が「 の記述例を実行」と空にならないか（前に h3 が無い箱）を見る
