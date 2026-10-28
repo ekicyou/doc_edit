@@ -125,3 +125,139 @@ requirements.md の **仮定** の印の箇所。番号は requirements.md の�
 - 1・2: 前もって了承を取らず、PR を出してメンテナの判断に委ねる。`/kiro-complete` は PR を出すまでで止め、マージしない（requirements.md の 9.1・9.8）。`CLAUDE.md` の書き足しは PR に含め、受け入れるかはメンテナが決める。4 の「危うさ」のうち「合意が得られなければ spec ごと止まる」は、「PR が受け入れられないことがある」に変わる
 - 3・4: 仮定のとおりに確定した。送るスクリプトは `\0プロパティ「{名前}」は「%property[{名前}]」です。\e` の形にする（requirements.md の 3.2。今の対象の名前は英数字と `.` だけで、エスケープは要らない）
 - 5〜9 は仮定のとおりに確定した。あわせて、確かめで送れないと分かった種類のボタンだけを外して進めることにした（requirements.md の 9.7）
+
+---
+
+# 設計の調べ（2026-10-28、kiro-spec-design）
+
+## Summary
+- **Feature**: `site-look-sstp-playback`
+- **Discovery Scope**: Extension（今のサイトにブラウザの仕掛けを足す。外部の連携は手元の SSP の SSTP over HTTP だけ）。light の調べに、SSP と jsstp とブラウザの外部の調べを足した
+- **Key Findings**:
+  - 送る仕掛けは、jsstp を使わずに自分で書ける。送るのは `EXECUTE GetFMO`・`SEND`・`NOTIFY` の 3 つで、要求の字を組んで POST し、本文の 1 行目を読むだけ（見本で約 30 行）。jsstp（v3.2.0.0 の `src/types/jsstp_t.mjs`）も `fetch` に `method: "POST"` と本文だけを渡し、`Content-Type` を付けていない
+  - 置き場は HTML の形で決まる。記述例の箱（C18）は `h4 + .highlight + .highlight …` の隣り合わせで作られるので、「実行」は `div.highlight` の中（`pre` の後ろ）に置く。名前と説明の表は `td:first-child > strong:only-child` で幅を決めるので、キーのボタンは表の直後の 1 行に置く
+  - 名前の形の規則（プロパティ `[A-Za-z0-9_.-]`、イベント `On[A-Za-z0-9_.]`）で、要件の線引きがほぼそのまま出る。違いは 1 つ: `OnMusicPlayExの拡張情報リスト` は `On` で始まる説明の項目で、イベントのボタンは 273 でなく 272 になる
+  - テーマは今も頁を開くと Google Fonts を読む。要件 1.1・10.2 の「頁の外への読み込み 0 件」を字どおりに取ると、この spec の前から満たしていない
+
+## 調べ方
+- `ukadoc-spec` の `8a7d8da` を `git archive` で Claude のスクラッチ（`…\scratchpad\base`）に書き出し、doc_edit の `.venv` で `prepare_site.py` と `zensical build --strict`（No issues found）を流した
+- 設計の見本 `…\scratchpad\design\sstp.js`・`block.css` を書き、`node --check` と、純粋な部分の自己確かめ `…\scratchpad\design\selfcheck.mjs`（6 例すべて ok）を流した
+- 写しの `_site/` を `python -m http.server`（`127.0.0.1:8031`）で配り、内蔵ブラウザの枠で 3 頁と `list/plugin-event` を開き、頁の `fetch` を作り物（ゴースト 2 体の FMO を返すだけ）に差し替えてから見本を読ませ、「読み込み」を押した。送るボタンは押していない。手元の `localhost:9801` には何も送っていない（`fetch` を差し替えたので網に出ない）
+- jsstp は `gh api` で `ukatech/jsstp-lib` の `v3.2.0.0` の `src/` と、`v3.1.1.2` の `LICENSE` を読んだ（写していない）
+- ukadoc-spec・サブモジュールには何も書いていない。git の状態を変える操作もしていない
+
+## Research Log
+
+### 配る HTML の形（`8a7d8da`）
+- **Context**: ボタンをどこに置けば、今の見え方・コピー・見出しを崩さないか
+- **Sources Consulted**: 写しの `_site/list/{sakura-script,propertysystem,shiori-event}/index.html`、`assets/extra.css`、Zensical の `templates/base.html`
+- **Findings**:
+  - `extra_javascript` は `bundle.*.min.js` の直後に `{{ script | script_tag }}` で出る（`<body>` の末尾。DOM ができた後に動く）
+  - 記述例は `div.language-sakurascript.highlight > pre > span + code`。コピーのボタンは `pre` の中（`nav.md-code__nav` の `button`）。287 個どれも末尾の改行を除くと 1 行
+  - 項目は `h3.bundle-item`。字は名前と `a.headerlink`（`¶`）。プロパティの見出し 159、イベントの見出し 328（ギャップ分析の 162・330 と数え方が違う。実装で数え直す）
+  - `(キー)` の項目は、`h3` の後ろに `p`（説明）を挟んで `div.definition-table`。キーは `td:first-child > strong`。`system.os` の `locale.language`・`timezone.offset`、`system.power` の `battery.percent` など、`.` を含むキーが 7 個
+  - 置き換える部分の無いプロパティ 44 のうち 1 つは `currentghost.seriko.sticky-window`（`-` を含む）
+  - `On` で始まる見出し 283。うち `OnMusicPlayExの拡張情報リスト`（id `caption_musicplayex_codes`）は説明の項目。`OnUpdate.OnDownloadBegin`・`OnHeadlinesense.OnFind` など `.` を含むイベントが 9 個（SSP が送るイベントの名前そのもの）
+  - 頁の外への参照: テーマが `fonts.googleapis.com`・`fonts.gstatic.com` を読む（`theme.font` の既定）
+- **Implications**: 置き場と名前の規則を design.md の Targets の表にした。Google Fonts は OPEN QUESTION 1
+
+### SSP の SSTP over HTTP（ukadoc-spec の文書）
+- **Context**: ギャップ分析の Research Needed の 1〜4・6
+- **Sources Consulted**: `spec/sstp/http.md`・`req_res.md`・`method_send.md`・`method_notify.md`・`method_execute.md`・`spec/fmo-mutex/fmo.md`
+- **Findings**:
+  - `http://localhost:9801/api/sstp/v1` に `Content-Type: text/plain` で POST。`Content-Length` は必須（ブラウザの `fetch` が付ける）。SSTP の誤りでも HTTP は 200
+  - Origin が localhost でなければリモートの扱いで、`SecurityLevel` は無視される。緩むのは Origin が localhost で、かつ `SecurityLevel: local` のときだけ。`SecurityLevel: external` を明示すれば、プレビューでも公開サイトでもリモートと同じ制約になる
+  - `SEND` は `Event` と `Script` を併用でき、SHIORI がスクリプトを返さなければ `Script` に戻る（旧サイトの `OnUkadocScriptExample` の形が成り立つ）。`SEND` に `Ghost`（`descript.txt` の `name`）で送る先を指す道もある
+  - `GetFMO` は「リモート制限あり」で、リモートでは「各パス情報が抜け、ヘッダとhwndがダミーに置き換わる」。名前（`name`）は残ると読める。`ReceiverGhostHWnd`・`ReceiverGhostName` は「(Socket)SSTP限定」と書かれる（SSTP over HTTP は TCP の 9801 で受けるので当たると読む）。見つからなければ 404
+  - `EXECUTE GetProperty` は「リモート不可」ではない（`SetProperty` はリモート不可）。`%property` がリモートで展開されなかったときの代わりになりうるが、送るスクリプトの形（3.2）を変えることになるので設計には入れない
+  - CORS の応答（`Access-Control-Allow-Origin`）を SSP が返すかは、文書に書かれていない。旧サイトと jsstp がブラウザから使えていることから、返すと推す
+- **Implications**: ダミーの hwnd で送る先が選べるか・`%property` の展開・リモートの `NOTIFY`・CORS は、文書だけでは決まらない。ManualSend の V1〜V4 で確かめ、だめなら 9.7（V1 は止めて報告）
+
+### jsstp（`ukatech/jsstp-lib`）
+- **Context**: ギャップ分析の Research Needed の 8、要件 8.5（jsstp の扱い）
+- **Sources Consulted**: `v3.2.0.0` の `src/types/jsstp_t.mjs`・`fmo_info_t.mjs`・`base_sstp_info_t.mjs`・`src/base/value_table.mjs`・`tools.mjs`、`v3.1.1.2` の `LICENSE`
+- **Findings**:
+  - 送り先は `http://localhost:9801/api/sstp/v1`。`fetch(host, { method: "POST", headers: { Origin }, body })`（ブラウザは `Origin` を自分で付けるので、この指定は効かない）。`Content-Type` は付けない。HTTP が 200 でなければ例外
+  - 版の表: `SEND` 1.4・`NOTIFY` 1.1・`EXECUTE` 1.2。行の区切りは CR+LF。`Charset: UTF-8` を既定で付ける
+  - `get_fmo_infos()` は `EXECUTE GetFMO` の追加データを `id.key\x01value` で読む。`by_fmo_info()` は `ReceiverGhostHWnd` に FMO の `hwnd` を付ける
+  - `LICENSE` は `v3.1.1.2` の tag でも WTFPL v2（Research Needed の 8 は解けた）
+- **Implications**: 同じ形を自分で書けば足りる（Option C）。jsstp は使わず、写さない
+
+### ブラウザの手元の通信の許可（Local Network Access）
+- **Context**: 要件 1.8、ギャップ分析の Research Needed の 5
+- **Sources Consulted**: [Chrome の Local Network Access の告知（2025-06-09）](https://developer.chrome.com/blog/local-network-access)、[blink-dev の Intent to Prototype](https://groups.google.com/a/chromium.org/g/blink-dev/c/vCfMJ35P7bY)、[OpenReplay の解説](https://blog.openreplay.com/chrome-local-network-access-lna-permission/)
+- **Findings**:
+  - 公開のサイトから手元（ループバックを含む）への `fetch` に、Chrome が許可を求める。Chrome 138 で旗付きの試し、OpenReplay の解説は 142 から既定と書く（Chrome の公式の版の記録では確かめていない）。許可の求めは安全な文脈（`https`）の頁に限る
+  - 手元（ループバック）の頁から手元への通信は対象にならない見込み。`zensical serve`（`http://127.0.0.1:8000`）では許可の求めは出ない
+  - `http://localhost` は安全な宛先として扱われ、`https` の頁からの `fetch` は混在の内容として止められない
+- **Implications**: 1.8 は「`fetch` が押した後にしか無い」作りで満たし、プレビューでは確かめられない旨を記録する（OPEN QUESTION 6）
+
+### 設計の見本の試し（作り物の応答）
+- **Findings**（`8a7d8da` の写し、1000×700 と 375×700）:
+  - `list/sakura-script`: 欄 1、「実行」287、`data-sstp` の `Script` と `code.textContent`（末尾の改行を除く）の食い違い 0、改行を含む記述例 0、`#bang-lock-repaint` の `code.innerText` が前後で同じ、幅 375 で `scrollWidth` 375
+  - `list/propertysystem`: 欄 1、見出しの中の「値を見る」44、キーの行 5・キーのボタン 34、`data-sstp` の例 `["SEND",{"Script":"\\0プロパティ「system.cpu.load」は「%property[system.cpu.load]」です。\\e","Option":"notranslate"}]`
+  - `list/shiori-event`: 欄 1、「発生させる」272、除く 10 個のボタン 0、id 360・`headerlink` 360 は読み込みの後も同じ
+  - `list/plugin-event`: 欄 0・ボタン 0
+  - 「読み込み」で送られた要求の字: `EXECUTE SSTP/1.2\r\nCharset: UTF-8\r\nSender: UKADOC\r\nSecurityLevel: external\r\nCommand: GetFMO\r\n\r\n`（作り物の `fetch` が受けた）
+  - 画面: 見出しの帯の中の「値を見る」、表の直後の「値を見る: load num …」の行、記述例の箱の中の右寄せの「実行」が、帯・表・箱の形を崩さずに出た（明るい表示だけ見た。暗い表示と対比は実装で測る）
+
+## Architecture Pattern Evaluation
+
+| Option | Description | Strengths | Risks / Limitations | Notes |
+|--------|-------------|-----------|---------------------|-------|
+| C 自分で書く | `assets/sstp.js` に要求の組み立てと POST を書く | 第三者のコード・ライセンスの並べ方・CDN の問題が無い。メンテナが全部読める | jsstp が隠す SSP の違いを自分で踏むおそれ（hwnd のダミーなど） | 採る |
+| A jsstp を `assets/` に置く | 版を固定した `jsstp.mjs` を同じサイトから動的に読む | 頁の外を読まない | 縮めて `eval` で包んだ WTFPL のファイルが CC BY 4.0 に混ざる。レビューできない。送り方は C と同じなので得が無い | 採らない |
+| B jsDelivr から読む | 旧サイトと同じ | ukadoc-spec に第三者のコードが入らない | 公開サイトが第三者の CDN のコードを実行する。tag は付け替えうる。動的な `import()` に SRI を付けられない | 採らない |
+| テンプレートの上書き | `overrides/` で欄を置く | 欄が HTML にある | 3 頁の条件を minijinja で書く要がある。部品が 2 か所に分かれる。欄の字が検索の索引に入りうる | 採らない |
+
+## Design Decisions
+
+### Decision: 3 種類のボタンを 1 つの形にまとめる（一般化）
+- **Context**: 2・3・4 の要件は、どれも「利用者の操作で、選んだゴーストへ SSTP のメソッドとヘッダの組を送り、結果を出す」の変種
+- **Selected Approach**: `sender(label, aria, method, headers)` 1 つにし、種類ごとに違うのは当て先・置き場・ヘッダの組の作り方だけにした（`place()` の 3 つの分岐）。9.7 で種類を外すときも、分岐 1 つを消せば済む
+- **Trade-offs**: 抽象の層は足していない（関数 1 つ）
+
+### Decision: 第三者のコードを使わない（Build vs. Adopt）
+- **Context**: 8.1〜8.5、メンテナの「JavaScript は使わない」とのぶつかりを小さくする
+- **Alternatives Considered**: 上の表の A・B
+- **Selected Approach**: Option C。jsstp と同じ送り方（POST・`Content-Type` 無し・CR+LF・`ReceiverGhostHWnd`）を自分で書く
+- **Rationale**: 送るのは 3 種類だけで、jsstp の機能（イベントの問い合わせ・Proxy の呼び出しなど）は要らない。PR の説明で「第三者のコードは無い」と言える
+- **Follow-up**: ManualSend の V1・V2 で、jsstp が隠していた違いを踏んでいないかを見る
+
+### Decision: `SecurityLevel: external` を明示する
+- **Context**: プレビュー（`http://127.0.0.1:8000`）の Origin を SSP が localhost と見るかは文書から決まらない。ローカルの扱いになると、確かめが公開サイトより甘くなる
+- **Selected Approach**: すべての要求に `SecurityLevel: external` を付ける。SSP が緩めるのは `local` のときだけなので、どちらの Origin でもリモートと同じ制約になる
+- **Follow-up**: design.md の OPEN QUESTION 7
+
+### Decision: 名前の形で当て先を決める（簡素化）
+- **Context**: 3.5・3.6・4.5 の線引きを、項目の名前の一覧で持つか、形の規則で持つか
+- **Selected Approach**: 規則（`NAME`・`EVENT`）と、除くイベントの 10 個の並び（`SKIP`）だけを持つ。原稿に項目が増えても規則で自然に付く・外れる
+- **Trade-offs**: 規則に合わない新しい名前には付かない（安全な側に倒れる）。Revalidation Triggers に書いた
+
+### Decision: 1 本の PR、マージしない
+- **Context**: 9.6・9.8
+- **Selected Approach**: 3 種類を 1 本の PR にし、`/kiro-complete` は PR を作って止める（kiro-complete の「マージの許可が無いとき」の道。開発者の「マージしない」による）
+
+## Risks & Mitigations
+- SSP がブラウザからの要求に CORS の応答を返さない・リモートの `GetFMO` のダミーの hwnd で送る先を選べない — ManualSend の V1・V2 を実装の確かめの最初に行い、だめなら OPEN QUESTION 5 の代わり、それでもだめなら止めて報告する
+- リモートの扱いで `%property` が展開されない・`NOTIFY` が断られる — 9.7 でその種類だけ外す
+- ゴーストの多くがリモートの `NOTIFY`（`SecurityLevel: external` の SHIORI の要求）に応えない — SSP が受け付けたかだけを表示し（5.4）、ゴーストの応えは記録だけにする（Boundary の外）
+- 公開サイトでの Chrome の許可の求めを、この spec の中で確かめられない — 作りで満たし、記録する（OPEN QUESTION 6）
+- メンテナが JavaScript を受け入れない — PR の説明で違いを示して委ねる（9.1）。受け入れられなければ PR は閉じられうる
+
+## 使った手引き
+- `kiro-spec-design` の `rules/design-principles.md`・`design-discovery-light.md`・`design-synthesis.md`・`design-review-gate.md` と、`.kiro/settings/templates/specs/design.md`・`research.md`
+- 前の spec の型: `.kiro/specs/completed/site-look-sakura-script-highlight/design.md`（見本のコードを design.md に載せ、書き方のわけを注でなく本文に残す型、部品とファイルの対応の表、確かめの部品の分け方）
+- 開発者の決まり: 公開する `extra.css` の注は塊ごとに 1 行、説明は spec の記録へ。UKADOC の誤りは救済しない（記述例の誤りの印があっても直さず送る。2.5）
+
+## References
+- [ukatech/jsstp-lib](https://github.com/ukatech/jsstp-lib) — 送り方の参考（v3.2.0.0 の `src/`。使わない）
+- [Chrome: Local Network Access](https://developer.chrome.com/blog/local-network-access) — 手元の通信の許可
+- [blink-dev: Intent to Prototype: Local network access restrictions](https://groups.google.com/a/chromium.org/g/blink-dev/c/vCfMJ35P7bY)
+- [OpenReplay: Chrome Local Network Access permission](https://blog.openreplay.com/chrome-local-network-access-lna-permission/) — 既定の版の記述（公式では確かめていない）
+- ukadoc-spec の `spec/sstp/http.md`・`req_res.md`・`method_send.md`・`method_notify.md`・`method_execute.md`・`spec/fmo-mutex/fmo.md`
+
+## 設計の review gate
+- 機械の確かめ: requirements.md の 60 の ID がすべて traceability の表にある（足りない 0・余り 0）。Boundary の 4 節と File Structure Plan が埋まっている。部品はどれも「部品とファイルの対応」にある（`ContrastProbe` の名前だけが traceability の表に残っていたので、PageCheck の対比に直した）
+- 判断: 境目（ukadoc-spec の 4 ファイル）とファイルの計画が合う。送る仕掛けは 1 本のスクリプトの中の 5 つの部分で、タスクに分けられる（欄と一覧・3 種類の置き場・見た目・確かめの道具・記録）。要件の字と食い違う所（1.1 と Google Fonts、3.1 のキーの置き場、4.1 の数、7.3 の「コードブロックの中」）は、要件の隙間ではなく読み方の問題として［仮定］を置き、design.md の OPEN QUESTION に回した
+- 1 回の直しで通った
