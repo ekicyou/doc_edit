@@ -24,7 +24,7 @@
   - 名前に置き換える部分の無い項目（`system.year`・`baseware.version` など。今は 44 個。`developer.log.ログ種別.count` は置き換える部分を持つので含まない）
   - 名前に置き換える部分が `(キー)` だけで、項目の名前と説明の表にキーが並ぶ項目（`system.os`・`system.cpu`・`system.memory`・`system.power`・`system.network` の 5 項目、キーは 34 個）。キーごとに 1 つの名前（例: `system.cpu.name`）とする
 - **発生させられるイベント**: `list/shiori-event` の項目のうち、名前が `On` で始まるもの（今は 283 個）から、除くイベントを引いたもの。`Reference一覧について` などの説明の項目と、`Notifyイベント` の `basewareversion` などの `On` で始まらない項目は含まない
-- **除くイベント**: ゴーストの終わり・消滅・初回の系のイベント。今の案は、`消滅イベント` の分類の 6 個（`OnVanishSelecting`・`OnVanishSelected`・`OnVanishCancel`・`OnVanishButtonHold`・`OnVanished`・`OnOtherGhostVanished`）と、`OnFirstBoot`・`OnClose`・`OnCloseAll`・`OnGhostChanging` の計 10 個（**仮定**。OPEN QUESTION 5）
+- **除くイベント**: ゴーストの終わり・消滅・初回の系のイベント。`消滅イベント` の分類の 6 個（`OnVanishSelecting`・`OnVanishSelected`・`OnVanishCancel`・`OnVanishButtonHold`・`OnVanished`・`OnOtherGhostVanished`）と、`OnFirstBoot`・`OnClose`・`OnCloseAll`・`OnGhostChanging` の計 10 個（要件の話し合いで確定、2026-10-28）
 - **危険なタグの説明**: 「ゴーストの削除などの危険なタグは、`OnUkadocScriptExample` に対応したゴーストでしか実行されない」旨の説明（旧サイトの「Target Ghost」の欄の説明と同じ趣旨。字は書き直す）
 
 目標の画面（ボタンを足す先の見え方）は `.kiro/specs/completed/site-look-plan/screenshots/` の `mock-sakura-script-C21-*.png`（`#bang-lock-repaint`）・`mock-propertysystem-C23-*.png`（`[id="system.cpu"]`）・`mock-shiori-event-C23-*.png`（`#OnBoot`）の明・暗である。ボタンそのものの目標の画面は無い（試作していない）。
@@ -50,7 +50,7 @@
   - 原稿（`.md`）・`.nav.yml`・Zensical の版
   - ゴーストの側の対応（`OnUkadocScriptExample` を受けるゴーストの用意）
   - SSTP 以外の送り方、ベースウェアの設定の変更
-  - 頁をまたいで選んだゴーストを覚えておくこと（**仮定**。OPEN QUESTION 9）
+  - 頁をまたいで選んだゴーストを覚えておくこと（頁ごとに「読み込み」を押す。要件の話し合いで確定、2026-10-28）
 - **Adjacent expectations**:
   - 土台は ukadoc-spec の `origin/main`（今は `8a7d8da`。brief の土台の spec の PR #10〜#17 と、メンテナの `d01f9eb`・`b1abe20`・`1080225` が入ったもの）
   - 記述例の見分けは、Pygments のレキサーと `pymdownx.highlight` が付ける `language-sakurascript` に依る（`site-look-sakura-script-highlight` の後にメンテナが移したもの）。この spec はその印と、印の中の色付けの字を変えない
@@ -81,7 +81,7 @@
 2. The UKADOC のサイト shall 言語の印の無いコードブロック・ほかの言語の印のコードブロック・送る先の頁の外の記述例に「実行」ボタンを表示しない
 3. When 利用者が記述例の「実行」を押したとき, the UKADOC のサイト shall その記述例の字を、選んだゴーストへ `OnUkadocScriptExample` のイベントとして SSTP で送る（スクリプトとしても同じ字を添える。旧サイトと同じ）
 4. The UKADOC のサイト shall 送る字を、記述例に表示されている字と同じにする（`\` を `\` のまま送り、字を足したり直したりしない。コードブロックの末尾の改行だけは送らない）
-5. If 記述例に誤りの印（閉じない `[` などの波線）が付いているとき, the UKADOC のサイト shall その記述例にも「実行」ボタンを表示し、直さずにそのまま送る（UKADOC の誤りは救済しない。今の誤りは 0 個。**仮定**。OPEN QUESTION 6）
+5. If 記述例に誤りの印（閉じない `[` などの波線）が付いているとき, the UKADOC のサイト shall その記述例にも「実行」ボタンを表示し、直さずにそのまま送る（UKADOC の誤りは救済しない。今の誤りは 0 個）
 
 ### Requirement 3: プロパティの「値を見る」
 **Objective:** As a プロパティシステムを調べるゴースト制作者, I want 項目ごとの「値を見る」で、手元のベースウェアのそのプロパティの今の値をゴーストに喋らせられること, so that 値の形と例を、自分の環境の実際の値で確かめられる
@@ -101,8 +101,8 @@
 #### Acceptance Criteria
 1. While 読み込みの後のとき, the UKADOC のサイト shall 発生させられるイベント（今の案では 273 個）のそれぞれに、項目の見出しの近くに「発生させる」ボタンを 1 つ表示する
 2. When 利用者が「発生させる」を押したとき, the UKADOC のサイト shall そのイベントの名前（例: `OnBoot`）を `Event` にした SSTP の `NOTIFY` を、選んだゴーストへ送る
-3. The UKADOC のサイト shall 除くイベント（今の案では 10 個）に「発生させる」ボタンを表示しない（**仮定**。OPEN QUESTION 5）
-4. The UKADOC のサイト shall `Reference` を付けずにイベントを送る（Reference の表は値の説明で、送れる値の例を持たないため。**仮定**。OPEN QUESTION 7）
+3. The UKADOC のサイト shall 除くイベント（10 個）に「発生させる」ボタンを表示しない
+4. The UKADOC のサイト shall `Reference` を付けずにイベントを送る（Reference の表は値の説明で、送れる値の例を持たないため）
 5. The UKADOC のサイト shall `On` で始まらない項目（説明の項目・`Notifyイベント` の `basewareversion` など）に「発生させる」ボタンを表示しない
 
 ### Requirement 5: 送った結果と失敗
@@ -119,7 +119,7 @@
 **Objective:** As a 初めて送るボタンを使うゴースト制作者, I want 送る前に、危険なタグがどう扱われるかを読めること, so that ゴーストの削除などの記述例を送っても、自分のゴーストが壊れないかを判断できる
 
 #### Acceptance Criteria
-1. The UKADOC のサイト shall 危険なタグの説明を、ゴーストを選ぶ欄と「読み込み」ボタンのすぐ近くに表示する（**仮定**: 読み込みの前から表示する。OPEN QUESTION 8）
+1. The UKADOC のサイト shall 危険なタグの説明を、ゴーストを選ぶ欄と「読み込み」ボタンのすぐ近くに、読み込みの前から表示する
 2. The UKADOC のサイト shall 危険なタグの説明を、送る先の頁ごとに 1 か所だけ表示し、ボタンごとに繰り返さない
 3. The UKADOC のサイト shall 危険なタグの説明の字を、旧サイトの字を写さずに書き直し、ukadoc-spec の文体（だ/である調）にする
 
@@ -156,6 +156,7 @@
 4. The site-look-sstp-playback shall Build Gate（`python scripts/prepare_site.py` と `zensical build --strict` がどちらも exit 0）と規約 Gate を通してから PR にする
 5. The site-look-sstp-playback shall PR の説明に、この PR が UKADOC の見た目を旧サイト並みの見やすさに近づける一連の PR の最後の 1 本であり、これで一連が終わること、出し済みの PR の番号、この PR だけで完結してマージしてよいことを書く
 6. The site-look-sstp-playback shall 3 種類の送るボタンを 1 つの PR にするか分けるかを設計で決める
+7. If 設計か実装の確かめで、ある種類の送るボタンが手元のベースウェアに断られる（リモートの要求の扱いで `%property` が展開されない・`NOTIFY` がゴーストに届かないなど）と分かったとき, the site-look-sstp-playback shall その種類のボタンだけを外し、理由と確かめた結果を記録して、残りの種類で進める（要件の話し合いで確定、2026-10-28）
 
 ### Requirement 10: 確かめ方と記録
 **Objective:** As a spec の完了を承認する開発者, I want 送らない自動の確かめと、手元の SSP で押して確かめた記録がそろっていること, so that 公開サイトで勝手に送らないことと、押せば送れることの両方を根拠を持って判断できる
