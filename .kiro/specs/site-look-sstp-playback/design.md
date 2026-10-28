@@ -423,18 +423,20 @@ flowchart TD
     C --> D[ScriptCheck を流す]
     D --> E[serve を止めて prepare_site.py と zensical build --strict]
     E --> F[serve を起動し直す]
-    F --> G[PageCheck で数と通信と変わらないものを確かめる]
-    G --> H[LoadedShot で読み込みの前後の明暗の画面と幅 375]
-    H --> I[開発者が SSP を動かして ManualSend の手順で押す]
+    F --> I[開発者が SSP を動かして ManualSend の V1 から V4 を押す]
     I --> J{種類ごとに送れたか}
-    J -- 断られた種類がある --> K[その種類のボタンだけ外して理由を記録し G から]
-    J -- 送れた --> L[verification.md と screenshots に記録する]
+    J -- 読み込みが通らない --> X[止めて開発者に報告する]
+    J -- 断られた種類がある --> K[その種類のボタンだけ外して理由を記録する]
+    J -- 送れた --> G[PageCheck で数と通信と変わらないものを確かめる]
     K --> G
+    G --> H[LoadedShot で読み込みの前後の明暗の画面と幅 375]
+    H --> M[開発者が ManualSend の V5 から V8 を押す]
+    M --> L[verification.md と screenshots に記録する]
 ```
 - A（`workflow.md` の「ukadoc-spec の作業木」）: `git -C ukadoc-spec fetch origin` → `git -C ukadoc-spec worktree add ../.worktrees/site-look-sstp-playback -b site-look-sstp-playback origin/main` → `git -C .worktrees/site-look-sstp-playback branch --unset-upstream`
 - B・C のコミットは `-c user.name=ekicyou -c user.email=dot.station@gmail.com` で名前を渡す。push と PR は `/kiro-complete` で行う
 - E: `serve` は `_site_src/` を見るので、動かしたまま `prepare_site.py` を流さない
-- I は ManualSend の V1 を最初に行う。V1（読み込み）が通らなければ、どの種類も送れないので、ほかを進めずに開発者に報告する（9.7 の外す範囲を超えるため）
+- 手で押す確かめ（ManualSend）の V1〜V4 を、スクリプトを書いて serve を起動した直後、PageCheck・LoadedShot・画面より先に行う（送る仕掛けが SSP に通らなければ、見た目を整えても無駄になるため。設計のディスカッションで確定、2026-10-28）。V1（読み込み）が通らなければ、どの種類も送れないので、ほかを進めずに開発者に報告する（9.7 の外す範囲を超えるため）。V5〜V8 は画面の後に行う
 - K（9.7）: 例えば `%property` が展開されないなら、`place()` の `propertysystem` の分岐と `show()` を消し、`list/propertysystem` を頁の見分けから外す。外した種類・理由・確かめた結果を `verification.md` と PR の説明に書く
 
 ## Requirements Traceability
@@ -791,8 +793,8 @@ ukadoc-spec に JavaScript のテストの仕組みは無く、足さない。�
 2. **キーのボタンの置き場**（3.1・7.2）: ［仮定］表の直後に 1 行（「値を見る:」とキーの名前のボタン）。表の見え方は 1 画素も変わらない。代案: 表の 1 列目のセルのキーの後ろに置く（要件の「キーの行ごとに」に字どおり合うが、`strong:only-child` の幅の指定が外れて表の見え方が変わる。この spec の塊で同じ指定を足し直す要がある）、2 列目の末尾に置く
 3. **イベントのボタンの数**（4.1）: **確定（自明な修正、2026-10-28）**: 要件の数を 272 に直し、4.5 に説明の項目として名指しした。以下は元の記述。 `On` で始まる見出し 283 のうち `OnMusicPlayExの拡張情報リスト`（id `caption_musicplayex_codes`）は説明の項目で、イベントの名前ではない。［仮定］名前の形（`On` と英数字・`_`・`.`）で見分けて外し、272 にする（4.5 の「説明の項目」に当たる）。要件の見込み 273 との差として記録する。代案: 名前が `On` で始まるものをすべて採り 273（存在しない `Event` を送る）
 4. **「実行」の置き場**（2.1・7.3）: ［仮定］`div.highlight` の中、`pre` の後ろに右寄せの 1 行。要件 7.3 の「コードブロック」を `pre`・`code` と読む（brief の申し送り「`pre` の外か `code` の外に置く」と同じ）。代案: `div.highlight` の外の直後（C18 の箱の点線と地の並びが切れる）、`h4`「記述例」の帯に 1 つ（記述例が複数あるとどれを送るか分からない）
-5. **送る先の指定**（5.1）: ［仮定］`GetFMO` の `hwnd`（リモートではダミー）を `ReceiverGhostHWnd` に付ける（jsstp と旧サイトと同じ）。ManualSend の V2 で効かなければ、`ReceiverGhostName`（`\0` の名前）か、`SEND` の `Ghost`（`descript.txt` の `name`。FMO の `fullname`）に替える。どれも効かなければ、送る先を選べないので止めて報告する
-6. **ブラウザの手元の通信の許可**（1.8）: プレビュー（`127.0.0.1`）から `localhost` への通信は手元どうしなので、Chrome の許可の求めは出ない見込みで、公開サイトからの振る舞いは PR がマージされるまで確かめられない（マージしない spec なので、この spec の中では確かめられない）。［仮定］`fetch` が押したときの処理の中にしか無いことと、許されないときの `fetch` の失敗が見つからない旨になることを、作りで満たし、記録する。代案: 開発者のフォークの GitHub Pages など公開の場所に写しを出して確かめる（手間が増える）
-7. **要求の決まった行**: ［仮定］`Sender: UKADOC`、`SecurityLevel: external`（プレビューと公開を同じ扱いにする）、`SEND` に `Option: notranslate`（旧サイトと同じ。`NOTIFY` には付けない）、打ち切り 15 秒。代案: `SecurityLevel` を付けない（プレビューでローカルの扱いになり、確かめが公開サイトより甘くなるおそれ）
-8. **ファイルと class の名前**: ［仮定］`assets/sstp.js`、class は `sstp-panel`・`sstp-play`・`sstp-keys`・`sstp-result`。`site-look-sakura-script-highlight` の設計の決定（後続も `sakurascript-` で始める）は、タグの色付けが Pygments の `.nt`・`.vg` に移って `sakurascript-` の class が無くなったので当てはまらない、と読んだ。代案: `ukadoc-play.js`・`ukadoc-play-*`
+5. **送る先の指定**（5.1）: **確定（推奨案、2026-10-28）**。［仮定］`GetFMO` の `hwnd`（リモートではダミー）を `ReceiverGhostHWnd` に付ける（jsstp と旧サイトと同じ）。ManualSend の V2 で効かなければ、`ReceiverGhostName`（`\0` の名前）か、`SEND` の `Ghost`（`descript.txt` の `name`。FMO の `fullname`）に替える。どれも効かなければ、送る先を選べないので止めて報告する
+6. **ブラウザの手元の通信の許可**（1.8）: **確定（推奨案、2026-10-28）**。プレビュー（`127.0.0.1`）から `localhost` への通信は手元どうしなので、Chrome の許可の求めは出ない見込みで、公開サイトからの振る舞いは PR がマージされるまで確かめられない（マージしない spec なので、この spec の中では確かめられない）。［仮定］`fetch` が押したときの処理の中にしか無いことと、許されないときの `fetch` の失敗が見つからない旨になることを、作りで満たし、記録する。代案: 開発者のフォークの GitHub Pages など公開の場所に写しを出して確かめる（手間が増える）
+7. **要求の決まった行**: **確定（推奨案、2026-10-28）**。［仮定］`Sender: UKADOC`、`SecurityLevel: external`（プレビューと公開を同じ扱いにする）、`SEND` に `Option: notranslate`（旧サイトと同じ。`NOTIFY` には付けない）、打ち切り 15 秒。代案: `SecurityLevel` を付けない（プレビューでローカルの扱いになり、確かめが公開サイトより甘くなるおそれ）
+8. **ファイルと class の名前**: **確定（推奨案、2026-10-28）**。［仮定］`assets/sstp.js`、class は `sstp-panel`・`sstp-play`・`sstp-keys`・`sstp-result`。`site-look-sakura-script-highlight` の設計の決定（後続も `sakurascript-` で始める）は、タグの色付けが Pygments の `.nt`・`.vg` に移って `sakurascript-` の class が無くなったので当てはまらない、と読んだ。代案: `ukadoc-play.js`・`ukadoc-play-*`
 9. **説明の字**（6.1〜6.3）: ［仮定］3 頁で同じ字（上の Panel の節）。代案: 頁ごとに「記述例」「プロパティの値」「イベント」と言い替える、危険なタグの文を `list/sakura-script` だけにする（6.2 は頁ごとに 1 か所を求めるだけで、字の違いは妨げない）
