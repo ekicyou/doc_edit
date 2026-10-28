@@ -10,7 +10,7 @@
 
 変えるのは ukadoc-spec の `assets/`（送る仕掛けと見た目の指定）・`mkdocs.yml`・要るならテンプレートの上書きで、原稿（`.md`）・`.nav.yml`・Zensical の版は変えない。ukadoc-spec を変えるので、作業木 `.worktrees/site-look-sstp-playback/` で書き、Build Gate と規約 Gate を通し、`/kiro-complete` で PR にする。
 
-**brief の後に変わった前提**（2026-10-27、メンテナのコミット `d01f9eb`・`b1abe20`・`1080225`。今の ukadoc-spec の `origin/main` は `8a7d8da`）: 記述例の色付けはブラウザの仕掛け（`assets/sakurascript.js`）から Pygments のレキサー（`site_ext/`）に移り、`extra_javascript` は外れた。名前と説明の表も Markdown 拡張が作る。ukadoc-spec の `CLAUDE.md` は「見た目のための構造は、Zensical のカスタマイズの方法（`extra_css`、Markdown 拡張、Pygments）に載せている。JavaScript は使わない」と書く。手元のゴーストへ送るには、利用者のブラウザで動く仕掛けがどうしても要る（ビルドの処理では送れない）。roadmap は「始める前にメンテナと話して決める」としている。この要件は、メンテナがこの仕掛けを受け入れることを前提に書く（Requirement 9.1。**仮定**。OPEN QUESTION 1）。
+**brief の後に変わった前提**（2026-10-27、メンテナのコミット `d01f9eb`・`b1abe20`・`1080225`。今の ukadoc-spec の `origin/main` は `8a7d8da`）: 記述例の色付けはブラウザの仕掛け（`assets/sakurascript.js`）から Pygments のレキサー（`site_ext/`）に移り、`extra_javascript` は外れた。名前と説明の表も Markdown 拡張が作る。ukadoc-spec の `CLAUDE.md` は「見た目のための構造は、Zensical のカスタマイズの方法（`extra_css`、Markdown 拡張、Pygments）に載せている。JavaScript は使わない」と書く。手元のゴーストへ送るには、利用者のブラウザで動く仕掛けがどうしても要る（ビルドの処理では送れない）。roadmap は「始める前にメンテナと話して決める」としている。この spec は、前もって了承を取らずに PR を出してメンテナの判断に委ね、マージはしない（開発者の判断、2026-10-28。Requirement 9.1・9.8）。
 
 本文の主語は 2 つある。「UKADOC のサイト」は、この spec の変更を入れた後の公開サイト（とそのプレビュー）の見え方と振る舞いを指す。「site-look-sstp-playback」は、この spec の作業（ukadoc-spec への変更・確かめ・記録）を指す。
 
@@ -150,13 +150,14 @@
 **Objective:** As a ukadoc-spec のメンテナ, I want 送る仕掛けが合意の上で、決まった場所にだけ足されること, so that 「JavaScript は使わない」とした見た目の分担を崩さずに、レビューしやすい小さな PR で受け取れる
 
 #### Acceptance Criteria
-1. The site-look-sstp-playback shall 送る仕掛けをブラウザで動かすことについて、作業木で書き始める前にメンテナの了承を得て、その日付と中身を記録する（**仮定**: 了承が得られる。得られないときは spec を止めて開発者に戻す。OPEN QUESTION 1）
+1. The site-look-sstp-playback shall 送る仕掛けをブラウザで動かすことについて、前もってメンテナの了承を取らずに PR を出し、PR の説明で、ukadoc-spec の `CLAUDE.md` の「JavaScript は使わない」と違う仕掛けであること・何を足したか（自前のスクリプト・第三者のコードの有無・動く頁・頁を開いただけでは何もしないこと）を示して、受け入れるかどうかをメンテナの判断に委ねる（開発者の判断、2026-10-28）
 2. The site-look-sstp-playback shall 原稿（`.md`）・`.nav.yml`・Zensical の版・`site_ext` の Markdown 拡張と Pygments のレキサーを変えない
-3. The site-look-sstp-playback shall ukadoc-spec の `CLAUDE.md` の「GitHub Pages」の節に、送る仕掛けの役割と、それが見た目のための構造ではないことを短く書き足す（**仮定**。OPEN QUESTION 2）
+3. The site-look-sstp-playback shall ukadoc-spec の `CLAUDE.md` の「GitHub Pages」の節に、送る仕掛けの役割と、それが見た目のための構造ではないことを短く書き足す（メンテナが PR で受け入れるかを判断する）
 4. The site-look-sstp-playback shall Build Gate（`python scripts/prepare_site.py` と `zensical build --strict` がどちらも exit 0）と規約 Gate を通してから PR にする
 5. The site-look-sstp-playback shall PR の説明に、この PR が UKADOC の見た目を旧サイト並みの見やすさに近づける一連の PR の最後の 1 本であり、これで一連が終わること、出し済みの PR の番号、この PR だけで完結してマージしてよいことを書く
 6. The site-look-sstp-playback shall 3 種類の送るボタンを 1 つの PR にするか分けるかを設計で決める
 7. If 設計か実装の確かめで、ある種類の送るボタンが手元のベースウェアに断られる（リモートの要求の扱いで `%property` が展開されない・`NOTIFY` がゴーストに届かないなど）と分かったとき, the site-look-sstp-playback shall その種類のボタンだけを外し、理由と確かめた結果を記録して、残りの種類で進める（要件の話し合いで確定、2026-10-28）
+8. When 開発者が「実装完了を承認」したとき, the site-look-sstp-playback shall `/kiro-complete` で ukadoc-spec に PR を出すところまでで止め、マージしない（spec.json の `ukadoc_spec.state` は `"OPEN"`。メンテナがマージした後に `/kiro-complete site-look-sstp-playback` を再実行して後始末する。開発者の判断、2026-10-28）
 
 ### Requirement 10: 確かめ方と記録
 **Objective:** As a spec の完了を承認する開発者, I want 送らない自動の確かめと、手元の SSP で押して確かめた記録がそろっていること, so that 公開サイトで勝手に送らないことと、押せば送れることの両方を根拠を持って判断できる
