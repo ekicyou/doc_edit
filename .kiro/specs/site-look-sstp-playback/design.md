@@ -58,6 +58,7 @@ ukadoc-spec の `CLAUDE.md` は、見た目のための構造に「JavaScript �
 - `language-sakurascript` の付け方、記述例の HTML の形（`div.highlight > pre > code`）、コピーのボタンの置き場が変わったとき: 「実行」の当て先と置き場を確かめ直す
 - `h3.bundle-item` の字の形（名前の後ろに `¶`）・`div.definition-table` の形が変わったとき: 名前とキーの取り方を確かめ直す
 - 記述例の箱の並び（C18 の `h4 + .highlight + .highlight …`）を変えたとき: ボタンを `div.highlight` の中に置く前提を確かめ直す
+- テーマのコピーのボタンの並び（`nav.md-code__nav`・`md-code__button`・`::after` の `mask-image`）や `code` の右の余白が変わったとき: ▶ の置き場と見え方を確かめ直す
 - `navigation.instant` を有効にしたとき: 頁を移ってもスクリプトが動き直さない
 - Zensical の版を上げたとき: `extra_javascript` の読み込み方を確かめ直す
 - `list/shiori-event` に、ゴーストの終わり・消滅・初回の系のイベントが足されたとき: `SKIP` に足すかを決める
@@ -70,7 +71,7 @@ ukadoc-spec の `CLAUDE.md` は、見た目のための構造に「JavaScript �
 - 今の 3 頁の `<script>` はテーマのもの（`__config`・`bundle`・インラインの 3 個）だけで、`extra_javascript` は無い（`d01f9eb` で `assets/sakurascript.js` が Pygments のレキサーに移ったときに外れた）
 - `prepare_site.py` は `assets/` を丸ごと写すので、`assets/sstp.js` を足しても前処理は変えない
 - 見出しの id・¶・右の欄の目次・検索の索引は build のときに決まる。ブラウザで後から足した字と要素は、それらに入らない（7.5・7.6）
-- 記述例の箱（C18）は `h4 + .highlight` からの隣り合わせのセレクタで作られている。`div.highlight` の間に要素を挟むと、2 つ目からの点線と地が切れる。だから「実行」は `div.highlight` の中（`pre` の後ろ）に置く
+- 記述例の箱（C18）は `h4 + .highlight` からの隣り合わせのセレクタで作られている。`div.highlight` の間に要素を挟むと、2 つ目からの点線と地が切れる。だから「実行」は箱の中に置く。テーマはコピーのボタンを `pre` の中の `nav.md-code__nav`（右上に重ねた並び。テーマのスクリプトが頁を開いた後に作る）に置き、`code` の右にアイコン 1 つ分の余白（`padding-right` 約 38px）を取っている。「実行」は ▶ のアイコンだけのボタンとしてその並びのコピーの下に積むので、字に重ならない（設計のディスカッションで確定、2026-10-28。案 C）
 - 名前と説明の表の 1 列目は `td:first-child > strong:only-child` で幅を決めている。セルの中にボタンを足すとこの指定が外れて表の見え方が変わる。だからキーのボタンは表の直後の 1 行にまとめる（OPEN QUESTION 2）
 
 ### Architecture Pattern & Boundary Map
@@ -238,6 +239,14 @@ ukadoc-spec で変えるのは上の 4 ファイルだけである（9.2）。
         while (h && h.tagName !== 'H3') h = h.previousElementSibling;
         const s = sender('実行', `${h ? nameOf(h) : ''} の記述例を実行`, 'SEND',
           { Event: 'OnUkadocScriptExample', Reference0: text, Script: text, Option: 'notranslate' });
+        // ▶ はコピーのボタンの下に積み、結果の字だけを箱の下の行に残す（押す前は空で隠れる）
+        const button = s.firstElementChild;
+        const nav = box.querySelector('nav.md-code__nav');
+        if (nav) {
+          Object.assign(button, { className: 'md-code__button sstp-run', title: '手元のゴーストで実行', textContent: '' });
+          nav.append(button);
+          out.push(button);
+        }
         box.append(s);
         out.push(s);
       }
@@ -338,6 +347,28 @@ ukadoc-spec で変えるのは上の 4 ファイルだけである（9.2）。
   padding: 0 .6em .4em;
   text-align: right;
 }
+.md-typeset .highlight > .sstp-play:has(> .sstp-result:empty) {
+  display: none;
+}
+.md-typeset .md-code__nav:has(.sstp-run) {
+  flex-direction: column;
+}
+.md-typeset .highlight:has(.sstp-run) > pre {
+  min-height: 3.2rem;
+}
+.md-typeset .md-code__button.sstp-run {
+  color: var(--md-default-fg-color--light);
+}
+.md-typeset .md-code__button.sstp-run:is(:hover, :focus-visible) {
+  color: var(--md-accent-fg-color);
+}
+.md-typeset .md-code__button.sstp-run::after {
+  -webkit-mask-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>');
+  mask-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>');
+}
+.md-typeset .sstp-run[hidden] {
+  display: none;
+}
 .md-typeset .sstp-keys {
   font-size: .7rem;
 }
@@ -349,7 +380,8 @@ ukadoc-spec で変えるのは上の 4 ファイルだけである（9.2）。
 指定のわけ:
 - **色**（7.1）: 字は `--md-typeset-color`、ボタンの地は `--md-default-bg-color`、枠は `--md-default-fg-color--light`。どれもテーマの変数なので明・暗で自動で替わり、直書きの色は無い。結果の字もボタンと同じ `--md-typeset-color`（薄い字の変数は帯の地の上で 4.5 を割るおそれがあるので使わない）。対比は実装で測る
 - **大きさ**: ボタン・結果・欄は `.7rem`。項目名の帯（`h3`）の中でも字の大きさがそろう
-- **「実行」の置き場**: `div.highlight` の中の `pre` の後ろに右寄せの 1 行で置く。記述例の箱の地の中に収まり、`pre`・`code`・コピーのボタンには触れない（7.3）。字に重ならない（7.7）
+- **「実行」の置き場**（案 C、設計のディスカッションで確定）: ▶ のアイコンだけのボタンを、テーマのコピーのボタンと同じ部品（`md-code__button`）にして、`nav.md-code__nav` のコピーの下に縦に積む。アイコンの形は `::after` の `mask-image`（三角の SVG。テーマのコピーのアイコンと同じ仕組み）。テーマのアイコンはマウスを載せるまでごく薄いが、▶ だけはふだんから `--md-default-fg-color--light` で見せ、載せるか選ぶとアクセントの色にする。`code` の右の余白（アイコン 1 つ分）に収まるので字に重ならない。結果の字は箱の下の右寄せの行（`div.highlight > .sstp-play`）に出し、押す前（結果が空）は行ごと隠す。2 段のアイコンが入るように、▶ のある箱の `pre` の高さを最低 `3.2rem` にする（1 行の記述例 116 個は箱が 40px から 64px になる）。`pre`・`code`・コピーのボタン・コピーされる字には触れない（7.3）。幅 375 でも収まる（7.7。見本で `scrollWidth` 375）
+- **`.sstp-run[hidden]`**: テーマがボタンに `display` を付けるので、読み込みが失敗したときに隠れるよう戻す
 - **`[hidden]`**: `display: block` の指定が `hidden` の既定の `display: none` に勝つので、後ろで戻す
 - **幅 375**（7.7）: 選ぶ欄は `max-width: 100%`。欄・ボタンはふつうの流し込みで折り返す。設計の写しで、読み込みの後の `list/sakura-script` が `scrollWidth` = `innerWidth` = 375 だった
 
@@ -478,7 +510,7 @@ flowchart TD
 | 6.3 | 書き直した字、だ/である調 | Panel | 説明の字 | ― |
 | 7.1 | 明・暗で 4.5:1、色は変数から | PlaybackStyle, PageCheck（対比） | テーマの変数 | H |
 | 7.2 | 目標の画面の当て先を崩さない | PlaybackStyle, Targets（置き場）, LoadedShot | 3 つの当て先 | H |
-| 7.3 | コードブロックの中に足さず、コピーの字を変えない | Targets（`pre` の外）, PageCheck | `innerText` の前後 | G, H |
+| 7.3 | `code` の中に足さず、コピーの字を変えない | Targets（コピーの下の ▶・`pre` の後ろの結果の行）, PageCheck | `innerText` の前後 | G, H |
 | 7.4 | `\` を `\` のまま | Targets（記述例の字に触れない） | 画面 | H |
 | 7.5 | 見出しの id・¶・目次を変えない | Targets（`h3` の末尾に足すだけ）, PageCheck | id・`headerlink`・`md-nav__link` の数 | G |
 | 7.6 | 検索の結果に出さない | Panel, Targets（ブラウザで足す）, PageCheck | `search.json` | G |
@@ -608,7 +640,7 @@ declare function loadGhosts(): Promise<Ghost[]>;            // 状態が 2xx で
 
 | 頁 | 当て先 | 置き場 | ボタンの字・読み上げの名前 | 送る中身 |
 |---|---|---|---|---|
-| `list/sakura-script` | `article div.language-sakurascript.highlight` のそれぞれ | その `div` の末尾（`pre` の後ろ）に右寄せの 1 行 | 「実行」・「{項目の名前} の記述例を実行」 | `SEND`、`Event: OnUkadocScriptExample`、`Reference0` と `Script` に `code.textContent` の末尾の改行を取った字、`Option: notranslate` |
+| `list/sakura-script` | `article div.language-sakurascript.highlight` のそれぞれ | ▶ はその箱の `nav.md-code__nav` のコピーの下。結果の字は箱の末尾（`pre` の後ろ）の右寄せの 1 行（押す前は隠れる） | ▶（`title` は「手元のゴーストで実行」）・「{項目の名前} の記述例を実行」 | `SEND`、`Event: OnUkadocScriptExample`、`Reference0` と `Script` に `code.textContent` の末尾の改行を取った字、`Option: notranslate` |
 | `list/propertysystem` | 名前が `[A-Za-z0-9_.-]+` の `h3.bundle-item` | `h3` の末尾（¶ の後ろ） | 「値を見る」・「{名前} の値を見る」 | `SEND`、`Script: \0プロパティ「{名前}」は「%property[{名前}]」です。\e`、`Option: notranslate` |
 | `list/propertysystem` | 名前が `{base}.(キー)` の `h3.bundle-item` の後ろの `div.definition-table` のキー（`[A-Za-z0-9_.-]+`） | 表の直後の 1 行 `p.sstp-keys`（「値を見る:」とキーごとのボタン） | 「{キー}」・「{base}.{キー} の値を見る」 | 同上（名前は `{base}.{キー}`） |
 | `list/shiori-event` | 名前が `On[A-Za-z0-9_.]+` で、`SKIP` の 10 個でない `h3.bundle-item` | `h3` の末尾（¶ の後ろ） | 「発生させる」・「{名前} を発生させる」 | `NOTIFY`、`Event: {名前}` |
@@ -639,7 +671,7 @@ declare function place(): HTMLElement[];
 - 結果の字: 「受け付けられた（{SSTP の状態}）」「送れなかった（{SSTP の状態}）」「送れなかった」。次に押すまで残る
 
 **Implementation Notes**
-- Integration: 「実行」を `div.highlight` の外（兄弟）に置くと C18 の箱の 2 つ目からの点線と地が切れるので、中に置く。キーのボタンを表のセルに置くと `strong:only-child` の幅の指定が外れるので、表の直後に置く（OPEN QUESTION 2・4）
+- Integration: 「実行」を `div.highlight` の外（兄弟）に置くと C18 の箱の 2 つ目からの点線と地が切れるので、中のコピーの下に置く。キーのボタンを表のセルに置くと 1 列目が広がって説明の列が折り返すので、表の直後に置く（どちらも設計のディスカッションで見本を撮って確定）。`nav.md-code__nav` はテーマのスクリプトが頁を開いた後に作る。`place()` は「読み込み」を押したときに動くので、その時には並びがある。並びが無ければ（テーマが変わったとき）▶ を出さず、結果の行の「実行」の字のボタンが残る
 - Validation: LoadedShot（数・`data-sstp` と記述例の字の一致・除くイベント）、ManualSend
 - Risks: `h3` の中のボタンの字が見出しのアクセシブルな名前に入る（「system.year ¶ 値を見る」）。見出しへのリンク・目次・検索の索引には入らない
 
@@ -726,6 +758,9 @@ SSP の動く手元の環境で、開発者がボタンを押す手順（10.6）
 | `{before,after}-propertysystem-{light,dark}.png` | `list/propertysystem/` | `[id="system.cpu"]` | `mock-propertysystem-C23-*` |
 | `{before,after}-shiori-event-{light,dark}.png` | `list/shiori-event/` | `#OnBoot` | `mock-shiori-event-C23-*` |
 | `{before,after}-panel-{light,dark}.png` | `list/sakura-script/` | `h1` | 目標の画面なし（欄の見え方） |
+| `{before,after}-oneline-{light,dark}.png` | `list/sakura-script/` | `#plus` | 目標の画面なし（1 行の記述例の箱の高さ） |
+
+設計のディスカッションで撮った見本の画面（案 A・B・C、キーの置き場、欄）は `screenshots/discussion/` にある。build の写しに見本のスクリプトを差し込み、`fetch` を作り物に替えて撮ったもので、送信はしていない
 
 - 目標の画面にはボタンが無い。比べるのは、記述例の箱・名前と説明の表・項目名の帯・対応の札が前と同じに見えることだけ（7.2）。二重に重なった画面は撮り直す
 - 開発者に画面や `serve` を見せるときは Ctrl+F5 を頼む
@@ -790,11 +825,11 @@ ukadoc-spec に JavaScript のテストの仕組みは無く、足さない。�
 設計のディスカッションで決める。番号は下の各節の印と同じ。どれも、設計の見本は［仮定］のとおりに書いてある。
 
 1. **頁を開いた時点の外への読み込み**（1.1・10.2）: **確定（自明な修正、2026-10-28）**: 要件の字を「この spec が足す読み込み」に直した。以下は元の記述。 テーマ（Material）は今も頁を開くと Google Fonts（`fonts.googleapis.com`・`fonts.gstatic.com`）を読む。要件の字のとおりに「頁の外への読み込み 0 件」とすると、この spec の前から満たしていない。［仮定］この spec が足す読み込み・送信が 0 件であること（`localhost:9801` と第三者のスクリプトが 0、それ以外は変更の前の控えと同じ）で確かめ、ウェブフォントは既存の振る舞いとして記録だけする。代案: `mkdocs.yml` の `theme.font: false` でウェブフォントも止める（字の形が変わる見た目の変更で、この spec の外）、要件の字を「この spec が足す読み込み」に直す
-2. **キーのボタンの置き場**（3.1・7.2）: ［仮定］表の直後に 1 行（「値を見る:」とキーの名前のボタン）。表の見え方は 1 画素も変わらない。代案: 表の 1 列目のセルのキーの後ろに置く（要件の「キーの行ごとに」に字どおり合うが、`strong:only-child` の幅の指定が外れて表の見え方が変わる。この spec の塊で同じ指定を足し直す要がある）、2 列目の末尾に置く
+2. **キーのボタンの置き場**（3.1・7.2）: **確定（推奨案。見本の画面 `screenshots/discussion/keys-*` を見て、2026-10-28）**。［仮定］表の直後に 1 行（「値を見る:」とキーの名前のボタン）。表の見え方は 1 画素も変わらない。代案: 表の 1 列目のセルのキーの後ろに置く（要件の「キーの行ごとに」に字どおり合うが、`strong:only-child` の幅の指定が外れて表の見え方が変わる。この spec の塊で同じ指定を足し直す要がある）、2 列目の末尾に置く
 3. **イベントのボタンの数**（4.1）: **確定（自明な修正、2026-10-28）**: 要件の数を 272 に直し、4.5 に説明の項目として名指しした。以下は元の記述。 `On` で始まる見出し 283 のうち `OnMusicPlayExの拡張情報リスト`（id `caption_musicplayex_codes`）は説明の項目で、イベントの名前ではない。［仮定］名前の形（`On` と英数字・`_`・`.`）で見分けて外し、272 にする（4.5 の「説明の項目」に当たる）。要件の見込み 273 との差として記録する。代案: 名前が `On` で始まるものをすべて採り 273（存在しない `Event` を送る）
-4. **「実行」の置き場**（2.1・7.3）: ［仮定］`div.highlight` の中、`pre` の後ろに右寄せの 1 行。要件 7.3 の「コードブロック」を `pre`・`code` と読む（brief の申し送り「`pre` の外か `code` の外に置く」と同じ）。代案: `div.highlight` の外の直後（C18 の箱の点線と地の並びが切れる）、`h4`「記述例」の帯に 1 つ（記述例が複数あるとどれを送るか分からない）
+4. **「実行」の置き場**（2.1・7.3）: **確定（開発者の案 C、2026-10-28）**: コピーのボタンの下に ▶ のアイコンだけを積み、結果は押した後に箱の下の行に出す（`screenshots/discussion/run-C-*`）。要件 7.1・7.3 を直した。以下は元の記述。［仮定］`div.highlight` の中、`pre` の後ろに右寄せの 1 行。要件 7.3 の「コードブロック」を `pre`・`code` と読む（brief の申し送り「`pre` の外か `code` の外に置く」と同じ）。代案: `div.highlight` の外の直後（C18 の箱の点線と地の並びが切れる）、`h4`「記述例」の帯に 1 つ（記述例が複数あるとどれを送るか分からない）
 5. **送る先の指定**（5.1）: **確定（推奨案、2026-10-28）**。［仮定］`GetFMO` の `hwnd`（リモートではダミー）を `ReceiverGhostHWnd` に付ける（jsstp と旧サイトと同じ）。ManualSend の V2 で効かなければ、`ReceiverGhostName`（`\0` の名前）か、`SEND` の `Ghost`（`descript.txt` の `name`。FMO の `fullname`）に替える。どれも効かなければ、送る先を選べないので止めて報告する
 6. **ブラウザの手元の通信の許可**（1.8）: **確定（推奨案、2026-10-28）**。プレビュー（`127.0.0.1`）から `localhost` への通信は手元どうしなので、Chrome の許可の求めは出ない見込みで、公開サイトからの振る舞いは PR がマージされるまで確かめられない（マージしない spec なので、この spec の中では確かめられない）。［仮定］`fetch` が押したときの処理の中にしか無いことと、許されないときの `fetch` の失敗が見つからない旨になることを、作りで満たし、記録する。代案: 開発者のフォークの GitHub Pages など公開の場所に写しを出して確かめる（手間が増える）
 7. **要求の決まった行**: **確定（推奨案、2026-10-28）**。［仮定］`Sender: UKADOC`、`SecurityLevel: external`（プレビューと公開を同じ扱いにする）、`SEND` に `Option: notranslate`（旧サイトと同じ。`NOTIFY` には付けない）、打ち切り 15 秒。代案: `SecurityLevel` を付けない（プレビューでローカルの扱いになり、確かめが公開サイトより甘くなるおそれ）
 8. **ファイルと class の名前**: **確定（推奨案、2026-10-28）**。［仮定］`assets/sstp.js`、class は `sstp-panel`・`sstp-play`・`sstp-keys`・`sstp-result`。`site-look-sakura-script-highlight` の設計の決定（後続も `sakurascript-` で始める）は、タグの色付けが Pygments の `.nt`・`.vg` に移って `sakurascript-` の class が無くなったので当てはまらない、と読んだ。代案: `ukadoc-play.js`・`ukadoc-play-*`
-9. **説明の字**（6.1〜6.3）: ［仮定］3 頁で同じ字（上の Panel の節）。代案: 頁ごとに「記述例」「プロパティの値」「イベント」と言い替える、危険なタグの文を `list/sakura-script` だけにする（6.2 は頁ごとに 1 か所を求めるだけで、字の違いは妨げない）
+9. **説明の字**（6.1〜6.3）: **確定（推奨案。見本の画面 `screenshots/discussion/panel-*` を見て、2026-10-28）**。［仮定］3 頁で同じ字（上の Panel の節）。代案: 頁ごとに「記述例」「プロパティの値」「イベント」と言い替える、危険なタグの文を `list/sakura-script` だけにする（6.2 は頁ごとに 1 か所を求めるだけで、字の違いは妨げない）
