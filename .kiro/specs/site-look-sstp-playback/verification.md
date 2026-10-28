@@ -45,3 +45,20 @@
 
 - 第三者のスクリプトの読み込みは 0。外への要求はテーマのウェブフォント（Google Fonts）と、テーマのリポジトリの表示の `api.github.com` の 2 つ
 - 並びは開くたびに少し入れ替わる（フォント・`data:` のアイコン・`workers/search` の前後）。後で比べるときは外への要求の集まりで比べる
+
+## ScriptCheck（タスク 2.2、2026-10-28）
+
+- 式: `node scriptcheck.mjs`（Claude のスクラッチの使い捨て。ukadoc-spec にファイルは足さない）
+- 作業木の `assets/sstp.js`（未コミット）の字から `ENDPOINT`・`VERSION`・`show`・`request`・`post`・`loadGhosts` を正規表現で切り出し、字を変えずに `new Function` で流す。`fetch` は決まった返事を返す作り物に差し替え、何も送らない（作り物への呼び出し 4 回）
+- RED: 5 の見込みをわざと「受け付け」にした写しで流し、5 で失敗（exit 1）。正しい見込みに戻して 6 例すべて合う（exit 0）
+
+| # | 確かめ | 見込み | 結果 |
+|---|---|---|---|
+| 1 | `show('system.cpu.name').Script` | `\0プロパティ「system.cpu.name」は「%property[system.cpu.name]」です。\e` | 同じ |
+| 2 | `request('SEND', {Event, Reference0, Script})` の字 | `SEND SSTP/1.4`・`Charset: UTF-8`・`Sender: UKADOC`・`SecurityLevel: external`・`Event`・`Reference0`・`Script` を CR+LF でつなぎ、空行で終わる | 同じ |
+| 3 | 値に CR+LF のある `Script` | 例外（`Script に改行がある`） | 例外 |
+| 4 | GetFMO の返事（`x_1` に hwnd・name・keroname、`x_2` に hwnd・name、`x_3.path` だけの行）を `loadGhosts` で読む | 2 体（ラーシェ 111、Emily 222）。`path` だけの `x_3` は除く。要求は `EXECUTE SSTP/1.2`・`Command: GetFMO` | 同じ |
+| 5 | 1 行目 `SSTP/1.4 404 Not Found` | 失敗、状態の字 `404 Not Found` | 同じ |
+| 6 | 1 行目 `SSTP/1.4 200 OK`・`SSTP/1.1 204 No Content` | どちらも受け付け、状態の字 `200 OK`・`204 No Content` | 同じ |
+
+- 結果: 6 例すべて合う。`sstp.js` は直していない
