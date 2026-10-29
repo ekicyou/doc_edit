@@ -102,3 +102,59 @@
 
 
 外した種類は無い。ReceiverGhostHWnd のまま、3 種類すべてで進める。
+
+## PageCheck（タスク 4.1、2026-10-29）
+
+- 版: 作業木 `f6bb9e3` の build（`_site/`、`zensical serve` 8000）と控え `8a7d8da`（8040）
+- 式: `node pagecheck.mjs <base> <path> <facts.json>`（Claude のスクラッチ。`net.mjs` の写しに、要求の種類と、`.sstp-panel` の数・当て先の候補の数を足したもの。候補は `sstp.js` の `place()` と同じセレクタと規則で、押さずに数える）。結果はスクラッチの `pc\`
+- `serve` の頁は `_site/` の HTML の末尾に `serve` の自動の読み直しの `<script>` が足されるだけ（5 頁とも差の塊は末尾の 1 つ）なので、数は `_site/` の HTML の数と同じ
+
+### 候補の数
+
+| 種類 | 規則 | 数 | 要件の見込み | 差 |
+|---|---|---|---|---|
+| 記述例（`list/sakura-script`） | `article div.language-sakurascript.highlight` | 287 | 287 | 0 |
+| 置き換える部分の無いプロパティ（`list/propertysystem`） | `h3.bundle-item` の名前が `^[A-Za-z0-9_.-]+$` | 44 | 44 | 0 |
+| キー（同） | `….(キー)` の項目（5）の直後の `div.definition-table` の 1 列目の `strong` | 34 | 34 | 0 |
+| イベント（`list/shiori-event`） | `h3.bundle-item` の名前が `^On[A-Za-z0-9_.]+$` で `SKIP` に無い | 272 | 272 | 0 |
+
+- 外した種類は無いので、0 にした数は無い
+- `list/propertysystem` の `h3.bundle-item` 160 = 44 + `(キー)` 5 + ほかの置き換える部分を持つ 109（3.5）+ プロパティでない見出し 2（「プロパティシステム」「補足」、3.6）
+- `list/shiori-event` の `h3.bundle-item` 328 のうち `On` で始まるもの 283 = 272 + `SKIP` 10 + `OnMusicPlayExの拡張情報リスト` 1（4.5）
+- 開いただけ（押す前）では、どの頁も送るボタン（`.sstp-play`・`.sstp-keys`・`.sstp-run`）は 0
+
+### 開いた時点の通信
+
+`list/sakura-script`・`list/propertysystem`・`list/shiori-event`・`list/plugin-event`・`index` を押さずに 3 秒開いた（作業木と控えの両方、どれも exit 0）
+
+| 確かめ | 結果 |
+|---|---|
+| `localhost:9801`・`127.0.0.1:9801`・`[::1]:9801` への要求 | 5 頁とも 0 |
+| 読み込んだスクリプト | `bundle.67a597eb.min.js`・`workers/search.7d14d953.min.js`・`assets/sstp.js` の 3 つで、どれも `serve` の中。第三者のスクリプトは 0 |
+| `serve` の中の要求（集まり）の控えとの差 | 5 頁とも `assets/sstp.js` が 1 つ増えただけ |
+| `serve` の外への要求（集まり）の控えとの差 | 5 頁とも 0 |
+
+- 外への要求は控えと同じく、`fonts.googleapis.com` の CSS 1・`fonts.gstatic.com` の woff2（3 頁は 5 個、`list/plugin-event` と `index` は 3 個）と、テーマのリポジトリの表示の `api.github.com/repos/ukatech/ukadoc-spec` と `…/releases/latest` の 2 つ
+- 設計・タスクの「テーマのウェブフォントだけ」とは、`api.github.com` の 2 つの分だけ違う。どちらも控えの頁（変更の前）からあるテーマの要求で、この spec が足したものではない。並びは開くたびに入れ替わるので、集まりで比べた
+
+### 欄の数
+
+| 頁 | `.sstp-panel` | `assets/sstp.js` の読み込み |
+|---|---|---|
+| `list/sakura-script/` | 1 | 1 |
+| `list/propertysystem/` | 1 | 1 |
+| `list/shiori-event/` | 1 | 1 |
+| `list/plugin-event/` | 0 | 1 |
+| `index`（`/ukadoc-spec/`） | 0 | 1 |
+
+- 控えの 5 頁は `.sstp-panel` 0。見出しの id・`a.headerlink` の数は控えと同じ（649・206・360・21・13）
+
+### 検索の索引
+
+| `search.json` | SHA-256 |
+|---|---|
+| 作業木 `_site/search.json` | `afa8d38c1a69f8c0a32396d3197665ce56e27fa91f219d1d92b8eb004bdf27a5` |
+| `serve` の `/ukadoc-spec/search.json` | 同じ |
+| 控え `root\_site\search.json`（と写しの `search.json`） | 同じ |
+
+- 違い 0
