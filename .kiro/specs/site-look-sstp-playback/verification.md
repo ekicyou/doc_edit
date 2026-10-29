@@ -158,3 +158,65 @@
 | 控え `root\_site\search.json`（と写しの `search.json`） | 同じ |
 
 - 違い 0
+
+## LoadedShot（タスク 4.3、2026-10-29）
+
+- 版: 作業木 `f6bb9e3` の `zensical serve`（8000）と控え `8a7d8da`（8040）
+- 式:
+  - 幅 375: `node tools/sstp-shot.mjs <頁> "article h1" - {light|dark} 375 700 --loaded`（3 頁 × 明・暗の 6 回、どれも exit 0）
+  - ほかの確かめ: `FACTS=<控えの facts-*.json> BASEIDS=<控えの開いた後の id> node t43.mjs <頁> "article h1" - light 1000 700 --loaded`（Claude のスクラッチ。`sstp-shot.mjs` の写しで、`Fetch.enable`（`*://*:9801/*`）を頁へ行く前に掛けること・GetFMO だけに作り物で答えてほかは断ること・Edge を止めてから CDP を切ることは同じ。「読み込み」をキーボードで押し、下の数と木を足して出す。3 頁とも exit 0）。控えの開いた後の id は同じ写しを `DUMP=` 付き・`--loaded` 無しで 8040 に流して取った
+- 9801 への要求は 3 頁とも「読み込み」の GetFMO の 1 つだけで、作り物で答えた。ほかの要求・CORS の下見は 0。送るボタンは押していない
+
+### 読み込みの後
+
+| 頁 | 前のボタン | 後のボタン | 4.1 の候補 | 差 |
+|---|---|---|---|---|
+| `list/sakura-script/` | 0 | 287（記述例） | 287 | 0 |
+| `list/propertysystem/` | 0 | 78（項目 44 + キー 34） | 78 | 0 |
+| `list/shiori-event/` | 0 | 272（イベント） | 272 | 0 |
+
+| 確かめ | 結果 |
+|---|---|
+| 記述例 287 個の `data-sstp` の `Script`・`Reference0` と `code.textContent`（末尾の改行を取る） | 287 個とも同じ（食い違い 0）。どれも `SEND` |
+| キー 34 個の名前 | 34 個とも、`(キー)` の項目の名前から `.(キー)` を取った `{base}` と表のキーで `{base}.{キー}`（例 `system.cpu.name`）。`aria-label` は `{base}.{キー} の値を見る`、送る中身は読むスクリプトだけ（食い違い 0） |
+| 項目 44 個の「値を見る」 | 名前は見出しの名前と同じ、送る中身は `\0プロパティ「{名前}」は「%property[{名前}]」です。\e` と `Option: notranslate` だけ（食い違い 0） |
+| `SKIP` の 10 個 | 見出し 10 個とも、ボタン 0。`SKIP` の `Event` を持つボタンも 0 |
+| `NOTIFY` の `Reference` | 272 個とも `Reference*` のヘッダ 0。`aria-label` は `{Event} を発生させる` で見出しの名前と同じ |
+| `[SET有効]` の項目 | `[SET有効]` の印を持つプロパティは 7 項目。置き換える部分の無い 3 つ（`currentghost.mousecursor`・`currentghost.seriko.sticky-window`・`currentghost.seriko.zorder`）に「値を見る」が付き、送る中身は読むスクリプトだけ（`\![set` 0）。残る 4 つ（`cursor.scope(ID)…` 2 つ・`tooltip.scope(ID)…` 2 つ）は `(ID)` などを持つので付かない（3.5）。道具の数え（8）に入った概要の「プロパティシステム」は、説明で印に触れるだけのプロパティでない項目で、ボタン 0（3.6） |
+
+### 変わらないもの
+
+読み込みの後の 3 頁を控えと比べた（食い違い 0）
+
+| 頁 | `article` の中の id（開いた後の控え） | うち見出しの id（1.2 の控え） | `a.headerlink` | `.md-nav__link` | 記述例の `code.innerText` |
+|---|---|---|---|---|---|
+| `list/sakura-script/` | 937 = 937、並びも同じ | 649 = 649 | 649 = 649 | 832 = 832 | 287 個とも同じ |
+| `list/propertysystem/` | 211 = 211、並びも同じ | 206 = 206 | 206 = 206 | 382 = 382 | 0 = 0 |
+| `list/shiori-event/` | 360 = 360、並びも同じ | 360 = 360 | 360 = 360 | 774 = 774 | 0 = 0 |
+
+- `article` の中の id は、見出しの id のほかに、テーマが開いた時にコードの箱へ付ける `__code_N`（`list/sakura-script` 288・`list/propertysystem` 5）を含む。HTML には無く、控えの頁でも開くと同じ数・同じ並びで付く。1.2 の控えの見出しの id とは、`__code_N` を除いて並びまで同じ。`sstp.js` が足した id は 0
+
+### 幅 375
+
+`sstp-shot.mjs` の `scrollWidth`（縦のスクロールバーの幅を足したもの）と `innerWidth`
+
+| 頁 | 明 前 | 明 後 | 暗 前 | 暗 後 |
+|---|---|---|---|---|
+| `list/sakura-script/` | 375 / 375 | 375 / 375 | 375 / 375 | 375 / 375 |
+| `list/propertysystem/` | 375 / 375 | 375 / 375 | 375 / 375 | 375 / 375 |
+| `list/shiori-event/` | 375 / 375 | 375 / 375 | 375 / 375 | 375 / 375 |
+
+- 6 回とも後のボタンの数は上の表と同じ、食い違い 0
+
+### キーボードと読み上げ
+
+| 確かめ | `list/sakura-script/` | `list/propertysystem/` | `list/shiori-event/` |
+|---|---|---|---|
+| h1 の ¶ から Tab 1 回 | 「読み込み」（選ぶ欄は読み込みの前は使えないので飛ぶ） | 同じ | 同じ |
+| 「読み込み」で Enter | 作り物の応答で読み込み、ボタン 287 | 同じく 78 | 同じく 272 |
+| 読み込みの後、「読み込み」から Tab | 9 回で最初の ▶（`\pID番号 の記述例を実行`） | 13 回で `system.year の値を見る` | 11 回で `OnBoot を発生させる` |
+| アクセシビリティの木の送るボタン | 「… の記述例を実行」287、名前が空の「 の記述例を実行」0 | 「… の値を見る」78 | 「… を発生させる」272 |
+
+- 名前の例: `\pID番号 の記述例を実行`・`\p[ID番号] の記述例を実行`・`system.year の値を見る`・`system.cpu.load の値を見る`・`OnBoot を発生させる`・`OnGhostChanged を発生させる`
+- ▶ は字を持たない（`textContent` が空）が、木の名前は `aria-label` から付く
+- 送るボタンでは Enter も Space も押していない（Tab で移っただけ）
