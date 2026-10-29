@@ -267,3 +267,34 @@
 | `list/propertysystem/` | キーのボタン（ボタンの地） | `rgba(226,228,233,.82)` | `#bfc1c6` | `#1e2129` | 8.92 |
 
 - いちばん低いのは ▶ の `hover`・`focus-visible`（明 3.82・暗 3.49、線 3:1）。字でいちばん低いのは暗の帯の結果・項目名の 6.75（線 4.5:1）
+
+## 画面（タスク 5.3、2026-10-29）
+
+- 版: 作業木 `f6bb9e3` の `zensical serve`（8000）
+- 式: `node tools/sstp-shot.mjs http://127.0.0.1:8000/ukadoc-spec/<頁> <当て先> screenshots/<名前> {light|dark} 1000 700`（`before-*`）と、同じ式に `--loaded` を付けたもの（`after-*`）。20 回とも exit 0。`--loaded` で押したのは「読み込み」だけで、9801 への要求は GetFMO の 1 つだけを作り物で答えた。送るボタンは押していない
+- 撮った 20 枚（`screenshots/`、1000×700）:
+
+| 当て先 | 明・前 | 暗・前 | 明・後 | 暗・後 |
+|---|---|---|---|---|
+| `list/sakura-script/` の `#bang-lock-repaint` | `before-sakura-script-light.png` | `before-sakura-script-dark.png` | `after-sakura-script-light.png` | `after-sakura-script-dark.png` |
+| `list/propertysystem/` の `[id="system.cpu"]` | `before-propertysystem-light.png` | `before-propertysystem-dark.png` | `after-propertysystem-light.png` | `after-propertysystem-dark.png` |
+| `list/shiori-event/` の `#OnBoot` | `before-shiori-event-light.png` | `before-shiori-event-dark.png` | `after-shiori-event-light.png` | `after-shiori-event-dark.png` |
+| `list/sakura-script/` の `h1`（欄） | `before-panel-light.png` | `before-panel-dark.png` | `after-panel-light.png` | `after-panel-dark.png` |
+| `list/sakura-script/` の `#plus`（1 行の記述例） | `before-oneline-light.png` | `before-oneline-dark.png` | `after-oneline-light.png` | `after-oneline-dark.png` |
+
+- 撮り直し: **1 枚**。`before-sakura-script-dark.png` の 1 回目は、頁の下半分に頁の頭がもう一度重なって写り、右端にも別の写りがはみ出していた（二重に重なった跡）。同じ式で撮り直し、跡が無いことを見た。ほかの 19 枚は 1 回目で跡が無かった
+
+### 目標の画面との見比べ（`completed/site-look-plan/screenshots/` の `mock-*-C21-*`・`mock-*-C23-*`）
+
+- 記述例の箱・名前と説明の表・項目名の帯・対応の札: `before-sakura-script-*` と `mock-sakura-script-C21-*`、`before-propertysystem-*` と `mock-propertysystem-C23-*`、`before-shiori-event-*` と `mock-shiori-event-C23-*` で、箱の帯（「記述例」）と左の線・地の色・コピーのアイコン・強調の字、表の罫と 1 列目の太字、項目名の帯の地と左の線、札（Materia・SSP・CROW・Ninix）の枠と色は、明・暗とも同じに見える（7.2）
+- 違うのは縦の余白だけ（見出しの下・段落の間・「対応」の行の上下が目標の画面より詰まっている）。控え `8a7d8da`（8040、`origin/main`）を同じ式で撮ると `before-sakura-script-light.png` と同じ詰まり方なので、この spec の前から `origin/main` にある違いで、この spec の変更によるものではない
+- 記述例の `\` は `\` のまま見える（`\s[0]\i[500]`・`\![lock,repaint]`・`\+`・`\_+`。¥ にならない）。「さくらスクリプトのエスケープ」の囲みの「\」「\\」も `\` のまま見える
+- 欄の説明（「手元の SSP で起動中のゴーストに、…」）は `before-panel-*` で読み込みの前から `h1` の下に 1 か所だけ見え、`after-panel-*` でも 1 か所のまま（6.1・6.2）。読み込みの前の選ぶ欄は空、後は「作り物のゴーストA」が選ばれている
+
+### 読み込みの前と後
+
+- `list/sakura-script/`: 前は ▶ が無く、目標の画面と同じ箱。後は各記述例の箱の右、コピーのアイコンの下に ▶ が 1 つ出る。字・コピーのアイコンの位置は変わらない（7.2・7.4）
+- 1 行の記述例（`#plus`・`#underscore-plus` の箱）: 前は 1 行の高さ、後は ▶ を積むぶん高くなる（設計の「1 行の記述例は 40px から 64px」のとおり）。▶ と字は重ならない
+- `list/propertysystem/`: 前は表の直後の「値を見る:」の行が無く目標の画面と同じ。後は表の直後に「値を見る:」とキー 6 つ（load・num・vendor・name・clock・features）のボタンが 1 行に出る。表の見え方は前と同じ
+- `list/shiori-event/`: 前は帯に何も無く目標の画面と同じ。後は項目名の帯の `OnBoot` の右に「発生させる」が出る。帯の高さ・表は前と同じ
+- 明・暗とも同じ並びで、暗でもボタン・▶ が見える（対比の数はタスク 5.2 の節）
