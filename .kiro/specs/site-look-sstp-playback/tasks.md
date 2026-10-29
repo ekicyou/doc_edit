@@ -67,7 +67,7 @@
   - `verification.md` の「候補の数」「開いた時点の通信」「欄の数」「検索の索引」の節に、数と要件の見込みとの差、通信の並び、違い 0 が書いてある
   - _Requirements: 1.1, 1.2, 2.2, 3.5, 3.6, 4.5, 7.6, 8.1, 8.2, 10.2, 10.3_
 
-- [ ] 4.2 (P) LoadedShot の道具 `tools/sstp-shot.mjs` を書き、何も外へ出ないことを確かめる
+- [x] 4.2 (P) LoadedShot の道具 `tools/sstp-shot.mjs` を書き、何も外へ出ないことを確かめる
   - `site-look-plan` の `tools/shot.mjs` を写して spec の `tools/sstp-shot.mjs` に置き（元は変えない）、引数に `--loaded` を足す
   - CDP の `Fetch.enable` に `http://localhost:9801/*` と `http://127.0.0.1:9801/*` を渡し、本文が `EXECUTE` の `GetFMO` なら作り物の応答（ゴースト 2 体）を返し、それ以外の要求は `Fetch.failRequest` して実行を失敗で終える。押すのは「読み込み」だけにする
   - 設計の `LoadedResult`（前と後のボタンの数・欄の数・`scrollWidth`・`innerWidth`・要求の並び・食い違い）を JSON で出す
@@ -144,3 +144,4 @@
 et.mjs <base> <path> [facts.json]（9801 を塞ぎ、触れたら exit 2）
 - 4.3 で、287 個の ▶ の名前が「 の記述例を実行」と空にならないか（前に h3 が無い箱）を見る
 - xtra.css の `.sstp-play:has(> .sstp-result:empty)` は、コピーの並びが無いときに残す字の「実行」も隠す（設計 674 行目の逃げ道が働かない）。今はテーマが頁を開いた時に並びを作り、`place()` は読み込みの後に動くので起きない
+- `sstp-shot.mjs` はボタンを `article button[data-sstp]` で数える（▶ は `nav.md-code__nav` に移るので、設計の `.sstp-play button` では 287 個を取りこぼす）。横取りは `*://*:9801/*` で、片付けは Edge を止めてから CDP を切る
