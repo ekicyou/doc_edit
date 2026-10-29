@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. 土台: 作業木と変更の前の控え
+- [x] 1. 土台: 作業木と変更の前の控え
 - [x] 1.1 ukadoc-spec の `origin/main` の最新からこの spec の作業木を作り、プレビューを起動する
   - ukadoc-spec を fetch し、`origin/main` から作業木 `.worktrees/site-look-sstp-playback/` とブランチ `site-look-sstp-playback` を作る。ukadoc-spec のメインのチェックアウトは使わない
   - 作った直後に追う先を外す（素の `git push` で `main` に送らないため）
@@ -15,7 +15,7 @@
   - spec の `verification.md` を作り、「変更の前」の節に、控えの置き場・コミット・控えた数と通信の並びが書いてある。doc_edit で spec の道だけをコミットして push してある
   - _Requirements: 7.3, 7.5, 7.6, 10.2_
 
-- [ ] 2. 送る仕掛けと見た目
+- [x] 2. 送る仕掛けと見た目
 - [x] 2.1 `mkdocs.yml` にスクリプトの読み込みを足し、`assets/sstp.js` を書く
   - プレビューを止めてから書く（書きかけの `_site_src/` を拾わせない）
   - 設計の「Modified Files」のとおり、`mkdocs.yml` の `extra_css` の後に `extra_javascript` の `assets/sstp.js` を足す。ほかの行と `scripts/prepare_site.py`・`site_ext/`・`requirements.txt` には触らない
@@ -37,7 +37,7 @@
   - 作業木の `assets/extra.css` の末尾に設計どおりの塊が 1 つあり、3 つのファイルのコミットが 1 つできている
   - _Requirements: 7.1, 7.2, 7.3, 7.7, 8.4_
 
-- [ ] 2.4 `CLAUDE.md` の「GitHub Pages」の節に送る仕掛けの 1 行を書き足してコミットする
+- [x] 2.4 `CLAUDE.md` の「GitHub Pages」の節に送る仕掛けの 1 行を書き足してコミットする
   - 設計の差分のとおり、「見た目のための構造は、…JavaScript は使わない」の箇条の後ろに同じ深さで 1 行だけ足し、ほかの行は変えない
   - 作業木で 1 コミット（2.3 と同じ型）
   - `git show --stat` が `CLAUDE.md` の 1 行の追加だけである
