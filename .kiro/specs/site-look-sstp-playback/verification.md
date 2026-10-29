@@ -1,5 +1,17 @@
 # 確かめの記録: site-look-sstp-playback
 
+## 測った版と流した式（タスク 6.2、2026-10-29）
+
+- 測った版: 作業木 `.worktrees/site-look-sstp-playback/` の `f6bb9e3`（ブランチ `site-look-sstp-playback`。`671b121`・`f6bb9e3` の 2 コミット）、ukadoc-spec `origin/main` `8a7d8da`（作業木の先祖。5.1 の fetch の後も進んでいない）
+- 日付: 2026-10-28〜2026-10-29（各節の見出しの日付）
+- 流した式（`<scratch>` は `C:\Users\maz-o\AppData\Local\Temp\claude\C--home-maz-git-doc-edit\65a4b07c-734f-48d2-9fcb-5a61fd74db85\scratchpad`）:
+  - Build Gate（作業木の根で、`.cache/` を消してから）: `C:\home\maz\git\doc_edit\.venv\Scripts\python.exe scripts/prepare_site.py` と `C:\home\maz\git\doc_edit\.venv\Scripts\zensical.exe build --strict`
+  - ScriptCheck: `node <scratch>\scriptcheck.mjs`
+  - PageCheck: `node <scratch>\net.mjs <base> <path> [facts.json]`（控え）と `node <scratch>\pagecheck.mjs <base> <path> <facts.json>`（作業木と控え）
+  - LoadedShot: `node .kiro/specs/site-look-sstp-playback/tools/sstp-shot.mjs http://127.0.0.1:8000/ukadoc-spec/<頁> <当て先> <出力|-> {light|dark} <幅> <高さ> [--loaded]`（ほかに、その写しの `<scratch>\t43.mjs`・`<scratch>\t52.mjs`。式の細かい形は 4.3・5.2・5.3 の節）
+  - ManualSend: 開発者が手で押す（Claude は送らない）
+- 開発者の判断: V6 は今のままとする（2026-10-29、ManualSend の節）。この spec は当面リリースしない（2026-10-29、`tasks.md` の Implementation Notes）。PR は出さず、作業は push していないローカルブランチ `site-look-sstp-playback` に残し、ukadoc-spec のチェックアウトはリモートの `main`（`8a7d8da`）のままにする
+
 ## 変更の前（タスク 1.2、2026-10-28）
 
 ### 控えの置き場と配り
@@ -90,6 +102,10 @@
 | V2 実行 | 2 体目を選び、`#bang-lock-repaint` などの記述例の「実行」 | 2 体目だけが記述例を再生し、1 体目は何もしない。「受け付けられた（200 OK か 204 No Content）」 | 1 体目が再生する・404: 送る先の指定が効いていない（OPEN QUESTION 5 の代わりを試す）。断られる: 9.7 |
 | V3 値を見る | `system.year` と `system.cpu.name` の「値を見る」 | ゴーストが「プロパティ「system.year」は「2026」です。」のように今の値を喋る | `%property[…]` がそのまま出る・値が空: 9.7（「値を見る」を外す） |
 | V4 発生させる | `OnBoot`・`OnSecondChange` の「発生させる」 | 「受け付けられた」。ゴーストが応えるかは記録だけ（ゴーストが決める） | SSP が断る（4xx・5xx）: 9.7（「発生させる」を外す） |
+| V5 失敗 | 選んだゴーストを終わらせて押す。SSP を終わらせて押す・「読み込み」を押す | 「送れなかった（404 Not Found）」「送れなかった」、見つからない旨。ダイアログが出ない。送り直さない | 5.2・5.3 の直し |
+| V6 二度押し | 長い記述例（`\w9` を含むものなど）の「実行」をすばやく 2 回 | 送っている間は 1 回だけ送る。SSP が受け付けた後の押し直しは送り直しになり、SSP が再生をやり直す（開発者の判断、2026-10-29） | 5.5 の直し |
+| V7 取り直し | 3 体目を起動して「読み込み」 | 一覧が 3 体になり、前に選んだゴーストが選ばれたまま | 1.7 の直し |
+| V8 許可の求め | （プレビューは手元どうしの通信なので、許可の求めは出ない見込み）ブラウザの許可の求めが出たら、押す前に出ていないことと、断ったときに見つからない旨が出ることを見る | 許可の求めは「読み込み」の後だけ | 出なければ「プレビューでは確かめられない」と記録する |
 
 ### 結果
 
@@ -302,3 +318,52 @@
 - `list/propertysystem/`: 前は表の直後の「値を見る:」の行が無く目標の画面と同じ。後は表の直後に「値を見る:」とキー 6 つ（load・num・vendor・name・clock・features）のボタンが 1 行に出る。表の見え方は前と同じ
 - `list/shiori-event/`: 前は帯に何も無く目標の画面と同じ。後は項目名の帯の `OnBoot` の右に「発生させる」が出る。帯の高さ・表は前と同じ
 - 明・暗とも同じ並びで、暗でもボタン・▶ が見える（対比の数はタスク 5.2 の節）
+
+## 仕上げ（タスク 6.2、2026-10-29）
+
+### 規約 Gate（9.3）
+
+作業木で `git -C .worktrees/site-look-sstp-playback …` を流して見た
+
+| 確かめ | 式 | 結果 |
+|---|---|---|
+| `CLAUDE.md` の変更 | `git diff --numstat origin/main -- CLAUDE.md` | `1 0`（1 行足しただけ、消した行 0） |
+| 足した行の置き場 | `git diff origin/main -- CLAUDE.md` | `## GitHub Pages` の節の「見た目は `assets/extra.css`…」の箇条の後ろに、同じ深さの箇条 1 行（`assets/sstp.js` の役割・3 頁だけで動く・押すまで何もしない・第三者のコードは使わない） |
+| `extra.css` の塊の注 | `git diff origin/main -- assets/extra.css` の `+` の行で `/*`・`*/` を数える | どちらも 1。注は `/* site-look-sstp-playback: 手元のゴーストへ送る欄とボタン */` の 1 行だけ |
+
+### `git diff --stat origin/main`（9.2）
+
+```
+ CLAUDE.md        |   1 +
+ assets/extra.css |  64 ++++++++++++++++++++++++
+ assets/sstp.js   | 148 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ mkdocs.yml       |   3 ++
+ 4 files changed, 216 insertions(+)
+```
+
+- 4 つだけ。作業木に未コミットの変更は無い（`git status --short` が空）
+- ブランチ `site-look-sstp-playback` は追う先が無く（`no upstream configured`）、`git ls-remote --heads origin site-look-sstp-playback` も 0 行で、push していない。ukadoc-spec のチェックアウトは `main`（`8a7d8da`、`origin/main` と同じ）
+
+### jsstp を使わなかったこと（8.5）
+
+- 設計で「使わずに自分で書く」と決め、理由を記録した（設計の Technology Stack の「jsstp を使わない理由」と `research.md`）
+- `git diff origin/main` の中の `jsstp` は 0（大文字小文字を問わず）。作業木の `assets/`・`mkdocs.yml`・`CLAUDE.md` にも 0
+- `assets/sstp.js` に `import`・`require` は無く、URL は送る先の `http://localhost:9801/api/sstp/v1` だけ。開いた時点の通信で第三者のスクリプトは 0（4.1）
+
+### 外した種類（9.7）
+
+- 無い。ManualSend の V1〜V4 がすべて通ったので、記述例の「実行」・プロパティの「値を見る」・イベントの「発生させる」の 3 種類すべてを残した。送る先の指定は `ReceiverGhostHWnd` のまま
+
+### 設計の「Testing Strategy」の各項目の結果
+
+| 項目 | 結果 | 節 |
+|---|---|---|
+| Build Gate | `prepare_site.py`・`build --strict` とも exit 0。`git diff --stat origin/main` は 4 つだけ | 配り（3.1）、この節 |
+| 規約 Gate | `CLAUDE.md` は「GitHub Pages」の 1 行だけ、塊の注は 1 行だけ | この節 |
+| 要求の字 | ScriptCheck の 6 例すべて合う | ScriptCheck（2.2） |
+| 何もしない時 | 9801 と第三者のスクリプトが 0、欄は 3 頁に 1 つずつ、読み込みの前のボタン 0 | PageCheck（4.1） |
+| ボタンの数と中身 | 287・78・272 で候補と同じ、`data-sstp` と字の食い違い 0、`SKIP` のボタン 0 | PageCheck（4.1）、LoadedShot（4.3） |
+| 変わらないもの | id・¶・目次の数、記述例の字、`search.json` の SHA-256 が控えと同じ | PageCheck（4.1）、LoadedShot（4.3） |
+| 見た目 | 目標の画面と同じ見え方（縦の余白の差は `origin/main` から）、対比は字 6.75 以上・▶ 3.49 以上、幅 375 で横にはみ出さない | LoadedShot（4.3）、対比（5.2）、画面（5.3） |
+| キーボードと読み上げ | Tab で「読み込み」と送るボタンに移れ、Enter で押せる。送るボタンの名前は 637 個とも空でない | LoadedShot（4.3） |
+| 送信 | V1〜V8 すべて通った。V6 は開発者の判断で今のまま（受け付けた後の押し直しは送り直し）。V8 の許可の求めはプレビューでは確かめられず、作りで満たした | ManualSend（3.2・6.1） |
