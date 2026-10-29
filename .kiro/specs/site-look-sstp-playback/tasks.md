@@ -43,14 +43,14 @@
   - `git show --stat` が `CLAUDE.md` の 1 行の追加だけである
   - _Requirements: 9.1, 9.3_
 
-- [ ] 3. 配りと、手で押す確かめ（先に）
+- [x] 3. 配りと、手で押す確かめ（先に）
 - [x] 3.1 Build Gate を通し、プレビューを起動し直してスクリプトの配りを確かめる
   - プレビューを止めたまま、作業木で `.cache/` を消して `prepare_site.py` と `zensical build --strict` を流し、`serve` を起動し直す
   - `/ukadoc-spec/assets/sstp.js` が 200 で、全頁の HTML に `assets/sstp.js` の読み込みが 1 つずつあり、`/ukadoc-spec/assets/extra.css` に `site-look-sstp-playback:` の見出しのコメントがあることを見る。無ければ止めて作り直す
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`git diff --stat origin/main` が `mkdocs.yml`・`CLAUDE.md`・`assets/extra.css`・`assets/sstp.js` だけである
   - _Requirements: 9.2, 9.4_
 
-- [ ] 3.2 ManualSend の V1〜V4 を開発者に押してもらい、結果で進め方を決める
+- [x] 3.2 ManualSend の V1〜V4 を開発者に押してもらい、結果で進め方を決める
   - `verification.md` に設計の ManualSend の表（V0〜V4 の用意・押すもの・見るもの・だめなとき）を書き、プレビューの URL と Ctrl+F5 を添えて開発者に押してもらう。Claude は送らない
   - V1（読み込み）が通らなければ、ほかのタスクに進まず、止めて開発者に報告する
   - V2 で 1 体目が再生する・404 なら、`ReceiverGhostHWnd` を `ReceiverGhostName`、次に `Ghost` に替えて 2.1 を直すコミットを足し、2.2 と 3.1 をやり直してから、Ctrl+F5 を添えてもう一度押してもらう。どれも効かなければ止めて報告する
