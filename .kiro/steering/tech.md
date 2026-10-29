@@ -18,6 +18,7 @@ doc_edit は、cc-sdd の作業環境（ルート）と、4 つの git サブモ
 - **公開**: `main` への push で GitHub Actions がビルドし、GitHub Pages に出す（Python 3.12）
 - **見た目の指定**: `assets/extra.css`。色はなるべく Material のテーマの色の変数（`--md-primary-fg-color` など）から取り、テーマの色が変わってもついてくるようにする。変数で出せない色（暗い表示のリンクの明るい紺、さくらスクリプトのタグの色、ベースウェアの札など）は、明・暗の地との対比を測って記録する（`site-look-plan` の試作で、テーマが緑から紺に変わったときに分かった）
 - **構造と色付け**: `site_ext/`（ビルドの部品。`requirements.txt` の `-e ./site_ext` で入る）が受け持つ。class と木の形を見て作る構造（対応の札・名前と説明の表）は Python-Markdown の拡張 `site_ext/ukadoc_site/structure.py`、記述例とファイル構成の木の色付けは Pygments レキサー `site_ext/ukadoc_site/lexers.py`（`sakurascript`・`ss`・`filetree`）。ukadoc-spec の `CLAUDE.md` は、見た目のための構造を Zensical のカスタマイズの方法（`extra_css`、Markdown 拡張、Pygments）に載せ、「JavaScript は使わない」と書いている（2026-10-27。それまでの `assets/sakurascript.js`・`assets/filetree.js` は、メンテナが「Zensical のカスタマイズの方法に合わせ」てレキサーに移した）。記述例の誤り（閉じない `[` など）は救済せず、波線とビルドの警告で示して原稿を直させる
+- **手元の SSP へ送るボタン**: `assets/sstp.js`（`mkdocs.yml` の `extra_javascript`）は見た目のためではなく、読み手の手元の SSP へ記述例・プロパティ・イベントを送るためにだけ読む。第三者のコードは読まず、「読み込み」を押すまで何もせず、`list/sakura-script`・`list/propertysystem`・`list/shiori-event` の 3 頁だけで動く。送信の確かめは開発者が手でボタンを押して行い、Claude はベースウェアへ何も送らない（自動の確かめは `.kiro/specs/site-look-sstp-playback/tools/sstp-shot.mjs` が CDP の Fetch で GetFMO を偽って答える）。当面リリースしない（2026-10-29 の開発者の判断。ukadoc-spec の作業木のローカルブランチ `site-look-sstp-playback` に置き、PR は出さない）
 
 編集規約（書式・文体・リンク・項目の追加手順）の正本は `ukadoc-spec/CLAUDE.md` である。steering には写さず、そちらに従う。
 
@@ -56,4 +57,4 @@ zensical serve                   # http://127.0.0.1:8000/ukadoc-spec/ でプレ�
 - **migration/tools で再生成しない**: ukadoc-spec の Markdown は旧 HTML 版から変換したものだが、再生成するとこのリポジトリでの修正が上書きされる（ukadoc-spec の規約）
 
 ---
-_updated_at: 2026-10-25_
+_updated_at: 2026-10-29_

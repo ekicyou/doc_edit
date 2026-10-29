@@ -43,6 +43,7 @@
 - `manual/` `dev/` `memo/` は 1 ファイル 1 ページ
 - サイトの見た目は `assets/extra.css`（spec ごとに見出しのコメントで始まる塊を末尾に足す）。`prepare_site.py` が `assets/` を丸ごと写すので、ファイルを足しても前処理は変えない
 - 見た目のための処理の分担（ukadoc-spec の `CLAUDE.md` の「GitHub Pages」に書かれている）: 頁ごとの判断は `prepare_site.py` が class で付け、class と木の形を見て作る構造は `site_ext/ukadoc_site/structure.py`（Markdown 拡張。頁を知らず全頁に掛かる）、コードブロックの色付けは `site_ext/ukadoc_site/lexers.py`（Pygments）。同じ節は、見た目のための構造を Zensical のカスタマイズの方法（`extra_css`、Markdown 拡張、Pygments）に載せ、「JavaScript は使わない」と書いている
+- 例外は手元の SSP へ送るボタンの `assets/sstp.js`（`extra_javascript`。見た目のためではない。3 頁だけで動き、「読み込み」を押すまで何もしない。方針は `tech.md`。当面リリースせず、作業木のローカルブランチ `site-look-sstp-playback` に置く）
 - 見た目のための目印は `prepare_site.py` が `<頁の種類>-<役>` の class で付け（まとめ頁は `bundle-item`・`bundle-notes`・`bundle-supplement` など、`manual/` の頁は `manual-item`。どの頁の種類にも出る役は `<役>` だけの名前にする。例: 名前と説明の表 `definition-table`）、頁の種類は `main()` の 1 か所で見分け、使う見た目の無い頁の種類だけの印は足さない。頁や項目を名指しせず原稿のファイル名や形で見分ける。見た目に使う絵は、`assets/` に今あるもの（例: 注釈の絵はサイトのロゴ `assets/logo.png`）を先に使い、同じ絵を足さない
 
 ## Naming Conventions
@@ -58,4 +59,4 @@
 
 ---
 _Document patterns, not file trees. New files following patterns shouldn't require updates_
-_updated_at: 2026-10-25_
+_updated_at: 2026-10-29_
