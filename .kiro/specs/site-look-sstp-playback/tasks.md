@@ -31,7 +31,7 @@
   - 6 例すべてが合い、`verification.md` の「ScriptCheck」の節に例と結果が書いてある
   - _Requirements: 3.2, 3.4, 10.1_
 
-- [ ] 2.3 `extra.css` の末尾に送る欄とボタンの塊を足し、送る仕掛けと見た目を 1 コミットにする
+- [x] 2.3 `extra.css` の末尾に送る欄とボタンの塊を足し、送る仕掛けと見た目を 1 コミットにする
   - 設計の「Modified Files」の塊を、今の末尾（`site-look-definition-tables:` の塊）の後ろに足す。ほかの塊・テーマの色には触らない。注は `/* site-look-sstp-playback: 手元のゴーストへ送る欄とボタン */` の 1 行だけにし、直書きの色を使わない
   - 作業木で `mkdocs.yml`・`assets/sstp.js`・`assets/extra.css` を 1 コミットにする（ukadoc-spec の履歴の型の日本語の 1 文、名前は `-c user.name=ekicyou -c user.email=dot.station@gmail.com` で渡す）
   - 作業木の `assets/extra.css` の末尾に設計どおりの塊が 1 つあり、3 つのファイルのコミットが 1 つできている
@@ -143,3 +143,4 @@
 - 通信の確かめは scratch の 
 et.mjs <base> <path> [facts.json]（9801 を塞ぎ、触れたら exit 2）
 - 4.3 で、287 個の ▶ の名前が「 の記述例を実行」と空にならないか（前に h3 が無い箱）を見る
+- xtra.css の `.sstp-play:has(> .sstp-result:empty)` は、コピーの並びが無いときに残す字の「実行」も隠す（設計 674 行目の逃げ道が働かない）。今はテーマが頁を開いた時に並びを作り、`place()` は読み込みの後に動くので起きない
