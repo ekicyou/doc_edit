@@ -220,3 +220,10 @@
 - 名前の例: `\pID番号 の記述例を実行`・`\p[ID番号] の記述例を実行`・`system.year の値を見る`・`system.cpu.load の値を見る`・`OnBoot を発生させる`・`OnGhostChanged を発生させる`
 - ▶ は字を持たない（`textContent` が空）が、木の名前は `aria-label` から付く
 - 送るボタンでは Enter も Space も押していない（Tab で移っただけ）
+
+## 測る版（タスク 5.1、2026-10-29）
+
+- ukadoc-spec を fetch した `origin/main` は `8a7d8da` のままで、作業木の分岐点から進んでいない。merge は要らず、控え（1.2）と 3.1・4.1・4.3 の結果はそのまま使う
+- `origin/main` は作業木の先祖（`git merge-base --is-ancestor` が 0）。Build Gate は 3.1 で同じ版に対して exit 0
+- 測る版: 作業木 `f6bb9e3`（`origin/main` `8a7d8da` の上に 2 コミット）
+
