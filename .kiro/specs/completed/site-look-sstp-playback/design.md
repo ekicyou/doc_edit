@@ -117,7 +117,7 @@ ukadoc-spec（作業木 .worktrees/site-look-sstp-playback/、ブランチ site-
     ├── sstp.js           # 新規。3 頁の見分け・欄・一覧・ボタン・送信・結果
     └── extra.css         # 末尾に site-look-sstp-playback の塊を 1 つ足す
 
-.kiro/specs/site-look-sstp-playback/（doc_edit。完了で completed/ へ移る）
+.kiro/specs/completed/site-look-sstp-playback/（doc_edit。完了で completed/ へ移る）
 ├── verification.md       # 新規。数・中身・通信・画面・手で押した結果の記録
 ├── screenshots/          # 新規。読み込みの前と後の明・暗の画面
 └── tools/
@@ -402,9 +402,9 @@ ukadoc-spec で変えるのは上の 4 ファイルだけである（9.2）。
 | RoleNote | `CLAUDE.md` の「GitHub Pages」の 1 行 | 足す |
 | ScriptCheck | なし（Node の使い捨ての確かめ。置き場は Claude のスクラッチ。結果は `verification.md`） | 作らない |
 | PageCheck | なし（build の HTML とブラウザの頁を数える使い捨てのスクリプト。手順と結果は `verification.md`） | 作らない |
-| LoadedShot | `.kiro/specs/site-look-sstp-playback/tools/sstp-shot.mjs` | 新規（doc_edit） |
+| LoadedShot | `.kiro/specs/completed/site-look-sstp-playback/tools/sstp-shot.mjs` | 新規（doc_edit） |
 | ManualSend | なし（開発者の手順。手順と結果は `verification.md`） | 作らない |
-| VerificationRecord | `.kiro/specs/site-look-sstp-playback/verification.md`・`screenshots/` | 新規（doc_edit） |
+| VerificationRecord | `.kiro/specs/completed/site-look-sstp-playback/verification.md`・`screenshots/` | 新規（doc_edit） |
 | PrNote | なし（`/kiro-complete` で書く PR の説明） | 作らない |
 
 ## System Flows
@@ -712,7 +712,7 @@ PlaybackStyle は新しい境目を持たない見た目の指定で、中身は
 | Requirements | 1.3, 2.1, 2.4, 3.1, 3.3, 4.1, 4.3, 7.2, 7.7, 10.1, 10.3〜10.5 |
 
 **Responsibilities & Constraints**
-- 置き場は `.kiro/specs/site-look-sstp-playback/tools/sstp-shot.mjs`（doc_edit。`shot.mjs` の引数の形に `--loaded` を足す）
+- 置き場は `.kiro/specs/completed/site-look-sstp-playback/tools/sstp-shot.mjs`（doc_edit。`shot.mjs` の引数の形に `--loaded` を足す）
 - CDP の `Fetch.enable` に `http://localhost:9801/*` と `http://127.0.0.1:9801/*` の型を渡し、`Fetch.requestPaused` で要求を止める。本文が `EXECUTE` の `GetFMO` なら作り物の応答（ゴースト 2 体）を `Fetch.fulfillRequest` で返し、それ以外の要求が来たら `Fetch.failRequest` して実行を失敗で終える。止めた要求は網に出ないので、SSP が動いていても何も届かない
 - 送るボタンは押さない（10.1）。押すのは「読み込み」だけ
 - 数（10.3）: 読み込みの後の `article .sstp-play button` を頁ごとに数え、PageCheck の候補の数と同じ。読み込みの前は 0（1.3）

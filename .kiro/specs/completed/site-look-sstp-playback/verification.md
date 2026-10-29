@@ -8,7 +8,7 @@
   - Build Gate（作業木の根で、`.cache/` を消してから）: `C:\home\maz\git\doc_edit\.venv\Scripts\python.exe scripts/prepare_site.py` と `C:\home\maz\git\doc_edit\.venv\Scripts\zensical.exe build --strict`
   - ScriptCheck: `node <scratch>\scriptcheck.mjs`
   - PageCheck: `node <scratch>\net.mjs <base> <path> [facts.json]`（控え）と `node <scratch>\pagecheck.mjs <base> <path> <facts.json>`（作業木と控え）
-  - LoadedShot: `node .kiro/specs/site-look-sstp-playback/tools/sstp-shot.mjs http://127.0.0.1:8000/ukadoc-spec/<頁> <当て先> <出力|-> {light|dark} <幅> <高さ> [--loaded]`（ほかに、その写しの `<scratch>\t43.mjs`・`<scratch>\t52.mjs`。式の細かい形は 4.3・5.2・5.3 の節）
+  - LoadedShot: `node .kiro/specs/completed/site-look-sstp-playback/tools/sstp-shot.mjs http://127.0.0.1:8000/ukadoc-spec/<頁> <当て先> <出力|-> {light|dark} <幅> <高さ> [--loaded]`（ほかに、その写しの `<scratch>\t43.mjs`・`<scratch>\t52.mjs`。式の細かい形は 4.3・5.2・5.3 の節）
   - ManualSend: 開発者が手で押す（Claude は送らない）
 - 開発者の判断: V6 は今のままとする（2026-10-29、ManualSend の節）。この spec は当面リリースしない（2026-10-29、`tasks.md` の Implementation Notes）。PR は出さず、作業は push していないローカルブランチ `site-look-sstp-playback` に残し、ukadoc-spec のチェックアウトはリモートの `main`（`8a7d8da`）のままにする
 

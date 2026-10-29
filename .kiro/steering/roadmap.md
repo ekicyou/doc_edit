@@ -21,7 +21,7 @@
 - [x] site-look-manual-files -- `manual/` の頁でファイルごとの切れ目とファイル名の帯を見せ、ファイル構成の木のファイル名に色を付ける（C14・C15・C22）. Dependencies: site-look-list-items
 - [x] site-look-definition-tables -- 「`- **名前**: 説明`」だけが並ぶ箇条書きを、原稿を変えずに組み立ての処理で 2 列の表にする（C23）. Dependencies: site-look-manual-files
 - [x] site-look-note-icon -- 注釈の節・補足の項目・`!!! note` の見出しの頭に、添付の色付きのアイコンを付ける（C26）. Dependencies: site-look-list-markers
-- [ ] site-look-sstp-playback -- さくらスクリプトの記述例・プロパティシステム・SHIORI Event を、利用者の操作で手元のゴーストへ送れるようにする（C13）. Dependencies: site-look-sakura-script-highlight, site-look-definition-tables. PR: site-look-sstp-playback
+- [x] site-look-sstp-playback -- さくらスクリプトの記述例・プロパティシステム・SHIORI Event を、利用者の操作で手元のゴーストへ送れるようにする（C13）. Dependencies: site-look-sakura-script-highlight, site-look-definition-tables. PR: site-look-sstp-playback
   - 始める前にメンテナと話して決める（2026-10-27）: 送るにはブラウザで動く仕掛けが要る。ukadoc-spec の `CLAUDE.md`（`1080225`）は、見た目のための構造を Zensical のカスタマイズの方法（`extra_css`、Markdown 拡張、Pygments）に載せ、「JavaScript は使わない」と書いている。ブラウザで動く仕掛けを足してよいかは書かれていない。記述例の言語の印は Pygments の `language-sakurascript`、名前と説明の表は `site_ext` の拡張が作る形に変わった
 - [x] site-look-top-page -- トップページ（`INDEX.md`）に印を付け、節の見出し・目次の分類・「ukadocの見方」の箇条書きを、ほかの頁と同じ帯で見せる（開発者の指摘、2026-10-25。候補番号なし）. Dependencies: site-look-list-items, site-look-manual-files
 

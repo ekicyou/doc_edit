@@ -1,0 +1,31 @@
+{
+  "feature_name": "site-look-sstp-playback",
+  "created_at": "2026-10-28T18:23:54+09:00",
+  "updated_at": "2026-10-29T13:00:00+09:00",
+  "language": "ja",
+  "phase": "completed",
+  "approvals": {
+    "requirements": {
+      "generated": true,
+      "approved": true
+    },
+    "design": {
+      "generated": true,
+      "approved": true
+    },
+    "tasks": {
+      "generated": true,
+      "approved": true
+    }
+  },
+  "ready_for_implementation": true,
+  "completed_at": "2026-10-29T13:00:00+09:00",
+  "ukadoc_spec": {
+    "pr_unit": "site-look-sstp-playback",
+    "pr": "none",
+    "state": "LOCAL_ONLY",
+    "branch": "site-look-sstp-playback",
+    "head": "f6bb9e3",
+    "reason": "開発者の判断（2026-10-29）で当面リリースしない。PR は出さず、ukadoc-spec の作業木のローカルブランチにだけ残す（push しない）。ukadoc-spec の参照はリモートの main（8a7d8da）のまま"
+  }
+}
