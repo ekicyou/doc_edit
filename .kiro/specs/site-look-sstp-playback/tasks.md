@@ -44,7 +44,7 @@
   - _Requirements: 9.1, 9.3_
 
 - [ ] 3. 配りと、手で押す確かめ（先に）
-- [ ] 3.1 Build Gate を通し、プレビューを起動し直してスクリプトの配りを確かめる
+- [x] 3.1 Build Gate を通し、プレビューを起動し直してスクリプトの配りを確かめる
   - プレビューを止めたまま、作業木で `.cache/` を消して `prepare_site.py` と `zensical build --strict` を流し、`serve` を起動し直す
   - `/ukadoc-spec/assets/sstp.js` が 200 で、全頁の HTML に `assets/sstp.js` の読み込みが 1 つずつあり、`/ukadoc-spec/assets/extra.css` に `site-look-sstp-playback:` の見出しのコメントがあることを見る。無ければ止めて作り直す
   - `prepare_site.py` と `build --strict` がどちらも exit 0 で、`git diff --stat origin/main` が `mkdocs.yml`・`CLAUDE.md`・`assets/extra.css`・`assets/sstp.js` だけである

@@ -62,3 +62,41 @@
 | 6 | 1 行目 `SSTP/1.4 200 OK`・`SSTP/1.1 204 No Content` | どちらも受け付け、状態の字 `200 OK`・`204 No Content` | 同じ |
 
 - 結果: 6 例すべて合う。`sstp.js` は直していない
+
+## 配り（タスク 3.1、2026-10-29）
+
+- 版: 作業木 `f6bb9e3`（その下に `671b121`）、`origin/main` `8a7d8da`
+- 作業木で `.cache/` を消してから流した:
+  - `C:\home\maz\git\doc_edit\.venv\Scripts\python.exe scripts/prepare_site.py` → exit 0
+  - `C:\home\maz\git\doc_edit\.venv\Scripts\zensical.exe build --strict` → exit 0（`No issues found`）
+- `zensical serve` を起動し直した（8000、PID はスクラッチの `serve-8000.pid`）
+
+| 確かめ | 結果 |
+|---|---|
+| `GET /ukadoc-spec/assets/sstp.js` | 200。中身は作業木の `assets/sstp.js` と同じ |
+| `_site/` の全頁の HTML の `assets/sstp.js` を読む `<script` の数 | 41 頁すべて 1 つずつ（0 や 2 以上の頁は 0） |
+| `GET /ukadoc-spec/assets/extra.css` | 200。252 行目に `/* site-look-sstp-playback: 手元のゴーストへ送る欄とボタン */` |
+| `git diff --stat origin/main` | `CLAUDE.md`（+1）・`assets/extra.css`（+64）・`assets/sstp.js`（+148）・`mkdocs.yml`（+3）の 4 つだけ。未コミットの変更は無し |
+
+
+## ManualSend（タスク 3.2・6.1）
+
+開発者が SSP の動く手元の環境で押す。Claude は送らない。プレビュー: http://127.0.0.1:8000/ukadoc-spec/list/sakura-script/ （作業木 f6bb9e3、Ctrl+F5 で読み直す）
+
+| 手順 | 用意と押すもの | 見るもの | だめなとき |
+|---|---|---|---|
+| V0 用意 | SSP（最新版）を起動し、ゴースト 2 体（例: 既定のゴーストともう 1 体）を同時に起動する。作業木の `zensical serve` を Edge か Chrome で開き、Ctrl+F5 | ― | ― |
+| V1 読み込み | `list/sakura-script` で「読み込み」 | 選ぶ欄に 2 体の名前、送るボタンが出る。開発者のツールの通信で `api/sstp/v1` への POST が 1 つ | 一覧が出ない（CORS・接続・`GetFMO`）: どの種類も送れないので止めて報告する |
+| V2 実行 | 2 体目を選び、`#bang-lock-repaint` などの記述例の「実行」 | 2 体目だけが記述例を再生し、1 体目は何もしない。「受け付けられた（200 OK か 204 No Content）」 | 1 体目が再生する・404: 送る先の指定が効いていない（OPEN QUESTION 5 の代わりを試す）。断られる: 9.7 |
+| V3 値を見る | `system.year` と `system.cpu.name` の「値を見る」 | ゴーストが「プロパティ「system.year」は「2026」です。」のように今の値を喋る | `%property[…]` がそのまま出る・値が空: 9.7（「値を見る」を外す） |
+| V4 発生させる | `OnBoot`・`OnSecondChange` の「発生させる」 | 「受け付けられた」。ゴーストが応えるかは記録だけ（ゴーストが決める） | SSP が断る（4xx・5xx）: 9.7（「発生させる」を外す） |
+
+### 結果
+
+| 手順 | 結果 | 状態の字・メモ |
+|---|---|---|
+| V1 | （待ち） | |
+| V2 | （待ち） | |
+| V3 | （待ち） | |
+| V4 | （待ち） | |
+
