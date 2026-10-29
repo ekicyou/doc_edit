@@ -107,7 +107,7 @@
   - `before-*`・`after-*` の 20 枚がそろい、`verification.md` の「画面」の節に、見比べ・撮り直しの枚数が書いてある。doc_edit で spec の道だけをコミットして push してある
   - _Requirements: 6.1, 6.2, 7.2, 7.4, 10.4_
 
-- [ ] 6. 残りの手の確かめと記録
+- [x] 6. 残りの手の確かめと記録
 - [x] 6.1 ManualSend の V5〜V8 を開発者に押してもらう
   - `verification.md` の ManualSend の表に V5〜V8 を足し、プレビューの URL と Ctrl+F5 を添えて開発者に押してもらう。Claude は送らない
   - 合わない振る舞い（ダイアログが出る・送り直す・二度送る・選択が保たれない）があれば 2.1 を直してコミットし、3.1 と、当たる自動の確かめと、その手順をやり直す
@@ -115,20 +115,20 @@
   - `verification.md` の ManualSend の表に V5〜V8 の結果が書いてある
   - _Requirements: 1.6, 1.7, 1.8, 5.2, 5.3, 5.5, 10.6_
 
-- [ ] 6.2 `verification.md` の記録を仕上げる
+- [x] 6.2 `verification.md` の記録を仕上げる
   - 頭に、測った版（作業木のコミット、`origin/main` の版）と日付、流した式（Build Gate・ScriptCheck・PageCheck・LoadedShot）をそのまま書く
   - 1.2・2.2・3.1・3.2・4.1・4.3・5.1〜5.3・6.1 の節がそろっていることを見て欠けを埋め、規約 Gate（`CLAUDE.md` の変更が「GitHub Pages」の 1 行だけ・塊の注が 1 行だけ）と `git diff --stat origin/main`、jsstp を使わなかったこと、外した種類とその理由（あれば）を書く
   - `verification.md` と `screenshots/` がそろい、設計の「Testing Strategy」の各項目の結果が書いてある。doc_edit で spec の道だけをコミットして push してある
   - _Requirements: 8.5, 9.2, 9.3, 9.7, 10.2, 10.3, 10.4, 10.5, 10.6_
 
-- [ ] 6.3 PR の説明の材料をまとめ、作業木を `/kiro-complete` で PR に出せる状態にする
+- [x] 6.3 PR の説明の材料をまとめ、作業木を `/kiro-complete` で PR に出せる状態にする
   - ukadoc-spec を fetch し、5.1 の後に `origin/main` がまた進んでいれば、5.1 と同じく追いつき、変わった所に当たる確かめをやり直して `verification.md` の版と結果を直す
   - `verification.md` の「PR の説明の材料」の節に、設計の「PR の説明」の 4 点（一連の最後の 1 本と出し済みの PR の番号・この PR だけで完結すること・`CLAUDE.md` の「JavaScript は使わない」と違う仕掛けであることと足したもの・ManualSend の要約と外した種類）と、PR は 1 本でマージせず `OPEN` で止めることを下書きする（番号は `gh pr list --repo ukatech/ukadoc-spec --state merged` で集める）
   - 作業木の変更をすべてコミットし、push も PR もしない（PR は `/kiro-complete` で作る）。プレビューと控えの配りを止め、スクラッチの控えを消す
   - 作業木に未コミットの変更が無く、`origin/main` が作業木の先祖で、ブランチ `site-look-sstp-playback` がまだ push されておらず、`verification.md` に PR の説明の材料がある
   - _Requirements: 9.1, 9.4, 9.5, 9.6, 9.8_
 
-- [ ] 7. 整合性の確認と更新
+- [x] 7. 整合性の確認と更新
   - ukadoc-spec: 新しい頁・ディレクトリは作らないので、`index.md` の `## 一覧`・`.nav.yml`・`INDEX.md`・`llms.txt` に足す所が無いことを確かめる
   - doc_edit: 初めて決めた方針（見た目ではなく手元の SSP へ送るためにだけ `assets/sstp.js` を `extra_javascript` で読み、第三者のコードを読まず、押すまで何もしないこと、送信の確かめは開発者が手で押すこと）を steering（`tech.md`・`structure.md`）に書き足し、「doc_edit への記録」のとおり自分の道だけをコミットして push する
   - 一覧に足す所が無いことが `verification.md` にあり、steering に方針の書き足しがある
